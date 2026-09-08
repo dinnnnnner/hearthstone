@@ -1,0 +1,883 @@
+.mobile-settings {
+  display: none;
+}
+.play-mode-setting {
+  gap: 16px;
+}
+.play-mode-setting select {
+  max-width: 130px;
+  padding: 10px;
+  border: 1px solid #d4c6b1;
+  border-radius: 8px;
+  background: #fffaf0;
+  color: #665137;
+}
+.touch-mode {
+  --touch-brown: #68482c;
+  --touch-paper: #fcf8ee;
+}
+.touch-mode button {
+  touch-action: manipulation;
+}
+.touch-mode .mobile-settings {
+  display: grid;
+}
+.touch-mode .main-shell {
+  width: 100%;
+  margin: 0;
+  min-width: 0;
+}
+.touch-mode .sidebar {
+  inset: auto 0 0;
+  width: 100%;
+  height: calc(58px + env(safe-area-inset-bottom));
+  padding: 0 8px env(safe-area-inset-bottom);
+  border: 0;
+  border-top: 1px solid #ded3c1;
+  background: #fcf9f1f5;
+}
+.touch-mode .sidebar .brand,
+.touch-mode .sidebar-line,
+.touch-mode .nav-caption,
+.touch-mode .sidebar-note,
+.touch-mode .sidebar-bottom {
+  display: none;
+}
+.touch-mode .sidebar nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  gap: 4px;
+  margin: 0;
+}
+.touch-mode .nav-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 8px;
+  min-width: 54px;
+  min-height: 48px;
+  font-size: 10px;
+}
+.touch-mode .nav-item > span:not(.nav-dot) {
+  display: block;
+}
+.touch-mode .nav-dot {
+  display: none;
+}
+.touch-mode .topbar {
+  height: 48px;
+  padding: 0 max(10px, env(safe-area-inset-right)) 0
+    max(10px, env(safe-area-inset-left));
+}
+.touch-mode .topbar-right {
+  gap: 3px;
+}
+.touch-mode .topbar .icon-button {
+  width: 38px;
+  height: 42px;
+}
+.touch-mode .topbar .sound-toggle,
+.touch-mode .topbar .player-avatar,
+.touch-mode .topbar .player-name,
+.touch-mode .topbar .header-divider {
+  display: none;
+}
+.touch-mode .version-pill {
+  display: inline-flex;
+  font-size: 9px;
+  margin-right: 3px;
+}
+.touch-mode .breadcrumb {
+  font-size: 11px;
+  gap: 4px;
+}
+.touch-mode main {
+  padding: 12px max(10px, env(safe-area-inset-right))
+    calc(76px + env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+}
+.touch-mode.is-tavern main {
+  padding-top: 0;
+}
+.touch-mode.is-tavern .page-heading {
+  display: none;
+}
+.mobile-arena {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.mobile-hud {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #78664e;
+  font-size: 11px;
+}
+.mobile-hud > span,
+.mobile-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.mobile-hud .mobile-tier {
+  color: #ab8247;
+  gap: 3px;
+  font-size: 11px;
+}
+.mobile-tier small {
+  color: #9b8b72;
+  font-size: 10px;
+}
+.mobile-gold {
+  margin-left: auto;
+  color: #a5772b;
+  font-size: 21px;
+}
+.mobile-gold small {
+  font-size: 11px;
+  font-weight: 400;
+}
+.mobile-hud > button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 40px;
+  background: transparent;
+  border-radius: 7px;
+}
+.rotate-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 0 10px;
+  font-size: 10px;
+  color: #988772;
+}
+.mobile-table {
+  display: grid;
+  gap: 10px;
+}
+.mobile-shop,
+.mobile-warband,
+.mobile-hand {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #ddd0b9;
+  border-radius: 12px;
+  background: var(--touch-paper);
+  box-shadow: 0 3px 10px #65442808;
+}
+.mobile-shop {
+  background: linear-gradient(120deg, #fbf4e6, #f3e8d3);
+}
+.mobile-shop.is-frozen {
+  background: #e6f0f2;
+  border-color: #92bdca;
+  box-shadow: inset 0 0 12px #aed9e95c;
+}
+.mobile-warband {
+  background: linear-gradient(110deg, #eef0e4, #f7f7ed);
+  border-color: #d1d6c0;
+}
+.mobile-hand {
+  background: #f2eae0;
+}
+.mobile-section-heading {
+  height: 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.mobile-section-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+  color: #76654f;
+}
+.mobile-section-heading h2 small {
+  font-size: 10px;
+  font-weight: 400;
+  color: #9b8d76;
+}
+.mobile-section-heading > span {
+  font-size: 9px;
+  color: #9a917d;
+}
+.mobile-shop .mobile-section-heading {
+  height: 40px;
+}
+.mobile-shop-actions {
+  display: flex;
+  gap: 5px;
+}
+.mobile-shop-actions button {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  border: 1px solid #daccb4;
+  border-radius: 8px;
+  background: #fffaf0;
+  color: #795c3b;
+  font-size: 11px;
+}
+.mobile-shop-actions button.active {
+  background: #d1e9f0;
+  border-color: #80afbf;
+  color: #477783;
+}
+.mobile-card-strip {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  padding: 4px 2px 6px;
+  scroll-snap-type: x proximity;
+  min-height: 110px;
+  align-items: stretch;
+}
+.mobile-card-strip > div {
+  width: 78px;
+  flex: 0 0 78px;
+  scroll-snap-align: start;
+}
+.mobile-arena .minion-card.compact {
+  height: 106px;
+  padding: 3px;
+  border-radius: 7px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 17px 23px;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+.mobile-arena .minion-card:hover:not(:disabled) {
+  transform: none;
+}
+.mobile-arena .compact .card-art {
+  height: 100%;
+  min-height: 0;
+}
+.mobile-arena .compact .card-name {
+  margin: -3px 0 0;
+  padding: 2px 0;
+  align-self: center;
+  font-size: 9px;
+  line-height: 15px;
+}
+.mobile-arena .compact .card-bottom {
+  padding: 2px 0 0;
+}
+.mobile-arena .compact .stat {
+  font-size: 15px;
+  width: 20px;
+  height: 21px;
+}
+.mobile-arena .compact .tribe-label {
+  font-size: 7px;
+  letter-spacing: 0;
+}
+.mobile-arena .compact .tier-badge {
+  top: 1px;
+  left: 1px;
+  font-size: 9px;
+  padding: 1px 2px;
+}
+.mobile-arena .keyword-icons {
+  gap: 1px;
+  bottom: 4px;
+  right: 1px;
+}
+.mobile-arena .keyword-icons > span {
+  width: 15px;
+  height: 15px;
+}
+.mobile-arena .keyword-icons svg {
+  width: 10px;
+  height: 10px;
+}
+.mobile-arena .golden-label {
+  font-size: 8px;
+  padding: 1px 3px;
+}
+.mobile-arena .spell-card-type {
+  padding: 3px 0;
+  font-size: 8px;
+}
+.mobile-spell-offer {
+  flex: 0 0 76px;
+  height: 106px;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  position: relative;
+  padding: 4px;
+  border: 1px solid #b8a0c1;
+  border-radius: 8px;
+  background: #ebe2ef;
+  color: #6d4c7b;
+  text-align: center;
+}
+.mobile-spell-offer img {
+  width: 100%;
+  height: 61px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.mobile-spell-offer strong {
+  font-size: 9px;
+  padding: 3px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mobile-spell-offer span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11px;
+}
+.mobile-board-slots {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px 0;
+}
+.mobile-board-slot {
+  min-width: 0;
+  height: 90px;
+  border-radius: 7px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+.mobile-board-slot:not(.occupied) {
+  border: 1px dashed #c6cdb5;
+  background: #fafaf075;
+  align-items: center;
+  color: #b2bba1;
+  font:
+    16px Georgia,
+    serif;
+}
+.mobile-arena .mobile-board-slot .minion-card {
+  height: 90px;
+}
+.mobile-arena .mobile-board-slot .card-name {
+  font-size: 8px;
+}
+.mobile-arena .mobile-board-slot .tribe-label {
+  display: none;
+}
+.mobile-arena .mobile-board-slot .stat {
+  width: 18px;
+  height: 20px;
+  font-size: 14px;
+}
+.mobile-empty {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 11px;
+  color: #a3947f;
+}
+.mobile-reward {
+  width: 78px;
+  flex: 0 0 78px;
+  border: 1px solid #c5a454;
+  border-radius: 7px;
+  background: linear-gradient(130deg, #fff4bf, #e9cf81);
+  color: #8a692d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+.mobile-reward strong {
+  font-size: 10px;
+}
+.mobile-reward span {
+  font-size: 9px;
+}
+.mobile-dock {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #d4c1a4;
+  border-radius: 12px;
+  background: #ebe0ce;
+}
+.mobile-hero {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.mobile-hero img {
+  width: 43px;
+  height: 49px;
+  object-fit: cover;
+  border-radius: 15px;
+  border: 2px solid #b69a76;
+}
+.mobile-hero strong {
+  display: block;
+  font-size: 10px;
+}
+.mobile-hero span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #aa6658;
+  margin-top: 4px;
+}
+.mobile-hero span svg:nth-of-type(2) {
+  color: #87917d;
+  margin-left: 4px;
+}
+.mobile-power {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-content: center;
+  gap: 4px;
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #c6b090;
+  border-radius: 9px;
+  background: #faf3e4;
+  color: #89633b;
+  min-height: 52px;
+}
+.mobile-power strong {
+  font-size: 10px;
+  align-self: center;
+}
+.mobile-power span {
+  grid-column: 2;
+  font-size: 9px;
+}
+.mobile-utilities {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mobile-utilities button {
+  min-height: 42px;
+  background: transparent;
+  font-size: 10px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 2px;
+}
+.mobile-utilities button small {
+  font-size: 9px;
+  color: #ad8d61;
+}
+.mobile-end {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  border-radius: 9px;
+  background: #94613a;
+  box-shadow:
+    inset 0 1px 0 #d5ad7b,
+    0 2px 4px #7b4e2b25;
+  color: #fff4df;
+  font-size: 12px;
+  font-weight: 650;
+}
+.choosing-target {
+  box-shadow: 0 0 0 2px #ab8a4f;
+}
+.touch-mode .modal-shade {
+  padding: max(8px, env(safe-area-inset-top))
+    max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+}
+.touch-mode .modal {
+  max-height: calc(
+    100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
+  padding: 16px;
+  overscroll-behavior-y: contain;
+}
+.touch-mode .modal-heading {
+  margin-bottom: 14px;
+}
+.touch-mode .modal-heading .icon-button {
+  min-width: 44px;
+  height: 44px;
+}
+.touch-mode .modal .detail-actions .button {
+  min-height: 44px;
+}
+.touch-mode .modal .card-detail {
+  gap: 16px;
+}
+.touch-mode .modal .card-detail > div {
+  min-width: 0;
+}
+.touch-mode .target-banner {
+  inset: auto 12px calc(65px + env(safe-area-inset-bottom));
+  transform: none;
+  max-width: 600px;
+  margin: auto;
+  padding: 8px;
+  gap: 8px;
+  font-size: 11px;
+}
+.touch-mode .target-banner button {
+  min-height: 40px;
+  white-space: nowrap;
+}
+.touch-mode .toast {
+  bottom: calc(122px + env(safe-area-inset-bottom));
+  max-width: calc(100% - 24px);
+  font-size: 11px;
+  pointer-events: none;
+}
+.touch-mode .toast button {
+  pointer-events: auto;
+}
+@media (max-width: 600px) {
+  .touch-mode .modal-shade:has(.card-detail) {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .touch-mode .modal:has(.card-detail) {
+    border-radius: 18px 18px 0 0;
+    max-height: 75dvh;
+    padding: 16px 16px max(16px, env(safe-area-inset-bottom));
+  }
+  .touch-mode .card-detail > .minion-card {
+    width: 110px;
+    max-width: 110px;
+  }
+  .touch-mode .card-detail .card-art {
+    height: 95px;
+  }
+  .touch-mode .card-detail .card-description {
+    display: none;
+  }
+  .touch-mode .card-detail {
+    align-items: flex-start;
+  }
+  .touch-mode .detail-stats {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .touch-mode .detail-actions {
+    gap: 8px;
+  }
+  .touch-mode .move-buttons {
+    display: flex;
+  }
+  .touch-mode .detail-actions .button {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  .touch-mode .card-source {
+    font-size: 10px;
+  }
+}
+@media (min-width: 601px) {
+  .touch-mode .sidebar {
+    inset: 0 auto 0 0;
+    width: calc(56px + env(safe-area-inset-left));
+    height: 100dvh;
+    border-right: 1px solid #dfd3c1;
+    padding: max(8px, env(safe-area-inset-top)) 3px
+      max(8px, env(safe-area-inset-bottom))
+      calc(3px + env(safe-area-inset-left));
+  }
+  .touch-mode .sidebar nav {
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+  }
+  .touch-mode .nav-item {
+    font-size: 9px;
+    padding: 8px 2px;
+    min-width: 48px;
+    min-height: 52px;
+  }
+  .touch-mode .nav-item svg {
+    width: 17px;
+    height: 17px;
+  }
+  .touch-mode .main-shell {
+    width: calc(100% - 56px - env(safe-area-inset-left));
+    margin-left: calc(56px + env(safe-area-inset-left));
+  }
+  .touch-mode .topbar {
+    height: 40px;
+    padding-left: 12px;
+  }
+  .touch-mode main {
+    padding: 10px max(10px, env(safe-area-inset-right))
+      max(8px, env(safe-area-inset-bottom)) 10px;
+  }
+  .touch-mode .mobile-hud {
+    height: 36px;
+  }
+  .touch-mode .rotate-hint {
+    display: none;
+  }
+  .touch-mode .mobile-table {
+    height: calc(100dvh - 84px - env(safe-area-inset-bottom));
+    min-height: 284px;
+    max-height: 650px;
+    grid-template-columns: minmax(0, 1fr) 112px;
+    grid-template-rows: 1.2fr 1fr 1fr;
+    gap: 6px 8px;
+  }
+  .touch-mode .mobile-shop,
+  .touch-mode .mobile-warband,
+  .touch-mode .mobile-hand {
+    grid-column: 1;
+    min-height: 0;
+    padding: 4px 7px;
+    display: flex;
+    flex-direction: column;
+  }
+  .touch-mode .mobile-section-heading {
+    height: 20px;
+    flex-shrink: 0;
+    margin: 0;
+  }
+  .touch-mode .mobile-shop .mobile-section-heading {
+    height: 35px;
+  }
+  .touch-mode .mobile-shop-actions button {
+    min-height: 34px;
+  }
+  .touch-mode .mobile-card-strip {
+    min-height: 0;
+    flex: 1;
+    padding: 3px 2px;
+    gap: 6px;
+  }
+  .touch-mode .mobile-card-strip > div {
+    width: clamp(64px, 9vw, 110px);
+    flex-basis: clamp(64px, 9vw, 110px);
+  }
+  .touch-mode .mobile-arena .minion-card.compact {
+    height: 100%;
+    grid-template-rows: minmax(0, 1fr) 15px 20px;
+    padding: 2px;
+  }
+  .touch-mode .mobile-arena .compact .stat {
+    height: 19px;
+    font-size: 14px;
+  }
+  .touch-mode .mobile-board-slots {
+    min-height: 0;
+    flex: 1;
+    padding: 3px 0;
+    gap: 6px;
+  }
+  .touch-mode .mobile-board-slot {
+    height: 100%;
+    min-height: 0;
+  }
+  .touch-mode .mobile-board-slot .card-name {
+    font-size: 9px;
+  }
+  .touch-mode .mobile-spell-offer {
+    height: 100%;
+    width: 70px;
+    flex-basis: 70px;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr) 16px 14px;
+    padding: 2px;
+  }
+  .touch-mode .mobile-spell-offer img {
+    height: 100%;
+    min-height: 0;
+  }
+  .touch-mode .mobile-spell-offer strong {
+    padding: 1px;
+  }
+  .touch-mode .mobile-dock {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
+    padding: 8px;
+  }
+  .touch-mode .mobile-hero {
+    flex-direction: column;
+    gap: 3px;
+    text-align: center;
+  }
+  .touch-mode .mobile-hero img {
+    width: 42px;
+    height: 46px;
+  }
+  .touch-mode .mobile-hero span {
+    justify-content: center;
+  }
+  .touch-mode .mobile-power {
+    padding: 6px;
+    min-height: 48px;
+  }
+  .touch-mode .mobile-utilities {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+  .touch-mode .mobile-utilities button {
+    min-height: 32px;
+    justify-content: center;
+  }
+  .touch-mode .mobile-end {
+    gap: 5px;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .touch-mode .target-banner {
+    bottom: 8px;
+    left: 70px;
+    right: 132px;
+    max-width: none;
+  }
+  .touch-mode .toast {
+    bottom: 55px;
+  }
+  .touch-mode .modal:has(.card-detail) {
+    max-width: 640px;
+  }
+  .touch-mode .modal .card-detail > .minion-card {
+    width: 115px;
+    max-width: 115px;
+  }
+  .touch-mode .modal .card-detail .card-art {
+    height: 86px;
+  }
+  .touch-mode .modal .card-detail .card-description {
+    display: none;
+  }
+  .touch-mode .modal .card-detail > div {
+    flex: 1;
+  }
+  .touch-mode .modal .card-detail .detail-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .touch-mode .modal .card-detail .detail-stats {
+    margin: 10px 0;
+  }
+  .touch-mode .modal .card-detail .card-source {
+    margin: 8px 0;
+  }
+  .touch-mode .combat-stage {
+    padding: 8px;
+  }
+  .touch-mode .combat-cards {
+    min-height: 65px;
+  }
+  .touch-mode .combat-cards .compact .card-art {
+    height: 38px;
+  }
+  .touch-mode .combat-divider {
+    padding: 6px;
+  }
+  .touch-mode .modal:has(.combat-stage) .modal-heading {
+    margin-bottom: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .touch-mode *,
+  .touch-mode *::before,
+  .touch-mode *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* Put round information in the landscape header to leave more room for card art. */
+@media (min-width: 601px) {
+  .touch-mode.is-tavern .topbar .breadcrumb,
+  .touch-mode.is-tavern .topbar .version-pill {
+    display: none;
+  }
+  .touch-mode.is-tavern .topbar-right {
+    margin-left: auto;
+  }
+  .touch-mode.is-tavern .mobile-hud {
+    position: absolute;
+    top: 0;
+    left: calc(68px + env(safe-area-inset-left));
+    right: calc(142px + env(safe-area-inset-right));
+    height: 40px;
+    z-index: 2;
+  }
+  .touch-mode .mobile-table {
+    height: calc(100dvh - 48px - env(safe-area-inset-bottom));
+  }
+  .touch-mode .mobile-arena .compact .card-name {
+    position: absolute;
+    bottom: 22px;
+    left: 3px;
+    right: 3px;
+    background: #f5ead8e8;
+    margin: 0;
+    padding: 1px 0;
+    line-height: 14px;
+  }
+  .touch-mode .mobile-arena .minion-card.compact {
+    display: block;
+  }
+  .touch-mode .mobile-arena .compact .card-art {
+    height: 100%;
+  }
+  .touch-mode .mobile-arena .compact .card-bottom {
+    position: absolute;
+    bottom: 2px;
+    left: 3px;
+    right: 3px;
+    padding: 0;
+  }
+  .touch-mode .mobile-arena .compact .tribe-label {
+    color: #fff7e3;
+    text-shadow: 0 1px 3px #271b12;
+  }
+  .touch-mode .mobile-arena .spell-card-type {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #fff4fc;
+    background: #624a72bf;
+  }
+  .touch-mode .mobile-arena .keyword-icons {
+    top: 3px;
+    bottom: auto;
+  }
+}
+
+@media (min-width: 601px) {
+  .touch-mode.is-tavern.has-lobby .mobile-hud {
+    right: calc(184px + env(safe-area-inset-right));
+  }
+}

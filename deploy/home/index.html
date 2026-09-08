@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#f4f3ed" />
+    <meta
+      name="description"
+      content="游戏大厅：进入 SECTOR 多人战术竞技场，或在鲍勃的酒馆练习阵容与三连。支持电脑和手机浏览器。"
+    />
+    <title>游戏大厅 · Playroom</title>
+    <link rel="icon" href="/lobby/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/lobby/home.css" />
+  </head>
+  <body>
+    <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <symbol id="arrow" viewBox="0 0 24 24">
+          <path d="M5 12h14m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="monitor" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="13" rx="2" />
+          <path d="M8 21h8m-4-4v4" />
+        </symbol>
+        <symbol id="phone" viewBox="0 0 24 24">
+          <rect x="6" y="2" width="12" height="20" rx="3" />
+          <path d="M10 5h4m-3 14h2" />
+        </symbol>
+        <symbol id="cross" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="7" />
+          <path d="M12 2v5m0 10v5M2 12h5m10 0h5" />
+        </symbol>
+        <symbol id="cards" viewBox="0 0 24 24">
+          <rect x="7" y="3" width="13" height="18" rx="2" />
+          <path
+            d="m7 6-4 1 3 14m7-13 1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4Z"
+          />
+        </symbol>
+      </defs>
+    </svg>
+    <div class="shell">
+      <header class="header">
+        <a class="brand" href="/" aria-label="游戏大厅首页"
+          ><span class="brand-icon"><i></i><i></i><i></i><i></i></span
+          ><span>PLAYROOM<small>游戏大厅</small></span></a
+        ><span class="header-note"><i></i>浏览器即开即玩</span>
+      </header>
+      <main id="games">
+        <div class="intro">
+          <div>
+            <p class="eyebrow">YOUR NEXT ROUND STARTS HERE</p>
+            <h1>
+              选个游戏，<br class="phone-break" />开始这一局<span>。</span>
+            </h1>
+            <p class="intro-note">和朋友一起交锋，或独自琢磨下一套阵容。</p>
+          </div>
+          <span class="game-count"><strong>02</strong>款游戏，随时开局</span>
+        </div>
+        <div class="games">
+          <a
+            class="game sector"
+            href="/sector/"
+            aria-label="进入 SECTOR 战术竞技场"
+          >
+            <div class="game-art sector-art">
+              <div class="art-top">
+                <span class="category">多人竞技</span
+                ><span class="art-number">01 / SECTOR</span>
+              </div>
+              <svg
+                class="arena-art"
+                viewBox="0 0 600 270"
+                fill="none"
+                aria-hidden="true"
+              >
+                <defs>
+                  <pattern
+                    id="grid"
+                    width="30"
+                    height="30"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <path d="M30 0H0v30" stroke="#3d514c" stroke-width=".7" />
+                  </pattern>
+                  <linearGradient
+                    id="wall"
+                    x1="160"
+                    y1="70"
+                    x2="410"
+                    y2="250"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#3b534c" />
+                    <stop offset="1" stop-color="#263c37" />
+                  </linearGradient>
+                </defs>
+                <path fill="url(#grid)" d="M35 15h530v235H35z" opacity=".65" />
+                <g
+                  transform="translate(300 138) rotate(-27) skewX(22) translate(-300 -138)"
+                >
+                  <path
+                    d="M160 38h278v188H160z"
+                    fill="#172b27"
+                    stroke="#5e786e"
+                  />
+                  <path
+                    d="M160 38h85v28h-56v59h-29zM345 38h93v89h-28V66h-65zM160 167h29v31h67v28h-96zM350 198h60v-25h28v53h-88z"
+                    fill="url(#wall)"
+                    stroke="#739281"
+                  />
+                  <path
+                    d="M263 85h38v50h-38zM327 148h52v24h-52zM213 152h32v22h-32z"
+                    fill="#425d51"
+                    stroke="#7b9780"
+                  />
+                  <path
+                    d="m203 88 26 23 89 9 57 55"
+                    stroke="#c5df8c"
+                    stroke-width="2"
+                    stroke-dasharray="5 6"
+                    opacity=".8"
+                  />
+                  <circle cx="203" cy="88" r="9" stroke="#c5df8c" />
+                  <circle cx="203" cy="88" r="3" fill="#e1f5ab" />
+                  <circle
+                    cx="375"
+                    cy="175"
+                    r="17"
+                    stroke="#bc785e"
+                    stroke-dasharray="3 4"
+                  />
+                  <path
+                    d="m369 169 12 12m0-12-12 12"
+                    stroke="#e1a183"
+                    stroke-width="2"
+                  />
+                </g>
+                <path
+                  d="M67 55V35h20m426 0h20v20M67 212v20h20m426 0h20v-20"
+                  stroke="#95ad8d"
+                  opacity=".55"
+                />
+                <text
+                  x="76"
+                  y="255"
+                  fill="#73877a"
+                  font-family="monospace"
+                  font-size="9"
+                  letter-spacing="2"
+                >
+                  TACTICAL ARENA / READY TO DEPLOY
+                </text>
+              </svg>
+              <div class="art-bottom">
+                <span><i></i>集结，进入战场</span
+                ><svg class="icon"><use href="#cross" /></svg>
+              </div>
+            </div>
+            <div class="game-info">
+              <div class="title-row">
+                <div>
+                  <p class="game-label">战术竞技场</p>
+                  <h2>SECTOR</h2>
+                </div>
+                <span class="entry-arrow"
+                  ><svg class="icon"><use href="#arrow" /></svg
+                ></span>
+              </div>
+              <p class="description">
+                选择干员与地图，创建房间，和朋友一起展开一场战术交锋。
+              </p>
+              <div class="game-meta">
+                <span
+                  ><svg class="icon"><use href="#monitor" /></svg>推荐电脑</span
+                ><span>多人联机</span><strong>进入战场 <span>↗</span></strong>
+              </div>
+            </div>
+          </a>
+          <a class="game tavern" href="/tavern/" aria-label="进入鲍勃的酒馆">
+            <div class="game-art tavern-art">
+              <div class="art-top">
+                <span class="category">策略卡牌</span
+                ><span class="art-number">02 / TAVERN</span>
+              </div>
+              <svg
+                class="tavern-illustration"
+                viewBox="0 0 600 270"
+                fill="none"
+                aria-hidden="true"
+              >
+                <defs>
+                  <linearGradient
+                    id="card"
+                    x1="210"
+                    y1="45"
+                    x2="365"
+                    y2="230"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stop-color="#f7edd4" />
+                    <stop offset="1" stop-color="#d5b878" />
+                  </linearGradient>
+                  <radialGradient id="glow">
+                    <stop stop-color="#f3d987" stop-opacity=".65" />
+                    <stop offset="1" stop-color="#f3d987" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <ellipse
+                  cx="300"
+                  cy="142"
+                  rx="220"
+                  ry="126"
+                  fill="url(#glow)"
+                />
+                <ellipse
+                  cx="301"
+                  cy="222"
+                  rx="157"
+                  ry="14"
+                  fill="#866132"
+                  opacity=".13"
+                />
+                <g transform="rotate(-18 234 147)">
+                  <rect
+                    x="157"
+                    y="64"
+                    width="124"
+                    height="163"
+                    rx="13"
+                    fill="#c4ac80"
+                    stroke="#9c7d4b"
+                  />
+                  <rect
+                    x="164"
+                    y="71"
+                    width="110"
+                    height="148"
+                    rx="8"
+                    fill="#877557"
+                    stroke="#e3cea4"
+                  />
+                  <path
+                    d="m219 94 28 53-28 50-28-50z"
+                    fill="#b6a078"
+                    stroke="#d9c99f"
+                  />
+                </g>
+                <g transform="rotate(18 364 147)">
+                  <rect
+                    x="319"
+                    y="63"
+                    width="124"
+                    height="163"
+                    rx="13"
+                    fill="#c4ac80"
+                    stroke="#9c7d4b"
+                  />
+                  <rect
+                    x="326"
+                    y="70"
+                    width="110"
+                    height="148"
+                    rx="8"
+                    fill="#877557"
+                    stroke="#e3cea4"
+                  />
+                  <path
+                    d="m381 93 28 53-28 50-28-50z"
+                    fill="#b6a078"
+                    stroke="#d9c99f"
+                  />
+                </g>
+                <rect
+                  x="230"
+                  y="36"
+                  width="142"
+                  height="189"
+                  rx="13"
+                  fill="url(#card)"
+                  stroke="#a98037"
+                  stroke-width="2"
+                />
+                <rect
+                  x="238"
+                  y="44"
+                  width="126"
+                  height="173"
+                  rx="8"
+                  stroke="#fdf7e4"
+                  stroke-width="2"
+                />
+                <path
+                  d="M246 106a55 55 0 0 1 110 0v57H246z"
+                  fill="#6b7157"
+                  stroke="#b29655"
+                />
+                <circle
+                  cx="301"
+                  cy="115"
+                  r="34"
+                  stroke="#c9bb82"
+                  opacity=".6"
+                />
+                <path
+                  d="m301 78 10 25 27 2-21 18 7 27-23-15-24 15 7-27-20-18 27-2Z"
+                  fill="#e8cc7b"
+                  stroke="#f8e4a3"
+                  stroke-width="2"
+                />
+                <rect
+                  x="242"
+                  y="156"
+                  width="118"
+                  height="25"
+                  rx="4"
+                  fill="#ebd8a9"
+                  stroke="#b49551"
+                />
+                <text
+                  x="301"
+                  y="172"
+                  text-anchor="middle"
+                  fill="#846532"
+                  font-family="serif"
+                  font-size="11"
+                  letter-spacing="5"
+                >
+                  金色伙伴
+                </text>
+                <circle
+                  cx="258"
+                  cy="199"
+                  r="13"
+                  fill="#bda155"
+                  stroke="#f5e3b0"
+                  stroke-width="2"
+                />
+                <text
+                  x="258"
+                  y="204"
+                  text-anchor="middle"
+                  fill="#fff5d4"
+                  font-family="Georgia,serif"
+                  font-size="17"
+                >
+                  6
+                </text>
+                <path
+                  d="M332 210s-19-11-13-20c5-8 13-1 13-1s8-7 13 1c6 9-13 20-13 20"
+                  fill="#ac7059"
+                />
+                <text
+                  x="332"
+                  y="203"
+                  text-anchor="middle"
+                  fill="#ffefdc"
+                  font-family="Georgia,serif"
+                  font-size="16"
+                >
+                  6
+                </text>
+                <path
+                  d="m420 51 3 10 10 3-10 3-3 10-3-10-10-3 10-3ZM165 30l2 7 7 2-7 2-2 7-2-7-7-2 7-2ZM467 157l2 7 7 2-7 2-2 7-2-7-7-2 7-2Z"
+                  fill="#ba9451"
+                />
+              </svg>
+              <div class="art-bottom">
+                <span>第 14 赛季 · 36.4.2</span
+                ><svg class="icon"><use href="#cards" /></svg>
+              </div>
+            </div>
+            <div class="game-info">
+              <div class="title-row">
+                <div>
+                  <p class="game-label">酒馆战棋练习场</p>
+                  <h2>鲍勃的酒馆</h2>
+                </div>
+                <span class="entry-arrow"
+                  ><svg class="icon"><use href="#arrow" /></svg
+                ></span>
+              </div>
+              <p class="description">
+                招募随从，寻找三连。试试新阵容，或横过手机，来一局酒馆。
+              </p>
+              <div class="game-meta">
+                <span
+                  ><svg class="icon"><use href="#monitor" /></svg
+                  ><svg class="icon"><use href="#phone" /></svg>电脑 /
+                  手机</span
+                ><span>单人练习</span><strong>进入酒馆 <span>↗</span></strong>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="guide">
+          <span class="guide-mark">i</span>
+          <p>
+            SECTOR
+            可创建或加入房间。酒馆进度保存在当前浏览器，手机横屏可以同屏操作。
+          </p>
+        </div>
+      </main>
+      <footer>
+        <span>PLAYROOM <i>/</i> 你的游戏时间</span
+        ><span
+          >无需下载客户端
+          <span class="footer-dot">·</span> 选择游戏即可开始</span
+        >
+      </footer>
+    </div>
+  </body>
+</html>

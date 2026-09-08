@@ -1,0 +1,10 @@
+{
+  "season": 14,
+  "patch": "36.4.2",
+  "build": "251332",
+  "date": "2026-09-08",
+  "source": "https://api.hearthstonejson.com/v1/251332/zhCN/cards.json",
+  "sha256": "81b3a31ad21278d88d315087fa0fbe81569bf982d15dc880071c5ca6b606f9e3",
+  "poolDefinition": "isBattlegroundsPoolMinion, non-Duos, Tier 1–6",
+  "trinketPoolVerified": false
+}

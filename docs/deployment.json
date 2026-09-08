@@ -1,0 +1,16 @@
+{
+  "release": "20260908T033043Z",
+  "remote": "/var/www/playroom/releases/20260908T033043Z",
+  "site": "https://8.153.150.101/",
+  "routes": {
+    "sector": "/sector/",
+    "tavern": "/tavern/"
+  },
+  "validation": {
+    "engineTests": 45,
+    "publicBrowserTests": 3,
+    "nginxConfig": "passed",
+    "websocket": "pong",
+    "sectorRestarted": false
+  }
+}
