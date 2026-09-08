@@ -1,6 +1,6 @@
 {
-  "release": "20260908T055800Z",
-  "remote": "/var/www/playroom/releases/20260908T055800Z",
+  "release": "20260908T062430Z",
+  "remote": "/var/www/playroom/releases/20260908T062430Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -9,33 +9,45 @@
   },
   "validation": {
     "engineAndStateTests": 46,
-    "serverTests": 7,
+    "serverTests": 16,
     "localBrowserTests": 22,
     "publicBrowserTests": 7,
-    "publicEightBrowserRoom": "passed, 12.1 seconds with separate caches",
+    "publicEightBrowserRoom": "passed, 11.6 seconds with separate caches",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
     "sectorPidAtFinalActivation": 107631,
-    "sectorPidAfterFinalValidation": 107631,
-    "tavernPid": 107805,
-    "tavernMemoryBytesAfterTests": 27570176,
+    "sectorPidAfterFinalValidation": 108207,
+    "tavernPid": 108082,
+    "tavernMemoryBytesAfterTests": 36601856,
     "tavernAutomaticRestarts": 0,
     "uiImageCount": 556,
     "uiImageBytes": 8897106,
     "originalImageBytes": 133827864
   },
-  "previousRelease": "20260908T055357Z",
+  "previousRelease": "20260908T055800Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
   "backend": {
-    "release": "/opt/bobs-tavern/releases/20260908T055800Z",
+    "release": "/opt/bobs-tavern/releases/20260908T062430Z",
     "service": "bobs-tavern",
     "listen": "127.0.0.1:8787",
     "state": "/var/lib/bobs-tavern/state.json",
     "maxActiveMatches": 6,
-    "memoryLimitMiB": 384
+    "memoryLimitMiB": 384,
+    "offlineGraceSeconds": 300,
+    "snapshotWrites": "serialized async atomic replacement with per-room serialization cache"
+  },
+  "replayBenchmark": {
+    "frames": 180,
+    "fullBytes": 352115,
+    "cachedBytes": 6642,
+    "fullGzipBytes": 5938,
+    "cachedGzipBytes": 1653,
+    "snapshotBytes": 2808390,
+    "unchangedSnapshotMs": 0.003798180000000002,
+    "scope": "Synthetic 180-frame local test; not a full server capacity benchmark"
   }
 }

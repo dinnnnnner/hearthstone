@@ -40,6 +40,7 @@ export type Seat = {
   game?: Game;
   place?: number;
   requests: string[];
+  battleId?: string;
 };
 export type Room = {
   code: string;
@@ -56,7 +57,11 @@ export type Room = {
   updated: number;
   grave?: { hero: string; name: string; board: Minion[]; tier: number };
   online?: string;
+  pairings?: [string, string | null][];
+  gameRev?: number;
+  storageRev?: number;
 };
+export const OFFLINE_GRACE_MS = 5 * 60 * 1000;
 const score = (m: Minion) =>
   m.attack + m.health + getDef(m.id).tier * 2 + m.keywords.length * 3;
 export const tokenHash = (token: string) =>
@@ -65,6 +70,7 @@ export class Rooms {
   guests = new Map<string, Guest>();
   rooms = new Map<string, Room>();
   seq = 0;
+  private roomSnapshots = new WeakMap<Room, { rev: number; json: string }>();
   constructor(
     public now: () => number = Date.now,
     public random: () => number = Math.random,
@@ -72,6 +78,7 @@ export class Rooms {
   touch(r?: Room, publicChange = true) {
     this.seq++;
     if (r) {
+      r.storageRev = this.seq;
       r.updated = this.now();
       if (publicChange) r.rev++;
     }
@@ -98,7 +105,9 @@ export class Rooms {
   auth(token: string) {
     const g = this.guests.get(tokenHash(token));
     if (!g) throw Error("请重新游客登录");
-    g.seen = this.now();
+    const now = this.now();
+    if (Math.floor(now / 60000) !== Math.floor(g.seen / 60000)) this.touch();
+    g.seen = now;
     return g;
   }
   member(g: Guest) {
@@ -233,9 +242,23 @@ export class Rooms {
     r.deadline = this.now() + 90000;
     this.opponents(r);
     this.bots(r);
+    this.planPairings(r);
     this.touch(r);
   }
+  planPairings(r: Room) {
+    const order = [...this.living(r)];
+    if (order.length > 2) {
+      const tail = order.splice(1),
+        shift = (r.turn - 1) % tail.length;
+      order.push(...tail.slice(shift), ...tail.slice(0, shift));
+    }
+    r.pairings = [];
+    while (order.length)
+      r.pairings.push([order.shift()!.id, order.pop()?.id ?? null]);
+    this.opponents(r);
+  }
   opponents(r: Room) {
+    r.gameRev = (r.gameRev || 0) + 1;
     for (const p of r.seats) {
       if (!p.game) continue;
       const old = p.game.opponents[p.game.nextOpponent]?.hero;
@@ -253,6 +276,36 @@ export class Rooms {
         0,
         p.game.opponents.findIndex((o) => o.hero === old),
       );
+      if (r.stage === "recruit" && r.pairings) {
+        const pair = r.pairings.find((pair) => pair.includes(p.id));
+        if (pair) {
+          const enemyId = pair[0] === p.id ? pair[1] : pair[0];
+          const enemy = r.seats.find(
+            (x) => x.id === enemyId && x.game!.health > 0 && !x.left,
+          );
+          if (enemy)
+            p.game.nextOpponent = p.game.opponents.findIndex(
+              (o) => o.hero === enemy.hero,
+            );
+          else {
+            p.game.nextOpponent = Math.max(
+              0,
+              p.game.opponents.findIndex(
+                (o) => o.hero === r.grave?.hero && o.health <= 0,
+              ),
+            );
+            const ghostIndex = p.game.nextOpponent;
+            p.game.opponents[ghostIndex] = {
+              hero: r.grave?.hero || p.game.opponents[ghostIndex].hero,
+              name: "幽灵阵容",
+              health: 0,
+              armor: 0,
+              tier: r.grave?.tier || 1,
+              board: [],
+            };
+          }
+        }
+      }
     }
   }
   apply(r: Room, p: Seat, a: Action) {
@@ -261,7 +314,14 @@ export class Rooms {
     if (result.error) return result.error;
     p.game = result.state;
     r.pool = result.state.pool;
+    r.gameRev = (r.gameRev || 0) + 1;
     p.rev++;
+    if (p.game.health <= 0) {
+      this.eliminate(r, p);
+      this.opponents(r);
+      this.checkFinish(r);
+      this.touch(r);
+    }
     this.touch(r, false);
   }
   autoChoices(r: Room, p: Seat) {
@@ -374,12 +434,8 @@ export class Rooms {
         throw Error("已结束招募，请等待下一回合");
       const error = this.apply(r, p, action);
       if (error) throw Error(error);
-      if (p.game!.health <= 0) {
-        this.eliminate(r, p);
-        this.opponents(r);
-        this.checkFinish(r);
-        this.touch(r);
-      }
+      if (r.stage === "recruit" && this.living(r).every((x) => x.ended))
+        this.fight(r);
     }
     p.requests.push(requestId);
     if (p.requests.length > 32) p.requests.shift();
@@ -424,19 +480,23 @@ export class Rooms {
       p.game!.pool = r.pool;
       endEffects(p.game!, this.random);
       r.pool = p.game!.pool;
+      if (p.game!.health <= 0) this.eliminate(r, p);
     }
     this.opponents(r);
-    const alive = this.living(r),
-      order = [...alive];
-    if (order.length > 2) {
-      const tail = order.splice(1),
-        shift = (r.turn - 1) % tail.length;
-      order.push(...tail.slice(shift), ...tail.slice(0, shift));
+    if (this.checkFinish(r)) {
+      this.touch(r);
+      return;
     }
+    if (!r.pairings) this.planPairings(r);
     const dead: Seat[] = [];
-    while (order.length) {
-      const a = order.shift()!,
-        b = order.pop();
+    for (const pair of r.pairings!) {
+      const players = pair
+        .map((id) =>
+          r.seats.find((p) => p.id === id && p.game!.health > 0 && !p.left),
+        )
+        .filter((p): p is Seat => !!p);
+      const [a, b] = players;
+      if (!a) continue;
       let enemy: Game;
       if (b) enemy = b.game!;
       else {
@@ -468,13 +528,19 @@ export class Rooms {
       const enemyName = b?.name || "幽灵阵容";
       battle.opponent = enemyName;
       a.game!.battle = battle;
+      a.battleId = randomBytes(12).toString("hex");
       a.game!.phase = "combat";
       a.game!.nextOpponent = b
         ? Math.max(
             0,
             a.game!.opponents.findIndex((o) => o.hero === b.hero),
           )
-        : 0;
+        : Math.max(
+            0,
+            a.game!.opponents.findIndex(
+              (o) => o.hero === enemy.hero && o.health <= 0,
+            ),
+          );
       if (!b)
         a.game!.opponents[a.game!.nextOpponent] = {
           name: enemyName,
@@ -508,6 +574,7 @@ export class Rooms {
           })),
         };
         b.game!.battle = mirror;
+        b.battleId = randomBytes(12).toString("hex");
         b.game!.phase = "combat";
         b.game!.nextOpponent = Math.max(
           0,
@@ -586,6 +653,7 @@ export class Rooms {
     for (const p of this.living(r)) {
       p.game!.pool = r.pool;
       advanceRecruit(p.game!, this.random);
+      p.battleId = undefined;
       r.pool = p.game!.pool;
       p.ended = false;
       p.continued = false;
@@ -598,6 +666,7 @@ export class Rooms {
     r.stage = "recruit";
     r.deadline = this.now() + 90000;
     this.bots(r);
+    this.planPairings(r);
     this.touch(r);
   }
   leave(g: Guest) {
@@ -644,6 +713,7 @@ export class Rooms {
         ended: false,
         continued: false,
         requests: [],
+        battleId: undefined,
         rev: s.rev + 1,
       }));
     r.pool = {};
@@ -651,13 +721,21 @@ export class Rooms {
     r.turn = 1;
     r.stage = "waiting";
     r.grave = undefined;
+    r.pairings = undefined;
     this.touch(r);
   }
   tick() {
+    const guestsById = new Map([...this.guests.values()].map((g) => [g.id, g]));
     for (const r of this.rooms.values()) {
+      const lastHumanSeen = Math.max(
+        0,
+        ...r.seats
+          .filter((s) => !s.bot && !s.left)
+          .map((s) => guestsById.get(s.id)?.seen || 0),
+      );
       if (
-        this.now() - r.updated >
-        (r.stage === "finished" ? 600000 : 7200000)
+        this.now() - lastHumanSeen >= OFFLINE_GRACE_MS ||
+        this.now() - r.updated > (r.stage === "finished" ? 600000 : 7200000)
       ) {
         for (const g of this.guests.values())
           if (g.room === r.code) g.room = undefined;
@@ -670,10 +748,7 @@ export class Rooms {
       const online = r.seats
         .filter(
           (s) =>
-            !s.bot &&
-            [...this.guests.values()].some(
-              (g) => g.id === s.id && this.now() - g.seen < 20000,
-            ),
+            !s.bot && this.now() - (guestsById.get(s.id)?.seen || 0) < 20000,
         )
         .map((s) => s.id)
         .join(",");
@@ -683,9 +758,12 @@ export class Rooms {
       }
     }
     for (const [k, g] of this.guests)
-      if (!g.room && this.now() - g.seen > 30 * 86400000) this.guests.delete(k);
+      if (!g.room && this.now() - g.seen > 30 * 86400000) {
+        this.guests.delete(k);
+        this.touch();
+      }
   }
-  view(g: Guest) {
+  view(g: Guest, knownBattle = "") {
     const r = this.rooms.get(g.room || ""),
       p = r?.seats.find((s) => s.id === g.id);
     if (!r || !p) {
@@ -696,6 +774,8 @@ export class Rooms {
         guest: { id: g.id, name: g.name },
         room: null,
         game: null,
+        gameVersion: "none",
+        battleId: undefined as string | undefined,
       };
     }
     const game = p.game
@@ -703,11 +783,17 @@ export class Rooms {
           ...p.game,
           pool: r.pool,
           opponents: p.game.opponents.map((o) => ({ ...o, board: [] })),
+          battle:
+            p.game.battle && p.battleId && knownBattle === p.battleId
+              ? { ...p.game.battle, frames: [] }
+              : p.game.battle,
         }
       : null;
     return {
       seq: this.seq,
       version: `${r.code}:${r.rev}:${p.rev}`,
+      gameVersion: `${r.code}:${p.rev}:${r.gameRev || 0}`,
+      battleId: p.battleId,
       guest: { id: g.id, name: g.name },
       room: {
         code: r.code,
@@ -736,12 +822,15 @@ export class Rooms {
     };
   }
   dump() {
-    return JSON.stringify({
-      schema: 1,
-      seq: this.seq,
-      guests: [...this.guests.values()],
-      rooms: [...this.rooms.values()],
+    const rooms = [...this.rooms.values()].map((r) => {
+      const rev = r.storageRev || 0,
+        cached = this.roomSnapshots.get(r);
+      if (cached?.rev === rev) return cached.json;
+      const json = JSON.stringify(r);
+      this.roomSnapshots.set(r, { rev, json });
+      return json;
     });
+    return `{"schema":1,"seq":${this.seq},"guests":${JSON.stringify([...this.guests.values()])},"rooms":[${rooms.join(",")}]}`;
   }
   restore(raw: string) {
     const data = JSON.parse(raw);
@@ -749,6 +838,22 @@ export class Rooms {
     this.seq = data.seq || 0;
     this.guests = new Map(data.guests.map((g: Guest) => [g.hash, g]));
     this.rooms = new Map(data.rooms.map((r: Room) => [r.code, r]));
+    this.roomSnapshots = new WeakMap();
+    for (const r of this.rooms.values()) {
+      // The previous server did not persist idle heartbeats. Give its rooms
+      // one grace period on migration instead of evicting connected guests.
+      if (r.storageRev === undefined) {
+        for (const g of this.guests.values())
+          if (g.room === r.code) g.seen = this.now();
+      }
+      for (const p of r.seats) {
+        if (p.game && p.game.health <= 0 && !p.place) this.eliminate(r, p);
+        if (p.game?.battle && !p.battleId)
+          p.battleId = randomBytes(12).toString("hex");
+      }
+      if (r.stage === "recruit" && !r.pairings) this.planPairings(r);
+      this.touch(r);
+    }
   }
 }
 export type OnlineState = ReturnType<Rooms["view"]>;

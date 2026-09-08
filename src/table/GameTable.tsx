@@ -69,7 +69,7 @@ type Drag = {
 };
 type Props = {
   lobby?: () => void;
-  roomStatus?: string;
+  roomStatus?: import("react").ReactNode;
   locked?: boolean;
   game: Game;
   dispatch: (a: Action) => boolean;
@@ -467,7 +467,12 @@ export function GameTable(p: Props) {
               onClick={() => setRival(rival === i ? null : i)}
               aria-label={`${o.name}，${rivalHealth(i) <= 0 ? "已淘汰" : rivalHealth(i) + "生命"}${i === game.nextOpponent ? "，下一位对手" : ""}`}
             >
-              <img src={art(HEROES.find((h) => h.id === o.hero)!.art)} alt="" fetchPriority="low" decoding="async" />
+              <img
+                src={art(HEROES.find((h) => h.id === o.hero)!.art)}
+                alt=""
+                fetchPriority="low"
+                decoding="async"
+              />
               <span className="rival-tier">{"★".repeat(o.tier)}</span>
               <span className="rival-hp">
                 {rivalHealth(i) <= 0 ? "☠" : rivalHealth(i)}

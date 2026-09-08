@@ -11,7 +11,7 @@
     "build:site": "TAVERN_BASE=/tavern/ npm run build && python3 scripts/package-site.py",
     "build:server": "node scripts/build-server.mjs",
     "dev:server": "tsx server/index.ts",
-    "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts"
+    "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts server/persistence.test.ts"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

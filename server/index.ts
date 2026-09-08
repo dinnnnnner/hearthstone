@@ -3,28 +3,16 @@ import {
   type IncomingMessage,
   type ServerResponse,
 } from "node:http";
-import {
-  readFileSync,
-  existsSync,
-  mkdirSync,
-  writeFileSync,
-  renameSync,
-} from "node:fs";
-import { dirname } from "node:path";
+import { readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { Rooms } from "./rooms";
+import { SnapshotWriter } from "./persistence";
 import type { Action } from "../src/engine";
 const store = new Rooms(),
   saveFile = process.env.TAVERN_STATE || "/tmp/tavern-online-state.json";
 if (existsSync(saveFile)) store.restore(readFileSync(saveFile, "utf8"));
-let saved = -1;
-function persist() {
-  if (saved === store.seq) return;
-  mkdirSync(dirname(saveFile), { recursive: true });
-  writeFileSync(saveFile + ".next", store.dump(), { mode: 0o600 });
-  renameSync(saveFile + ".next", saveFile);
-  saved = store.seq;
-}
+const writer = new SnapshotWriter(store, saveFile);
+let closing = false;
 const limits = new Map<string, { at: number; count: number }>();
 function rate(key: string, max: number) {
   const t = Date.now(),
@@ -125,6 +113,10 @@ function action(input: unknown): Action {
 }
 const server = createServer(async (req, res) => {
   try {
+    if (closing) {
+      reply(res, 503, { error: "服务正在重启，请稍后重试" });
+      return;
+    }
     const url = new URL(req.url || "/", "http://localhost"),
       path = url.pathname.replace(/^\/tavern-api/, "");
     if (path === "/health" && req.method === "GET") {
@@ -162,7 +154,10 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (req.method === "GET" && path === "/state") {
-      const view = store.view(guest);
+      const view = store.view(
+        guest,
+        String(req.headers["x-tavern-battle"] || ""),
+      );
       if (url.searchParams.get("version") === view.version) {
         reply(res, 204);
         return;
@@ -218,7 +213,12 @@ const server = createServer(async (req, res) => {
         reply(res, 404, { error: "未找到接口" });
         return;
     }
-    reply(res, 200, store.view(guest), req);
+    reply(
+      res,
+      200,
+      store.view(guest, String(req.headers["x-tavern-battle"] || "")),
+      req,
+    );
   } catch (e) {
     reply(
       res,
@@ -234,7 +234,9 @@ server.keepAliveTimeout = 5000;
 const ticker = setInterval(() => {
   try {
     store.tick();
-    persist();
+    void writer
+      .flush()
+      .catch((e) => console.error("Room save failed", e.message));
     for (const [k, v] of limits)
       if (Date.now() - v.at > 60000) limits.delete(k);
   } catch (e) {
@@ -243,10 +245,19 @@ const ticker = setInterval(() => {
 }, 1000);
 for (const signal of ["SIGTERM", "SIGINT"])
   process.on(signal, () => {
+    if (closing) return;
+    closing = true;
     clearInterval(ticker);
-    persist();
-    server.close(() => process.exit(0));
-    setTimeout(() => process.exit(0), 3000).unref();
+    server.close(() => {
+      void writer.flush().then(
+        () => process.exit(0),
+        (e) => {
+          console.error("Final room save failed", e.message);
+          process.exit(1);
+        },
+      );
+    });
+    setTimeout(() => process.exit(1), 7000).unref();
   });
 server.listen(
   Number(process.env.TAVERN_PORT || 8787),

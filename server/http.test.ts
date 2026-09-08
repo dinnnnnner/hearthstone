@@ -39,13 +39,15 @@ test("HTTP authentication, action validation and a graceful server restart prese
       await exited;
     }
   };
-  let token = "";
+  let token = "",
+    knownBattle = "";
   const call = (path: string, data?: unknown, auth = token) =>
     fetch(`http://127.0.0.1:${port}/tavern-api` + path, {
       method: data === undefined ? "GET" : "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + auth,
+        "X-Tavern-Battle": knownBattle,
       },
       body: data === undefined ? undefined : JSON.stringify(data),
     });
@@ -69,14 +71,36 @@ test("HTTP authentication, action validation and a graceful server restart prese
       ).status,
       400,
     );
+    await call("/start", {});
+    const combat = (await (
+      await call("/action", {
+        turn: 1,
+        requestId: "end",
+        action: { type: "end" },
+      })
+    ).json()) as any;
+    assert.ok(combat.game.battle.frames.length);
+    knownBattle = combat.battleId;
+    const cached = (await (await call("/state")).json()) as any;
+    assert.equal(cached.game.battle.frames.length, 0);
+    assert.equal(
+      (await call("/state?version=" + encodeURIComponent(cached.version)))
+        .status,
+      204,
+    );
+    knownBattle = "";
     await stop();
     await start();
     const restored = (await (await call("/state")).json()) as {
       room: { code: string };
       guest: { name: string };
+      battleId: string;
+      game: { battle: { frames: unknown[] } };
     };
     assert.equal(restored.room.code, created.room.code);
     assert.equal(restored.guest.name, "重连验证");
+    assert.equal(restored.battleId, combat.battleId);
+    assert.deepEqual(restored.game.battle.frames, combat.game.battle.frames);
     assert.equal((await call("/leave", {})).status, 200);
   } finally {
     await stop();

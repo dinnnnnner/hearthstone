@@ -128,7 +128,16 @@ test("two guest browsers join, ready, synchronize rounds, reconnect and cannot o
     await expect(friend.locator(".combat-table")).toBeVisible();
     await page.getByRole("button", { name: /跳过动画/ }).click();
     await friend.getByRole("button", { name: /跳过动画/ }).click();
+    const cachedReply = page.waitForResponse(
+      (r) =>
+        r.url().endsWith("/tavern-api/action") &&
+        !!r.request().headers()["x-tavern-battle"] &&
+        r.status() === 200,
+    );
     await page.getByRole("button", { name: /返回酒馆/ }).click();
+    expect((await (await cachedReply).json()).game.battle.frames).toHaveLength(
+      0,
+    );
     await friend.getByRole("button", { name: /返回酒馆/ }).click();
     await expect(page.locator(".round-medallion")).toContainText("第 2 回合");
     await expect(friend.locator(".round-medallion")).toContainText("第 2 回合");

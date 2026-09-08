@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Countdown } from "./Countdown";
 import {
   ArrowLeft,
   ArrowRight,
@@ -31,7 +32,7 @@ function readIdentity(): Identity | null {
 export interface NetworkGame {
   game: Game;
   locked: boolean;
-  status: string;
+  status: ReactNode;
   place?: number;
   send: (action: Action) => boolean;
   lobby: () => void;
@@ -51,7 +52,6 @@ export default function OnlineApp() {
     [error, setError] = useState(""),
     [pending, setPending] = useState(false),
     [connected, setConnected] = useState(false),
-    [now, setNow] = useState(Date.now()),
     [view, setView] = useState<"hall" | "game" | "practice">(() =>
       localStorage.getItem("bobs-tavern-entry") === "practice"
         ? "practice"
@@ -74,9 +74,18 @@ export default function OnlineApp() {
     if (last.current && next.seq < last.current.seq) return;
     const previous = last.current;
     if (
+      next.game?.battle &&
+      next.battleId &&
+      next.battleId === previous?.battleId &&
+      previous.game?.battle
+    ) {
+      next.game.battle = previous.game.battle;
+    }
+    if (
       previous?.game &&
       next.game &&
-      JSON.stringify(previous.game) === JSON.stringify(next.game)
+      next.gameVersion !== undefined &&
+      previous.gameVersion === next.gameVersion
     )
       next.game = previous.game;
     last.current = next;
@@ -94,6 +103,9 @@ export default function OnlineApp() {
     const res = await fetch("/tavern-api" + path, {
       method: data === undefined ? "GET" : "POST",
       headers: {
+        ...(last.current?.battleId
+          ? { "X-Tavern-Battle": last.current.battleId }
+          : {}),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(data !== undefined ? { "Content-Type": "application/json" } : {}),
       },
@@ -181,22 +193,6 @@ export default function OnlineApp() {
       clearTimeout(timer);
     };
   }, [identity?.token]);
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-  const remaining = room?.deadline
-    ? Math.max(
-        0,
-        Math.ceil(
-          (room.deadline -
-            room.serverNow -
-            (now - (state ? receivedAt.current : now))) /
-            1000,
-        ),
-      )
-    : 0;
-  // Receipt time is tracked separately from the server clock for countdowns on mis-set devices.
   function send(action: Action) {
     if (action.type === "continue" && state?.game && state.game.health <= 0) {
       changeView("hall");
@@ -213,9 +209,18 @@ export default function OnlineApp() {
     });
     return true;
   }
-  const status = room
-    ? `${room.kind === "ai" ? "人机对局" : `好友房 ${room.code}`} · 第 ${room.turn} 回合${me?.ended && room.stage === "recruit" ? " · 等待其他玩家" : me?.continued && room.stage === "combat" ? " · 等待下一回合" : ""}${remaining ? ` · ${remaining}秒` : ""}`
-    : "";
+  const status = room ? (
+    <>
+      {`${room.kind === "ai" ? "人机对局" : `好友房 ${room.code}`} · 第 ${room.turn} 回合${me?.ended && room.stage === "recruit" ? " · 等待其他玩家" : me?.continued && room.stage === "combat" ? " · 等待下一回合" : ""}`}
+      <Countdown
+        deadline={room.deadline}
+        serverNow={room.serverNow}
+        receivedAt={receivedAt.current}
+      />
+    </>
+  ) : (
+    ""
+  );
   if (view === "practice") return <App onLobby={() => changeView("hall")} />;
   if (view === "game" && state?.game && room)
     return (
