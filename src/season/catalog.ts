@@ -366,6 +366,14 @@ const heroKeys: Record<string, string> = {
   BG26_HERO_101: "hoggarr",
   BG28_HERO_801: "hollidae",
   BG36_HERO_105: "xavius",
+  BG20_HERO_101: "xyrella",
+  TB_BaconShop_HERO_41: "reno",
+  TB_BaconShop_HERO_42: "elise",
+  TB_BaconShop_HERO_56: "alexstrasza",
+  BG20_HERO_103: "blackthorn",
+  BG26_HERO_102: "inge",
+  TB_BaconShop_HERO_49: "millhouse",
+  TB_BaconShop_HERO_78: "chenvaala",
 };
 export const SEASON_HEROES: Hero[] = snapshot.heroes
   .filter((h) => heroKeys[h.id])
@@ -386,8 +394,17 @@ export const SEASON_HEROES: Hero[] = snapshot.heroes
       "alakir",
       "hoggarr",
       "xavius",
+      "millhouse",
+      "chenvaala",
     ].includes(heroKeys[h.id]),
   }));
+export const HERO_TRIBES: Record<string, Tribe> = {
+  s14_millificent: "机械",
+  s14_hoggarr: "海盗",
+  s14_alexstrasza: "龙",
+  s14_blackthorn: "野猪人",
+  s14_chenvaala: "元素",
+};
 export const SEASON_HERO_CATALOG = snapshot.heroes;
 export const RAW_GIFTS = snapshot.gifts;
 export const RAW_TRINKETS = snapshot.trinkets;

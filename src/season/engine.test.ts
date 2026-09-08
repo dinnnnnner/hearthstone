@@ -23,6 +23,9 @@ import {
   refreshCost,
   TRINKETS,
   eligibleGifts,
+  seasonPowerState,
+  advanceRecruit,
+  minionCost,
 } from "./engine";
 const rng = () => 0.23;
 function seed(n: number) {
@@ -436,4 +439,143 @@ test("Tarecgosa retains each combat buff independently of intervening damage, do
     assert.equal(m.health, golden ? 18 : 14);
     assertPool(s);
   }
+});
+
+
+test("Xyrella takes only a shop minion as a 2/2, preserves enchantments and resolves triples", () => {
+  let s = fixture("s14_xyrella");
+  const friendly = add(s, "BG25_001", "board");
+  add(s, "BG25_001", "hand");
+  const target = add(s, "BG25_001", "shop");
+  target.attack = 12; target.health = 15;
+  target.keywords.push("圣盾");
+  const rejected = act(s, { type: "power", target: friendly.uid }, rng);
+  assert.ok(rejected.error); assert.equal(rejected.state, s);
+  s = apply(s, { type: "power", target: target.uid });
+  assert.equal(s.gold, 1);
+  assert.equal(s.triples, 1);
+  assert.equal(s.hand.length, 1);
+  assert.ok(s.hand[0].golden && s.hand[0].keywords.includes("圣盾"));
+  assert.equal(s.hand[0].attack, getDef(target.id).attack + 2);
+  assert.equal(s.hand[0].health, getDef(target.id).health + 2);
+  assert.equal(s.purchases, 0);
+  assert.ok(act(s, { type: "power", target: s.shop[0].uid }, rng).error);
+});
+test("Reno preserves buffs and pool ownership without a triple reward and remains spent after restore", () => {
+  let s = fixture("s14_reno");
+  const target = add(s, "BG25_001", "board");
+  target.attack += 7; target.health += 9; target.keywords.push("圣盾");
+  const d = getDef(target.id), copies = { ...target.copies };
+  s = apply(s, { type: "power", target: target.uid });
+  assert.equal(s.board[0].attack, d.goldenAttack! + 7);
+  assert.equal(s.board[0].health, d.goldenHealth! + 9);
+  assert.deepEqual(s.board[0].copies, copies);
+  assert.ok(s.board[0].golden && s.board[0].keywords.includes("圣盾"));
+  assert.equal(s.triples, 0); assert.equal(s.rewards.length, 0);
+  s = JSON.parse(JSON.stringify(s));
+  advanceRecruit(s, rng);
+  assert.equal(seasonPowerState(s).status, "本局已使用");
+  assert.ok(act(s, { type: "power", target: s.board[0].uid }, rng).error);
+  s = apply(s, { type: "sell", uid: s.board[0].uid });
+  assertPool(s);
+});
+test("Reno rejects shop and already golden targets without spending his once-per-game use", () => {
+  const s = fixture("s14_reno"), target = add(s, "BG25_001", "board", true);
+  for (const uid of [target.uid, s.shop[0].uid]) {
+    const result = act(s, { type: "power", target: uid }, rng);
+    assert.ok(result.error); assert.equal(result.state, s);
+  }
+  assert.equal(s.season!.heroPowerUses, 0);
+});
+test("Elise discovers the exact tavern tier and her price persists across turns and saves", () => {
+  let s = fixture("s14_elise"); s.tier = 3; s.gold = 10;
+  s = apply(s, { type: "power" });
+  assert.equal(s.gold, 9);
+  assert.ok(s.discovery.length && s.discovery.every((m) => getDef(m.id).tier === 3));
+  s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+  s = JSON.parse(JSON.stringify(s)); advanceRecruit(s, rng);
+  assert.equal(seasonPowerState(s).cost, 2);
+  s = apply(s, { type: "power" });
+  assert.equal(s.gold, 2);
+});
+test("Alexstrasza unlocks at tier four and discovers pooled dragons including higher tiers", () => {
+  let s = fixture("s14_alexstrasza");
+  assert.ok(s.season!.tribes.includes("龙"));
+  assert.ok(act(s, { type: "power" }, rng).error);
+  s.tier = 4;
+  // Isolate tier-six dragons to prove this discovery is not capped by tavern tier.
+  for (const id of Object.keys(s.pool)) {
+    const d = getDef(id);
+    if (!(d.tier === 6 && d.races?.includes("龙"))) {
+      s.season!.initialPool[id] -= s.pool[id]; s.pool[id] = 0;
+    }
+  }
+  s = apply(s, { type: "power" });
+  assert.ok(s.discovery.length);
+  assert.ok(s.discovery.every((m) => getDef(m.id).races?.includes("龙") && getDef(m.id).tier === 6));
+  assert.equal(s.gold, 2);
+});
+test("Blackthorn permits two uses per turn, resets on the next turn and respects hand capacity", () => {
+  let s = fixture("s14_blackthorn");
+  s = apply(s, { type: "power" });
+  assert.equal(s.hand.length, 2); assert.equal(s.powerUsed, false);
+  assert.equal(seasonPowerState(s).remaining, 1);
+  s = JSON.parse(JSON.stringify(s));
+  s = apply(s, { type: "power" });
+  assert.equal(s.hand.length, 4); assert.equal(s.gold, 1); assert.ok(s.powerUsed);
+  assert.ok(s.hand.every((m) => m.id === PREFIX + "BG20_GEM"));
+  assert.ok(act(s, { type: "power" }, rng).error);
+  advanceRecruit(s, rng);
+  assert.equal(seasonPowerState(s).remaining, 2);
+  while (s.hand.length < 10) s.hand.push(makeMinion(PREFIX + "BG20_GEM"));
+  const rejected = act(s, { type: "power" }, rng);
+  assert.ok(rejected.error); assert.equal(rejected.state, s);
+});
+test("Inge buffs board or shop twice and alternates attack and health without expiring the buff", () => {
+  let s = fixture("s14_inge"); s.tier = 3;
+  const target = add(s, "BG25_001", "board"), a = target.attack, h = target.health;
+  s = apply(s, { type: "power", target: target.uid });
+  s = apply(s, { type: "power", target: target.uid });
+  assert.equal(s.board[0].attack, a + 6); assert.equal(s.board[0].health, h);
+  assert.ok(act(s, { type: "power", target: target.uid }, rng).error);
+  advanceRecruit(s, rng); s.tier = 4;
+  s = apply(s, { type: "power", target: target.uid });
+  assert.equal(s.board[0].attack, a + 6); assert.equal(s.board[0].health, h + 4);
+  const shop = s.shop[0];
+  s = apply(s, { type: "power", target: shop.uid });
+  assert.equal(s.shop[0].health, shop.health + 4);
+});
+test("Millhouse pays two for minions and refresh, one extra for each upgrade, with free refresh respected", () => {
+  let s = fixture("s14_millhouse");
+  assert.equal(s.upgrade, 6); assert.equal(refreshCost(s), 2);
+  assert.equal(minionCost(s, s.shop[0]), 2);
+  s = apply(s, { type: "buy", uid: s.shop[0].uid });
+  assert.equal(s.gold, 1); assert.ok(act(s, { type: "refresh" }, rng).error);
+  s.gold = 10; s = apply(s, { type: "refresh" }); assert.equal(s.gold, 8);
+  s.season!.freeRefresh = 1; s = apply(s, { type: "refresh" }); assert.equal(s.gold, 8);
+  s = apply(s, { type: "upgrade" }); assert.equal(s.gold, 2); assert.equal(s.upgrade, 8);
+  advanceRecruit(s, rng); assert.equal(s.upgrade, 7);
+});
+test("Chenvaala counts elementals across turns and saves, discounts every third play and never below zero", () => {
+  let s = fixture("s14_chenvaala");
+  assert.ok(s.season!.tribes.includes("元素"));
+  const elemental = SEASON_CARDS.find((d) => d.tier === 1 && d.races?.includes("元素"))!;
+  for (let i = 0; i < 3; i++) {
+    if (i === 2) { s = JSON.parse(JSON.stringify(s)); advanceRecruit(s, rng); }
+    const m = add(s, elemental.sourceId!);
+    s = apply(s, { type: "play", uid: m.uid });
+    s = apply(s, { type: "sell", uid: m.uid });
+  }
+  assert.equal(s.season!.elementalsPlayed, 3); assert.equal(s.upgrade, 1);
+  s.season!.elementalsPlayed = 5; s.upgrade = 1;
+  const m = add(s, elemental.sourceId!); s = apply(s, { type: "play", uid: m.uid });
+  assert.equal(s.upgrade, 0);
+});
+test("old saves without hero counters still enforce the existing once-per-turn power limit", () => {
+  let s = fixture("s14_george");
+  delete s.season!.heroPowerUses; delete s.season!.heroPowerUsesTurn;
+  s.powerUsed = true;
+  assert.equal(seasonPowerState(s).used, true);
+  advanceRecruit(s, rng);
+  assert.equal(seasonPowerState(s).used, false);
 });

@@ -16,7 +16,7 @@ import {
   Minimize,
   Smartphone,
 } from "lucide-react";
-import { type Game, type Minion, type Action, heroOf } from "../engine";
+import { type Game, type Minion, type Action, heroOf, heroPowerState } from "../engine";
 import { art, getDef } from "../data";
 import { refreshCost, spellCost } from "../season/engine";
 
@@ -79,6 +79,7 @@ export function MobileArena({
   targeting: boolean;
   notify: (text: string) => void;
 }) {
+  const powerState = heroPowerState(game);
   const hero = heroOf(game),
     recruit = game.phase === "recruit";
   const [fullscreen, setFullscreen] = useState(!!document.fullscreenElement);
@@ -158,7 +159,7 @@ export function MobileArena({
               <button
                 onClick={() => dispatch({ type: "refresh" })}
                 disabled={
-                  !recruit || (game.gold < 1 && !game.season?.freeRefresh)
+                  !recruit || (game.gold < (game.season ? refreshCost(game) : 1))
                 }
               >
                 <RotateCw size={14} />
@@ -275,20 +276,20 @@ export function MobileArena({
             </div>
           </div>
           <button
-            className={`mobile-power ${game.powerUsed ? "used" : ""}`}
+            className={`mobile-power ${powerState.used ? "used" : ""}`}
             onClick={power}
-            disabled={!recruit || game.powerUsed}
+            disabled={!recruit || powerState.used}
             aria-label={
               hero.passive
                 ? `被动英雄技能：${hero.text}`
-                : game.powerUsed
-                  ? "本回合已使用英雄技能"
-                  : `使用英雄技能：${hero.power}，${hero.cost}金币`
+                : powerState.used
+                  ? `${powerState.status}英雄技能`
+                  : `使用英雄技能：${hero.power}，${powerState.cost}金币`
             }
           >
             <Sparkles size={16} />
-            <strong>{game.powerUsed ? "本回合已使用" : hero.power}</strong>
-            <span>{hero.passive ? "被动" : `${hero.cost} 金币`}</span>
+            <strong>{powerState.used ? powerState.status : hero.power}</strong>
+            <span>{hero.passive ? "被动" : `${powerState.cost} 金币`}</span>
           </button>
           <div className="mobile-utilities">
             {game.season && (

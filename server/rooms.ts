@@ -8,12 +8,14 @@ import {
   releasePlayerCards,
   seasonTargets,
   minionCost,
+  refreshCost,
   TRINKETS,
 } from "../src/season/engine";
-import { SEASON_HEROES, ALL_TRIBES } from "../src/season/catalog";
+import { SEASON_HEROES, ALL_TRIBES, HERO_TRIBES } from "../src/season/catalog";
 import { getDef, type Tribe } from "../src/data";
 import {
   heroOf,
+  heroPowerState,
   targetsFor,
   type Action,
   type Game,
@@ -222,13 +224,14 @@ export class Rooms {
         requests: [],
       });
     }
-    // Both tribe-dependent heroes remain usable in this curated room ruleset.
-    const rest = ALL_TRIBES.filter((t) => !["机械", "海盗"].includes(t));
+    // Include the selected heroes' required races, then fill to five randomly.
+    const required = [...new Set(r.seats.map((s) => HERO_TRIBES[s.hero]).filter(Boolean))];
+    const rest = ALL_TRIBES.filter((t) => !required.includes(t));
     for (let i = rest.length - 1; i > 0; i--) {
       const j = Math.floor(this.random() * (i + 1));
       [rest[i], rest[j]] = [rest[j], rest[i]];
     }
-    r.tribes = ["机械", "海盗", ...rest.slice(0, 3)];
+    r.tribes = [...required, ...rest.slice(0, 5 - required.length)];
     for (const p of r.seats) {
       p.game = createSeason(p.hero, this.random, {
         tribes: r.tribes,
@@ -353,6 +356,7 @@ export class Rooms {
       for (let n = 0; n < 36; n++) {
         this.autoChoices(r, p);
         const s = p.game!;
+        const power = heroPowerState(s);
         if (s.phase === "over") break;
         let a: Action | undefined;
         const hand = s.hand.find(
@@ -370,12 +374,11 @@ export class Rooms {
           };
         } else if (
           !powered &&
-          s.board.length &&
+          (s.board.length > 0 || s.hero === "s14_xyrella") &&
           !heroOf(s).passive &&
-          s.gold >= heroOf(s).cost
+          !power.reason
         ) {
-          powered = true;
-          a = { type: "power", target: s.board[0].uid };
+          a = { type: "power", ...(power.needsTarget ? { target: power.targets[0].uid } : {}) };
         } else if (
           !upgraded &&
           s.turn >= 3 &&
@@ -398,13 +401,14 @@ export class Rooms {
             }
           }
           if (!a && s.rewards.length) a = { type: "reward" };
-          if (!a && !refreshed && s.gold >= 1) {
+          if (!a && !refreshed && s.gold >= refreshCost(s)) {
             refreshed = true;
             a = { type: "refresh" };
           }
         }
         if (!a) break;
         const error = this.apply(r, p, a);
+        if (error && a.type === "power") powered = true;
         if (error && a.type !== "power") break;
       }
       p.ended = true;

@@ -78,6 +78,7 @@ import {
   act,
   createGame,
   heroOf,
+  heroPowerState,
   targetsFor,
   poolTotal,
   type Game,
@@ -308,6 +309,7 @@ function App({
   const [playing, setPlaying] = useState(true);
   const [poolOpen, setPoolOpen] = useState(false);
   const hero = heroOf(game);
+  const powerState = heroPowerState(game);
   const catalog = game.season
     ? collectionType === "spells"
       ? SEASON_SPELL_CATALOG
@@ -406,6 +408,10 @@ function App({
   }
   function choose(m: Minion, zone: Selection["zone"]) {
     if (targeting) {
+      if (targeting.type === "power" && !powerState.targets.some((t) => t.uid === m.uid)) {
+        setToast("这个随从不是有效的英雄技能目标。");
+        return;
+      }
       if (
         zone !== "board" &&
         !(
@@ -452,21 +458,16 @@ function App({
       setToast(hero.text);
       return;
     }
-    if (game.powerUsed) {
-      setToast("本回合已使用英雄技能。");
+    if (powerState.reason) {
+      setToast(powerState.reason);
       return;
     }
-    if (game.gold < hero.cost) {
-      setToast(`英雄技能需要${hero.cost}枚金币。`);
-      return;
-    }
-    if (["lich", "george", "s14_lich", "s14_george"].includes(hero.id)) {
-      if (!game.board.length && !(game.season && game.shop.length)) {
-        setToast("先在战场上放置一个随从。");
-        return;
-      }
+    if (powerState.needsTarget) {
       setTargeting({ type: "power" });
-      setToast("点击一个友方随从，施放英雄技能。");
+      setSelection(null);
+      setToast(hero.id === "s14_xyrella" ? "点击酒馆中的随从，将其变为2/2并获取。"
+        : hero.id === "s14_reno" ? "选择战场上的非金色随从。每局只能使用一次。"
+        : "点击酒馆或战场中的随从，施放英雄技能。");
     } else dispatch({ type: "power" });
   }
   function start() {
@@ -824,7 +825,7 @@ function App({
                           </span>
                           <h2>鲍勃的酒馆</h2>
                           <span className="sub-label">
-                            每位随从 <Coin small /> 3
+                            基础招募 <Coin small /> {game.hero === "s14_millhouse" ? 2 : 3}
                           </span>
                         </div>
                         <div className="tavern-actions">
@@ -851,7 +852,7 @@ function App({
                             onClick={() => dispatch({ type: "refresh" })}
                             disabled={
                               !recruiting ||
-                              (game.gold < 1 && !game.season?.freeRefresh)
+                              (game.gold < (game.season ? refreshCost(game) : 1))
                             }
                           >
                             <RotateCw size={14} />
@@ -896,7 +897,7 @@ function App({
                               }
                             />
                             <span className="buy-hint">
-                              <Coin small />3 <span>点击招募</span>
+                              <Coin small />{game.season ? minionCost(game, m) : 3} <span>点击招募</span>
                             </span>
                           </div>
                         ))}
@@ -907,7 +908,7 @@ function App({
                             <button
                               className="text-button"
                               onClick={() => dispatch({ type: "refresh" })}
-                              disabled={game.gold < 1}
+                              disabled={game.gold < (game.season ? refreshCost(game) : 1)}
                             >
                               刷新酒馆 <ArrowRight size={14} />
                             </button>
@@ -1141,26 +1142,27 @@ function App({
                             ) : (
                               <>
                                 <Coin small />
-                                {hero.cost}
+                                {powerState.cost}
                               </>
                             )}
                           </span>
                         </div>
                         <p>{hero.text}</p>
+                        {powerState.status && <small>{powerState.status}</small>}
                         <button
-                          className={`power-button ${game.powerUsed ? "used" : ""}`}
+                          className={`power-button ${powerState.used ? "used" : ""}`}
                           onClick={power}
-                          disabled={!recruiting || game.powerUsed}
+                          disabled={!recruiting || powerState.used}
                         >
                           {hero.passive ? (
                             <>
                               <Check size={13} />
                               被动技能已生效
                             </>
-                          ) : game.powerUsed ? (
+                          ) : powerState.used ? (
                             <>
                               <Check size={13} />
-                              本回合已使用
+                              {powerState.status}
                             </>
                           ) : (
                             <>
@@ -1837,7 +1839,7 @@ function App({
               {
                 icon: Coins,
                 t: "招募与经济",
-                p: "购买随从需要3金币，刷新需要1金币，出售场上的随从获得1金币。首回合3金币，此后每回合增加1，最多10金币。剩余金币不保留。",
+                p: "购买随从通常需要3金币，刷新通常需要1金币；英雄技能和饰品可能改变费用，以按钮显示为准。出售场上的随从获得1金币。首回合3金币，此后每回合增加1，最多10金币。剩余金币不保留。",
               },
               {
                 icon: Snowflake,

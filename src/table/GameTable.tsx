@@ -36,6 +36,7 @@ import {
 import { art, cardText, getDef, HEROES } from "../data";
 import {
   heroOf,
+  heroPowerState,
   targetsFor,
   type Action,
   type Game,
@@ -156,6 +157,7 @@ function Piece({
 }
 export function GameTable(p: Props) {
   const { game, dispatch, selection, choose, close, targeting, frame } = p;
+  const powerState = heroPowerState(game);
   const hero = heroOf(game),
     combat = game.phase === "combat",
     finished = combat && frame === (game.battle?.frames.length || 0) - 1,
@@ -700,21 +702,22 @@ export function GameTable(p: Props) {
                 </span>
               </button>
               <button
-                className={`hero-power-orb ${game.powerUsed ? "used" : ""}`}
+                className={`hero-power-orb ${powerState.used ? "used" : ""}`}
                 onClick={p.power}
-                disabled={!recruit || game.powerUsed}
+                disabled={!recruit || powerState.used}
                 aria-label={
-                  game.powerUsed
-                    ? "本回合已使用英雄技能"
+                  powerState.used
+                    ? `${powerState.status}英雄技能`
                     : `使用英雄技能：${hero.power}`
                 }
-                title={hero.text}
+                title={[hero.text, powerState.status].filter(Boolean).join("\n")}
               >
                 <span className="orb-core">
                   <Sparkles size={30} />
                 </span>
-                <b>{hero.passive ? "∞" : hero.cost}</b>
-                <small>{game.powerUsed ? "已使用" : hero.power}</small>
+                <b>{hero.passive ? "∞" : powerState.cost}</b>
+                <small>{powerState.used ? powerState.status : hero.power}</small>
+                {!powerState.used && powerState.status && !hero.passive && <span className="hero-power-status">{powerState.status}</span>}
               </button>
             </div>
             <div className="round-medallion">

@@ -327,3 +327,48 @@ test("legacy saves gain planned opponents and settle previously unranked dead bo
   again.restore(resumed.dump());
   pool(again.rooms.get(room.code)!);
 });
+
+
+test("expanded hero room preserves required tribes, two-use powers and golden ownership after restart", () => {
+  const { service, guests, room, identities } = setup(8);
+  const heroes = ["xyrella", "reno", "elise", "alexstrasza", "blackthorn", "inge", "millhouse", "chenvaala"];
+  room.seats.forEach((p, i) => { p.hero = "s14_" + ["lich", "george", "patchwerk", "pyramid", "millificent", "nozdormu", "omu", "alakir"][i]; });
+  heroes.forEach((key, i) => service.hero(guests[i], "s14_" + key));
+  guests.slice(1).forEach((g) => service.ready(g, true));
+  service.start(guests[0]);
+  assert.equal(room.tribes.length, 5);
+  for (const race of ["龙", "野猪人", "元素"]) assert.ok(room.tribes.includes(race as any));
+  const xyrella = room.seats[0], target = xyrella.game!.shop[0];
+  service.action(guests[0], { type: "power", target: target.uid }, "take", 1);
+  assert.equal(xyrella.game!.hand[0].attack, 2);
+  assert.equal(xyrella.game!.hand[0].health, 2);
+  const reno = room.seats[1], offer = reno.game!.shop[0];
+  service.action(guests[1], { type: "buy", uid: offer.uid }, "buy", 1);
+  service.action(guests[1], { type: "play", uid: offer.uid }, "play", 1);
+  service.action(guests[1], { type: "power", target: offer.uid }, "golden", 1);
+  assert.ok(reno.game!.board[0].golden);
+  service.action(guests[4], { type: "power" }, "gems1", 1);
+  service.action(guests[4], { type: "power" }, "gems2", 1);
+  assert.throws(() => service.action(guests[4], { type: "power" }, "gems3", 1));
+  pool(room);
+  const resumed = new Rooms(); resumed.restore(service.dump());
+  const guest = resumed.auth(identities[4].token);
+  const restored = resumed.member(guest).p.game!;
+  assert.equal(restored.season!.heroPowerUsesTurn, 2);
+  assert.equal(restored.hand.length, 4);
+  assert.throws(() => resumed.action(guest, { type: "power" }, "gems-after-restore", 1));
+  pool(resumed.member(guest).r);
+});
+test("bots use new heroes with valid targets and both Inge charges without stranding the first turn", () => {
+  const { service, guests, room } = setup(8);
+  const heroes = ["chenvaala", "xyrella", "reno", "elise", "alexstrasza", "blackthorn", "inge", "millhouse"];
+  room.seats.forEach((p, i) => { p.hero = "s14_" + ["lich", "george", "patchwerk", "pyramid", "millificent", "nozdormu", "omu", "alakir"][i]; });
+  heroes.forEach((key, i) => service.hero(guests[i], "s14_" + key));
+  room.seats.slice(1).forEach((p) => { p.bot = true; p.ready = true; });
+  service.start(guests[0]);
+  assert.ok(room.seats.slice(1).every((p) => p.game!.board.length > 0));
+  assert.equal(room.seats[1].game!.season!.heroPowerUses, 1);
+  assert.ok(room.seats[2].game!.board[0].golden);
+  assert.equal(room.seats[6].game!.season!.heroPowerUsesTurn, 2);
+  pool(room);
+});

@@ -20,6 +20,7 @@ import {
 import {
   SEASON_CARDS,
   SEASON_HEROES,
+  HERO_TRIBES,
   SEASON_SPELLS,
   SEASON_CATALOG,
   ALL_TRIBES,
@@ -59,6 +60,9 @@ export interface SeasonState {
   battlecries: number;
   deaths: number;
   trinketBuys: number;
+  heroPowerUses?: number;
+  heroPowerUsesTurn?: number;
+  elementalsPlayed?: number;
 }
 export const TRINKETS = RAW_TRINKETS.filter((t) =>
   [
@@ -213,17 +217,48 @@ function applyShop(s: Game, m: Minion) {
   }
 }
 export function refreshCost(s: Game) {
-  return ss(s).freeRefresh > 0 ? 0 : 1;
+  return ss(s).freeRefresh > 0 ? 0 : s.hero === PREFIX + "millhouse" ? 2 : 1;
 }
 export function minionCost(s: Game, m: Minion) {
   return trinket(s, "202") &&
     ss(s).trinketBuys < 2 &&
     ability(m, "battlecry").length
     ? 0
-    : 3;
+    : s.hero === PREFIX + "millhouse" ? 2 : 3;
 }
 export function spellCost(s: Game, m: Minion) {
   return Math.max(0, (getDef(m.id).cost || 0) - ss(s).spellDiscount);
+}
+export function seasonPowerState(s: Game) {
+  const h = SEASON_HEROES.find((h) => h.id === s.hero)!;
+  const key = s.hero.slice(4), st = ss(s);
+  const limit = ["blackthorn", "inge"].includes(key) ? 2 : 1;
+  const spent = st.heroPowerUsesTurn ?? (s.powerUsed ? limit : 0);
+  const exhausted = key === "reno" && (st.heroPowerUses || 0) > 0;
+  const remaining = exhausted ? 0 : Math.max(0, limit - spent);
+  const cost = h.cost + (key === "elise" ? st.heroPowerUses || 0 : 0);
+  const needsTarget = ["lich", "george", "xyrella", "reno", "inge"].includes(key);
+  let targets = key === "xyrella" ? s.shop : key === "reno" ? s.board : [...s.board, ...s.shop];
+  if (key === "reno") targets = targets.filter((m) => !m.golden);
+  if (key === "george") targets = targets.filter((m) => !m.keywords.includes("圣盾"));
+  const locked = ["millificent", "alexstrasza"].includes(key) && s.tier < 4;
+  const used = remaining === 0;
+  const status = exhausted ? "本局已使用" : used ? "本回合已使用"
+    : locked ? "酒馆4星解锁"
+    : key === "inge" ? `${s.turn % 2 ? "攻击力" : "生命值"} +${s.tier} · 剩余${remaining}次`
+    : limit === 2 ? `本回合剩余${remaining}次`
+    : key === "elise" ? `当前费用 ${cost} 金币`
+    : key === "reno" ? "本局剩余1次"
+    : key === "chenvaala" ? `再使用${3 - (st.elementalsPlayed || 0) % 3}张元素减费`
+    : h.passive ? "被动技能" : "";
+  const reason = h.passive ? "这是被动技能，持续生效。"
+    : used ? status + "英雄技能。"
+    : locked ? "英雄技能在酒馆4星时解锁。"
+    : s.gold < cost ? `英雄技能需要${cost}枚金币。`
+    : needsTarget && !targets.length ? "没有可用的英雄技能目标。"
+    : ["xyrella", "pyramid", "elise", "alexstrasza", "blackthorn", "hollidae", "millificent"].includes(key) && !room(s)
+      ? "请先腾出一个手牌位置。" : undefined;
+  return { cost, remaining, used, status, needsTarget, targets, reason };
 }
 function refill(s: Game, rng: () => number, keep = false) {
   if (!keep) {
@@ -306,10 +341,8 @@ export function createSeason(
   const types = shared
     ? [...shared.tribes]
     : shuffled(ALL_TRIBES, rng).slice(0, 5);
-  if (!shared && hero.id === PREFIX + "millificent" && !types.includes("机械"))
-    types[0] = "机械";
-  if (!shared && hero.id === PREFIX + "hoggarr" && !types.includes("海盗"))
-    types[0] = "海盗";
+  const required = HERO_TRIBES[hero.id];
+  if (!shared && required && !types.includes(required)) types[0] = required;
   const defs = SEASON_CARDS.filter((d) => available(d, types));
   const initialPool = Object.fromEntries(
     defs.map((d) => [d.id, POOL_COPIES[d.tier]]),
@@ -334,7 +367,7 @@ export function createSeason(
     turn: 1,
     gold: 3,
     tier: 1,
-    upgrade: 5,
+    upgrade: hero.id === PREFIX + "millhouse" ? 6 : 5,
     health: hero.health,
     frozen: false,
     powerUsed: false,
@@ -380,6 +413,9 @@ export function createSeason(
       battlecries: 0,
       deaths: 0,
       trinketBuys: 0,
+      heroPowerUses: 0,
+      heroPowerUsesTurn: 0,
+      elementalsPlayed: 0,
     },
   };
   refill(s, rng);
@@ -848,6 +884,11 @@ function played(ctx: Context, m: Minion) {
       if (tribe(m, "元素")) run({ ...ctx, eventMinion: m }, x, "playElemental");
     }
     giftEvent(ctx, x, "play");
+  }
+  if (ctx.s.hero === PREFIX + "chenvaala" && tribe(m, "元素")) {
+    const count = (ss(ctx.s).elementalsPlayed || 0) + 1;
+    ss(ctx.s).elementalsPlayed = count;
+    if (count % 3 === 0) ctx.s.upgrade = Math.max(0, ctx.s.upgrade - 3);
   }
   ss(ctx.s).playedTurn++;
   if (m.golden) ss(ctx.s).goldenPlayed++;
@@ -1481,12 +1522,12 @@ export function actSeason(
           );
       const cost = refreshCost(s);
       if (s.gold < cost && !healthFree)
-        return fail("金币不足，刷新需要1金币。");
+        return fail(`金币不足，刷新需要${cost}金币。`);
       if (st.freeRefresh > 0) st.freeRefresh--;
       else if (healthFree) {
         heroDamage(s, 1, ctx);
         st.healthRefreshes++;
-      } else s.gold--;
+      } else s.gold -= cost;
       s.frozen = false;
       refill(s, rng);
       s.refreshes++;
@@ -1651,25 +1692,22 @@ export function actSeason(
       if (s.gold < s.upgrade) return fail(`升级需要${s.upgrade}金币。`);
       s.gold -= s.upgrade;
       s.tier++;
-      s.upgrade = UPGRADE_COST[s.tier];
+      s.upgrade = UPGRADE_COST[s.tier] + (s.hero === PREFIX + "millhouse" ? 1 : 0);
       if (s.hero === PREFIX + "omu") gold(s, 2);
       log(s, `酒馆升至${s.tier}星。`);
       break;
     case "power": {
       const h = SEASON_HEROES.find((h) => h.id === s.hero)!;
-      if (h.passive) return fail("这是被动技能，持续生效。");
-      if (s.powerUsed) return fail("本回合已使用英雄技能。");
-      if (s.gold < h.cost) return fail(`英雄技能需要${h.cost}金币。`);
+      const info = seasonPowerState(s);
+      if (info.reason) return fail(info.reason);
       const key = s.hero.slice(4),
-        target = [...s.board, ...s.shop].find((m) => m.uid === action.target);
-      if (["lich", "george"].includes(key) && !target)
-        return fail("请选择一个随从。");
-      if (key === "george" && target?.keywords.includes("圣盾"))
-        return fail("该随从已有圣盾。");
-      if (key === "millificent" && s.tier < 4)
-        return fail("修补匠在酒馆4星时解锁。");
+        target = info.targets.find((m) => m.uid === action.target);
+      if (info.needsTarget && !target) return fail("请选择有效的英雄技能目标。");
       if (key === "pyramid" && (!s.shop.length || !room(s)))
         return fail("酒馆需要随从，且手牌需要空位。");
+      if (["elise", "alexstrasza"].includes(key) && !poolCards(s).some((d) =>
+        s.pool[d.id] > 0 && (key === "elise" ? d.tier === s.tier : d.races?.includes("龙") || d.tribe === "全部")))
+        return fail("随从池中没有符合条件的发现候选。");
       if (key === "lich") target!.rebornNext = true;
       if (key === "george") keyword(target!, "圣盾");
       if (key === "pyramid") {
@@ -1683,8 +1721,34 @@ export function actSeason(
         const m = drawSpell(s, rng);
         if (m) putHand(s, m);
       }
-      s.gold -= h.cost;
-      s.powerUsed = true;
+      if (key === "xyrella") {
+        s.shop = s.shop.filter((m) => m.uid !== target!.uid);
+        target!.attack = target!.health = 2;
+        // Existing temporary stats must not reappear when they expire next turn.
+        if (target!.temporary) {
+          target!.temporary.attack = 0;
+          target!.temporary.health = 0;
+        }
+        putHand(s, target!);
+      }
+      if (key === "reno") {
+        const d = getDef(target!.id);
+        addStats(target!, (d.goldenAttack ?? d.attack * 2) - d.attack,
+          (d.goldenHealth ?? d.health * 2) - d.health);
+        target!.golden = true;
+        // Only a natural triple awards a discovery; keep the original pool copies.
+      }
+      if (key === "elise") queueDiscover(s, "minion", { tiers: [s.tier] });
+      if (key === "alexstrasza") queueDiscover(s, "minion", { tribe: "龙", tiers: [1, 2, 3, 4, 5, 6] });
+      if (key === "blackthorn") {
+        putHand(s, makeMinion(PREFIX + "BG20_GEM"));
+        putHand(s, makeMinion(PREFIX + "BG20_GEM"));
+      }
+      if (key === "inge") addStats(target!, s.turn % 2 ? s.tier : 0, s.turn % 2 ? 0 : s.tier);
+      s.gold -= info.cost;
+      st.heroPowerUses = (st.heroPowerUses || 0) + 1;
+      st.heroPowerUsesTurn = (st.heroPowerUsesTurn || 0) + 1;
+      s.powerUsed = seasonPowerState(s).used;
       log(s, `使用英雄技能：${h.power}。`);
       break;
     }
@@ -1821,6 +1885,8 @@ export function advanceRecruit(s: Game, rng: () => number = Math.random) {
   st.nextGold = 0;
   s.upgrade = Math.max(0, s.upgrade - 1);
   s.powerUsed = false;
+  st.heroPowerUsesTurn = 0;
+  s.powerUsed = seasonPowerState(s).used;
   s.phase = "recruit";
   s.battle = null;
   startEffects(s, rng);

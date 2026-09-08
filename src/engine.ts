@@ -2,6 +2,7 @@ import {
   actSeason,
   createSeason,
   seasonTargets,
+  seasonPowerState,
   assertSeasonPool,
   type SeasonState,
 } from "./season/engine";
@@ -99,6 +100,20 @@ const uid = () =>
   `${Date.now().toString(36)}-${++serial}-${Math.random().toString(36).slice(2, 7)}`;
 export const clone = <T>(v: T): T => structuredClone(v);
 export const heroOf = (s: Game) => HEROES.find((h) => h.id === s.hero)!;
+export function heroPowerState(s: Game) {
+  if (s.season) return seasonPowerState(s);
+  const hero = heroOf(s);
+  return {
+    cost: hero.cost,
+    remaining: s.powerUsed ? 0 : 1,
+    used: s.powerUsed,
+    status: s.powerUsed ? "本回合已使用" : "",
+    needsTarget: ["lich", "george"].includes(hero.id),
+    targets: s.board,
+    reason: hero.passive ? hero.text : s.powerUsed ? "本回合已使用英雄技能。"
+      : s.gold < hero.cost ? `英雄技能需要${hero.cost}枚金币。` : undefined,
+  };
+}
 export const isTribe = (m: Minion, t: string) =>
   getDef(m.id).tribe === t ||
   getDef(m.id).tribe === "全部" ||
