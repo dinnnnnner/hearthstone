@@ -31,7 +31,7 @@ async function open(page: Page, s: Game) {
     },
     { s, key },
   );
-  await page.goto("/");
+  await page.goto(process.env.TAVERN_TEST_PATH || "/");
 }
 async function saved(page: Page): Promise<Game> {
   return page.evaluate((key) => JSON.parse(localStorage.getItem(key)!), key);
@@ -61,10 +61,10 @@ test("drag buy, summon, reorder, sell, freeze and inline combat; save survives r
     page.locator(".tavern-row .table-piece"),
     page.locator(".table-hand"),
   );
-  await expect(page.locator(".hand-card-button")).toHaveCount(1);
+  await expect(page.locator(".table-hand .hand-card-button")).toHaveCount(1);
   await drag(
     page,
-    page.locator(".hand-card-button"),
+    page.locator(".table-hand .hand-card-button"),
     page.locator('[data-slot="1"]'),
   );
   await expect(page.locator(".friendly-row .table-piece")).toHaveCount(2);
@@ -88,7 +88,7 @@ test("drag buy, summon, reorder, sell, freeze and inline combat; save survives r
   await expect(page.locator(".combat-stage")).toHaveCount(0);
   await expect(page.locator(".enemy-row .table-piece").first()).toBeVisible();
   await expect
-    .poll(async () => page.locator(".table-floater").count(), { timeout: 7000 })
+    .poll(async () => page.locator(".scene-number").count(), { timeout: 7000 })
     .toBeGreaterThan(0);
   await page.getByRole("button", { name: "暂停战斗" }).click();
   await page.getByLabel("战斗速度").selectOption("2");
@@ -119,7 +119,7 @@ test("targeted activation, spell drag, and hero power work on board pieces", asy
   );
   await drag(
     page,
-    page.locator(".hand-card-button"),
+    page.locator(".table-hand .hand-card-button"),
     page.locator(".friendly-row .table-piece").nth(1),
   );
   await expect(page.locator(".friendly-row .piece-attack").nth(1)).toHaveText(
@@ -141,7 +141,7 @@ test("triple celebration and reward discovery; panel fallback preserves the game
   await page.locator(".tavern-row .table-piece").dblclick();
   await expect(page.locator(".triple-ribbon")).toBeVisible();
   await expect(page.locator(".golden-hand")).toHaveCount(1);
-  await page.locator(".hand-card-button").dblclick();
+  await page.locator(".table-hand .hand-card-button").dblclick();
   await expect(page.locator(".friendly-row .golden-piece")).toHaveCount(1);
   await page.locator(".table-reward").click();
   await page.locator(".discovery-cards .button").first().click();
@@ -190,12 +190,17 @@ test("phone touch and full ten-card hand remain usable in both orientations", as
     }
   }
   const health = await page.locator(".table-hero-health").boundingBox();
-  const hand = await page.locator(".hand-card-button").first().boundingBox();
+  const hand = await page
+    .locator(".table-hand .hand-card-button")
+    .first()
+    .boundingBox();
   expect(health!.y + health!.height).toBeLessThan(hand!.y);
   const strip = page.locator(".hand-fan");
   await strip.evaluate((e) => e.scrollTo(e.scrollWidth, 0));
-  await expect(page.locator(".hand-card-button").last()).toBeInViewport();
-  await page.locator(".hand-card-button").last().tap();
+  await expect(
+    page.locator(".table-hand .hand-card-button").last(),
+  ).toBeInViewport();
+  await page.locator(".table-hand .hand-card-button").last().tap();
   await expect(page.locator(".table-inspector")).toBeVisible();
   await page.getByRole("button", { name: "关闭卡牌详情" }).tap();
   await page.locator(".friendly-row .table-piece").first().tap();
@@ -249,9 +254,9 @@ test("native touch drag buys and plays; horizontal hand swipe scrolls without pl
     await center(page.locator(".tavern-row .table-piece")),
     await center(page.locator(".table-hand")),
   );
-  await expect(page.locator(".hand-card-button")).toHaveCount(1);
+  await expect(page.locator(".table-hand .hand-card-button")).toHaveCount(1);
   await swipe(
-    await center(page.locator(".hand-card-button")),
+    await center(page.locator(".table-hand .hand-card-button")),
     await center(page.locator('[data-slot="0"]')),
   );
   await expect(page.locator(".friendly-row .table-piece")).toHaveCount(1);
@@ -274,4 +279,79 @@ test("native touch drag buys and plays; horizontal hand swipe scrolls without pl
   expect((await saved(page)).hand).toHaveLength(10);
   expect((await saved(page)).board).toHaveLength(1);
   await context.close();
+});
+test("combat contact controls damage and shields; pause freezes motion and skip clears every transient", async ({
+  page,
+}) => {
+  const s = fixture(),
+    a = makeMinion("s14_BG25_001"),
+    b = makeMinion("s14_BG25_001");
+  a.attack = 8;
+  a.health = 12;
+  b.attack = 2;
+  b.health = 8;
+  b.keywords = ["圣盾"];
+  const aHit = { ...a, health: 10 },
+    bOpen = { ...b, keywords: [] },
+    bDead = { ...bOpen, health: 0 };
+  s.board = [a];
+  s.phase = "combat";
+  s.battle = {
+    result: "win",
+    damage: 3,
+    opponent: "动画测试",
+    frames: [
+      { text: "准备接触", allies: [a], enemies: [b] },
+      {
+        text: "contact-test-1",
+        allies: [aHit],
+        enemies: [bOpen],
+        attacker: a.uid,
+        target: b.uid,
+      },
+      {
+        text: "contact-test-2",
+        allies: [aHit],
+        enemies: [bDead],
+        attacker: a.uid,
+        target: b.uid,
+      },
+      { text: "亡语退场", allies: [aHit], enemies: [] },
+      { text: "胜利", allies: [aHit], enemies: [] },
+    ],
+  };
+  await open(page, s);
+  const savedBefore = await saved(page);
+  await page.waitForFunction(() =>
+    document
+      .querySelector(".table-footer")
+      ?.textContent?.includes("contact-test-1"),
+  );
+  await page.getByRole("button", { name: "暂停战斗" }).click();
+  await expect(page.locator(".friendly-row .piece-health")).toHaveText("12");
+  await expect(page.locator(".enemy-row .shield-piece")).toHaveCount(1);
+  await expect(page.locator(".scene-number.damage")).toHaveCount(0);
+  await page.waitForTimeout(350);
+  await expect(page.locator(".friendly-row .piece-health")).toHaveText("12");
+  await page.getByRole("button", { name: "继续播放" }).click();
+  await expect(page.locator(".friendly-row .piece-health")).toHaveText("10");
+  await expect(page.locator(".enemy-row .shield-piece")).toHaveCount(0);
+  await expect(page.locator(".scene-number.damage")).toHaveCount(1);
+  await page.getByRole("button", { name: "暂停战斗" }).click();
+  const transform = await page
+    .locator(".friendly-row .table-piece")
+    .evaluate((e) => getComputedStyle(e).transform);
+  await page.waitForTimeout(250);
+  expect(
+    await page
+      .locator(".friendly-row .table-piece")
+      .evaluate((e) => getComputedStyle(e).transform),
+  ).toBe(transform);
+  await page.getByLabel("战斗速度").selectOption("2");
+  await page.getByRole("button", { name: "继续播放" }).click();
+  await page.getByRole("button", { name: /跳过动画/ }).click();
+  await expect(page.locator(".scene-ghost")).toHaveCount(0);
+  await expect(page.locator(".scene-number")).toHaveCount(0);
+  await expect(page.locator(".battle-verdict")).toBeVisible();
+  expect(await saved(page)).toEqual(savedBefore);
 });

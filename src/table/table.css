@@ -3389,3 +3389,144 @@
 .game-table .table-hero-armor {
   bottom: 51%;
 }
+.scene-flight-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 34;
+  pointer-events: none;
+  perspective: 900px;
+  overflow: visible;
+}
+.scene-ghost {
+  position: absolute !important;
+  pointer-events: none !important;
+  z-index: 1;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+.scene-ghost .piece-name {
+  display: none;
+}
+.triple-flight {
+  filter: drop-shadow(0 0 12px #ffe394) brightness(1.4);
+}
+.buy-flight {
+  filter: drop-shadow(0 0 8px #d8c5ff);
+}
+.shield-shell {
+  border: 3px solid #fff0a1;
+  border-radius: 50%;
+  background: linear-gradient(120deg, #fff5ab88, transparent 40%, #ffd77677);
+  box-shadow:
+    0 0 15px #ffedaa,
+    inset 0 0 15px #ffe899;
+}
+.scene-number {
+  position: absolute;
+  z-index: 8;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  font:
+    900 clamp(20px, 3vw, 35px) Georgia,
+    serif;
+  color: #fff9d3;
+  text-shadow:
+    0 2px 1px #6c3516,
+    2px 0 #6c3516,
+    -2px 0 #6c3516,
+    0 -2px #6c3516;
+  isolation: isolate;
+  white-space: nowrap;
+  min-width: 1.6em;
+  text-align: center;
+  padding: 9px 8px;
+}
+.scene-number.damage:before {
+  content: "";
+  position: absolute;
+  inset: -6px -9px;
+  background: #76451b;
+  clip-path: polygon(
+    50% 0,
+    60% 23%,
+    82% 9%,
+    77% 34%,
+    100% 39%,
+    79% 53%,
+    96% 76%,
+    70% 72%,
+    65% 100%,
+    49% 80%,
+    25% 97%,
+    29% 72%,
+    1% 79%,
+    20% 55%,
+    0 39%,
+    28% 34%,
+    21% 8%,
+    43% 24%
+  );
+  z-index: -2;
+}
+.scene-number.damage:after {
+  content: "";
+  position: absolute;
+  inset: -3px -6px;
+  background: radial-gradient(
+    ellipse at 40% 35%,
+    #ffea83,
+    #e9b440 62%,
+    #b47a22
+  );
+  clip-path: polygon(
+    50% 0,
+    60% 23%,
+    82% 9%,
+    77% 34%,
+    100% 39%,
+    79% 53%,
+    96% 76%,
+    70% 72%,
+    65% 100%,
+    49% 80%,
+    25% 97%,
+    29% 72%,
+    1% 79%,
+    20% 55%,
+    0 39%,
+    28% 34%,
+    21% 8%,
+    43% 24%
+  );
+  z-index: -1;
+}
+.scene-number.buff {
+  color: #cfffab;
+  text-shadow: 0 2px 3px #245c37;
+  font-size: clamp(14px, 2.2vw, 26px);
+}
+.scene-number.coin {
+  color: #ffe29a;
+  text-shadow: 0 2px 3px #684424;
+}
+.combat-table[data-playing="false"] * {
+  animation-play-state: paused !important;
+}
+@media (max-height: 500px) {
+  .scene-number {
+    font-size: 20px;
+    padding: 3px 4px;
+  }
+  .scene-number.buff {
+    font-size: 14px;
+  }
+}
+@media (max-width: 600px) {
+  .scene-number {
+    font-size: 19px;
+    padding: 3px 4px;
+  }
+  .scene-number.buff {
+    font-size: 13px;
+  }
+}

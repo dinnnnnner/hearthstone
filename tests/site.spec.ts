@@ -25,11 +25,11 @@ test("lobby links to both games, tavern assets use its subpath, and returning ho
   expect(image).toContain("/tavern/art/");
   await page.locator(".tavern-row .table-piece").first().click();
   await page.getByRole("button", { name: /招募随从/ }).click();
-  await expect(page.locator(".hand-card-button")).toHaveCount(1);
+  await expect(page.locator(".table-hand .hand-card-button")).toHaveCount(1);
   await page.getByRole("link", { name: "返回游戏大厅" }).click();
   await expect(page).toHaveTitle("游戏大厅 · Playroom");
   await page.getByRole("link", { name: "进入鲍勃的酒馆", exact: true }).click();
-  await expect(page.locator(".hand-card-button")).toHaveCount(1);
+  await expect(page.locator(".table-hand .hand-card-button")).toHaveCount(1);
   expect(errors).toEqual([]);
   expect(failed).toEqual([]);
 });

@@ -1,3 +1,4 @@
+import { useBattlePlayback } from "./table/useBattlePlayback";
 import { GameTable } from "./table/GameTable";
 import { playTableSound, type TableSound } from "./table/sound";
 import { basePath } from "./paths";
@@ -316,17 +317,7 @@ function App() {
       return () => clearTimeout(id);
     }
   }, [toast]);
-  useEffect(() => {
-    if (
-      game.phase === "combat" &&
-      playing &&
-      game.battle &&
-      frame < game.battle.frames.length - 1
-    ) {
-      const id = setTimeout(() => setFrame((x) => x + 1), 760 / battleSpeed);
-      return () => clearTimeout(id);
-    }
-  }, [frame, playing, game.phase, game.battle, battleSpeed]);
+  useBattlePlayback(game, frame, playing, battleSpeed, setFrame);
   useEffect(() => {
     const f = (e: KeyboardEvent) => {
       if (e.key === "Escape") {

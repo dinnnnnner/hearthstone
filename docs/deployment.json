@@ -1,6 +1,6 @@
 {
-  "release": "20260908T043854Z",
-  "remote": "/var/www/playroom/releases/20260908T043854Z",
+  "release": "20260908T051012Z",
+  "remote": "/var/www/playroom/releases/20260908T051012Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -8,15 +8,16 @@
   },
   "validation": {
     "engineTests": 45,
-    "publicBrowserTests": 3,
+    "publicBrowserTests": 4,
     "nginxConfig": "passed",
     "websocket": "pong",
     "sectorRestarted": false,
     "engineAndStateTests": 46,
-    "localBrowserTests": 17,
+    "localBrowserTests": 18,
     "sectorPid": 106565,
-    "gzipJavaScriptBytes": 209284
+    "gzipJavaScriptBytes": 212866
   },
-  "previousRelease": "20260908T033043Z",
-  "presentation": "game-table"
+  "previousRelease": "20260908T043854Z",
+  "presentation": "game-table",
+  "animationPass": 2
 }

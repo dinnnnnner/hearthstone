@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -53,7 +52,8 @@ import { GiftNote, CardSource } from "../season/Panels";
 import { basePath } from "../paths";
 import { BoardDecoration } from "./BoardDecoration";
 import { Effects, type EffectsHandle } from "./Effects";
-import { changesBetween, shortStat } from "./presentation";
+import { shortStat } from "./presentation";
+import { useSceneMotion } from "./useSceneMotion";
 import { playTableSound } from "./sound";
 export type Zone = "shop" | "hand" | "board" | "spellshop";
 type Selection = { m: Minion; zone: Zone };
@@ -163,39 +163,44 @@ export function GameTable(p: Props) {
     opponent = game.opponents[game.nextOpponent];
   const table = useRef<HTMLDivElement>(null),
     effects = useRef<EffectsHandle>(null),
-    lastPieces = useRef<Minion[]>([]),
-    lastRects = useRef(new Map<string, DOMRect>()),
+    flightLayer = useRef<HTMLDivElement>(null),
     lastTriples = useRef(game.triples),
-    lastPhase = useRef(game.phase),
-    animations = useRef<Animation[]>([]);
+    lastPhase = useRef(game.phase);
   const [drag, setDrag] = useState<Drag | null>(null),
     dragRef = useRef<Drag | null>(null),
     suppressClick = useRef(false);
-  const [phaseBanner, setPhaseBanner] = useState("欢迎来到酒馆"),
+  const [phaseBanner, setPhaseBanner] = useState(
+      game.phase === "combat" ? "战斗开始" : "欢迎来到酒馆",
+    ),
     [tripleBanner, setTripleBanner] = useState(false),
     [rival, setRival] = useState<number | null>(null),
     [hudText, setHudText] = useState("");
-  const [floaters, setFloaters] = useState<
-    {
-      id: string;
-      x: number;
-      y: number;
-      text: string;
-      good: boolean;
-      shield?: boolean;
-    }[]
-  >([]);
+  const [motionReset, setMotionReset] = useState(0);
+  const { overrides: displayed, heroStruck } = useSceneMotion({
+    reset: motionReset,
+    game,
+    current,
+    frame,
+    speed: p.speed,
+    playing: p.playing,
+    sound: p.sound,
+    root: table,
+    layer: flightLayer,
+    effects,
+  });
   const previousStats = useRef({
     health: game.health,
     armor: game.season?.armor || 0,
+    enemyHealth: opponent?.health || 0,
   });
   useEffect(() => {
     if (recruit)
       previousStats.current = {
         health: game.health,
         armor: game.season?.armor || 0,
+        enemyHealth: opponent?.health || 0,
       };
-  }, [game.health, game.season?.armor, recruit]);
+  }, [game.health, game.season?.armor, opponent?.health, recruit]);
   useEffect(() => {
     const id = setTimeout(() => setPhaseBanner(""), 1600);
     return () => clearTimeout(id);
@@ -212,7 +217,7 @@ export function GameTable(p: Props) {
   useEffect(() => {
     if (lastTriples.current < game.triples) {
       setTripleBanner(true);
-      playTableSound("triple", p.sound);
+
       const r = table.current?.getBoundingClientRect();
       if (r)
         effects.current?.burst(
@@ -231,150 +236,11 @@ export function GameTable(p: Props) {
       return () => clearTimeout(id);
     }
   }, [hudText]);
-  useEffect(() => () => animations.current.forEach((a) => a.cancel()), []);
-  useLayoutEffect(() => {
-    const root = table.current;
-    if (!root) return;
-    const pieces = [...allies, ...enemies],
-      prior = lastPieces.current,
-      rects = new Map<string, DOMRect>();
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const element = (uid: string) =>
-      root.querySelector<HTMLElement>(`[data-piece-id="${CSS.escape(uid)}"]`);
-    for (const m of pieces) {
-      const el = element(m.uid);
-      if (el) rects.set(m.uid, el.getBoundingClientRect());
-    }
-    const changes = changesBetween(prior, pieces),
-      labels: typeof floaters = [];
-    const rootRect = root.getBoundingClientRect();
-    animations.current.forEach((a) => a.cancel());
-    animations.current = [];
-    const animate = (
-      el: HTMLElement,
-      keyframes: Keyframe[],
-      options: KeyframeAnimationOptions,
-    ) => {
-      if (!reduced) animations.current.push(el.animate(keyframes, options));
-    };
-    for (const c of changes) {
-      const el = element(c.uid),
-        r = rects.get(c.uid) || lastRects.current.get(c.uid);
-      if (!r) continue;
-      const x = r.x + r.width / 2,
-        y = r.y + r.height / 2;
-      const oldRect = lastRects.current.get(c.uid);
-      if (
-        !combat &&
-        !c.spawned &&
-        el &&
-        oldRect &&
-        (Math.abs(oldRect.x - r.x) > 2 || Math.abs(oldRect.y - r.y) > 2)
-      )
-        animate(
-          el,
-          [
-            {
-              transform: `translate(${oldRect.x - r.x}px,${oldRect.y - r.y}px)`,
-            },
-            { transform: "translate(0,0)" },
-          ],
-          { duration: 220, easing: "ease-out" },
-        );
-      if (c.damage && combat) {
-        labels.push({
-          id: `${frame}-${c.uid}`,
-          x: x - rootRect.x,
-          y: y - rootRect.y,
-          text: `−${shortStat(c.damage)}`,
-          good: false,
-        });
-        effects.current?.burst(x, y, "hit");
-        if (el)
-          animate(
-            el,
-            [
-              { filter: "brightness(1)" },
-              { filter: "brightness(2.4)", offset: 0.25 },
-              { filter: "brightness(1)" },
-            ],
-            { duration: 350, delay: 180 },
-          );
-      }
-      if (c.shieldBroken) {
-        effects.current?.burst(x, y, "shield");
-        labels.push({
-          id: `shield-${frame}-${c.uid}`,
-          x: x - rootRect.x,
-          y: y - rootRect.y,
-          text: "圣盾",
-          good: false,
-          shield: true,
-        });
-      }
-      if (c.health || c.attack > 0) {
-        if (prior.length) {
-          effects.current?.burst(x, y, "buff");
-          labels.push({
-            id: `buff-${frame}-${c.uid}-${game.logs[0]}`,
-            x: x - rootRect.x,
-            y: y - rootRect.y,
-            text: `+${Math.max(0, c.attack)}/+${c.health}`,
-            good: true,
-          });
-        }
-      }
-      if (c.spawned && prior.length && el)
-        animate(
-          el,
-          [
-            { transform: "scale(.3)", opacity: 0 },
-            { transform: "scale(1.12)", opacity: 1, offset: 0.7 },
-            { transform: "scale(1)", opacity: 1 },
-          ],
-          { duration: 350, easing: "ease-out" },
-        );
-      if (c.dead && !el) effects.current?.burst(x, y, "death");
-    }
-    if (current?.attacker && current.target) {
-      const a = element(current.attacker),
-        ar = rects.get(current.attacker),
-        tr = rects.get(current.target);
-      if (a && ar && tr) {
-        const x = tr.x + tr.width / 2 - ar.x - ar.width / 2,
-          y = tr.y + tr.height / 2 - ar.y - ar.height / 2;
-        animate(
-          a,
-          [
-            { transform: "translate(0,0) scale(1)" },
-            {
-              transform: `translate(${x * 0.88}px,${y * 0.83}px) scale(1.14)`,
-              offset: 0.42,
-            },
-            {
-              transform: `translate(${x * 0.85}px,${y * 0.8}px) scale(1.04)`,
-              offset: 0.52,
-            },
-            { transform: "translate(0,0) scale(1)" },
-          ],
-          { duration: 580 / p.speed, easing: "cubic-bezier(.3,.1,.3,1)" },
-        );
-        a.style.zIndex = "30";
-        animations.current
-          .at(-1)
-          ?.finished.then(() => {
-            a.style.zIndex = "";
-          })
-          .catch(() => {
-            a.style.zIndex = "";
-          });
-        playTableSound("hit", p.sound);
-      }
-    }
-    setFloaters(labels);
-    lastPieces.current = pieces;
-    lastRects.current = rects;
-  }, [allies, enemies, frame, current, combat, game.logs, p.speed, p.sound]);
+  function rivalHealth(index: number) {
+    return combat && index === game.nextOpponent && (!finished || !heroStruck)
+      ? previousStats.current.enemyHealth
+      : game.opponents[index].health;
+  }
   function startDrag(
     e: PointerEvent<HTMLButtonElement>,
     m: Minion,
@@ -489,7 +355,7 @@ export function GameTable(p: Props) {
     return (
       <Piece
         key={m.uid}
-        m={m}
+        m={displayed.get(m.uid) || m}
         combat={combat}
         selected={selection?.m.uid === m.uid || (targeting && zone === "board")}
         onClick={() => choosePiece(m, zone)}
@@ -534,6 +400,8 @@ export function GameTable(p: Props) {
   };
   return (
     <div
+      data-playing={p.playing}
+      style={{ "--motion-speed": p.speed } as CSSProperties}
       className={`game-table ${combat ? "combat-table" : ""} ${drag?.moving ? "dragging-table" : ""}`}
     >
       <header className="table-header">
@@ -587,13 +455,15 @@ export function GameTable(p: Props) {
           {game.opponents.map((o, i) => (
             <button
               key={o.hero}
-              className={`rival-token ${i === game.nextOpponent ? "next-rival" : ""} ${o.health <= 0 ? "eliminated" : ""}`}
+              className={`rival-token ${i === game.nextOpponent ? "next-rival" : ""} ${rivalHealth(i) <= 0 ? "eliminated" : ""}`}
               onClick={() => setRival(rival === i ? null : i)}
-              aria-label={`${o.name}，${o.health <= 0 ? "已淘汰" : o.health + "生命"}${i === game.nextOpponent ? "，下一位对手" : ""}`}
+              aria-label={`${o.name}，${rivalHealth(i) <= 0 ? "已淘汰" : rivalHealth(i) + "生命"}${i === game.nextOpponent ? "，下一位对手" : ""}`}
             >
               <img src={art(HEROES.find((h) => h.id === o.hero)!.art)} alt="" />
               <span className="rival-tier">{"★".repeat(o.tier)}</span>
-              <span className="rival-hp">{o.health <= 0 ? "☠" : o.health}</span>
+              <span className="rival-hp">
+                {rivalHealth(i) <= 0 ? "☠" : rivalHealth(i)}
+              </span>
               {i === game.nextOpponent && <i />}
             </button>
           ))}
@@ -638,7 +508,9 @@ export function GameTable(p: Props) {
               {combat && (
                 <b className="enemy-life">
                   <Heart size={11} />
-                  {Math.max(0, opponent?.health || 0)}
+                  {!finished || !heroStruck
+                    ? previousStats.current.enemyHealth
+                    : Math.max(0, opponent?.health || 0)}
                 </b>
               )}
             </div>
@@ -804,12 +676,12 @@ export function GameTable(p: Props) {
                 <span className="hero-name-ribbon">{hero.name}</span>
                 <span className="table-hero-armor">
                   <Shield size={14} />
-                  {combat && !finished
+                  {combat && (!finished || !heroStruck)
                     ? previousStats.current.armor
                     : game.season?.armor || 0}
                 </span>
                 <span className="table-hero-health">
-                  {combat && !finished
+                  {combat && (!finished || !heroStruck)
                     ? previousStats.current.health
                     : Math.max(0, game.health)}
                 </span>
@@ -918,6 +790,7 @@ export function GameTable(p: Props) {
                   }
                 >
                   <button
+                    data-hand-id={m.uid}
                     className={`hand-card-button ${m.golden ? "golden-hand" : ""}`}
                     onPointerDown={(e) => startDrag(e, m, "hand")}
                     onPointerMove={moveDrag}
@@ -965,17 +838,17 @@ export function GameTable(p: Props) {
               )}
             </div>
           </div>
-          <Effects ref={effects} />
-          {floaters.map((f) => (
-            <span
-              key={f.id}
-              className={`table-floater ${f.good ? "buff-floater" : ""} ${f.shield ? "shield-floater" : ""}`}
-              style={{ left: f.x, top: f.y }}
-            >
-              {f.text}
-            </span>
-          ))}
-          {finished && (
+          <div
+            ref={flightLayer}
+            className="scene-flight-layer"
+            aria-hidden="true"
+          />
+          <Effects
+            ref={effects}
+            playing={!combat || p.playing}
+            speed={combat ? p.speed : 1}
+          />
+          {finished && heroStruck && (
             <div className={`battle-verdict ${game.battle!.result}`}>
               <Swords size={24} />
               <strong>
@@ -1165,7 +1038,12 @@ export function GameTable(p: Props) {
               <option value={1}>1×</option>
               <option value={2}>2×</option>
             </select>
-            <button onClick={() => p.setFrame(game.battle!.frames.length - 1)}>
+            <button
+              onClick={() => {
+                setMotionReset((n) => n + 1);
+                p.setFrame(game.battle!.frames.length - 1);
+              }}
+            >
               <SkipForward size={13} />
               跳过动画
             </button>

@@ -4,6 +4,7 @@ export type TableSound =
   | "play"
   | "sell"
   | "spell"
+  | "shield"
   | "hit"
   | "death"
   | "triple"
@@ -23,6 +24,7 @@ export function playTableSound(kind: TableSound, enabled: boolean) {
       play: [196, 392],
       sell: [660, 990],
       spell: [523, 659, 784],
+      shield: [1800, 1240, 2320],
       hit: [95, 48],
       death: [100, 55],
       triple: [392, 494, 587, 784, 988],
