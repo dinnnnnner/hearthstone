@@ -2,6 +2,11 @@ import { test, expect, type Page } from "@playwright/test";
 import { createGame, makeMinion, type Game } from "../src/engine";
 import { SEASON_CARDS } from "../src/season/catalog";
 import { POOL_COPIES } from "../src/data";
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("bobs-tavern-presentation", "panels"),
+  );
+});
 test.use({
   viewport: { width: 390, height: 844 },
   isMobile: true,

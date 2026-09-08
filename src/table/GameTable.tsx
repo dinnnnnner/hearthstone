@@ -1,0 +1,1205 @@
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  BookOpen,
+  Coins,
+  Crown,
+  Gem,
+  Heart,
+  HelpCircle,
+  LayoutGrid,
+  Maximize,
+  Pause,
+  Play,
+  Plus,
+  RotateCw,
+  Settings,
+  Shield,
+  SkipForward,
+  Snowflake,
+  Sparkles,
+  Swords,
+  Users,
+  Volume2,
+  VolumeX,
+  X,
+} from "lucide-react";
+import { art, cardText, getDef, HEROES } from "../data";
+import {
+  heroOf,
+  targetsFor,
+  type Action,
+  type Game,
+  type Minion,
+} from "../engine";
+import {
+  minionCost,
+  refreshCost,
+  seasonTargets,
+  spellCost,
+  TRINKETS,
+} from "../season/engine";
+import { GiftNote, CardSource } from "../season/Panels";
+import { basePath } from "../paths";
+import { BoardDecoration } from "./BoardDecoration";
+import { Effects, type EffectsHandle } from "./Effects";
+import { changesBetween, shortStat } from "./presentation";
+import { playTableSound } from "./sound";
+export type Zone = "shop" | "hand" | "board" | "spellshop";
+type Selection = { m: Minion; zone: Zone };
+type Drag = {
+  m: Minion;
+  zone: Zone;
+  startX: number;
+  startY: number;
+  x: number;
+  y: number;
+  moving: boolean;
+  pointer: number;
+};
+type Props = {
+  game: Game;
+  dispatch: (a: Action) => boolean;
+  selection: Selection | null;
+  choose: (m: Minion, zone: Zone) => void;
+  close: () => void;
+  play: (m: Minion, position?: number) => void;
+  activate: (m: Minion) => void;
+  power: () => void;
+  targeting: boolean;
+  frame: number;
+  setFrame: (n: number) => void;
+  playing: boolean;
+  setPlaying: (v: boolean) => void;
+  speed: number;
+  setSpeed: (v: number) => void;
+  sound: boolean;
+  toggleSound: () => void;
+  newGame: () => void;
+  settings: () => void;
+  help: () => void;
+  collection: () => void;
+  heroes: () => void;
+  season: () => void;
+  pool: () => void;
+  notify: (s: string) => void;
+  card: (m: Minion) => ReactNode;
+};
+function Piece({
+  m,
+  selected = false,
+  combat = false,
+  ...events
+}: {
+  m: Minion;
+  selected?: boolean;
+  combat?: boolean;
+  onClick?: () => void;
+  onDoubleClick?: () => void;
+  onPointerDown?: (e: PointerEvent<HTMLButtonElement>) => void;
+  onPointerMove?: (e: PointerEvent<HTMLButtonElement>) => void;
+  onPointerUp?: (e: PointerEvent<HTMLButtonElement>) => void;
+  onPointerCancel?: () => void;
+}) {
+  const d = getDef(m.id),
+    activate = d.abilities?.some((a) => a.event === "activate");
+  return (
+    <button
+      {...events}
+      className={`table-piece ${m.golden ? "golden-piece" : ""} ${m.keywords.includes("圣盾") ? "shield-piece" : ""} ${m.keywords.includes("嘲讽") ? "taunt-piece" : ""} ${selected ? "chosen-piece" : ""} ${m.health <= 0 ? "fallen-piece" : ""}`}
+      data-piece-id={m.uid}
+      data-target={m.uid}
+      aria-label={`${d.name}，${m.attack}攻击，${m.health}生命，${cardText(m)}`}
+    >
+      <span className="piece-frame">
+        <img src={art(m.id)} alt="" draggable={false} />
+        <span className="piece-vignette" />
+      </span>
+      <span className="piece-tier">{"★".repeat(d.tier)}</span>
+      <span className="piece-attack" title={`${m.attack}攻击`}>
+        {shortStat(m.attack)}
+      </span>
+      <span className="piece-health" title={`${m.health}生命`}>
+        {shortStat(m.health)}
+      </span>
+      <span className="piece-abilities">
+        {m.rebornNext || m.keywords.includes("复生") ? (
+          <RotateCw size={12} />
+        ) : null}
+        {m.keywords.includes("烈毒") || m.keywords.includes("剧毒") ? (
+          <span>☠</span>
+        ) : null}
+        {d.abilities?.some((a) => a.event === "death") ? <span>☠</span> : null}
+        {m.gift ? <Gem size={12} /> : null}
+        {activate && !combat ? (
+          <span className={m.activated ? "spent-activate" : "ready-activate"}>
+            ϟ
+          </span>
+        ) : null}
+      </span>
+      <span className="piece-name">{d.name}</span>
+    </button>
+  );
+}
+export function GameTable(p: Props) {
+  const { game, dispatch, selection, choose, close, targeting, frame } = p;
+  const hero = heroOf(game),
+    combat = game.phase === "combat",
+    finished = combat && frame === (game.battle?.frames.length || 0) - 1,
+    recruit = game.phase === "recruit";
+  const current = combat ? game.battle?.frames[frame] : undefined;
+  const allies = current?.allies || game.board,
+    enemies = current?.enemies || game.shop,
+    opponent = game.opponents[game.nextOpponent];
+  const table = useRef<HTMLDivElement>(null),
+    effects = useRef<EffectsHandle>(null),
+    lastPieces = useRef<Minion[]>([]),
+    lastRects = useRef(new Map<string, DOMRect>()),
+    lastTriples = useRef(game.triples),
+    lastPhase = useRef(game.phase),
+    animations = useRef<Animation[]>([]);
+  const [drag, setDrag] = useState<Drag | null>(null),
+    dragRef = useRef<Drag | null>(null),
+    suppressClick = useRef(false);
+  const [phaseBanner, setPhaseBanner] = useState("欢迎来到酒馆"),
+    [tripleBanner, setTripleBanner] = useState(false),
+    [rival, setRival] = useState<number | null>(null),
+    [hudText, setHudText] = useState("");
+  const [floaters, setFloaters] = useState<
+    {
+      id: string;
+      x: number;
+      y: number;
+      text: string;
+      good: boolean;
+      shield?: boolean;
+    }[]
+  >([]);
+  const previousStats = useRef({
+    health: game.health,
+    armor: game.season?.armor || 0,
+  });
+  useEffect(() => {
+    if (recruit)
+      previousStats.current = {
+        health: game.health,
+        armor: game.season?.armor || 0,
+      };
+  }, [game.health, game.season?.armor, recruit]);
+  useEffect(() => {
+    const id = setTimeout(() => setPhaseBanner(""), 1600);
+    return () => clearTimeout(id);
+  }, [phaseBanner]);
+  useEffect(() => {
+    if (lastPhase.current !== game.phase) {
+      setPhaseBanner(
+        combat ? "战斗开始" : recruit ? `第 ${game.turn} 回合` : "对局结束",
+      );
+      lastPhase.current = game.phase;
+      if (combat) playTableSound("round", p.sound);
+    }
+  }, [game.phase, game.turn, combat, recruit, p.sound]);
+  useEffect(() => {
+    if (lastTriples.current < game.triples) {
+      setTripleBanner(true);
+      playTableSound("triple", p.sound);
+      const r = table.current?.getBoundingClientRect();
+      if (r)
+        effects.current?.burst(
+          r.x + r.width / 2,
+          r.y + r.height * 0.76,
+          "gold",
+        );
+    }
+    lastTriples.current = game.triples;
+    const id = setTimeout(() => setTripleBanner(false), 1900);
+    return () => clearTimeout(id);
+  }, [game.triples, p.sound]);
+  useEffect(() => {
+    if (hudText) {
+      const id = setTimeout(() => setHudText(""), 2000);
+      return () => clearTimeout(id);
+    }
+  }, [hudText]);
+  useEffect(() => () => animations.current.forEach((a) => a.cancel()), []);
+  useLayoutEffect(() => {
+    const root = table.current;
+    if (!root) return;
+    const pieces = [...allies, ...enemies],
+      prior = lastPieces.current,
+      rects = new Map<string, DOMRect>();
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const element = (uid: string) =>
+      root.querySelector<HTMLElement>(`[data-piece-id="${CSS.escape(uid)}"]`);
+    for (const m of pieces) {
+      const el = element(m.uid);
+      if (el) rects.set(m.uid, el.getBoundingClientRect());
+    }
+    const changes = changesBetween(prior, pieces),
+      labels: typeof floaters = [];
+    const rootRect = root.getBoundingClientRect();
+    animations.current.forEach((a) => a.cancel());
+    animations.current = [];
+    const animate = (
+      el: HTMLElement,
+      keyframes: Keyframe[],
+      options: KeyframeAnimationOptions,
+    ) => {
+      if (!reduced) animations.current.push(el.animate(keyframes, options));
+    };
+    for (const c of changes) {
+      const el = element(c.uid),
+        r = rects.get(c.uid) || lastRects.current.get(c.uid);
+      if (!r) continue;
+      const x = r.x + r.width / 2,
+        y = r.y + r.height / 2;
+      const oldRect = lastRects.current.get(c.uid);
+      if (
+        !combat &&
+        !c.spawned &&
+        el &&
+        oldRect &&
+        (Math.abs(oldRect.x - r.x) > 2 || Math.abs(oldRect.y - r.y) > 2)
+      )
+        animate(
+          el,
+          [
+            {
+              transform: `translate(${oldRect.x - r.x}px,${oldRect.y - r.y}px)`,
+            },
+            { transform: "translate(0,0)" },
+          ],
+          { duration: 220, easing: "ease-out" },
+        );
+      if (c.damage && combat) {
+        labels.push({
+          id: `${frame}-${c.uid}`,
+          x: x - rootRect.x,
+          y: y - rootRect.y,
+          text: `−${shortStat(c.damage)}`,
+          good: false,
+        });
+        effects.current?.burst(x, y, "hit");
+        if (el)
+          animate(
+            el,
+            [
+              { filter: "brightness(1)" },
+              { filter: "brightness(2.4)", offset: 0.25 },
+              { filter: "brightness(1)" },
+            ],
+            { duration: 350, delay: 180 },
+          );
+      }
+      if (c.shieldBroken) {
+        effects.current?.burst(x, y, "shield");
+        labels.push({
+          id: `shield-${frame}-${c.uid}`,
+          x: x - rootRect.x,
+          y: y - rootRect.y,
+          text: "圣盾",
+          good: false,
+          shield: true,
+        });
+      }
+      if (c.health || c.attack > 0) {
+        if (prior.length) {
+          effects.current?.burst(x, y, "buff");
+          labels.push({
+            id: `buff-${frame}-${c.uid}-${game.logs[0]}`,
+            x: x - rootRect.x,
+            y: y - rootRect.y,
+            text: `+${Math.max(0, c.attack)}/+${c.health}`,
+            good: true,
+          });
+        }
+      }
+      if (c.spawned && prior.length && el)
+        animate(
+          el,
+          [
+            { transform: "scale(.3)", opacity: 0 },
+            { transform: "scale(1.12)", opacity: 1, offset: 0.7 },
+            { transform: "scale(1)", opacity: 1 },
+          ],
+          { duration: 350, easing: "ease-out" },
+        );
+      if (c.dead && !el) effects.current?.burst(x, y, "death");
+    }
+    if (current?.attacker && current.target) {
+      const a = element(current.attacker),
+        ar = rects.get(current.attacker),
+        tr = rects.get(current.target);
+      if (a && ar && tr) {
+        const x = tr.x + tr.width / 2 - ar.x - ar.width / 2,
+          y = tr.y + tr.height / 2 - ar.y - ar.height / 2;
+        animate(
+          a,
+          [
+            { transform: "translate(0,0) scale(1)" },
+            {
+              transform: `translate(${x * 0.88}px,${y * 0.83}px) scale(1.14)`,
+              offset: 0.42,
+            },
+            {
+              transform: `translate(${x * 0.85}px,${y * 0.8}px) scale(1.04)`,
+              offset: 0.52,
+            },
+            { transform: "translate(0,0) scale(1)" },
+          ],
+          { duration: 580 / p.speed, easing: "cubic-bezier(.3,.1,.3,1)" },
+        );
+        a.style.zIndex = "30";
+        animations.current
+          .at(-1)
+          ?.finished.then(() => {
+            a.style.zIndex = "";
+          })
+          .catch(() => {
+            a.style.zIndex = "";
+          });
+        playTableSound("hit", p.sound);
+      }
+    }
+    setFloaters(labels);
+    lastPieces.current = pieces;
+    lastRects.current = rects;
+  }, [allies, enemies, frame, current, combat, game.logs, p.speed, p.sound]);
+  function startDrag(
+    e: PointerEvent<HTMLButtonElement>,
+    m: Minion,
+    zone: Zone,
+  ) {
+    if (!recruit || targeting || e.button !== 0) return;
+    dragRef.current = {
+      m,
+      zone,
+      startX: e.clientX,
+      startY: e.clientY,
+      x: e.clientX,
+      y: e.clientY,
+      moving: false,
+      pointer: e.pointerId,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+  function moveDrag(e: PointerEvent<HTMLButtonElement>) {
+    const d = dragRef.current;
+    if (!d) return;
+    const moving =
+      d.moving || Math.hypot(e.clientX - d.startX, e.clientY - d.startY) > 9;
+    if (moving) {
+      const next = { ...d, x: e.clientX, y: e.clientY, moving };
+      dragRef.current = next;
+      setDrag(next);
+      close();
+    }
+  }
+  function stopDrag(e: PointerEvent<HTMLButtonElement>) {
+    const d = dragRef.current;
+    dragRef.current = null;
+    setDrag(null);
+    if (!d?.moving) return;
+    suppressClick.current = true;
+    setTimeout(() => {
+      suppressClick.current = false;
+    }, 0);
+    const hit = document.elementFromPoint(e.clientX, e.clientY),
+      zone = hit?.closest<HTMLElement>("[data-dropzone]")?.dataset.dropzone,
+      target = hit?.closest<HTMLElement>("[data-target]")?.dataset.target;
+    if (
+      d.zone === "shop" &&
+      (zone === "hand" || zone === "board" || zone === "hero")
+    ) {
+      dispatch({ type: "buy", uid: d.m.uid });
+      return;
+    }
+    if (d.zone === "board" && zone === "sell") {
+      dispatch({ type: "sell", uid: d.m.uid });
+      return;
+    }
+    if (d.zone === "board" && zone === "board") {
+      const cells = [
+        ...table.current!.querySelectorAll<HTMLElement>(
+          ".friendly-row [data-slot]",
+        ),
+      ];
+      const i = cells.findIndex(
+        (el) => e.clientX < el.getBoundingClientRect().right,
+      );
+      dispatch({
+        type: "move",
+        uid: d.m.uid,
+        to: i < 0 ? game.board.length - 1 : i,
+      });
+      return;
+    }
+    if (
+      d.zone === "hand" &&
+      (zone === "board" || zone === "shop" || zone === "hero")
+    ) {
+      const spell = getDef(d.m.id).kind === "spell",
+        targets =
+          spell && game.season
+            ? seasonTargets(game, d.m, "cast")
+            : targetsFor(game, d.m);
+      if (target && targets.some((m) => m.uid === target)) {
+        dispatch({ type: spell ? "cast" : "play", uid: d.m.uid, target });
+        return;
+      }
+      if (zone !== "board" && zone !== "hero") {
+        p.notify("把随从拖到自己的战场，或选择有效法术目标。");
+        return;
+      }
+      const cells = [
+        ...table.current!.querySelectorAll<HTMLElement>(
+          ".friendly-row [data-slot]",
+        ),
+      ];
+      const i = cells.findIndex(
+        (el) =>
+          e.clientX <
+          el.getBoundingClientRect().left +
+            el.getBoundingClientRect().width / 2,
+      );
+      p.play(d.m, i < 0 ? game.board.length : Math.min(i, game.board.length));
+      return;
+    }
+    if (d.zone === "spellshop" && (zone === "hand" || zone === "hero"))
+      dispatch({ type: "buySpell", uid: d.m.uid });
+  }
+  const cancelDrag = () => {
+    dragRef.current = null;
+    setDrag(null);
+  };
+  function choosePiece(m: Minion, zone: Zone) {
+    if (!suppressClick.current) choose(m, zone);
+  }
+  function piece(m: Minion, zone: Zone) {
+    return (
+      <Piece
+        key={m.uid}
+        m={m}
+        combat={combat}
+        selected={selection?.m.uid === m.uid || (targeting && zone === "board")}
+        onClick={() => choosePiece(m, zone)}
+        onDoubleClick={() => {
+          if (!recruit || targeting) return;
+          if (zone === "shop") dispatch({ type: "buy", uid: m.uid });
+          else if (zone === "hand") p.play(m);
+        }}
+        onPointerDown={(e) => startDrag(e, m, zone)}
+        onPointerMove={moveDrag}
+        onPointerUp={stopDrag}
+        onPointerCancel={cancelDrag}
+      />
+    );
+  }
+  async function fullscreen() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen)
+        await document.documentElement.requestFullscreen();
+      else p.notify("当前浏览器不支持网页全屏，可以横屏游玩。");
+    } catch {
+      p.notify("浏览器未允许全屏，仍可正常游玩。");
+    }
+  }
+  const cost = selection
+    ? selection.zone === "shop"
+      ? game.season
+        ? minionCost(game, selection.m)
+        : 3
+      : selection.zone === "spellshop"
+        ? spellCost(game, selection.m)
+        : 0
+    : 0;
+  const primary = () => {
+    if (!selection) return;
+    if (selection.zone === "shop")
+      dispatch({ type: "buy", uid: selection.m.uid });
+    else if (selection.zone === "spellshop")
+      dispatch({ type: "buySpell", uid: selection.m.uid });
+    else if (selection.zone === "hand") p.play(selection.m);
+  };
+  return (
+    <div
+      className={`game-table ${combat ? "combat-table" : ""} ${drag?.moving ? "dragging-table" : ""}`}
+    >
+      <header className="table-header">
+        <div className="table-brand">
+          {basePath !== "/" ? (
+            <a href="/" aria-label="返回游戏大厅">
+              <LayoutGrid size={17} />
+            </a>
+          ) : (
+            <Crown size={18} />
+          )}
+          <span>
+            鲍勃的酒馆
+            <small>{game.season ? "第14赛季 · 36.4.2" : "经典精选"}</small>
+          </span>
+        </div>
+        <div className="table-header-center">
+          {game.season?.tribes.join(" · ") || "经典随从练习"}
+        </div>
+        <nav>
+          <button onClick={p.collection} aria-label="随从图鉴" title="随从图鉴">
+            <BookOpen size={17} />
+          </button>
+          <button onClick={p.heroes} aria-label="英雄图鉴" title="英雄图鉴">
+            <Users size={17} />
+          </button>
+          <button
+            onClick={p.toggleSound}
+            aria-label={p.sound ? "关闭音效" : "开启音效"}
+          >
+            {p.sound ? <Volume2 size={17} /> : <VolumeX size={17} />}
+          </button>
+          <button onClick={fullscreen} aria-label="切换全屏">
+            <Maximize size={17} />
+          </button>
+          <button onClick={p.settings} aria-label="偏好设置">
+            <Settings size={17} />
+          </button>
+          <button onClick={p.help} aria-label="查看玩法指南">
+            <HelpCircle size={17} />
+          </button>
+          <button className="table-new" onClick={p.newGame}>
+            <Plus size={14} />
+            <span>新对局</span>
+          </button>
+        </nav>
+      </header>
+      <div className="table-game">
+        <aside className="opponent-rail" aria-label="对局英雄">
+          <span className="rail-caption">本局英雄</span>
+          {game.opponents.map((o, i) => (
+            <button
+              key={o.hero}
+              className={`rival-token ${i === game.nextOpponent ? "next-rival" : ""} ${o.health <= 0 ? "eliminated" : ""}`}
+              onClick={() => setRival(rival === i ? null : i)}
+              aria-label={`${o.name}，${o.health <= 0 ? "已淘汰" : o.health + "生命"}${i === game.nextOpponent ? "，下一位对手" : ""}`}
+            >
+              <img src={art(HEROES.find((h) => h.id === o.hero)!.art)} alt="" />
+              <span className="rival-tier">{"★".repeat(o.tier)}</span>
+              <span className="rival-hp">{o.health <= 0 ? "☠" : o.health}</span>
+              {i === game.nextOpponent && <i />}
+            </button>
+          ))}
+          <div className="rail-self">
+            <img src={art(hero.art)} alt="" />
+            <span>你</span>
+          </div>
+        </aside>
+        <div className="table-arena" ref={table}>
+          <div className="table-ambience">
+            <i />
+            <i />
+            <i />
+          </div>
+          <div
+            className={`wooden-table ${game.frozen && !combat ? "frozen-table" : ""}`}
+          >
+            <BoardDecoration />
+            <div className="board-corner top-left">✦</div>
+            <div className="board-corner top-right">✦</div>
+            <div
+              className={`bartender ${drag?.zone === "board" ? "sell-ready" : ""}`}
+              data-dropzone="sell"
+            >
+              <div className="portrait-frame">
+                <img
+                  src={art(
+                    combat
+                      ? HEROES.find((h) => h.id === opponent?.hero)!.art
+                      : "TB_BaconShopBob",
+                  )}
+                  alt={combat ? opponent?.name : "鲍勃"}
+                />
+              </div>
+              <span>
+                {combat
+                  ? opponent?.name
+                  : drag?.zone === "board"
+                    ? "拖到这里出售 +1"
+                    : "鲍勃"}
+              </span>
+              {combat && (
+                <b className="enemy-life">
+                  <Heart size={11} />
+                  {Math.max(0, opponent?.health || 0)}
+                </b>
+              )}
+            </div>
+            {!combat && (
+              <div className="bob-controls">
+                <button
+                  className="tavern-control upgrade-control"
+                  onClick={() => dispatch({ type: "upgrade" })}
+                  disabled={
+                    !recruit || game.tier === 6 || game.gold < game.upgrade
+                  }
+                  aria-label={`升级酒馆，${game.upgrade}金币`}
+                >
+                  <span className="control-cost">
+                    {game.tier === 6 ? "★" : game.upgrade}
+                  </span>
+                  <Crown />
+                  <span>{game.tier === 6 ? "满级酒馆" : "升级"}</span>
+                </button>
+                <div className="right-bob-controls">
+                  <button
+                    className="tavern-control"
+                    onClick={() => dispatch({ type: "refresh" })}
+                    disabled={
+                      !recruit ||
+                      game.gold < (game.season ? refreshCost(game) : 1)
+                    }
+                    aria-label="刷新酒馆"
+                  >
+                    <span className="control-cost">
+                      {game.season ? refreshCost(game) : 1}
+                    </span>
+                    <RotateCw />
+                    <span>刷新</span>
+                  </button>
+                  <button
+                    className={`tavern-control freeze-control ${game.frozen ? "active" : ""}`}
+                    onClick={() => dispatch({ type: "freeze" })}
+                    disabled={!recruit}
+                    aria-label={game.frozen ? "解冻酒馆" : "冻结酒馆"}
+                  >
+                    <span className="control-cost">0</span>
+                    <Snowflake />
+                    <span>{game.frozen ? "解冻" : "冻结"}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className="table-level">
+              <span>{"★".repeat(game.tier)}</span>
+              <small>{game.tier} 星酒馆</small>
+            </div>
+            <div
+              className={`table-row tavern-row ${combat ? "enemy-row" : ""}`}
+              data-dropzone="shop"
+              aria-label={combat ? "对手战场" : "酒馆随从"}
+            >
+              {enemies.map((m) => piece(m, "shop"))}
+              {!enemies.length && (
+                <span className="empty-table-row">
+                  {combat ? "对手随从已退场" : "酒馆已售空，刷新寻找新伙伴"}
+                </span>
+              )}
+              {!combat &&
+                game.season?.spellShop.map((m) => (
+                  <button
+                    className="table-shop-spell"
+                    key={m.uid}
+                    onClick={() => choose(m, "spellshop")}
+                    onPointerDown={(e) => startDrag(e, m, "spellshop")}
+                    onPointerMove={moveDrag}
+                    onPointerUp={stopDrag}
+                    onPointerCancel={cancelDrag}
+                    aria-label={`酒馆法术：${getDef(m.id).name}`}
+                  >
+                    <img src={art(m.id)} alt="" />
+                    <b>{spellCost(game, m)}</b>
+                    <span>{getDef(m.id).name}</span>
+                    <small>酒馆法术</small>
+                  </button>
+                ))}
+            </div>
+            <div className="board-divider">
+              <span />
+              {combat ? (
+                <Swords size={16} />
+              ) : (
+                <span className="divider-diamond">◆</span>
+              )}
+              <span />
+            </div>
+            <div
+              className={`table-row friendly-row ${targeting ? "targeting-row" : ""}`}
+              data-dropzone="board"
+              aria-label="我的战场"
+            >
+              {Array.from(
+                { length: Math.max(allies.length, recruit ? 7 : 0) },
+                (_, i) => {
+                  const m = allies[i];
+                  return (
+                    <div
+                      className="table-slot"
+                      data-slot={i}
+                      key={m?.uid || `slot-${i}`}
+                      data-target={m?.uid}
+                    >
+                      {m ? (
+                        piece(m, "board")
+                      ) : recruit ? (
+                        <span
+                          className={`empty-table-slot ${drag?.zone === "hand" ? "drop-ready" : ""}`}
+                        >
+                          <Plus size={14} />
+                          <small>{i + 1}</small>
+                        </span>
+                      ) : null}
+                    </div>
+                  );
+                },
+              )}
+              {combat && !allies.length && (
+                <span className="empty-table-row">己方随从已退场</span>
+              )}
+            </div>
+            {recruit && !game.board.length && (
+              <p className="table-onboarding">
+                把手牌拖上战场，开始组建你的阵容。
+                <small>也可以点选随从操作</small>
+              </p>
+            )}
+            <div className="player-hero-area" data-dropzone="hero">
+              <div className="trinket-coins">
+                {[0, 1].map((i) => {
+                  const t = TRINKETS.find(
+                    (t) => t.id === game.season?.trinkets[i],
+                  );
+                  return (
+                    <button
+                      key={i}
+                      onClick={p.season}
+                      title={
+                        t
+                          ? `${t.name}：${t.text}`
+                          : `第${i === 0 ? 6 : 9}回合选择饰品`
+                      }
+                      aria-label={t?.name || `${i === 0 ? "小型" : "大型"}饰品`}
+                      className={t ? "equipped" : ""}
+                    >
+                      {t ? <img src={art(t.id)} alt="" /> : <Gem size={18} />}
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                className="player-hero-token"
+                onClick={() => setHudText(`${hero.name} · ${hero.text}`)}
+                aria-label={`${hero.name}，${game.health}生命`}
+              >
+                <div className="portrait-frame">
+                  <img src={art(hero.art)} alt={hero.name} />
+                </div>
+                <span className="hero-name-ribbon">{hero.name}</span>
+                <span className="table-hero-armor">
+                  <Shield size={14} />
+                  {combat && !finished
+                    ? previousStats.current.armor
+                    : game.season?.armor || 0}
+                </span>
+                <span className="table-hero-health">
+                  {combat && !finished
+                    ? previousStats.current.health
+                    : Math.max(0, game.health)}
+                </span>
+              </button>
+              <button
+                className={`hero-power-orb ${game.powerUsed ? "used" : ""}`}
+                onClick={p.power}
+                disabled={!recruit || game.powerUsed}
+                aria-label={
+                  game.powerUsed
+                    ? "本回合已使用英雄技能"
+                    : `使用英雄技能：${hero.power}`
+                }
+                title={hero.text}
+              >
+                <span className="orb-core">
+                  <Sparkles size={30} />
+                </span>
+                <b>{hero.passive ? "∞" : hero.cost}</b>
+                <small>{game.powerUsed ? "已使用" : hero.power}</small>
+              </button>
+            </div>
+            <div className="round-medallion">
+              <span>第 {game.turn} 回合</span>
+              <strong>
+                {combat
+                  ? "战斗阶段"
+                  : game.phase === "over"
+                    ? "对局结束"
+                    : "招募阶段"}
+              </strong>
+              <small>
+                {recruit ? "不限时练习" : finished ? "战斗已结束" : "自动交战"}
+              </small>
+            </div>
+            <button
+              className="table-end-turn"
+              onClick={() => dispatch({ type: combat ? "continue" : "end" })}
+              disabled={combat ? !finished : !recruit}
+            >
+              {combat ? (finished ? "返回酒馆" : "交战中") : "结束招募"}
+              {combat ? <Swords size={17} /> : <ArrowRight size={17} />}
+            </button>
+            {game.season && !combat && (
+              <button
+                className="dark-discovery-orb"
+                onClick={() => dispatch({ type: "darkGift" })}
+                disabled={
+                  !recruit ||
+                  game.turn < 3 ||
+                  game.gold < 3 ||
+                  game.season.giftsUsed >= 3 ||
+                  game.season.giftUsedTurn === game.turn
+                }
+                aria-label="黑暗发现，3金币"
+              >
+                <span>
+                  <Gem size={26} />
+                </span>
+                <b>3</b>
+                <small>黑暗发现</small>
+                <em>
+                  {game.turn < 3
+                    ? "第3回合解锁"
+                    : `${game.season.giftsUsed} / 3`}
+                </em>
+              </button>
+            )}
+            <div className="board-gold">
+              <div className="coin-pips">
+                {Array.from(
+                  { length: Math.min(game.season?.maxGold || 10, 15) },
+                  (_, i) => (
+                    <i key={i} className={i < game.gold ? "filled" : ""} />
+                  ),
+                )}
+              </div>
+              <strong>
+                <Coins size={16} />
+                {game.gold}
+                <small>
+                  {" "}
+                  / {game.season?.maxGold || Math.min(10, game.turn + 2)}
+                </small>
+              </strong>
+            </div>
+          </div>
+          <div
+            className="table-hand"
+            data-dropzone="hand"
+            aria-label="我的手牌"
+          >
+            <span className="hand-counter">
+              <BookOpen size={12} />
+              {game.hand.length + game.rewards.length}/10
+            </span>
+            <div className="hand-fan">
+              {game.hand.map((m, i) => (
+                <div
+                  key={m.uid}
+                  className="table-hand-card"
+                  style={
+                    {
+                      "--fan-angle": `${(i - (game.hand.length - 1) / 2) * 2}deg`,
+                    } as CSSProperties
+                  }
+                >
+                  <button
+                    className={`hand-card-button ${m.golden ? "golden-hand" : ""}`}
+                    onPointerDown={(e) => startDrag(e, m, "hand")}
+                    onPointerMove={moveDrag}
+                    onPointerUp={stopDrag}
+                    onPointerCancel={cancelDrag}
+                    onClick={() => choosePiece(m, "hand")}
+                    onDoubleClick={() => p.play(m)}
+                    aria-label={`手牌：${getDef(m.id).name}`}
+                  >
+                    <img src={art(m.id)} alt="" draggable={false} />
+                    <span className="hand-card-tier">
+                      {"★".repeat(getDef(m.id).tier)}
+                    </span>
+                    <strong>{getDef(m.id).name}</strong>
+                    <p>{cardText(m)}</p>
+                    <span className="hand-card-stats">
+                      {getDef(m.id).kind === "spell" ? (
+                        <Sparkles size={15} />
+                      ) : (
+                        <>
+                          <b>{shortStat(m.attack)}</b>
+                          <b>{shortStat(m.health)}</b>
+                        </>
+                      )}
+                    </span>
+                  </button>
+                </div>
+              ))}
+              {game.rewards.map((tier, i) => (
+                <button
+                  key={`reward-${i}`}
+                  className="table-reward"
+                  onClick={() => dispatch({ type: "reward" })}
+                >
+                  <Sparkles size={24} />
+                  <strong>三连奖励</strong>
+                  <span>{tier} 星发现</span>
+                </button>
+              ))}
+              {!game.hand.length && !game.rewards.length && (
+                <div className="hand-rest">
+                  <span>你的手牌</span>
+                  <small>从酒馆拖到这里，或双击随从购买</small>
+                </div>
+              )}
+            </div>
+          </div>
+          <Effects ref={effects} />
+          {floaters.map((f) => (
+            <span
+              key={f.id}
+              className={`table-floater ${f.good ? "buff-floater" : ""} ${f.shield ? "shield-floater" : ""}`}
+              style={{ left: f.x, top: f.y }}
+            >
+              {f.text}
+            </span>
+          ))}
+          {finished && (
+            <div className={`battle-verdict ${game.battle!.result}`}>
+              <Swords size={24} />
+              <strong>
+                {game.battle!.result === "win"
+                  ? "战斗胜利"
+                  : game.battle!.result === "loss"
+                    ? "战斗失利"
+                    : "势均力敌"}
+              </strong>
+              <span>
+                {game.battle!.damage
+                  ? `${game.battle!.result === "win" ? "造成" : "受到"} ${game.battle!.damage} 点伤害`
+                  : "双方英雄未受伤害"}
+              </span>
+            </div>
+          )}
+          {phaseBanner && (
+            <div className="phase-ribbon" key={phaseBanner}>
+              <Swords size={23} />
+              {phaseBanner}
+            </div>
+          )}
+          {tripleBanner && (
+            <div className="triple-ribbon">
+              <Sparkles size={30} />
+              <strong>金色传说！</strong>
+              <span>三连合成，金色随从已加入手牌</span>
+            </div>
+          )}
+          {hudText && <div className="table-hud-message">{hudText}</div>}
+          {rival !== null && (
+            <div className="rival-detail">
+              <button onClick={() => setRival(null)} aria-label="关闭对手信息">
+                <X size={16} />
+              </button>
+              <strong>{game.opponents[rival].name}</strong>
+              <span>
+                {game.opponents[rival].tier}星 ·{" "}
+                {Math.max(0, game.opponents[rival].health)}生命 ·{" "}
+                {game.opponents[rival].armor || 0}护甲
+              </span>
+              <p>
+                {rival === game.nextOpponent
+                  ? "下一轮将与你交战"
+                  : "本局练习对手"}
+              </p>
+            </div>
+          )}
+          {selection && !targeting && (
+            <aside className="table-inspector" aria-label="随从操作">
+              <button
+                className="inspect-close"
+                onClick={close}
+                aria-label="关闭卡牌详情"
+              >
+                <X size={18} />
+              </button>
+              <div className="inspect-card">{p.card(selection.m)}</div>
+              <h2>{getDef(selection.m.id).name}</h2>
+              <p>{cardText(selection.m)}</p>
+              <GiftNote m={selection.m} />
+              <div className="inspector-actions">
+                {recruit &&
+                  (selection.zone === "shop" ||
+                    selection.zone === "spellshop" ||
+                    selection.zone === "hand") && (
+                    <button
+                      className="inspect-primary"
+                      onClick={primary}
+                      disabled={
+                        selection.zone !== "hand" &&
+                        (game.gold < cost ||
+                          game.hand.length + game.rewards.length >= 10)
+                      }
+                    >
+                      {selection.zone === "hand"
+                        ? getDef(selection.m.id).kind === "spell"
+                          ? "施放法术"
+                          : "打出随从"
+                        : selection.zone === "spellshop"
+                          ? "购买法术"
+                          : "招募随从"}
+                      {cost > 0 && (
+                        <>
+                          <Coins size={13} />
+                          {cost}
+                        </>
+                      )}
+                      <ArrowUp size={14} />
+                    </button>
+                  )}
+                {recruit && selection.zone === "board" && (
+                  <>
+                    {getDef(selection.m.id).abilities?.some(
+                      (a) => a.event === "activate",
+                    ) && (
+                      <button
+                        className="inspect-primary"
+                        onClick={() => p.activate(selection.m)}
+                        disabled={
+                          selection.m.activated ||
+                          game.gold < (getDef(selection.m.id).activateCost || 0)
+                        }
+                      >
+                        {selection.m.activated ? "本回合已发动" : "发动技能"}
+                        <Coins size={12} />
+                        {getDef(selection.m.id).activateCost || 0}
+                      </button>
+                    )}
+                    <div className="inspect-move">
+                      <button
+                        onClick={() =>
+                          dispatch({
+                            type: "move",
+                            uid: selection.m.uid,
+                            to:
+                              game.board.findIndex(
+                                (m) => m.uid === selection.m.uid,
+                              ) - 1,
+                          })
+                        }
+                        disabled={game.board[0]?.uid === selection.m.uid}
+                      >
+                        <ArrowLeft size={14} />
+                        左移
+                      </button>
+                      <button
+                        onClick={() =>
+                          dispatch({
+                            type: "move",
+                            uid: selection.m.uid,
+                            to:
+                              game.board.findIndex(
+                                (m) => m.uid === selection.m.uid,
+                              ) + 1,
+                          })
+                        }
+                        disabled={game.board.at(-1)?.uid === selection.m.uid}
+                      >
+                        右移
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                    <button
+                      className="inspect-sell"
+                      onClick={() =>
+                        dispatch({ type: "sell", uid: selection.m.uid })
+                      }
+                    >
+                      出售随从 <Coins size={12} />
+                      +1
+                    </button>
+                  </>
+                )}
+              </div>
+              <details className="inspect-source">
+                <summary>卡面与资料</summary>
+                <CardSource m={selection.m} />
+              </details>
+            </aside>
+          )}
+        </div>
+      </div>
+      <footer className="table-footer">
+        <span>
+          {recruit
+            ? drag?.moving
+              ? "松开以完成操作"
+              : "拖动购买 / 打出 · 拖向鲍勃出售"
+            : current?.text || "准备下一轮"}
+          <span className="table-footer-scope">当前赛季部分复刻</span>
+        </span>
+        {combat ? (
+          <div className="table-playback">
+            <button
+              onClick={() => p.setPlaying(!p.playing)}
+              aria-label={p.playing ? "暂停战斗" : "继续播放"}
+            >
+              {p.playing ? <Pause size={13} /> : <Play size={13} />}
+            </button>
+            <select
+              value={p.speed}
+              onChange={(e) => p.setSpeed(Number(e.target.value))}
+              aria-label="战斗速度"
+            >
+              <option value={0.75}>0.75×</option>
+              <option value={1}>1×</option>
+              <option value={2}>2×</option>
+            </select>
+            <button onClick={() => p.setFrame(game.battle!.frames.length - 1)}>
+              <SkipForward size={13} />
+              跳过动画
+            </button>
+            {finished && (
+              <strong>
+                {game.battle!.result === "win"
+                  ? "胜利"
+                  : game.battle!.result === "loss"
+                    ? "失利"
+                    : "平局"}{" "}
+                · {game.battle!.damage}点伤害
+              </strong>
+            )}
+          </div>
+        ) : (
+          <div>
+            <button onClick={p.pool}>
+              <BookOpen size={12} />
+              随从池
+            </button>
+            {game.season && (
+              <button onClick={p.season}>
+                <Gem size={12} />
+                赛季玩法
+              </button>
+            )}
+          </div>
+        )}
+      </footer>
+      {drag?.moving && (
+        <div className="table-drag-ghost" style={{ left: drag.x, top: drag.y }}>
+          <Piece m={drag.m} />
+        </div>
+      )}
+    </div>
+  );
+}

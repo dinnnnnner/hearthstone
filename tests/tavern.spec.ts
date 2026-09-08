@@ -1,3 +1,8 @@
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("bobs-tavern-presentation", "panels"),
+  );
+});
 import { test, expect } from "@playwright/test";
 import { createGame, makeMinion } from "../src/engine";
 

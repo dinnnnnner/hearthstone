@@ -17,19 +17,19 @@ test("lobby links to both games, tavern assets use its subpath, and returning ho
   ).toHaveAttribute("href", "/sector/");
   await page.getByRole("link", { name: "进入鲍勃的酒馆", exact: true }).click();
   await expect(page).toHaveTitle(/鲍勃/);
-  await expect(page.locator(".season-bar")).toBeVisible();
+  await expect(page.locator(".game-table")).toBeVisible();
   const image = await page
-    .locator(".shop-cards .card-art")
+    .locator(".tavern-row .piece-frame img")
     .first()
-    .evaluate((e) => getComputedStyle(e).backgroundImage);
+    .evaluate((e) => (e as HTMLImageElement).src);
   expect(image).toContain("/tavern/art/");
-  await page.locator(".shop-cards .minion-card").first().click();
+  await page.locator(".tavern-row .table-piece").first().click();
   await page.getByRole("button", { name: /招募随从/ }).click();
-  await expect(page.locator(".hand-cards .minion-card")).toHaveCount(1);
+  await expect(page.locator(".hand-card-button")).toHaveCount(1);
   await page.getByRole("link", { name: "返回游戏大厅" }).click();
   await expect(page).toHaveTitle("游戏大厅 · Playroom");
   await page.getByRole("link", { name: "进入鲍勃的酒馆", exact: true }).click();
-  await expect(page.locator(".hand-cards .minion-card")).toHaveCount(1);
+  await expect(page.locator(".hand-card-button")).toHaveCount(1);
   expect(errors).toEqual([]);
   expect(failed).toEqual([]);
 });
@@ -48,9 +48,9 @@ test("lobby and prefixed mobile tavern fit portrait and landscape", async ({
     fullPage: true,
   });
   await page.getByRole("link", { name: "进入鲍勃的酒馆", exact: true }).click();
-  await expect(page.locator(".mobile-arena")).toBeVisible();
+  await expect(page.locator(".game-table")).toBeVisible();
   await page.setViewportSize({ width: 844, height: 390 });
-  const end = await page.locator(".mobile-end").boundingBox();
+  const end = await page.locator(".table-end-turn").boundingBox();
   expect(end!.y + end!.height).toBeLessThanOrEqual(390);
   await page.getByRole("link", { name: "返回游戏大厅" }).click();
   await expect(page).toHaveTitle("游戏大厅 · Playroom");
@@ -61,19 +61,47 @@ test("lobby and prefixed mobile tavern fit portrait and landscape", async ({
   });
 });
 
-test('SECTOR opens from the lobby and its WebSocket still replies through Nginx', async ({page}) => {
-  test.skip(!process.env.CHECK_SECTOR, 'Enable against the server with SECTOR installed');
-  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
-  const failures:string[]=[];page.on('response',r=>{if(r.status()>=400)failures.push(r.url());});
-  await page.goto(site!);await page.getByRole('link',{name:'进入 SECTOR 战术竞技场'}).click();
-  await expect(page).toHaveTitle(/SECTOR/);await expect(page.locator('#lobby')).toBeVisible();
-  const reply=await page.evaluate(()=>new Promise<{type:string;at:number}>((resolve,reject)=>{
-    const ws=new WebSocket(`wss://${location.host}/ws`);
-    const timer=setTimeout(()=>{ws.close();reject(new Error('WebSocket ping timeout'));},8000);
-    ws.onopen=()=>ws.send(JSON.stringify({type:'ping',at:12345}));
-    ws.onmessage=e=>{clearTimeout(timer);ws.close();resolve(JSON.parse(e.data));};
-    ws.onerror=()=>{clearTimeout(timer);ws.close();reject(new Error('WebSocket connection failed'));};
-  }));
-  expect(reply).toEqual({type:'pong',at:12345});expect(errors).toEqual([]);expect(failures).toEqual([]);
-  await page.locator('.brand-symbol').click();await expect(page).toHaveTitle('游戏大厅 · Playroom');
+test("SECTOR opens from the lobby and its WebSocket still replies through Nginx", async ({
+  page,
+}) => {
+  test.skip(
+    !process.env.CHECK_SECTOR,
+    "Enable against the server with SECTOR installed",
+  );
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  const failures: string[] = [];
+  page.on("response", (r) => {
+    if (r.status() >= 400) failures.push(r.url());
+  });
+  await page.goto(site!);
+  await page.getByRole("link", { name: "进入 SECTOR 战术竞技场" }).click();
+  await expect(page).toHaveTitle(/SECTOR/);
+  await expect(page.locator("#lobby")).toBeVisible();
+  const reply = await page.evaluate(
+    () =>
+      new Promise<{ type: string; at: number }>((resolve, reject) => {
+        const ws = new WebSocket(`wss://${location.host}/ws`);
+        const timer = setTimeout(() => {
+          ws.close();
+          reject(new Error("WebSocket ping timeout"));
+        }, 8000);
+        ws.onopen = () => ws.send(JSON.stringify({ type: "ping", at: 12345 }));
+        ws.onmessage = (e) => {
+          clearTimeout(timer);
+          ws.close();
+          resolve(JSON.parse(e.data));
+        };
+        ws.onerror = () => {
+          clearTimeout(timer);
+          ws.close();
+          reject(new Error("WebSocket connection failed"));
+        };
+      }),
+  );
+  expect(reply).toEqual({ type: "pong", at: 12345 });
+  expect(errors).toEqual([]);
+  expect(failures).toEqual([]);
+  await page.locator(".brand-symbol").click();
+  await expect(page).toHaveTitle("游戏大厅 · Playroom");
 });

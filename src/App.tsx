@@ -1,3 +1,5 @@
+import { GameTable } from "./table/GameTable";
+import { playTableSound, type TableSound } from "./table/sound";
 import { basePath } from "./paths";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -241,6 +243,22 @@ function MinionCard({
 }
 function App() {
   const { mode, setMode, mobile } = usePlayMode();
+  const [tableMode, setTableMode] = useState(() => {
+    try {
+      return localStorage.getItem("bobs-tavern-presentation") !== "panels";
+    } catch {
+      return true;
+    }
+  });
+  const [battleSpeed, setBattleSpeed] = useState(1);
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "bobs-tavern-presentation",
+        tableMode ? "table" : "panels",
+      );
+    } catch {}
+  }, [tableMode]);
   const [mobileSeason, setMobileSeason] = useState(false);
   const [game, setGame] = useState<Game>(load);
   const [page, setPage] = useState<Page>("tavern");
@@ -252,7 +270,7 @@ function App() {
   const [collectionType, setCollectionType] = useState("minions");
   const [onlyPlayable, setOnlyPlayable] = useState(false);
   const [targeting, setTargeting] = useState<
-    | { type: "play" | "cast" | "activate"; uid: string }
+    | { type: "play" | "cast" | "activate"; uid: string; position?: number }
     | { type: "power" }
     | null
   >(null);
@@ -262,7 +280,18 @@ function App() {
   const [tierFilter, setTierFilter] = useState(0);
   const [tribeFilter, setTribeFilter] = useState("全部");
   const [search, setSearch] = useState("");
-  const [sound, setSound] = useState(false);
+  const [sound, setSound] = useState(() => {
+    try {
+      return localStorage.getItem("bobs-tavern-sound") !== "off";
+    } catch {
+      return true;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem("bobs-tavern-sound", sound ? "on" : "off");
+    } catch {}
+  }, [sound]);
   const [frame, setFrame] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [poolOpen, setPoolOpen] = useState(false);
@@ -294,10 +323,10 @@ function App() {
       game.battle &&
       frame < game.battle.frames.length - 1
     ) {
-      const id = setTimeout(() => setFrame((x) => x + 1), 650);
+      const id = setTimeout(() => setFrame((x) => x + 1), 760 / battleSpeed);
       return () => clearTimeout(id);
     }
-  }, [frame, playing, game.phase, game.battle]);
+  }, [frame, playing, game.phase, game.battle, battleSpeed]);
   useEffect(() => {
     const f = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -311,22 +340,23 @@ function App() {
     window.addEventListener("keydown", f);
     return () => window.removeEventListener("keydown", f);
   }, []);
-  function beep() {
-    if (!sound) return;
-    try {
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator(),
-        gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.setValueAtTime(660, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.035, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.13);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.15);
-      osc.onended = () => void ctx.close();
-    } catch {}
+  function beep(action: Action) {
+    const sounds: Partial<Record<Action["type"], TableSound>> = {
+      buy: "buy",
+      buySpell: "buy",
+      refresh: "refresh",
+      play: "play",
+      sell: "sell",
+      cast: "spell",
+      activate: "spell",
+      power: "spell",
+      discover: "spell",
+      darkGift: "spell",
+      upgrade: "round",
+      freeze: "spell",
+    };
+    const kind = sounds[action.type];
+    if (kind) playTableSound(kind, sound);
   }
   function dispatch(action: Action) {
     const result = act(game, action);
@@ -337,7 +367,7 @@ function App() {
     setGame(result.state);
     setSelection(null);
     setTargeting(null);
-    beep();
+    beep(action);
     if (action.type === "end") {
       setFrame(0);
       setPlaying(true);
@@ -362,7 +392,7 @@ function App() {
     }
     setSelection({ m, zone });
   }
-  function play(m: Minion) {
+  function play(m: Minion, position?: number) {
     if (game.season && getDef(m.id).kind === "spell") {
       const ts = seasonTargets(game, m, "cast");
       if (ts.length) {
@@ -374,10 +404,10 @@ function App() {
     }
     const ts = targetsFor(game, m);
     if (ts.length) {
-      setTargeting({ type: "play", uid: m.uid });
+      setTargeting({ type: "play", uid: m.uid, position });
       setSelection(null);
       setToast("点击战场上的随从，选择技能目标。");
-    } else dispatch({ type: "play", uid: m.uid });
+    } else dispatch({ type: "play", uid: m.uid, position });
   }
   function activate(m: Minion) {
     const ts = seasonTargets(game, m, "activate");
@@ -434,7 +464,7 @@ function App() {
   ];
   return (
     <div
-      className={`app-shell ${mobile ? "touch-mode" : ""} ${basePath !== "/" ? "has-lobby" : ""} ${page === "tavern" ? "is-tavern" : ""}`}
+      className={`app-shell ${mobile ? "touch-mode" : ""} ${tableMode && page === "tavern" ? "table-active" : ""} ${basePath !== "/" ? "has-lobby" : ""} ${page === "tavern" ? "is-tavern" : ""}`}
     >
       <aside className="sidebar">
         <a
@@ -603,7 +633,46 @@ function App() {
             </button>
           </div>
           {page === "tavern" ? (
-            mobile ? (
+            tableMode ? (
+              <GameTable
+                game={game}
+                dispatch={dispatch}
+                selection={selection}
+                choose={choose}
+                close={() => setSelection(null)}
+                play={play}
+                activate={activate}
+                power={power}
+                targeting={!!targeting}
+                frame={frame}
+                setFrame={setFrame}
+                playing={playing}
+                setPlaying={setPlaying}
+                speed={battleSpeed}
+                setSpeed={setBattleSpeed}
+                sound={sound}
+                toggleSound={() => setSound(!sound)}
+                newGame={() => {
+                  setNewHero(game.hero);
+                  setNewSeason(!!game.season);
+                  setModal("new");
+                }}
+                settings={() => setModal("settings")}
+                help={() => setModal("help")}
+                collection={() => {
+                  setSelection(null);
+                  setPage("cards");
+                }}
+                heroes={() => {
+                  setSelection(null);
+                  setPage("heroes");
+                }}
+                season={() => setMobileSeason(true)}
+                pool={() => setPoolOpen(true)}
+                notify={setToast}
+                card={(m) => <MinionCard m={m} />}
+              />
+            ) : mobile ? (
               <MobileArena
                 game={game}
                 dispatch={dispatch}
@@ -1383,7 +1452,13 @@ function App() {
               getDef(game.hand.find((m) => m.uid === targeting.uid)!.id)
                 .magnetic) && (
               <button
-                onClick={() => dispatch({ type: "play", uid: targeting.uid })}
+                onClick={() =>
+                  dispatch({
+                    type: "play",
+                    uid: targeting.uid,
+                    position: targeting.position,
+                  })
+                }
               >
                 单独打出
               </button>
@@ -1393,7 +1468,7 @@ function App() {
           </button>
         </div>
       )}
-      {selection && !targeting && (
+      {selection && !targeting && !(tableMode && page === "tavern") && (
         <Modal
           title={getDef(selection.m.id).name}
           subtitle={`${selection.m.golden ? "金色 · " : ""}${getDef(selection.m.id).tier}星 · ${getDef(selection.m.id).tribe}`}
@@ -1618,6 +1693,20 @@ function App() {
           subtitle="让这间酒馆更适合你。"
           onClose={() => setModal(null)}
         >
+          <div className="setting-row">
+            <div>
+              <strong>实战棋盘</strong>
+              <p>同屏招募与交战，支持拖牌和攻击动画。关闭可回到旧版面板。</p>
+            </div>
+            <button
+              className={`toggle ${tableMode ? "on" : ""}`}
+              aria-label="切换实战棋盘"
+              aria-pressed={tableMode}
+              onClick={() => setTableMode(!tableMode)}
+            >
+              <span />
+            </button>
+          </div>
           <div className="setting-row play-mode-setting">
             <div>
               <strong>手游模式</strong>
@@ -1812,105 +1901,107 @@ function App() {
           </div>
         </Modal>
       )}
-      {game.phase === "combat" && game.battle && (
-        <Modal
-          title={
-            frame === game.battle.frames.length - 1
-              ? game.battle.result === "win"
-                ? "漂亮，这一轮赢了！"
-                : game.battle.result === "loss"
-                  ? "下一轮，找回节奏"
-                  : "势均力敌！"
-              : "让随从们一决高下"
-          }
-          subtitle={`第${game.turn}回合 · ${hero.name} vs ${game.battle.opponent}`}
-          wide
-        >
-          <div className="combat-stage">
-            <div className="combat-side-label">
-              {game.battle.opponent}
-              <span>对手战场</span>
+      {game.phase === "combat" &&
+        game.battle &&
+        !(tableMode && page === "tavern") && (
+          <Modal
+            title={
+              frame === game.battle.frames.length - 1
+                ? game.battle.result === "win"
+                  ? "漂亮，这一轮赢了！"
+                  : game.battle.result === "loss"
+                    ? "下一轮，找回节奏"
+                    : "势均力敌！"
+                : "让随从们一决高下"
+            }
+            subtitle={`第${game.turn}回合 · ${hero.name} vs ${game.battle.opponent}`}
+            wide
+          >
+            <div className="combat-stage">
+              <div className="combat-side-label">
+                {game.battle.opponent}
+                <span>对手战场</span>
+              </div>
+              <div className="combat-cards">
+                {game.battle.frames[frame]?.enemies.map((m) => (
+                  <div
+                    className={
+                      game.battle?.frames[frame]?.attacker === m.uid
+                        ? "attacking"
+                        : game.battle?.frames[frame]?.target === m.uid
+                          ? "damaged"
+                          : ""
+                    }
+                    key={m.uid}
+                  >
+                    <MinionCard m={m} compact />
+                  </div>
+                ))}
+                {!game.battle.frames[frame]?.enemies.length && (
+                  <span className="combat-empty">对方随从已全部退场</span>
+                )}
+              </div>
+              <div className="combat-divider">
+                <Swords size={18} />
+                <span>{game.battle.frames[frame]?.text}</span>
+              </div>
+              <div className="combat-cards">
+                {game.battle.frames[frame]?.allies.map((m) => (
+                  <div
+                    className={
+                      game.battle?.frames[frame]?.attacker === m.uid
+                        ? "attacking"
+                        : game.battle?.frames[frame]?.target === m.uid
+                          ? "damaged"
+                          : ""
+                    }
+                    key={m.uid}
+                  >
+                    <MinionCard m={m} compact />
+                  </div>
+                ))}
+                {!game.battle.frames[frame]?.allies.length && (
+                  <span className="combat-empty">己方随从已全部退场</span>
+                )}
+              </div>
+              <div className="combat-side-label">
+                {hero.name}
+                <span>我的战场</span>
+              </div>
             </div>
-            <div className="combat-cards">
-              {game.battle.frames[frame]?.enemies.map((m) => (
-                <div
-                  className={
-                    game.battle?.frames[frame]?.attacker === m.uid
-                      ? "attacking"
-                      : game.battle?.frames[frame]?.target === m.uid
-                        ? "damaged"
-                        : ""
-                  }
-                  key={m.uid}
+            <div className="modal-bottom">
+              <div className="playback-controls">
+                <button
+                  className="icon-button"
+                  onClick={() => setPlaying(!playing)}
+                  aria-label={playing ? "暂停战斗" : "继续播放"}
                 >
-                  <MinionCard m={m} compact />
-                </div>
-              ))}
-              {!game.battle.frames[frame]?.enemies.length && (
-                <span className="combat-empty">对方随从已全部退场</span>
-              )}
-            </div>
-            <div className="combat-divider">
-              <Swords size={18} />
-              <span>{game.battle.frames[frame]?.text}</span>
-            </div>
-            <div className="combat-cards">
-              {game.battle.frames[frame]?.allies.map((m) => (
-                <div
-                  className={
-                    game.battle?.frames[frame]?.attacker === m.uid
-                      ? "attacking"
-                      : game.battle?.frames[frame]?.target === m.uid
-                        ? "damaged"
-                        : ""
-                  }
-                  key={m.uid}
+                  {playing ? <span>Ⅱ</span> : <Play size={16} />}
+                </button>
+                <span>
+                  {frame + 1} / {game.battle.frames.length}
+                </span>
+                <button
+                  className="small-button"
+                  onClick={() => setFrame(game.battle!.frames.length - 1)}
                 >
-                  <MinionCard m={m} compact />
-                </div>
-              ))}
-              {!game.battle.frames[frame]?.allies.length && (
-                <span className="combat-empty">己方随从已全部退场</span>
-              )}
-            </div>
-            <div className="combat-side-label">
-              {hero.name}
-              <span>我的战场</span>
-            </div>
-          </div>
-          <div className="modal-bottom">
-            <div className="playback-controls">
+                  <SkipForward size={14} />
+                  跳过动画
+                </button>
+              </div>
               <button
-                className="icon-button"
-                onClick={() => setPlaying(!playing)}
-                aria-label={playing ? "暂停战斗" : "继续播放"}
+                className="button primary"
+                disabled={frame < game.battle.frames.length - 1}
+                onClick={() => dispatch({ type: "continue" })}
               >
-                {playing ? <span>Ⅱ</span> : <Play size={16} />}
-              </button>
-              <span>
-                {frame + 1} / {game.battle.frames.length}
-              </span>
-              <button
-                className="small-button"
-                onClick={() => setFrame(game.battle!.frames.length - 1)}
-              >
-                <SkipForward size={14} />
-                跳过动画
+                {game.health <= 0 || game.opponents.every((o) => o.health <= 0)
+                  ? "查看结果"
+                  : "返回酒馆"}
+                <ArrowRight size={15} />
               </button>
             </div>
-            <button
-              className="button primary"
-              disabled={frame < game.battle.frames.length - 1}
-              onClick={() => dispatch({ type: "continue" })}
-            >
-              {game.health <= 0 || game.opponents.every((o) => o.health <= 0)
-                ? "查看结果"
-                : "返回酒馆"}
-              <ArrowRight size={15} />
-            </button>
-          </div>
-        </Modal>
-      )}
+          </Modal>
+        )}
       {game.phase === "over" && (
         <Modal
           title={
