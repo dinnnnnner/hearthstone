@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Countdown } from "./Countdown";
+import { LoadingScreen } from "../loading/LoadingScreen";
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,7 +9,6 @@ import {
   Crown,
   LogOut,
   Plus,
-  RefreshCw,
   Users,
   Swords,
   Wifi,
@@ -310,17 +310,13 @@ export default function OnlineApp() {
             </button>
           </section>
         ) : !state ? (
-          <section className="online-loading">
-            <RefreshCw size={30} />
-            <h2>正在连接酒馆</h2>
-            <p>身份和房间进度会自动恢复。</p>
-            <button
-              className="online-text-button"
-              onClick={() => changeView("practice")}
-            >
-              先玩本地练习
-            </button>
-          </section>
+          <LoadingScreen
+            embedded
+            title="正在连接酒馆"
+            detail="找回你的座位与对局进度…"
+            continueLabel="先玩本地练习"
+            onContinue={() => changeView("practice")}
+          />
         ) : room ? (
           <section className="room-panel">
             <div className="room-heading">

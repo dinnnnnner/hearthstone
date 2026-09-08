@@ -36,10 +36,25 @@ export function BoardDecoration() {
           />
         </pattern>
         <linearGradient id="boardlight" x1="0" y1="0" x2="0" y2="1">
-          <stop stopColor="#b98754" />
-          <stop offset=".55" stopColor="#cba775" />
-          <stop offset="1" stopColor="#946644" />
+          <stop stopColor="#95623f" />
+          <stop offset=".18" stopColor="#b78c58" />
+          <stop offset=".52" stopColor="#c7a371" />
+          <stop offset="1" stopColor="#775039" />
         </linearGradient>
+        <radialGradient id="table-warmth">
+          <stop stopColor="#ffe6b3" stopOpacity=".18" />
+          <stop offset=".6" stopColor="#8d5c35" stopOpacity="0" />
+          <stop offset="1" stopColor="#2b1720" stopOpacity=".38" />
+        </radialGradient>
+        <linearGradient id="table-leather" x2="0" y2="1">
+          <stop stopColor="#443243" />
+          <stop offset="1" stopColor="#221d2c" />
+        </linearGradient>
+        <radialGradient id="table-rivet" cx=".3" cy=".2">
+          <stop stopColor="#f9e1aa" />
+          <stop offset=".45" stopColor="#ba8e52" />
+          <stop offset="1" stopColor="#503621" />
+        </radialGradient>
       </defs>
       <path
         d="M24 24Q150 2 270 25L460 15Q600 60 740 15L930 25Q1050 2 1176 24L1160 210L1180 240L1160 430L1178 480L1152 682L788 680Q600 604 412 680L48 682L22 480L40 430L20 240L40 210Z"
@@ -65,13 +80,13 @@ export function BoardDecoration() {
       </g>
       <path
         d="M52 506Q266 529 447 606L411 659H61Z"
-        fill="#3b3747"
+        fill="url(#table-leather)"
         stroke="#776759"
         strokeWidth="5"
       />
       <path
         d="M1148 506Q934 529 753 606L789 659h350Z"
-        fill="#3b3747"
+        fill="url(#table-leather)"
         stroke="#776759"
         strokeWidth="5"
       />
@@ -84,6 +99,35 @@ export function BoardDecoration() {
         strokeOpacity=".16"
         strokeWidth="2"
       />
+      <path
+        d="M24 24Q150 2 270 25L460 15Q600 60 740 15L930 25Q1050 2 1176 24L1160 210L1180 240L1160 430L1178 480L1152 682L788 680Q600 604 412 680L48 682L22 480L40 430L20 240L40 210Z"
+        fill="url(#table-warmth)"
+      />
+      <g fill="url(#table-rivet)" stroke="#513425" strokeWidth="1.5">
+        {[
+          [43, 40],
+          [1157, 40],
+          [42, 246],
+          [1158, 246],
+          [45, 473],
+          [1155, 473],
+          [62, 666],
+          [1138, 666],
+        ].map(([cx, cy]) => (
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="4.5" />
+        ))}
+      </g>
+      <g
+        fill="none"
+        stroke="#563c2d"
+        strokeWidth="1.5"
+        opacity=".13"
+        transform="translate(590 340)"
+      >
+        <circle r="61" />
+        <circle r="54" strokeDasharray="2 9" />
+        <path d="M12-27C-15-48-49-15-30 15 0 57 49 12 25-7 3-27-17 4-3 13 8 20 19 9 11 2" />
+      </g>
     </svg>
   );
 }

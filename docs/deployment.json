@@ -1,6 +1,6 @@
 {
-  "release": "20260908T062430Z",
-  "remote": "/var/www/playroom/releases/20260908T062430Z",
+  "release": "20260908T073445Z",
+  "remote": "/var/www/playroom/releases/20260908T073445Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -10,23 +10,26 @@
   "validation": {
     "engineAndStateTests": 46,
     "serverTests": 16,
-    "localBrowserTests": 22,
-    "publicBrowserTests": 7,
-    "publicEightBrowserRoom": "passed, 11.6 seconds with separate caches",
+    "localBrowserTests": 26,
+    "publicBrowserTests": 11,
+    "publicEightBrowserRoom": "passed, 12.9 seconds with separate caches",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
-    "sectorPidAtFinalActivation": 107631,
-    "sectorPidAfterFinalValidation": 108207,
+    "sectorPidAtFinalActivation": 108431,
+    "sectorPidAfterFinalValidation": 108431,
     "tavernPid": 108082,
-    "tavernMemoryBytesAfterTests": 36601856,
+    "tavernMemoryBytesAfterTests": 40161280,
     "tavernAutomaticRestarts": 0,
     "uiImageCount": 556,
     "uiImageBytes": 8897106,
-    "originalImageBytes": 133827864
+    "originalImageBytes": 133827864,
+    "tavernRestarted": false,
+    "buildSite": "passed",
+    "rulesAndServerTestsScope": "46 engine/state and 16 server tests passed for unchanged backend in prior room-fixes release; not rerun for this frontend-only release"
   },
-  "previousRelease": "20260908T055800Z",
+  "previousRelease": "20260908T062430Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
@@ -49,5 +52,13 @@
     "snapshotBytes": 2808390,
     "unchangedSnapshotMs": 0.003798180000000002,
     "scope": "Synthetic 180-frame local test; not a full server capacity benchmark"
-  }
+  },
+  "loadingScreen": {
+    "inlineBootScreen": true,
+    "sceneImageConcurrency": 3,
+    "manualContinueAfterSeconds": 3,
+    "automaticContinueAfterSeconds": 8,
+    "reducedMotion": true
+  },
+  "visualDetails": "Wood and leather shading, brass rivets, card depth, button feedback and lobby crest"
 }

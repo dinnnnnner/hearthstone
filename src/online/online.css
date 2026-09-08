@@ -677,3 +677,11 @@
 .online-main h1 {
   color: #e8d7b8;
 }
+
+.guest-entry { position: relative; }
+.guest-entry::before { content: '✦'; display: block; width: 54px; height: 54px; margin-bottom: 28px; border: 1px solid #c19a6555; border-radius: 15px; color: #dfbb7e; font: 27px/54px Georgia, serif; text-align: center; background: radial-gradient(circle at 40% 30%, #75503960, #33232b); box-shadow: inset 0 0 0 4px #17121977, 0 7px 20px #0003; }
+.online-primary:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #644326; }
+.match-tile { box-shadow: inset 0 1px #e6c17e12, 0 10px 24px #0002; }
+.room-seat.self { box-shadow: inset 3px 0 #c69c60, inset 0 1px #f0d4a30c; }
+.room-seat > img { box-shadow: 0 3px 8px #0006; }
+@media (max-height: 500px) { .guest-entry::before { display: none; } }

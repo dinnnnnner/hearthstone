@@ -2,17 +2,358 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#f5f3ed" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#171219" />
     <meta
       name="description"
-      content="鲍勃的酒馆 · 酒馆战棋单人练习场。招募随从，打造阵容，练习三连与英雄技能。"
+      content="鲍勃的酒馆 · 酒馆战棋练习场，支持人机对战和好友房。招募随从，打造阵容，练习三连与英雄技能。"
     />
     <title>鲍勃的酒馆 · 酒馆战棋练习场</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #171219;
+      }
+      #boot-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        transition: opacity 0.22s;
+      }
+      #boot-screen.boot-leaving {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .tavern-loading {
+        box-sizing: border-box;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 32px 24px;
+        color: #eddbb7;
+        background:
+          radial-gradient(ellipse at 50% 43%, #67443338, transparent 47%),
+          radial-gradient(ellipse at 50% 110%, #5a345a30, transparent 65%),
+          #171219;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        position: relative;
+        overflow: hidden;
+      }
+      .tavern-loading:before {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        border: 1px solid #96703b40;
+        pointer-events: none;
+        clip-path: polygon(
+          0 0,
+          36% 0,
+          36% 1px,
+          64% 1px,
+          64% 0,
+          100% 0,
+          100% 100%,
+          64% 100%,
+          64% calc(100% - 1px),
+          36% calc(100% - 1px),
+          36% 100%,
+          0 100%
+        );
+      }
+      .loading-content {
+        position: relative;
+        width: min(340px, 100%);
+      }
+      .loading-eyebrow {
+        font-size: 10px;
+        letter-spacing: 5px;
+        color: #b89a70;
+        margin: 0 0 35px;
+      }
+      .loading-seal {
+        position: relative;
+        width: 144px;
+        height: 144px;
+        margin: 0 auto 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(
+          circle,
+          #6d455b55,
+          #30202d 57%,
+          #171219 58%
+        );
+        box-shadow:
+          0 0 70px #ad734e18,
+          inset 0 0 22px #d49b6030;
+      }
+      .loading-seal:before,
+      .loading-seal:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid #bd94613b;
+      }
+      .loading-seal:after {
+        inset: 9px;
+        border: 2px solid transparent;
+        border-top-color: #e2ba79;
+        border-bottom-color: #836143;
+        animation: loading-orbit 5s linear infinite;
+      }
+      .loading-seal svg {
+        width: 78px;
+        height: 78px;
+        fill: none;
+        stroke: #e8bf7b;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 9px #e1ac6260);
+      }
+      .loading-stars {
+        position: absolute;
+        inset: -12px;
+        color: #c69b60;
+        font:
+          17px Georgia,
+          serif;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        pointer-events: none;
+      }
+      .tavern-loading h1,
+      .tavern-loading h2 {
+        font:
+          500 29px/1.5 "Noto Serif SC",
+          "Songti SC",
+          serif;
+        letter-spacing: 4px;
+        color: #efdbb5;
+        margin: 0 0 11px;
+      }
+      .loading-detail {
+        font-size: 12px;
+        line-height: 1.8;
+        color: #b29a83;
+        margin: 0 0 24px;
+      }
+      .loading-track {
+        height: 4px;
+        border: 1px solid #95714755;
+        padding: 2px;
+        border-radius: 10px;
+        background: #0e0b11;
+        overflow: hidden;
+        margin: 0 auto;
+        width: 230px;
+        max-width: 90%;
+      }
+      .loading-fill {
+        display: block;
+        height: 100%;
+        width: 35%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #92673d, #ecc47e);
+        box-shadow: 0 0 9px #deac66;
+        animation: loading-slide 1.7s ease-in-out infinite;
+      }
+      .loading-track.is-determinate .loading-fill {
+        animation: none;
+        transition: width 0.16s ease-out;
+      }
+      .loading-count {
+        font:
+          10px/1.5 Georgia,
+          serif;
+        color: #b89a70;
+        letter-spacing: 2px;
+        min-height: 16px;
+        margin: 12px 0;
+      }
+      .loading-tip {
+        border-top: 1px solid #9472492f;
+        padding-top: 20px;
+        margin: 25px 0 0;
+        font-size: 11px;
+        line-height: 1.9;
+        color: #9b8775;
+      }
+      .loading-tip b {
+        color: #c8ac83;
+        font-weight: 400;
+      }
+      .loading-action {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 9px 17px;
+        background: #392a28;
+        border: 1px solid #ad865555;
+        border-radius: 5px;
+        color: #e4c48c;
+        font: inherit;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .loading-action:focus-visible {
+        outline: 2px solid #efc77e;
+        outline-offset: 4px;
+      }
+      .loading-action[hidden] {
+        display: none;
+      }
+      .loading-footer {
+        position: absolute;
+        bottom: max(35px, env(safe-area-inset-bottom));
+        left: 24px;
+        right: 24px;
+        letter-spacing: 3px;
+        font-size: 9px;
+        color: #766355;
+      }
+      .tavern-loading.is-embedded {
+        min-height: 430px;
+        background: transparent;
+      }
+      .tavern-loading.is-embedded:before,
+      .tavern-loading.is-embedded .loading-footer {
+        display: none;
+      }
+      @keyframes loading-orbit {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes loading-slide {
+        0% {
+          transform: translateX(-105%);
+        }
+        100% {
+          transform: translateX(390%);
+        }
+      }
+      @media (max-height: 520px) {
+        .tavern-loading {
+          padding: 25px;
+        }
+        .loading-seal {
+          width: 86px;
+          height: 86px;
+          margin-bottom: 12px;
+        }
+        .loading-seal svg {
+          width: 49px;
+          height: 49px;
+        }
+        .loading-eyebrow {
+          margin-bottom: 14px;
+        }
+        .tavern-loading h1,
+        .tavern-loading h2 {
+          font-size: 22px;
+        }
+        .loading-detail {
+          margin-bottom: 12px;
+        }
+        .loading-tip {
+          margin-top: 12px;
+          padding-top: 10px;
+        }
+        .loading-footer {
+          display: none;
+        }
+        .tavern-loading:before {
+          inset: 10px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loading-seal:after,
+        .loading-fill {
+          animation: none;
+        }
+        .loading-fill {
+          width: 100%;
+          opacity: 0.65;
+        }
+        #boot-screen,
+        .loading-track.is-determinate .loading-fill {
+          transition: none;
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="boot-screen" class="tavern-loading" aria-label="酒馆加载画面">
+      <div class="loading-content">
+        <p class="loading-eyebrow">BOB’S TAVERN</p>
+        <div class="loading-seal" aria-hidden="true">
+          <span class="loading-stars">✦<span>✦</span></span
+          ><svg viewBox="0 0 80 80">
+            <path d="M40 5 68 22v35L40 74 12 57V22Z" />
+            <path
+              d="M49 25c-16-12-36 6-26 24 8 14 28 7 30-5 2-12-15-17-19-7-3 8 6 12 10 6"
+            />
+            <path d="M40 5v8M68 57l-7-4M12 57l7-4" />
+          </svg>
+        </div>
+        <h1>鲍勃的酒馆</h1>
+        <p id="boot-message" class="loading-detail" role="status">
+          正在打开酒馆的大门…
+        </p>
+        <div class="loading-track" role="progressbar" aria-label="正在加载游戏">
+          <span class="loading-fill"></span>
+        </div>
+        <p class="loading-tip">
+          找个位置坐下。<br /><b>你的下一套阵容，从这里开始。</b>
+        </p>
+        <button
+          id="boot-retry"
+          class="loading-action"
+          hidden
+          onclick="location.reload()"
+        >
+          重新加载
+        </button>
+        <noscript
+          ><p class="loading-detail">
+            请启用 JavaScript 后进入酒馆。
+          </p></noscript
+        >
+      </div>
+      <span class="loading-footer">招募 · 三连 · 决胜酒馆</span>
+    </div>
     <div id="root"></div>
+    <script>
+      (() => {
+        function retry(message) {
+          const screen = document.getElementById("boot-screen");
+          if (!screen || screen.classList.contains("boot-leaving")) return;
+          document.getElementById("boot-message").textContent = message;
+          document.getElementById("boot-retry").hidden = false;
+        }
+        window.addEventListener(
+          "error",
+          () => retry("游戏未能加载，请检查网络后重试。"),
+          true,
+        );
+        window.addEventListener("vite:preloadError", () =>
+          retry("游戏已更新，请重新加载。"),
+        );
+        setTimeout(
+          () => retry("还在准备中，首次进入可能需要稍等片刻。"),
+          12000,
+        );
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

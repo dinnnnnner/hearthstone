@@ -58,6 +58,12 @@ npm run test:e2e  # 启动开发服务后运行浏览器测试
 
 表现层使用 React、原生 SVG、Web Animations API 与按需运行的 Canvas 粒子。动画在浏览器执行，棋盘沿用本地卡牌原画。参考片段、实现取舍与验证记录见 [docs/gameplay-presentation.md](docs/gameplay-presentation.md)。
 
+## 进入游戏与加载画面
+
+打开页面即显示酒馆纹章、旋转金环和加载提示，脚本下载失败时可点击重试。进入棋盘前按实际完成数量显示当前英雄、随从与饰品图片的准备进度；最多同时加载三张，等待三秒后可手动进入，八秒后自动进入，图片缺失不会卡住对局。已准备的图片在本次访问中复用，后续回合不重复等待。
+
+棋盘增加木板边缘明暗、皮革底色、黄铜铆钉和中央刻纹，卡框、手牌和操作按钮的阴影与按压反馈也已调整。加载画面适配手机横竖屏，并尊重系统“减少动态效果”设置。
+
 ## 当前赛季实现范围
 
 | 内容 | 已接入 |
@@ -136,3 +142,5 @@ python3 scripts/download-season-art.py   # 下载原画和可用的中文完整�
 游客和八人好友房版本另存为 `online-rooms-2026-09-08`，见 [在线版本记录](docs/checkpoints/online-rooms-2026-09-08.md)。
 
 房间边界修复和同步优化另存为 `room-fixes-2026-09-08`，见 [修复记录](docs/checkpoints/room-fixes-2026-09-08.md)。
+
+加载画面与棋盘细节另存为 `loading-details-2026-09-08`，见 [界面更新记录](docs/checkpoints/loading-details-2026-09-08.md)。

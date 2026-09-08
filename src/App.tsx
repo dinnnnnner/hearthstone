@@ -1,4 +1,6 @@
 import type { NetworkGame } from "./online/OnlineApp";
+import { useSceneReady } from "./loading/useSceneReady";
+import { LoadingScreen } from "./loading/LoadingScreen";
 import { useBattlePlayback } from "./table/useBattlePlayback";
 import { GameTable } from "./table/GameTable";
 import { playTableSound, type TableSound } from "./table/sound";
@@ -270,6 +272,7 @@ function App({
   const [mobileSeason, setMobileSeason] = useState(false);
   const [localGame, setGame] = useState<Game>(load);
   const game = network?.game || localGame;
+  const entrance = useSceneReady(game);
   const [page, setPage] = useState<Page>("tavern");
   const [selection, setSelection] = useState<Selection | null>(null);
   const [toast, setToast] = useState("");
@@ -326,7 +329,13 @@ function App({
       return () => clearTimeout(id);
     }
   }, [toast]);
-  useBattlePlayback(game, frame, playing, battleSpeed, setFrame);
+  useBattlePlayback(
+    game,
+    frame,
+    playing && entrance.ready,
+    battleSpeed,
+    setFrame,
+  );
   useEffect(() => {
     const f = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -483,6 +492,14 @@ function App({
     { id: "heroes", label: "英雄图鉴", icon: Users },
     { id: "history", label: "对局记录", icon: History },
   ];
+  if (!entrance.ready)
+    return (
+      <LoadingScreen
+        completed={entrance.completed}
+        total={entrance.total}
+        onContinue={entrance.slow ? entrance.enter : undefined}
+      />
+    );
   return (
     <div
       className={`app-shell ${mobile ? "touch-mode" : ""} ${tableMode && page === "tavern" ? "table-active" : ""} ${basePath !== "/" ? "has-lobby" : ""} ${page === "tavern" ? "is-tavern" : ""}`}
