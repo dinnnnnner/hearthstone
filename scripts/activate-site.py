@@ -60,10 +60,11 @@ try:
     time.sleep(1)
     assert '游戏大厅 · Playroom' in check_http('/'), 'Homepage health check failed'
     assert '/tavern/assets/' in check_http('/tavern/'), 'Tavern health check failed'
+    assert json.loads(check_http('/tavern-api/health'))['service'] == 'tavern', 'Tavern room API health check failed'
     assert 'SECTOR' in check_http('/sector/'), 'SECTOR page health check failed'
     assert json.loads(check_http('/api/health'))['ok'] is True, 'SECTOR API health check failed'
     assert command('systemctl', 'show', 'sector', '-p', 'MainPID', '--value') == pid, 'SECTOR process changed'
-    (release / 'activated.json').write_text(json.dumps({'sector_pid': pid, 'https_checks': ['/', '/sector/', '/tavern/', '/api/health']}, indent=2))
+    (release / 'activated.json').write_text(json.dumps({'sector_pid': pid, 'https_checks': ['/', '/sector/', '/tavern/', '/api/health', '/tavern-api/health']}, indent=2))
     print('Activated '+str(release)+'; HTTPS checks passed; SECTOR PID unchanged: '+pid, flush=True)
 except BaseException:
     atomic_copy(backup / 'site.conf', site)

@@ -1,23 +1,41 @@
 {
-  "release": "20260908T051012Z",
-  "remote": "/var/www/playroom/releases/20260908T051012Z",
+  "release": "20260908T055800Z",
+  "remote": "/var/www/playroom/releases/20260908T055800Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
-    "tavern": "/tavern/"
+    "tavern": "/tavern/",
+    "tavernApi": "/tavern-api/"
   },
   "validation": {
-    "engineTests": 45,
-    "publicBrowserTests": 4,
+    "engineAndStateTests": 46,
+    "serverTests": 7,
+    "localBrowserTests": 22,
+    "publicBrowserTests": 7,
+    "publicEightBrowserRoom": "passed, 12.1 seconds with separate caches",
     "nginxConfig": "passed",
+    "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
-    "engineAndStateTests": 46,
-    "localBrowserTests": 18,
-    "sectorPid": 106565,
-    "gzipJavaScriptBytes": 212866
+    "sectorPidAtFinalActivation": 107631,
+    "sectorPidAfterFinalValidation": 107631,
+    "tavernPid": 107805,
+    "tavernMemoryBytesAfterTests": 27570176,
+    "tavernAutomaticRestarts": 0,
+    "uiImageCount": 556,
+    "uiImageBytes": 8897106,
+    "originalImageBytes": 133827864
   },
-  "previousRelease": "20260908T043854Z",
+  "previousRelease": "20260908T055357Z",
   "presentation": "game-table",
-  "animationPass": 2
+  "animationPass": 2,
+  "onlineRooms": true,
+  "backend": {
+    "release": "/opt/bobs-tavern/releases/20260908T055800Z",
+    "service": "bobs-tavern",
+    "listen": "127.0.0.1:8787",
+    "state": "/var/lib/bobs-tavern/state.json",
+    "maxActiveMatches": 6,
+    "memoryLimitMiB": 384
+  }
 }

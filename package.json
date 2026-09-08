@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "test": "tsx --test src/engine.test.ts src/season/engine.test.ts src/table/presentation.test.ts",
     "test:e2e": "playwright test",
-    "build:site": "TAVERN_BASE=/tavern/ npm run build && python3 scripts/package-site.py"
+    "build:site": "TAVERN_BASE=/tavern/ npm run build && python3 scripts/package-site.py",
+    "build:server": "node scripts/build-server.mjs",
+    "dev:server": "tsx server/index.ts",
+    "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
@@ -23,6 +26,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "tsx": "^4.19.2",
     "typescript": "~5.7.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "esbuild": "^0.28.2"
   }
 }

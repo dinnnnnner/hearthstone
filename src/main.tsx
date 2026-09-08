@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "./online/OnlineApp";
 import "./styles.css";
 import "./mobile/mobile.css";
 import "./table/table.css";

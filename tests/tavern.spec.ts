@@ -1,6 +1,9 @@
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() =>
-    localStorage.setItem("bobs-tavern-presentation", "panels"),
+  await page.addInitScript(
+    () => (
+      localStorage.setItem("bobs-tavern-entry", "practice"),
+      localStorage.setItem("bobs-tavern-presentation", "panels")
+    ),
   );
 });
 import { test, expect } from "@playwright/test";

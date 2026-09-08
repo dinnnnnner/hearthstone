@@ -300,15 +300,21 @@ function nextDiscovery(s: Game, rng: () => number) {
 export function createSeason(
   heroId = PREFIX + "lich",
   rng: () => number = Math.random,
+  shared?: { tribes: Tribe[]; pool?: Record<string, number> },
 ): Game {
   const hero = SEASON_HEROES.find((h) => h.id === heroId) || SEASON_HEROES[0];
-  const types = shuffled(ALL_TRIBES, rng).slice(0, 5);
-  if (hero.id === PREFIX + "millificent" && !types.includes("机械"))
+  const types = shared
+    ? [...shared.tribes]
+    : shuffled(ALL_TRIBES, rng).slice(0, 5);
+  if (!shared && hero.id === PREFIX + "millificent" && !types.includes("机械"))
     types[0] = "机械";
-  if (hero.id === PREFIX + "hoggarr" && !types.includes("海盗"))
+  if (!shared && hero.id === PREFIX + "hoggarr" && !types.includes("海盗"))
     types[0] = "海盗";
   const defs = SEASON_CARDS.filter((d) => available(d, types));
-  const pool = Object.fromEntries(defs.map((d) => [d.id, POOL_COPIES[d.tier]]));
+  const initialPool = Object.fromEntries(
+    defs.map((d) => [d.id, POOL_COPIES[d.tier]]),
+  );
+  const pool = { ...(shared?.pool || initialPool) };
   const opponents = shuffled(
     SEASON_HEROES.filter((h) => h.id !== hero.id),
     rng,
@@ -353,7 +359,7 @@ export function createSeason(
       armor: hero.armor || 0,
       tribes: types,
       spellShop: [],
-      initialPool: { ...pool },
+      initialPool: { ...initialPool },
       freeRefresh: hero.id === PREFIX + "nozdormu" ? 1 : 0,
       nextGold: 0,
       maxGold: 10,
@@ -1108,7 +1114,7 @@ function death(ctx: Context, m: Minion) {
     ss(ctx.s).deaths++;
   }
 }
-function endEffects(s: Game, rng: () => number) {
+export function endEffects(s: Game, rng: () => number) {
   const ctx = { s, board: s.board, rng };
   const count = Math.max(
     1,
@@ -1190,15 +1196,21 @@ export function seasonCombat(
   enemies: Minion[],
   enemyTier: number,
   rng: () => number = Math.random,
+  other?: Game,
 ): Battle {
   const boards = [clone(s.board), clone(enemies)],
-    enemyGame = clone(s);
-  enemyGame.hand = [];
-  enemyGame.shop = [];
-  enemyGame.season!.buffs = {};
-  enemyGame.season!.trinkets = [];
+    enemyGame = other || clone(s);
+  if (!other) {
+    enemyGame.hand = [];
+    enemyGame.shop = [];
+    enemyGame.season!.buffs = {};
+    enemyGame.season!.trinkets = [];
+  }
   const frames: BattleFrame[] = [];
-  const originals = new Map(s.board.map((m) => [m.uid, m]));
+  const originals = [
+    new Map(s.board.map((m) => [m.uid, m])),
+    new Map((other?.board || []).map((m) => [m.uid, m])),
+  ];
   const contexts: Context[] = [];
   const frame = (text: string, attacker?: string, target?: string) =>
     frames.push({
@@ -1222,19 +1234,19 @@ export function seasonCombat(
       combat: true,
       summon: (m, pos) => summon(side, m, pos),
       permanent: (m, a, h) => {
-        if (side === 0) {
-          const orig = originals.get(m.uid);
+        if (side === 0 || other) {
+          const orig = originals[side].get(m.uid);
           if (orig && !retained.has(m)) addStats(orig, a, h);
         }
       },
     });
-  for (const m of boards[0]) if (m.rebornNext) keyword(m, "复生");
-  for (const m of boards[0])
-    if (has(m, "keep"))
-      retained.set(m, {
-        original: originals.get(m.uid)!,
-        factor: m.golden ? 2 : 1,
-      });
+  for (let side = 0; side < 2; side++)
+    for (const m of boards[side]) {
+      if (m.rebornNext) keyword(m, "复生");
+      const original = originals[side].get(m.uid);
+      if (has(m, "keep") && original)
+        retained.set(m, { original, factor: m.golden ? 2 : 1 });
+    }
   const damage = (target: Minion, amount: number, source?: Minion) => {
     if (amount <= 0) return;
     if (target.keywords.includes("圣盾")) {
@@ -1267,7 +1279,7 @@ export function seasonCombat(
           revived.health = 1;
           revived.keywords = revived.keywords.filter((k) => k !== "复生");
           summon(side, revived, pos);
-          if (side === 0 && trinket(s, "205"))
+          if ((side === 0 || other) && trinket(contexts[side].s, "205"))
             boards[side].forEach((t) => addStats(t, 2, 2));
         }
       }
@@ -1280,16 +1292,20 @@ export function seasonCombat(
       run(ctx, m, "combat");
       giftEvent(ctx, m, "combat");
     }
-    if (side === 0 && s.hero === PREFIX + "alakir" && boards[0][0])
+    if (
+      (side === 0 || other) &&
+      ctx.s.hero === PREFIX + "alakir" &&
+      boards[side][0]
+    )
       ["风怒", "圣盾", "嘲讽"].forEach((k) =>
-        keyword(boards[0][0], k as Keyword),
+        keyword(boards[side][0], k as Keyword),
       );
-    if (side === 0 && trinket(s, "213"))
-      boards[0]
+    if ((side === 0 || other) && trinket(ctx.s, "213"))
+      boards[side]
         .filter((m) => ability(m, "rally").length)
         .forEach((m) => keyword(m, "圣盾"));
-    if (side === 0 && trinket(s, "361")) {
-      const ns = boards[0].filter((m) => tribe(m, "纳迦"));
+    if ((side === 0 || other) && trinket(ctx.s, "361")) {
+      const ns = boards[side].filter((m) => tribe(m, "纳迦"));
       for (const m of new Set([ns[0], ns.at(-1)].filter(Boolean))) {
         addStats(m!, m!.attack, m!.health);
       }
@@ -1355,8 +1371,12 @@ export function seasonCombat(
         if (other.uid !== attack.uid && tribe(attack, "龙"))
           run({ ...ctx, eventMinion: attack }, other, "attackDragon");
       }
-      if (side === 0 && trinket(s, "200") && ability(attack, "rally").length)
-        ss(s).freeRefresh++;
+      if (
+        (side === 0 || other) &&
+        trinket(ctx.s, "200") &&
+        ability(attack, "rally").length
+      )
+        ss(ctx.s).freeRefresh++;
       const neighbors = has(attack, "cleave")
         ? [
             boards[1 - side][boards[1 - side].indexOf(target) - 1],
@@ -1401,6 +1421,7 @@ export function seasonCombat(
   const cap = living <= 4 ? Infinity : s.turn < 4 ? 5 : s.turn < 8 ? 10 : 15;
   const amount = Math.min(raw, cap);
   ss(s).buffs.beastCombat = { attack: 0, health: 0 };
+  if (other) ss(other).buffs.beastCombat = { attack: 0, health: 0 };
   frame(
     `${result === "win" ? "胜利" : result === "loss" ? "失利" : "平局"} · ${amount}点伤害${raw > cap ? "，已应用伤害上限" : ""}`,
   );
@@ -1759,19 +1780,7 @@ export function actSeason(
         s.phase = "over";
         break;
       }
-      s.turn++;
-      s.gold = Math.min(
-        st.maxGold,
-        Math.min(st.maxGold, s.turn + 2) + st.nextGold,
-      );
-      st.nextGold = 0;
-      s.upgrade = Math.max(0, s.upgrade - 1);
-      s.powerUsed = false;
-      s.phase = "recruit";
-      s.battle = null;
-      startEffects(s, rng);
-      refill(s, rng, s.frozen);
-      s.frozen = false;
+      advanceRecruit(s, rng);
       const living = s.opponents
         .map((o, i) => ({ o, i }))
         .filter((x) => x.o.health > 0);
@@ -1803,4 +1812,30 @@ export function assertSeasonPool(s: Game) {
   }
   if (s.hand.length + s.rewards.length > 10)
     throw Error("Season hand overflow");
+}
+
+export function advanceRecruit(s: Game, rng: () => number = Math.random) {
+  const st = ss(s);
+  s.turn++;
+  s.gold = Math.min(st.maxGold, Math.min(st.maxGold, s.turn + 2) + st.nextGold);
+  st.nextGold = 0;
+  s.upgrade = Math.max(0, s.upgrade - 1);
+  s.powerUsed = false;
+  s.phase = "recruit";
+  s.battle = null;
+  startEffects(s, rng);
+  refill(s, rng, s.frozen);
+  s.frozen = false;
+  triples(s);
+  nextDiscovery(s, rng);
+}
+export function releasePlayerCards(s: Game) {
+  for (const m of [...s.board, ...s.hand, ...s.shop, ...s.discovery])
+    release(s, m);
+  s.board = [];
+  s.hand = [];
+  s.shop = [];
+  s.discovery = [];
+  s.rewards = [];
+  ss(s).spellShop = [];
 }

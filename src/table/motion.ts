@@ -82,7 +82,11 @@ export class SceneTimeline {
     for (const a of this.animations) {
       a.updatePlaybackRate(speed);
       if (playing) a.play();
-      else a.pause();
+      else {
+        const time = a.currentTime;
+        a.pause();
+        if (time !== null) a.currentTime = time;
+      }
     }
   }
   dispose() {

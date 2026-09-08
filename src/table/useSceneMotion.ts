@@ -1,10 +1,4 @@
-import {
-  useLayoutEffect,
-  useEffect,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useLayoutEffect, useRef, useState, type RefObject } from "react";
 import type { Game, Minion, BattleFrame } from "../engine";
 import type { EffectsHandle, BurstKind } from "./Effects";
 import { changesBetween, shortStat } from "./presentation";
@@ -35,7 +29,7 @@ export function useSceneMotion(p: Props) {
   controls.current = p;
   const [heroStruck, setHeroStruck] = useState(true);
   const [overrides, setOverrides] = useState<Map<string, Minion>>(new Map());
-  useEffect(() => {
+  useLayoutEffect(() => {
     timeline.current?.control(
       p.game.phase === "combat" ? p.speed : 1,
       p.game.phase !== "combat" || p.playing,

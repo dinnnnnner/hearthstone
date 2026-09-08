@@ -68,6 +68,9 @@ type Drag = {
   pointer: number;
 };
 type Props = {
+  lobby?: () => void;
+  roomStatus?: string;
+  locked?: boolean;
   game: Game;
   dispatch: (a: Action) => boolean;
   selection: Selection | null;
@@ -419,9 +422,14 @@ export function GameTable(p: Props) {
           </span>
         </div>
         <div className="table-header-center">
-          {game.season?.tribes.join(" · ") || "经典随从练习"}
+          {p.roomStatus || game.season?.tribes.join(" · ") || "经典随从练习"}
         </div>
         <nav>
+          {p.lobby && (
+            <button onClick={p.lobby} aria-label="对战大厅" title="对战大厅">
+              <LayoutGrid size={17} />
+            </button>
+          )}
           <button onClick={p.collection} aria-label="随从图鉴" title="随从图鉴">
             <BookOpen size={17} />
           </button>
@@ -459,7 +467,7 @@ export function GameTable(p: Props) {
               onClick={() => setRival(rival === i ? null : i)}
               aria-label={`${o.name}，${rivalHealth(i) <= 0 ? "已淘汰" : rivalHealth(i) + "生命"}${i === game.nextOpponent ? "，下一位对手" : ""}`}
             >
-              <img src={art(HEROES.find((h) => h.id === o.hero)!.art)} alt="" />
+              <img src={art(HEROES.find((h) => h.id === o.hero)!.art)} alt="" fetchPriority="low" decoding="async" />
               <span className="rival-tier">{"★".repeat(o.tier)}</span>
               <span className="rival-hp">
                 {rivalHealth(i) <= 0 ? "☠" : rivalHealth(i)}
@@ -714,15 +722,27 @@ export function GameTable(p: Props) {
                     : "招募阶段"}
               </strong>
               <small>
-                {recruit ? "不限时练习" : finished ? "战斗已结束" : "自动交战"}
+                {recruit
+                  ? p.roomStatus
+                    ? "限时招募"
+                    : "不限时练习"
+                  : finished
+                    ? "战斗已结束"
+                    : "自动交战"}
               </small>
             </div>
             <button
               className="table-end-turn"
               onClick={() => dispatch({ type: combat ? "continue" : "end" })}
-              disabled={combat ? !finished : !recruit}
+              disabled={p.locked || (combat ? !finished : !recruit)}
             >
-              {combat ? (finished ? "返回酒馆" : "交战中") : "结束招募"}
+              {p.locked
+                ? "等待其他玩家"
+                : combat
+                  ? finished
+                    ? "返回酒馆"
+                    : "交战中"
+                  : "结束招募"}
               {combat ? <Swords size={17} /> : <ArrowRight size={17} />}
             </button>
             {game.season && !combat && (
@@ -1014,11 +1034,12 @@ export function GameTable(p: Props) {
       </div>
       <footer className="table-footer">
         <span>
-          {recruit
-            ? drag?.moving
-              ? "松开以完成操作"
-              : "拖动购买 / 打出 · 拖向鲍勃出售"
-            : current?.text || "准备下一轮"}
+          {p.roomStatus ||
+            (recruit
+              ? drag?.moving
+                ? "松开以完成操作"
+                : "拖动购买 / 打出 · 拖向鲍勃出售"
+              : current?.text || "准备下一轮")}
           <span className="table-footer-scope">当前赛季部分复刻</span>
         </span>
         {combat ? (

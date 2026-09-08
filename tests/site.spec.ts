@@ -1,4 +1,9 @@
 import { test, expect } from "@playwright/test";
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem("bobs-tavern-entry", "practice"),
+  );
+});
 const site = process.env.SITE_BASE_URL;
 test.skip(!site, "Set SITE_BASE_URL to the packaged or deployed site");
 test("lobby links to both games, tavern assets use its subpath, and returning home preserves progress", async ({
@@ -22,7 +27,8 @@ test("lobby links to both games, tavern assets use its subpath, and returning ho
     .locator(".tavern-row .piece-frame img")
     .first()
     .evaluate((e) => (e as HTMLImageElement).src);
-  expect(image).toContain("/tavern/art/");
+  expect(image).toContain("/tavern/thumbs/");
+  expect(image).toMatch(/\.webp$/);
   await page.locator(".tavern-row .table-piece").first().click();
   await page.getByRole("button", { name: /招募随从/ }).click();
   await expect(page.locator(".table-hand .hand-card-button")).toHaveCount(1);

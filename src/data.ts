@@ -593,7 +593,7 @@ export const CLASSIC_HEROES: Hero[] = [
   },
 ];
 export const HEROES: Hero[] = [...CLASSIC_HEROES, ...SEASON_HEROES];
-export const art = (id: string) =>
+export const originalArt = (id: string) =>
   id.startsWith("s14_")
     ? assetUrl("art/" + id.slice(4) + ".png")
     : assetUrl(
@@ -613,6 +613,7 @@ export const art = (id: string) =>
             : id) +
           ".png",
       );
+export const art = (id: string) => originalArt(id).replace("art/", "thumbs/").replace(/\.png$/, ".webp");
 
 const GOLDEN_TEXT: Record<string, string> = {
   cat: "战吼：召唤一头2/2的雌斑虎。",

@@ -1,0 +1,28 @@
+[Unit]
+Description=Bob's Tavern guest and room service
+After=network.target
+
+[Service]
+Type=simple
+User=bobs-tavern
+Group=bobs-tavern
+WorkingDirectory=/opt/bobs-tavern/current
+ExecStart=/usr/bin/node --max-old-space-size=256 /opt/bobs-tavern/current/server.cjs
+Environment=NODE_ENV=production
+Environment=TAVERN_HOST=127.0.0.1
+Environment=TAVERN_PORT=8787
+Environment=TAVERN_STATE=/var/lib/bobs-tavern/state.json
+StateDirectory=bobs-tavern
+StateDirectoryMode=0700
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=8
+MemoryMax=384M
+TasksMax=64
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,3 +1,4 @@
+import type { NetworkGame } from "./online/OnlineApp";
 import { useBattlePlayback } from "./table/useBattlePlayback";
 import { GameTable } from "./table/GameTable";
 import { playTableSound, type TableSound } from "./table/sound";
@@ -242,7 +243,13 @@ function MinionCard({
     </button>
   );
 }
-function App() {
+function App({
+  network,
+  onLobby,
+}: {
+  network?: NetworkGame;
+  onLobby?: () => void;
+}) {
   const { mode, setMode, mobile } = usePlayMode();
   const [tableMode, setTableMode] = useState(() => {
     try {
@@ -261,7 +268,8 @@ function App() {
     } catch {}
   }, [tableMode]);
   const [mobileSeason, setMobileSeason] = useState(false);
-  const [game, setGame] = useState<Game>(load);
+  const [localGame, setGame] = useState<Game>(load);
+  const game = network?.game || localGame;
   const [page, setPage] = useState<Page>("tavern");
   const [selection, setSelection] = useState<Selection | null>(null);
   const [toast, setToast] = useState("");
@@ -307,6 +315,7 @@ function App() {
   const opponent = game.opponents[game.nextOpponent];
   const recruiting = game.phase === "recruit";
   useEffect(() => {
+    if (network) return;
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(game));
     } catch {}
@@ -331,6 +340,14 @@ function App() {
     window.addEventListener("keydown", f);
     return () => window.removeEventListener("keydown", f);
   }, []);
+  useEffect(() => {
+    if (network) {
+      setFrame(0);
+      setPlaying(true);
+      setSelection(null);
+      setTargeting(null);
+    }
+  }, [!!network, game.phase, game.turn]);
   function beep(action: Action) {
     const sounds: Partial<Record<Action["type"], TableSound>> = {
       buy: "buy",
@@ -350,6 +367,19 @@ function App() {
     if (kind) playTableSound(kind, sound);
   }
   function dispatch(action: Action) {
+    if (network) {
+      if (network.locked) {
+        setToast("已提交，正在等待其他玩家。");
+        return false;
+      }
+      const sent = network.send(action);
+      if (sent) {
+        setSelection(null);
+        setTargeting(null);
+        beep(action);
+      }
+      return sent;
+    }
     const result = act(game, action);
     if (result.error) {
       setToast(result.error);
@@ -524,7 +554,8 @@ function App() {
           <div className="local-status">
             <span className="status-dot" />
             <div>
-              单人练习模式<small>对局自动保存在本地</small>
+              {network ? "在线对局" : "单人练习模式"}
+              <small>{network ? "进度由酒馆保存" : "对局自动保存在本地"}</small>
             </div>
             <Shield size={16} />
           </div>
@@ -537,6 +568,16 @@ function App() {
             <span>{navs.find((n) => n.id === page)?.label}</span>
           </div>
           <div className="topbar-right">
+            {onLobby && (
+              <button
+                className="icon-button"
+                onClick={onLobby}
+                aria-label="对战大厅"
+                title="对战大厅"
+              >
+                <LayoutGrid size={18} />
+              </button>
+            )}
             {basePath !== "/" && (
               <a
                 href="/"
@@ -626,6 +667,9 @@ function App() {
           {page === "tavern" ? (
             tableMode ? (
               <GameTable
+                lobby={onLobby}
+                roomStatus={network?.status}
+                locked={network?.locked}
                 game={game}
                 dispatch={dispatch}
                 selection={selection}
@@ -644,6 +688,10 @@ function App() {
                 sound={sound}
                 toggleSound={() => setSound(!sound)}
                 newGame={() => {
+                  if (network) {
+                    onLobby?.();
+                    return;
+                  }
                   setNewHero(game.hero);
                   setNewSeason(!!game.season);
                   setModal("new");
@@ -670,6 +718,10 @@ function App() {
                 choose={choose}
                 power={power}
                 newGame={() => {
+                  if (network) {
+                    onLobby?.();
+                    return;
+                  }
                   setNewHero(game.hero);
                   setNewSeason(!!game.season);
                   setModal("new");
@@ -1996,17 +2048,33 @@ function App() {
       {game.phase === "over" && (
         <Modal
           title={
-            game.health > 0 ? "酒馆之王，就是你！" : "这局结束，再来一杯？"
+            network
+              ? `本局第 ${network.place || "—"} 名`
+              : game.health > 0
+                ? "酒馆之王，就是你！"
+                : "这局结束，再来一杯？"
           }
           subtitle={
-            game.health > 0
-              ? "你击败了所有练习对手。"
-              : `你在第${game.turn}回合结束了本次练习。`
+            network
+              ? network.place === 1
+                ? "你赢得了本场对局。"
+                : "回到大厅，可以继续和朋友再来一局。"
+              : game.health > 0
+                ? "你击败了所有练习对手。"
+                : `你在第${game.turn}回合结束了本次练习。`
           }
         >
           <div className="game-over">
             <Trophy size={56} />
-            <h3>{game.health > 0 ? "练习胜利" : "继续磨练你的策略"}</h3>
+            <h3>
+              {network
+                ? network.place === 1
+                  ? "酒馆之王"
+                  : `本局第 ${network.place || "—"} 名`
+                : game.health > 0
+                  ? "练习胜利"
+                  : "继续磨练你的策略"}
+            </h3>
             <p>
               招募{game.purchases}次 · 三连{game.triples}次 · 获胜
               {game.battles.filter((b) => b.result === "win").length}场
@@ -2015,11 +2083,15 @@ function App() {
           <button
             className="button primary full-width"
             onClick={() => {
+              if (network) {
+                onLobby?.();
+                return;
+              }
               setGame(createGame(game.hero));
               setPage("tavern");
             }}
           >
-            再来一局 <RotateCw size={16} />
+            {network ? "返回对战大厅" : "再来一局"} <RotateCw size={16} />
           </button>
         </Modal>
       )}

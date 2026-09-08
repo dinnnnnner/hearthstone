@@ -6,3 +6,4 @@ playwright-report/
 .DS_Store
 site-dist/
 __pycache__/
+server-dist/

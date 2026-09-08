@@ -23,6 +23,7 @@ function add(s: Game, id: string, zone: "shop" | "board" | "hand") {
 async function open(page: Page, s: Game) {
   await page.addInitScript(
     ({ s, key }) => {
+      localStorage.setItem("bobs-tavern-entry", "practice");
       if (!sessionStorage.getItem("table-fixture")) {
         localStorage.setItem(key, JSON.stringify(s));
         localStorage.setItem("bobs-tavern-sound", "off");
@@ -88,7 +89,10 @@ test("drag buy, summon, reorder, sell, freeze and inline combat; save survives r
   await expect(page.locator(".combat-stage")).toHaveCount(0);
   await expect(page.locator(".enemy-row .table-piece").first()).toBeVisible();
   await expect
-    .poll(async () => page.locator(".scene-number").count(), { timeout: 7000 })
+    .poll(async () => page.locator(".scene-number").count(), {
+      timeout: 7000,
+      intervals: [50],
+    })
     .toBeGreaterThan(0);
   await page.getByRole("button", { name: "暂停战斗" }).click();
   await page.getByLabel("战斗速度").selectOption("2");
