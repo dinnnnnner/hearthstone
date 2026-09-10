@@ -372,3 +372,19 @@ test("bots use new heroes with valid targets and both Inge charges without stran
   assert.equal(room.seats[6].game!.season!.heroPowerUsesTurn, 2);
   pool(room);
 });
+
+
+test("zero-gold health refresh can eliminate a room player and returns their pool copies", () => {
+  const { service, guests, room } = setup(8);
+  service.start(guests[0]);
+  const p = room.seats[0], id = "s14_BG26_524";
+  if (room.pool[id] === undefined) { room.pool[id] = 11; room.initial[id] = 11; }
+  const prince = makeMinion(id, false, true);
+  room.pool[id]--; p.game!.board.push(prince);
+  p.game!.gold = 0; p.game!.health = 1; p.game!.season!.armor = 0;
+  service.action(guests[0], { type: "refresh" }, "lethal-health-refresh", room.turn);
+  assert.equal(p.game!.health, 0);
+  assert.equal(p.place, 8);
+  assert.equal(p.game!.board.length, 0);
+  pool(room);
+});

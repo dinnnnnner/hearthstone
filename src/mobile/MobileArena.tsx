@@ -1,3 +1,4 @@
+import { RefreshPrice } from "../table/RefreshPrice";
 import { useEffect, useState, type ReactNode } from "react";
 import {
   ArrowUp,
@@ -18,7 +19,7 @@ import {
 } from "lucide-react";
 import { type Game, type Minion, type Action, heroOf, heroPowerState } from "../engine";
 import { art, getDef } from "../data";
-import { refreshCost, spellCost } from "../season/engine";
+import { refreshCost, refreshPayment, spellCost } from "../season/engine";
 
 export type PlayMode = "auto" | "touch" | "desktop";
 const MODE_KEY = "bobs-tavern-play-mode";
@@ -164,8 +165,8 @@ export function MobileArena({
               >
                 <RotateCw size={14} />
                 刷新
-                <Coins size={11} />
-                {game.season ? refreshCost(game) : 1}
+                {!refreshPayment(game).health && <Coins size={11} />}
+                <RefreshPrice game={game} />
               </button>
               <button
                 className={game.frozen ? "active" : ""}

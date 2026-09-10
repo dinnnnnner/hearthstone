@@ -1,3 +1,4 @@
+import { RefreshPrice } from "./table/RefreshPrice";
 import type { NetworkGame } from "./online/OnlineApp";
 import { useSceneReady } from "./loading/useSceneReady";
 import { LoadingScreen } from "./loading/LoadingScreen";
@@ -63,6 +64,7 @@ import {
 import {
   seasonTargets,
   refreshCost,
+  refreshPayment,
   minionCost,
   spellCost,
 } from "./season/engine";
@@ -857,8 +859,8 @@ function App({
                           >
                             <RotateCw size={14} />
                             <span>刷新</span>
-                            <Coin small />
-                            {game.season ? refreshCost(game) : 1}
+                            {!refreshPayment(game).health && <Coin small />}
+                            <RefreshPrice game={game} />
                           </button>
                           <button
                             className={`small-button freeze-button ${game.frozen ? "is-frozen" : ""}`}

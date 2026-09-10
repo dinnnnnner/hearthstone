@@ -53,6 +53,7 @@ export interface SeasonState {
   fodder: number;
   spellDiscount: number;
   healthRefreshes: number;
+  healthRefreshUses?: Record<string, number>;
   playedTurn: number;
   goldenPlayed: number;
   spellsCast: number;
@@ -216,8 +217,32 @@ function applyShop(s: Game, m: Minion) {
     addStats(m, b.attack, b.health);
   }
 }
+function refreshSources(s: Game) {
+  return s.board.filter((m) => has(m, "healthRefresh"));
+}
+function refreshUses(s: Game) {
+  if (ss(s).healthRefreshUses) return ss(s).healthRefreshUses!;
+  // Old saves stored one shared counter. Distribute spent charges once, without
+  // granting those charges again when migrating a running game.
+  let spent = ss(s).healthRefreshes || 0;
+  return Object.fromEntries(refreshSources(s).map((m) => {
+    const used = Math.min(spent, m.golden ? 4 : 2);
+    spent -= used;
+    return [m.uid, used];
+  }));
+}
+export function refreshPayment(s: Game) {
+  if (!s.season) return { gold: 1, health: 0, remaining: 0, source: undefined as string | undefined };
+  const uses = refreshUses(s), sources = refreshSources(s);
+  const left = (m: Minion) => Math.max(0, (m.golden ? 4 : 2) - (uses[m.uid] || 0));
+  const remaining = sources.reduce((sum, m) => sum + left(m), 0);
+  const source = sources.find((m) => left(m) > 0)?.uid;
+  if (ss(s).freeRefresh > 0) return { gold: 0, health: 0, remaining, source: undefined };
+  if (source) return { gold: 0, health: 1, remaining, source };
+  return { gold: s.hero === PREFIX + "millhouse" ? 2 : 1, health: 0, remaining, source: undefined };
+}
 export function refreshCost(s: Game) {
-  return ss(s).freeRefresh > 0 ? 0 : s.hero === PREFIX + "millhouse" ? 2 : 1;
+  return refreshPayment(s).gold;
 }
 export function minionCost(s: Game, m: Minion) {
   return trinket(s, "202") &&
@@ -407,6 +432,7 @@ export function createSeason(
       fodder: 0,
       spellDiscount: 0,
       healthRefreshes: 0,
+      healthRefreshUses: {},
       playedTurn: 0,
       goldenPlayed: 0,
       spellsCast: 0,
@@ -1199,6 +1225,7 @@ function startEffects(s: Game, rng: () => number) {
   ss(s).playedTurn = 0;
   ss(s).trinketBuys = 0;
   ss(s).healthRefreshes = 0;
+  ss(s).healthRefreshUses = {};
   [...s.board, ...s.hand, ...s.shop].forEach((m) => {
     m.activated = false;
     m.rebornNext = false;
@@ -1494,6 +1521,7 @@ export function actSeason(
   const s = clone(state),
     st = ss(s),
     ctx: Context = { s, board: s.board, rng };
+  st.healthRefreshUses ??= refreshUses(s);
   const fail = (error: string) => ({ state, error });
   if (s.phase === "over") return fail("本局已结束，请开始新对局。");
   if (s.phase === "combat" && action.type !== "continue")
@@ -1512,28 +1540,21 @@ export function actSeason(
       log(s, s.frozen ? "已冻结随从和酒馆法术。" : "已解除冻结。");
       break;
     case "refresh": {
-      const healthFree =
-        s.board.some((m) => has(m, "healthRefresh")) &&
-        st.healthRefreshes <
-          Math.max(
-            ...s.board
-              .filter((m) => has(m, "healthRefresh"))
-              .map((m) => (m.golden ? 4 : 2)),
-          );
-      const cost = refreshCost(s);
-      if (s.gold < cost && !healthFree)
-        return fail(`金币不足，刷新需要${cost}金币。`);
-      if (st.freeRefresh > 0) st.freeRefresh--;
-      else if (healthFree) {
-        heroDamage(s, 1, ctx);
+      const payment = refreshPayment(s);
+      if (s.gold < payment.gold)
+        return fail(`金币不足，刷新需要${payment.gold}金币。`);
+      if (payment.source) {
+        st.healthRefreshUses![payment.source] = (st.healthRefreshUses![payment.source] || 0) + 1;
         st.healthRefreshes++;
-      } else s.gold -= cost;
+        heroDamage(s, payment.health, ctx);
+      } else if (st.freeRefresh > 0) st.freeRefresh--;
+      else s.gold -= payment.gold;
       s.frozen = false;
       refill(s, rng);
       s.refreshes++;
       log(
         s,
-        `刷新酒馆${healthFree ? "，以生命支付" : cost === 0 ? "，消耗免费次数" : ""}。`,
+        `刷新酒馆${payment.health ? `，以${payment.health}点生命支付` : payment.gold === 0 ? "，消耗免费次数" : ""}。`,
       );
       break;
     }

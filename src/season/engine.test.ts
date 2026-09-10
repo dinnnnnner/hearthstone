@@ -21,6 +21,7 @@ import {
   seasonTargets,
   giftTierRange,
   refreshCost,
+  refreshPayment,
   TRINKETS,
   eligibleGifts,
   seasonPowerState,
@@ -578,4 +579,71 @@ test("old saves without hero counters still enforce the existing once-per-turn p
   assert.equal(seasonPowerState(s).used, true);
   advanceRecruit(s, rng);
   assert.equal(seasonPowerState(s).used, false);
+});
+
+
+test("Malchezaar refresh works at zero gold, consumes health charges then returns to gold", () => {
+  let s = fixture(); s.gold = 0; s.season!.armor = 0;
+  add(s, "BG26_524", "board");
+  assert.equal(refreshCost(s), 0);
+  assert.equal(refreshPayment(s).remaining, 2);
+  const hp = s.health;
+  s = apply(s, { type: "refresh" });
+  assert.equal(s.health, hp - 1); assert.equal(s.gold, 0);
+  s = apply(s, { type: "refresh" });
+  assert.equal(s.health, hp - 2); assert.equal(refreshCost(s), 1);
+  const rejected = act(s, { type: "refresh" }, rng);
+  assert.ok(rejected.error); assert.equal(rejected.state, s);
+  advanceRecruit(s, rng);
+  assert.equal(refreshPayment(s).remaining, 2);
+});
+test("each Malchezaar owns its charges, golden grants four, new copies do not inherit spent charges", () => {
+  let s = fixture(); s.gold = 0;
+  const a = add(s, "BG26_524", "board");
+  const b = add(s, "BG26_524", "board", true);
+  assert.equal(refreshPayment(s).remaining, 6);
+  for (let i = 0; i < 6; i++) s = apply(s, { type: "refresh" });
+  assert.equal(s.season!.healthRefreshUses![a.uid], 2);
+  assert.equal(s.season!.healthRefreshUses![b.uid], 4);
+  s = apply(s, { type: "sell", uid: a.uid });
+  const fresh = add(s, "BG26_524");
+  s = apply(s, { type: "play", uid: fresh.uid });
+  assert.equal(refreshPayment(s).remaining, 2);
+  s = JSON.parse(JSON.stringify(s)); s.gold = 0;
+  s = apply(s, { type: "refresh" });
+  assert.equal(refreshPayment(s).remaining, 1);
+});
+test("free refresh is used before health and does not spend a Malchezaar charge", () => {
+  let s = fixture("s14_nozdormu"); s.gold = 0;
+  add(s, "BG26_524", "board");
+  const hp = s.health, armor = s.season!.armor;
+  assert.equal(refreshPayment(s).health, 0);
+  s = apply(s, { type: "refresh" });
+  assert.equal(s.health, hp); assert.equal(s.season!.armor, armor);
+  assert.equal(refreshPayment(s).remaining, 2);
+  assert.match(s.logs[0], /免费/); assert.doesNotMatch(s.logs[0], /生命/);
+  s = apply(s, { type: "refresh" });
+  assert.equal(s.season!.armor, armor - 1);
+  assert.equal(refreshPayment(s).remaining, 1);
+});
+test("old shared refresh counter migrates without restoring spent uses and supports a newly played copy", () => {
+  let s = fixture(); s.gold = 0;
+  add(s, "BG26_524", "board");
+  delete s.season!.healthRefreshUses; s.season!.healthRefreshes = 2;
+  assert.equal(refreshPayment(s).remaining, 0);
+  const fresh = add(s, "BG26_524");
+  s = apply(s, { type: "play", uid: fresh.uid });
+  assert.equal(refreshPayment(s).remaining, 2);
+  s = apply(s, { type: "refresh" });
+  assert.equal(refreshPayment(s).remaining, 1);
+});
+test("Malchezaar self damage triggers Soul Rewinder and can eliminate an unprotected hero", () => {
+  let s = fixture(); s.gold = 0; s.health = 1; s.season!.armor = 0;
+  add(s, "BG26_524", "board");
+  const rewinder = add(s, "BG26_174", "board"), health = rewinder.health;
+  s = apply(s, { type: "refresh" });
+  assert.equal(s.health, 1); assert.equal(s.board[1].health, health + 2);
+  s = apply(s, { type: "sell", uid: rewinder.uid });
+  s = apply(s, { type: "refresh" });
+  assert.equal(s.phase, "over"); assert.equal(s.health, 0);
 });

@@ -1,3 +1,5 @@
+import { KeywordEffects } from "./KeywordEffects";
+import { RefreshPrice } from "./RefreshPrice";
 import {
   useEffect,
   useRef,
@@ -26,6 +28,9 @@ import {
   Shield,
   SkipForward,
   Snowflake,
+  Skull,
+  FlaskConical,
+  Wind,
   Sparkles,
   Swords,
   Users,
@@ -45,6 +50,7 @@ import {
 import {
   minionCost,
   refreshCost,
+  refreshPayment,
   seasonTargets,
   spellCost,
   TRINKETS,
@@ -123,8 +129,9 @@ function Piece({
       className={`table-piece ${m.golden ? "golden-piece" : ""} ${m.keywords.includes("圣盾") ? "shield-piece" : ""} ${m.keywords.includes("嘲讽") ? "taunt-piece" : ""} ${selected ? "chosen-piece" : ""} ${m.health <= 0 ? "fallen-piece" : ""}`}
       data-piece-id={m.uid}
       data-target={m.uid}
-      aria-label={`${d.name}，${m.attack}攻击，${m.health}生命，${cardText(m)}`}
+      aria-label={`${d.name}，${m.attack}攻击，${m.health}生命，${cardText(m)}，当前关键词：${[...m.keywords, ...(m.rebornNext ? ["复生"] : [])].join("、") || "无"}`}
     >
+      <KeywordEffects m={m} />
       <span className="piece-frame">
         <img src={art(m.id)} alt="" draggable={false} />
         <span className="piece-vignette" />
@@ -138,12 +145,13 @@ function Piece({
       </span>
       <span className="piece-abilities">
         {m.rebornNext || m.keywords.includes("复生") ? (
-          <RotateCw size={12} />
+          <span className="keyword-badge reborn-badge" title="复生"><RotateCw size={12} /></span>
         ) : null}
         {m.keywords.includes("烈毒") || m.keywords.includes("剧毒") ? (
-          <span>☠</span>
+          <span className="keyword-badge poison-badge" title={m.keywords.includes("烈毒") ? "烈毒" : "剧毒"}><FlaskConical size={12} /></span>
         ) : null}
-        {d.abilities?.some((a) => a.event === "death") ? <span>☠</span> : null}
+        {[...(d.abilities || []), ...(m.extraAbilities || [])].some((a) => a.event === "death") ? <span className="keyword-badge deathrattle-badge" title="亡语"><Skull size={12} /></span> : null}
+        {m.keywords.includes("风怒") && <span className="keyword-badge windfury-badge" title="风怒"><Wind size={12} /></span>}
         {m.gift ? <Gem size={12} /> : null}
         {activate && !combat ? (
           <span className={m.activated ? "spent-activate" : "ready-activate"}>
@@ -158,6 +166,7 @@ function Piece({
 export function GameTable(p: Props) {
   const { game, dispatch, selection, choose, close, targeting, frame } = p;
   const powerState = heroPowerState(game);
+  const payment = refreshPayment(game);
   const hero = heroOf(game),
     combat = game.phase === "combat",
     finished = combat && frame === (game.battle?.frames.length || 0) - 1,
@@ -547,19 +556,20 @@ export function GameTable(p: Props) {
                 </button>
                 <div className="right-bob-controls">
                   <button
-                    className="tavern-control"
+                    className={`tavern-control ${payment.health ? "health-refresh-control" : ""}`}
                     onClick={() => dispatch({ type: "refresh" })}
                     disabled={
                       !recruit ||
                       game.gold < (game.season ? refreshCost(game) : 1)
                     }
                     aria-label="刷新酒馆"
+                    title={payment.health ? `消耗${payment.health}点生命，剩余${payment.remaining}次` : `消耗${payment.gold}金币`}
                   >
                     <span className="control-cost">
-                      {game.season ? refreshCost(game) : 1}
+                      <RefreshPrice game={game} compact />
                     </span>
                     <RotateCw />
-                    <span>刷新</span>
+                    <span>{payment.health ? `刷新 · ${payment.remaining}次` : "刷新"}</span>
                   </button>
                   <button
                     className={`tavern-control freeze-control ${game.frozen ? "active" : ""}`}

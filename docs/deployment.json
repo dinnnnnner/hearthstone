@@ -1,6 +1,6 @@
 {
-  "release": "20260908T085015Z",
-  "remote": "/var/www/playroom/releases/20260908T085015Z",
+  "release": "20260910T004855Z",
+  "remote": "/var/www/playroom/releases/20260910T004855Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -8,34 +8,34 @@
     "tavernApi": "/tavern-api/"
   },
   "validation": {
-    "engineAndStateTests": 56,
-    "serverTests": 18,
-    "localBrowserTests": 32,
-    "publicBrowserTests": 17,
-    "publicEightBrowserRoom": "passed, 12.2 seconds with separate caches",
+    "engineAndStateTests": 61,
+    "serverTests": 19,
+    "localBrowserTests": 34,
+    "publicBrowserTests": 15,
+    "publicEightBrowserRoom": "passed, 12.6 seconds with separate caches",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
-    "sectorPidAtFinalActivation": 108431,
-    "sectorPidAfterFinalValidation": 108431,
-    "tavernPid": 108957,
-    "tavernMemoryBytesAfterTests": 30437376,
+    "sectorPidAtFinalActivation": 110058,
+    "sectorPidAfterFinalValidation": 110058,
+    "tavernPid": 114820,
+    "tavernMemoryBytesAfterTests": 45285376,
     "tavernAutomaticRestarts": 0,
     "uiImageCount": 556,
     "uiImageBytes": 8897106,
     "originalImageBytes": 133827864,
     "tavernRestarted": true,
     "buildSite": "passed",
-    "finalReleasePublicBrowserTests": 9,
-    "browserValidationScope": "32 distinct local scenarios across full regression and final hero checks; 17 distinct public scenarios across the initial 16-test release check and final 9-test hero/site check. The final frontend-only correction updates legacy Millhouse cost labels and button availability."
+    "finalReleasePublicBrowserTests": 15,
+    "browserValidationScope": "34 local browser scenarios passed; 3 public-only site checks skipped locally. 15 public browser scenarios passed on the deployed release, including all board interactions and combat contact, pause and skip."
   },
-  "previousRelease": "20260908T084702Z",
+  "previousRelease": "20260908T085015Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
   "backend": {
-    "release": "/opt/bobs-tavern/releases/20260908T084702Z",
+    "release": "/opt/bobs-tavern/releases/20260910T004855Z",
     "service": "bobs-tavern",
     "listen": "127.0.0.1:8787",
     "state": "/var/lib/bobs-tavern/state.json",
@@ -43,7 +43,7 @@
     "memoryLimitMiB": 384,
     "offlineGraceSeconds": 300,
     "snapshotWrites": "serialized async atomic replacement with per-room serialization cache",
-    "previousRelease": "/opt/bobs-tavern/releases/20260908T062430Z"
+    "previousRelease": "/opt/bobs-tavern/releases/20260908T084702Z"
   },
   "replayBenchmark": {
     "frames": 180,
@@ -73,5 +73,8 @@
     "inge",
     "millhouse",
     "chenvaala"
-  ]
+  ],
+  "healthRefresh": "Shared payment calculation; per-minion counters with old-save migration; free refresh has priority; zero-gold use and health/charge labels in every layout",
+  "keywordVisuals": "Separate SVG taunt guard, golden shield with reflected light and broken-shell fragments, cyan reborn, green poison, skull deathrattle and windfury badges",
+  "homepagePreservedFromRelease": "20260908T085015Z"
 }
