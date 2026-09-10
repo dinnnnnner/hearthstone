@@ -1,0 +1,3 @@
+# Install a CPU or CUDA build of torch separately for your machine.
+numpy==2.5.3
+torch==2.14.0

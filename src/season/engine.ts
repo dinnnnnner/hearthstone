@@ -1,3 +1,4 @@
+import { recordsFrames, recordsLogs } from "../simulation";
 import {
   CARDS,
   POOL_COPIES,
@@ -164,6 +165,7 @@ const has = (m: Minion, op: string) => ability(m).some((a) => a.op === op);
 const trinket = (s: Game, n: string) =>
   ss(s).trinkets.includes("BG36_MagicItem_" + n);
 const log = (s: Game, text: string) => {
+  if (!recordsLogs()) return;
   s.logs.unshift(text);
   s.logs = s.logs.slice(0, 80);
 };
@@ -2098,7 +2100,7 @@ export function seasonCombat(
   ];
   const contexts: Context[] = [];
   const frame = (text: string, attacker?: string, target?: string) =>
-    frames.push({
+    recordsFrames() && frames.push({
       allies: clone(boards[0]),
       enemies: clone(boards[1]),
       text,

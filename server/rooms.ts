@@ -80,6 +80,10 @@ export class Rooms {
   constructor(
     public now: () => number = Date.now,
     public random: () => number = Math.random,
+    private identity = {
+      hex: (bytes: number) => randomBytes(bytes).toString("hex"),
+      int: (max: number) => randomInt(max),
+    },
   ) {}
   touch(r?: Room, publicChange = true) {
     this.seq++;
@@ -97,9 +101,9 @@ export class Rooms {
     )
       throw Error("昵称请填写 1 至 16 个字");
     if (this.guests.size >= 2000) throw Error("游客名额暂满，请稍后再试");
-    const token = randomBytes(32).toString("hex");
+    const token = this.identity.hex(32);
     const g: Guest = {
-      id: randomBytes(10).toString("hex"),
+      id: this.identity.hex(10),
       name: name.trim(),
       hash: tokenHash(token),
       seen: this.now(),
@@ -145,7 +149,7 @@ export class Rooms {
     do {
       code = Array.from(
         { length: 6 },
-        () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[randomInt(32)],
+        () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[this.identity.int(32)],
       ).join("");
     } while (this.rooms.has(code));
     const r: Room = {
@@ -249,7 +253,7 @@ export class Rooms {
     while (r.seats.length < 8) {
       const h = unused.splice(Math.floor(this.random() * unused.length), 1)[0];
       r.seats.push({
-        id: "bot-" + randomBytes(6).toString("hex"),
+        id: "bot-" + this.identity.hex(6),
         name: `酒馆人机 ${r.seats.length + 1}`,
         hero: h.id,
         bot: true,
@@ -576,7 +580,7 @@ export class Rooms {
       const enemyName = b?.name || "幽灵阵容";
       battle.opponent = enemyName;
       a.game!.battle = battle;
-      a.battleId = randomBytes(12).toString("hex");
+      a.battleId = this.identity.hex(12);
       a.game!.phase = "combat";
       a.game!.nextOpponent = b
         ? Math.max(
@@ -622,7 +626,7 @@ export class Rooms {
           })),
         };
         b.game!.battle = mirror;
-        b.battleId = randomBytes(12).toString("hex");
+        b.battleId = this.identity.hex(12);
         b.game!.phase = "combat";
         b.game!.nextOpponent = Math.max(
           0,
@@ -911,7 +915,7 @@ export class Rooms {
       for (const p of r.seats) {
         if (p.game && p.game.health <= 0 && !p.place) this.eliminate(r, p);
         if (p.game?.battle && !p.battleId)
-          p.battleId = randomBytes(12).toString("hex");
+          p.battleId = this.identity.hex(12);
       }
       if (r.stage === "recruit" && !r.pairings) this.planPairings(r);
       this.touch(r);

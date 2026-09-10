@@ -149,6 +149,8 @@ python3 scripts/download-season-art.py   # 下载原画和可用的中文完整�
 
 ## 版本基线与 AI / RL
 
+已实现八人自博弈 PPO，包括历史模型对手池、断点续训、评估和回放。运行 `npm run package:rl` 生成租用服务器训练包，命令见 [离线训练说明](rl/README.md)。训练不依赖网站数据，也不使用现有脚本人机作为对手。
+
 当前 Demo 已保存为 Git 标签 `baseline-demo-2026-09-08`。恢复方法见 [版本基线](docs/checkpoints/baseline-demo-2026-09-08.md)，后续强化学习接口与模拟器差异见 [AI / RL 记录](docs/rl-roadmap.md)。
 
 游客和八人好友房版本另存为 `online-rooms-2026-09-08`，见 [在线版本记录](docs/checkpoints/online-rooms-2026-09-08.md)。

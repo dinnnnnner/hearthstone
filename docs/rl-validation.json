@@ -1,0 +1,583 @@
+{
+  "date": "2026-09-10",
+  "sourceHash": "1a12efdb1f15bec8563585a14278bef77d3e92c6444c69bbe627c307c0870663",
+  "runtime": {
+    "python": "3.13.5",
+    "torch": "2.14.0+cpu",
+    "numpy": "2.5.3",
+    "device": "cpu"
+  },
+  "checks": {
+    "engine_tests": 96,
+    "server_tests": 28,
+    "rl_environment_tests": 5,
+    "ppo_unit_tests": 5,
+    "frontend_build": true,
+    "typescript": true,
+    "resumed_model_optimizer_league_rng_exact_match": true,
+    "complete_replay_with_and_without_frames_equal": true,
+    "extracted_package_standalone_game": true,
+    "checkpoint_source_mismatch_rejected": true,
+    "evaluation_training_seed_overlap_rejected": true,
+    "accidental_checkpoint_overwrite_rejected": true
+  },
+  "model": {
+    "observation_size": 2552,
+    "action_size": 4004,
+    "hidden": 64
+  },
+  "training_smoke": [
+    {
+      "iteration": 1,
+      "episodes": 2,
+      "seconds": 4.599697445999482,
+      "environment_actions": 1726,
+      "actions_per_second": 375.2420719543549,
+      "policy_loss": -0.0038220052873449667,
+      "value_loss": 0.03648394159972668,
+      "entropy": 2.904623866081238,
+      "approx_kl": 5.995644122387083e-05,
+      "gradient_norm": 0.27877825285707203,
+      "samples": 1726,
+      "optimizer_steps": 14,
+      "kl_early_stop": false,
+      "completed_games": 2,
+      "league_generations": [
+        0,
+        1
+      ]
+    },
+    {
+      "iteration": 2,
+      "episodes": 4,
+      "seconds": 4.66112817499743,
+      "environment_actions": 1871,
+      "actions_per_second": 401.4049667280458,
+      "policy_loss": -0.0021336971331038512,
+      "value_loss": 0.04933619289658964,
+      "entropy": 2.829092353582382,
+      "approx_kl": 1.89982820302248e-05,
+      "gradient_norm": 0.3298633713275194,
+      "samples": 904,
+      "optimizer_steps": 8,
+      "kl_early_stop": false,
+      "completed_games": 2,
+      "league_generations": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "iteration": 3,
+      "episodes": 6,
+      "seconds": 3.7786578070008545,
+      "environment_actions": 1704,
+      "actions_per_second": 450.95377433832147,
+      "policy_loss": -0.00692926615010947,
+      "value_loss": 0.037254198687151074,
+      "entropy": 2.904471218585968,
+      "approx_kl": 1.853269066032226e-05,
+      "gradient_norm": 0.33144666999578476,
+      "samples": 908,
+      "optimizer_steps": 8,
+      "kl_early_stop": false,
+      "completed_games": 2,
+      "league_generations": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "training_default_action_budget_64": [
+    {
+      "iteration": 1,
+      "episodes": 2,
+      "seconds": 6.842382915001508,
+      "environment_actions": 3448,
+      "actions_per_second": 503.9180126035434,
+      "policy_loss": -0.004328687209635973,
+      "value_loss": 0.025580616002636298,
+      "entropy": 2.821398036820548,
+      "approx_kl": 0.0002960476511881487,
+      "gradient_norm": 0.5042412121381078,
+      "samples": 3448,
+      "optimizer_steps": 28,
+      "kl_early_stop": false,
+      "completed_games": 2,
+      "league_generations": [
+        0,
+        1
+      ]
+    },
+    {
+      "iteration": 2,
+      "episodes": 4,
+      "seconds": 5.570052515002317,
+      "environment_actions": 3259,
+      "actions_per_second": 585.0932268990725,
+      "policy_loss": 0.008155770466795989,
+      "value_loss": 0.024759141329143728,
+      "entropy": 2.7285705464226857,
+      "approx_kl": 0.00011737438918706695,
+      "gradient_norm": 0.2972552052565983,
+      "samples": 1672,
+      "optimizer_steps": 14,
+      "kl_early_stop": false,
+      "completed_games": 2,
+      "league_generations": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "simulator_benchmark": {
+    "games": 4,
+    "seconds": 11.410877508998965,
+    "actions": 3511,
+    "actions_per_second": 307.68886943454777,
+    "max_child_rss_kib": 166460,
+    "scope": "Uniform random legal actions, simulator throughput only; not policy quality",
+    "matches": [
+      {
+        "turn": 22,
+        "steps": 861,
+        "placements": [
+          8,
+          6,
+          7,
+          3,
+          1,
+          4,
+          2,
+          5
+        ],
+        "rewards": [
+          -1,
+          -0.42857142857142855,
+          -0.7142857142857143,
+          0.42857142857142855,
+          1,
+          0.14285714285714285,
+          0.7142857142857143,
+          -0.14285714285714285
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "turn": 20,
+        "steps": 900,
+        "placements": [
+          5,
+          8,
+          3,
+          6,
+          4,
+          2,
+          7,
+          1
+        ],
+        "rewards": [
+          -0.14285714285714285,
+          -1,
+          0.42857142857142855,
+          -0.42857142857142855,
+          0.14285714285714285,
+          0.7142857142857143,
+          -0.7142857142857143,
+          1
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "turn": 19,
+        "steps": 855,
+        "placements": [
+          6,
+          2,
+          4,
+          5,
+          3,
+          8,
+          1,
+          7
+        ],
+        "rewards": [
+          -0.42857142857142855,
+          0.7142857142857143,
+          0.14285714285714285,
+          -0.14285714285714285,
+          0.42857142857142855,
+          -1,
+          1,
+          -0.7142857142857143
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "turn": 21,
+        "steps": 895,
+        "placements": [
+          6,
+          5,
+          2,
+          7,
+          4,
+          1,
+          3,
+          8
+        ],
+        "rewards": [
+          -0.42857142857142855,
+          -0.14285714285714285,
+          0.7142857142857143,
+          -0.7142857142857143,
+          0.14285714285714285,
+          1,
+          0.42857142857142855,
+          -1
+        ],
+        "actionLimitReached": false
+      }
+    ]
+  },
+  "evaluation": {
+    "schema": "tavern-evaluation-v1",
+    "sourceHash": "1a12efdb1f15bec8563585a14278bef77d3e92c6444c69bbe627c307c0870663",
+    "checkpoint": "rl/runs/final-resumed/latest.pt",
+    "iteration": 3,
+    "seed_start": 1000000,
+    "games": 8,
+    "opponents": [
+      0,
+      1,
+      2
+    ],
+    "mean_placement": 5.625,
+    "first_rate": 0.0,
+    "top_four_rate": 0.375,
+    "placement_standard_error": 0.6529466178136507,
+    "scope": "One candidate seat rotates through eight positions against frozen policies; finite sample, not proof of general or human-level strength",
+    "performance": {
+      "seconds": 20.71855787000095,
+      "environment_actions": 7092,
+      "actions_per_second": 342.30181678179105
+    },
+    "matches": [
+      {
+        "seed": 1000001,
+        "controllers": [
+          1,
+          -1,
+          0,
+          2,
+          0,
+          1,
+          2,
+          0
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 19,
+        "steps": 803,
+        "placements": [
+          4,
+          3,
+          2,
+          1,
+          6,
+          5,
+          7,
+          8
+        ],
+        "rewards": [
+          0.14285714285714285,
+          0.42857142857142855,
+          0.7142857142857143,
+          1,
+          -0.42857142857142855,
+          -0.14285714285714285,
+          -0.7142857142857143,
+          -1
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "seed": 1000000,
+        "controllers": [
+          -1,
+          2,
+          2,
+          1,
+          0,
+          1,
+          1,
+          1
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 26,
+        "steps": 1098,
+        "placements": [
+          7,
+          8,
+          6,
+          5,
+          2,
+          4,
+          1,
+          3
+        ],
+        "rewards": [
+          -0.7142857142857143,
+          -1,
+          -0.42857142857142855,
+          -0.14285714285714285,
+          0.7142857142857143,
+          0.14285714285714285,
+          1,
+          0.42857142857142855
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "seed": 1000002,
+        "controllers": [
+          1,
+          2,
+          -1,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 15,
+        "steps": 742,
+        "placements": [
+          8,
+          6,
+          4,
+          1,
+          2,
+          7,
+          3,
+          5
+        ],
+        "rewards": [
+          -1,
+          -0.42857142857142855,
+          0.14285714285714285,
+          1,
+          0.7142857142857143,
+          -0.7142857142857143,
+          0.42857142857142855,
+          -0.14285714285714285
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "seed": 1000003,
+        "controllers": [
+          0,
+          2,
+          1,
+          -1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 18,
+        "steps": 899,
+        "placements": [
+          1,
+          3,
+          6,
+          8,
+          5,
+          4,
+          2,
+          7
+        ],
+        "rewards": [
+          1,
+          0.42857142857142855,
+          -0.42857142857142855,
+          -1,
+          -0.14285714285714285,
+          0.14285714285714285,
+          0.7142857142857143,
+          -0.7142857142857143
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "seed": 1000004,
+        "controllers": [
+          0,
+          2,
+          1,
+          1,
+          -1,
+          1,
+          1,
+          1
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 17,
+        "steps": 813,
+        "placements": [
+          1,
+          5,
+          3,
+          8,
+          7,
+          4,
+          2,
+          6
+        ],
+        "rewards": [
+          1,
+          -0.14285714285714285,
+          0.42857142857142855,
+          -1,
+          -0.7142857142857143,
+          0.14285714285714285,
+          0.7142857142857143,
+          -0.42857142857142855
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "seed": 1000005,
+        "controllers": [
+          1,
+          2,
+          2,
+          0,
+          1,
+          -1,
+          1,
+          2
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 18,
+        "steps": 799,
+        "placements": [
+          7,
+          3,
+          6,
+          8,
+          4,
+          5,
+          1,
+          2
+        ],
+        "rewards": [
+          -0.7142857142857143,
+          0.42857142857142855,
+          -0.42857142857142855,
+          -1,
+          0.14285714285714285,
+          -0.14285714285714285,
+          1,
+          0.7142857142857143
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "seed": 1000006,
+        "controllers": [
+          1,
+          0,
+          2,
+          0,
+          0,
+          0,
+          -1,
+          1
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 26,
+        "steps": 951,
+        "placements": [
+          4,
+          3,
+          8,
+          2,
+          5,
+          1,
+          7,
+          6
+        ],
+        "rewards": [
+          0.14285714285714285,
+          0.42857142857142855,
+          -1,
+          0.7142857142857143,
+          -0.14285714285714285,
+          1,
+          -0.7142857142857143,
+          -0.42857142857142855
+        ],
+        "actionLimitReached": false
+      },
+      {
+        "seed": 1000007,
+        "controllers": [
+          0,
+          1,
+          2,
+          0,
+          2,
+          0,
+          2,
+          -1
+        ],
+        "terminated": true,
+        "truncated": false,
+        "turn": 24,
+        "steps": 987,
+        "placements": [
+          6,
+          3,
+          5,
+          7,
+          2,
+          1,
+          8,
+          4
+        ],
+        "rewards": [
+          -0.42857142857142855,
+          0.42857142857142855,
+          -0.14285714285714285,
+          -0.7142857142857143,
+          0.7142857142857143,
+          1,
+          -1,
+          0.14285714285714285
+        ],
+        "actionLimitReached": false
+      }
+    ]
+  },
+  "limits": [
+    "CPU only; CUDA was not tested",
+    "Small sample verifies plumbing, not policy strength",
+    "Official rules incomplete; MLP observation does not encode all complex effects",
+    "Throughput depends on hardware and sampled states; not a rented-server capacity guarantee",
+    "Continuous comparison used the same gameplay and trainer with an earlier build-hash calculation; weights and optimizer match exactly"
+  ]
+}

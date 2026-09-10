@@ -1,3 +1,4 @@
+import { simulationUid, recordsFrames } from "./simulation";
 import {
   actSeason,
   createSeason,
@@ -103,8 +104,8 @@ export type Action =
   | { type: "power"; target?: string; powerId?: string }
   | { type: "move"; uid: string; to: number };
 let serial = 0;
-const uid = () =>
-  `${Date.now().toString(36)}-${++serial}-${Math.random().toString(36).slice(2, 7)}`;
+const uid = () => simulationUid(() =>
+  `${Date.now().toString(36)}-${++serial}-${Math.random().toString(36).slice(2, 7)}`);
 export const clone = <T>(v: T): T => structuredClone(v);
 export const heroOf = (s: Game) => HEROES.find((h) => h.id === s.hero)!;
 export function heroPowerState(s: Game, id?: string) {
@@ -450,7 +451,7 @@ export function combat(
   });
   const frames: BattleFrame[] = [];
   const frame = (text: string, attacker?: string, target?: string) =>
-    frames.push({
+    recordsFrames() && frames.push({
       allies: clone(boards[0]),
       enemies: clone(boards[1]),
       text,
