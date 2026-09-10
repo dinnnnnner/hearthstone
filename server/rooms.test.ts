@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Rooms, OFFLINE_GRACE_MS, type Room, type Seat } from "./rooms";
 import { makeMinion } from "../src/engine";
+import { equipPowers } from "../src/season/powers";
 function setup(n = 2) {
   let now = 100000,
     seed = 42;
@@ -55,6 +56,20 @@ function recruit(service: Rooms, room: Room, p: Seat) {
   p.bot = false;
   p.ended = false;
 }
+test("Scabbs discovers the paired warband without exposing it in the player snapshot", () => {
+  const { service, guests, room } = setup(2); service.start(guests[0]);
+  const seat = room.seats[0], pair = room.pairings!.find((p) => p.includes(seat.id))!;
+  const enemy = room.seats.find((p) => p.id === pair.find((id) => id !== seat.id))!;
+  // Return the normal board before installing a generated test body.
+  for (const m of enemy.game!.board) for (const [id, n] of Object.entries(m.copies)) room.pool[id] += n;
+  enemy.game!.board = [makeMinion("s14_BG35_883")];
+  equipPowers(seat.game!, ["s14_scabbs"]); seat.game!.gold = 10;
+  assert.equal(service.apply(room, seat, { type: "power", powerId: "s14_scabbs" }), undefined);
+  assert.equal(seat.game!.discovery[0].id, "s14_BG35_883");
+  assert.deepEqual(seat.game!.discovery[0].copies, {});
+  assert.ok(service.view(guests[0]).game!.opponents.every((o) => o.board.length === 0));
+  pool(room);
+});
 test("guest tokens, host permissions, room capacity and late join are enforced", () => {
   const { service, guests, room } = setup(8);
   assert.throws(() => service.auth("bad"));

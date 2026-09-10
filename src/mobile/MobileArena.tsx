@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { type Game, type Minion, type Action, heroOf, heroPowerState } from "../engine";
 import { art, getDef } from "../data";
-import { refreshCost, refreshPayment, spellCost } from "../season/engine";
+import { refreshCost, refreshPayment, spellCost, spellUsesHealth } from "../season/engine";
 
 export type PlayMode = "auto" | "touch" | "desktop";
 const MODE_KEY = "bobs-tavern-play-mode";
@@ -200,7 +200,7 @@ export function MobileArena({
                 <img src={art(m.id)} alt="" />
                 <strong>{getDef(m.id).name}</strong>
                 <span>
-                  <Coins size={11} />
+                  {spellUsesHealth(m) ? <Heart size={11} /> : <Coins size={11} />}
                   {spellCost(game, m)}
                 </span>
               </button>

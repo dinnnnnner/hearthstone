@@ -17,6 +17,13 @@ import {
   type Keyword,
 } from "./data";
 export interface Minion {
+  counters?: Record<string, number>;
+  lockedUntil?: number;
+  lockedTier?: number;
+  bothChoices?: boolean;
+  magneticCount?: number;
+  learnedSpell?: string;
+  remembered?: string[];
   gift?: string;
   giftTurn?: number;
   activated?: boolean;
@@ -91,7 +98,7 @@ export type Action =
       target?: string;
     }
   | { type: "refresh" | "freeze" | "upgrade" | "end" | "continue" | "reward" }
-  | { type: "buy" | "sell" | "discover" | "choosePower"; uid: string }
+  | { type: "buy" | "sell" | "discover" | "choosePower"; uid: string; target?: string }
   | { type: "play"; uid: string; target?: string; position?: number }
   | { type: "power"; target?: string; powerId?: string }
   | { type: "move"; uid: string; to: number };

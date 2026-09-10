@@ -10,6 +10,10 @@
 .power-choice-cost { position: absolute; right: 10px; top: 12px; border-radius: 16px; padding: 5px 9px; background: #392958; border: 1px solid #c7a75b; font-size: 12px; }
 .power-choice-confirm { color: #f8d98c; padding-top: 6px; }
 .power-chosen { color: #ead18b; }
+.power-choice-card.selected { border-color: #ffda85; box-shadow: 0 0 0 2px #ffda85; }
+.choice-targets { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.choice-targets p { flex-basis: 100%; color: #503518; }
+.choice-targets button { min-height: 44px; background: #503720; color: #fff0c7; border: 1px solid #8d693b; }
 .hero-power-group { display: flex; align-items: center; gap: 12px; }
 .hero-power-group.dual { gap: 14px; }
 .hero-power-group.dual .hero-power-orb { width: 66px; height: 66px; }

@@ -44,6 +44,7 @@ export interface CardDef {
   sourceId?: string;
   cost?: number;
   kind?: "minion" | "spell";
+  spellSchool?: string;
   season?: boolean;
   playable?: boolean;
   races?: Tribe[];
@@ -491,7 +492,10 @@ export const ALL_CARDS = [
   ...SEASON_SPELL_CATALOG,
   ...SEASON_RELATED,
 ];
-export const getDef = (id: string) => ALL_CARDS.find((c) => c.id === id)!;
+// Pool definitions take precedence over duplicate entries in the related-card snapshot.
+const definitions = new Map<string, CardDef>();
+for (const card of ALL_CARDS) if (!definitions.has(card.id)) definitions.set(card.id, card);
+export const getDef = (id: string) => definitions.get(id)!;
 export const POOL_COPIES = [0, 15, 15, 13, 11, 9, 7];
 export const SHOP_SIZE = [0, 3, 4, 4, 5, 5, 6];
 export const UPGRADE_COST = [0, 5, 7, 8, 9, 10, 0];
@@ -643,8 +647,12 @@ const GOLDEN_TEXT: Record<string, string> = {
   coiler: "亡语：随机召唤四个亡语随从。",
   overseer: "战吼：使一个友方恶魔获得+4/+4。",
 };
-export function cardText(m: { id: string; golden: boolean }) {
+export function cardText(m: { id: string; golden: boolean; lockedUntil?: number; lockedTier?: number; learnedSpell?: string }) {
   const d = getDef(m.id);
-  if (d.season) return m.golden ? d.goldenText || d.text : d.text;
+  if (d.season) {
+    const lock = m.lockedUntil ? `第${m.lockedUntil}回合解锁。` : m.lockedTier ? `酒馆${m.lockedTier}星解锁。` : "";
+    if (m.learnedSpell) return lock + `战吼：施放${getDef(m.learnedSpell).name}。本随从无法三连。`;
+    return lock + (m.golden ? d.goldenText || d.text : d.text);
+  }
   return (m.golden && d.effect && GOLDEN_TEXT[d.effect]) || d.text;
 }

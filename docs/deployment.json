@@ -1,6 +1,6 @@
 {
-  "release": "20260910T022740Z",
-  "remote": "/var/www/playroom/releases/20260910T022740Z",
+  "release": "20260910T035242Z",
+  "remote": "/var/www/playroom/releases/20260910T035242Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -8,36 +8,36 @@
     "tavernApi": "/tavern-api/"
   },
   "validation": {
-    "engineAndStateTests": 74,
-    "serverTests": 21,
-    "localBrowserTests": 10,
-    "publicBrowserTests": 10,
-    "publicEightBrowserRoom": "passed, 14.1 seconds with separate caches",
+    "engineAndStateTests": 96,
+    "serverTests": 22,
+    "localBrowserTests": 20,
+    "publicBrowserTests": 17,
+    "publicEightBrowserRoom": "passed, 14.3 seconds with separate caches",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
     "sectorPidAtFinalActivation": 110058,
     "sectorPidAfterFinalValidation": 110058,
-    "tavernPid": 115344,
-    "tavernMemoryBytesAfterTests": 31997952,
+    "tavernPid": 116019,
+    "tavernMemoryBytesAfterTests": 34390016,
     "tavernAutomaticRestarts": 0,
-    "uiImageCount": 556,
-    "uiImageBytes": 8897106,
-    "originalImageBytes": 133827864,
-    "tavernRestarted": false,
+    "uiImageCount": 598,
+    "uiImageBytes": 9499166,
+    "originalImageBytes": 143250968,
+    "tavernRestarted": true,
     "buildSite": "passed",
-    "finalReleasePublicBrowserTests": 10,
-    "browserValidationScope": "Frontend-only update: 10 targeted local browser scenarios and 10 final public scenarios passed. Rope boundaries use the real Rooms model and controlled browser time; online AI, two-player and eight-player rooms use the actual service. Existing 74 engine and 21 server tests are retained from the unchanged backend baseline.",
-    "engineAndStateTestsSourceRelease": "20260910T011701Z",
-    "serverTestsSourceRelease": "20260910T011701Z"
+    "finalReleasePublicBrowserTests": 17,
+    "browserValidationScope": "20 targeted local cases; 17 final public cases. Includes 390px/desktop Choose One, save reload and Lockbox, actual guest/AI/two-player/eight-player rooms and Finley, controlled-clock Rooms rope tests, homepage and SECTOR WebSocket. Engine/server suites validate the final bundle; all file hashes verified at activation.",
+    "engineAndStateTestsSourceRelease": "20260910T035242Z",
+    "serverTestsSourceRelease": "20260910T035242Z"
   },
-  "previousRelease": "20260910T011701Z",
+  "previousRelease": "20260910T022740Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
   "backend": {
-    "release": "/opt/bobs-tavern/releases/20260910T011701Z",
+    "release": "/opt/bobs-tavern/releases/20260910T035242Z",
     "service": "bobs-tavern",
     "listen": "127.0.0.1:8787",
     "state": "/var/lib/bobs-tavern/state.json",
@@ -45,7 +45,8 @@
     "memoryLimitMiB": 384,
     "offlineGraceSeconds": 300,
     "snapshotWrites": "serialized async atomic replacement with per-room serialization cache",
-    "previousRelease": "/opt/bobs-tavern/releases/20260910T011401Z"
+    "previousRelease": "/opt/bobs-tavern/releases/20260910T011701Z",
+    "bundleSha256": "15f8bb35fbde0d1fc8235a9500c286e3c8fdc9a41d479c28c6d32022889908b6"
   },
   "replayBenchmark": {
     "frames": 180,
@@ -55,7 +56,8 @@
     "cachedGzipBytes": 1653,
     "snapshotBytes": 2808390,
     "unchangedSnapshotMs": 0.003798180000000002,
-    "scope": "Synthetic 180-frame local test; not a full server capacity benchmark"
+    "scope": "Synthetic 180-frame local test; not a full server capacity benchmark",
+    "sourceRelease": "20260910T011701Z"
   },
   "loadingScreen": {
     "inlineBootScreen": true,
@@ -65,25 +67,24 @@
     "reducedMotion": true
   },
   "visualDetails": "Wood and leather shading, brass rivets, card depth, button feedback and lobby crest",
-  "supportedHeroes": 22,
+  "supportedHeroes": 89,
   "heroExpansion": [
-    "finley",
-    "nguyen",
-    "genn"
+    "See docs/rules-coverage.json for 89 implemented and 27 missing heroes"
   ],
   "healthRefresh": "Shared payment calculation; per-minion counters with old-save migration; free refresh has priority; zero-gold use and health/charge labels in every layout",
   "keywordVisuals": "Separate SVG taunt guard, golden shield with reflected light and broken-shell fragments, cyan reborn, green poison, skull deathrattle and windfury badges",
-  "homepagePreservedFromRelease": "20260910T011701Z",
-  "supportedMinions": 124,
-  "supportedSpells": 42,
+  "homepagePreservedFromRelease": "20260910T022740Z",
+  "supportedMinions": 234,
+  "supportedSpells": 67,
   "powerReplacement": {
     "identityReveal": true,
     "gennSecondaryPreserved": true,
     "independentUsageAndCosts": true,
     "savedChoices": true,
-    "candidateScope": "Implemented powers compatible with lobby tribes; no complete official weights or exclusions"
+    "candidateScope": "Implemented powers compatible with lobby tribes; no complete official weights or exclusions",
+    "independentPurchaseProgress": true
   },
-  "sourceBaselineRelease": "20260910T004855Z",
+  "sourceBaselineRelease": "20260910T011701Z",
   "recruitmentRope": {
     "startsAtSeconds": 20,
     "urgentAtSeconds": 5,
@@ -94,5 +95,7 @@
     "reducedMotion": true,
     "extraAssets": 0,
     "scope": "Online AI and friend rooms; practice remains untimed"
-  }
+  },
+  "checkpoint": "season-pool-2026-09-10",
+  "rulesCoverageReport": "docs/rules-coverage.json"
 }

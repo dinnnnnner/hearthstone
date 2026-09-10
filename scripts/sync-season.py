@@ -9,8 +9,11 @@ raw=cache.read_bytes()
 x=json.loads(raw);by={c['dbfId']:c for c in x}
 def clean(t):
  t=re.sub(r'<[^>]+>', '', t or '').replace('\n','').replace('[x]','')
- # Game client alt text is concatenated in the extracted data; retain the first display variant.
- t=re.split(r'(?<=[。！）])\d+(?=[\u4e00-\u9fff])',t)[0]
+ # Numbers can begin a real second sentence (e.g. Lockbox's five-turn reward).
+ # Keep the full rules text; stripping numeric suffixes silently removed mechanics.
+ t=re.split(r'(?<=。)\d+(?=使一个随从获得)',t)[0]
+ if len(t)>8:
+  t=re.split(r'(?<=[。！）])\d+(?='+re.escape(t[:6])+r')',t)[0]
  return t
 minions=[c for c in x if c.get('isBattlegroundsPoolMinion') and not c.get('isBattlegroundsDuosExclusive') and c.get('techLevel',9)<=6]
 spells=[c for c in x if c.get('isBattlegroundsPoolSpell') and not c.get('isBattlegroundsDuosExclusive') and c.get('techLevel',9)<=6]
@@ -18,7 +21,7 @@ heroes=[c for c in x if c.get('battlegroundsHero') and not c.get('isBattleground
 trinkets=[c for c in x if c.get('type')=='BATTLEGROUND_TRINKET' and not c.get('isBattlegroundsDuosExclusive')]
 gifts=[c for c in x if c.get('isBattlegroundsDarkGift')]
 # Related cards are data only and never enter the recruit pool.
-related=[c for c in x if (c.get('set')=='BATTLEGROUNDS' or c['id']=='EBG_Spell_014') and c.get('type') in ['MINION','SPELL'] and not c.get('battlegroundsNormalDbfId') and not c.get('battlegroundsTimewarpCard') and not c.get('isBattlegroundsBuddy')]
+related=[c for c in x if c.get('set')=='BATTLEGROUNDS' and c.get('type') in ['MINION','SPELL','BATTLEGROUND_SPELL'] and not c.get('battlegroundsNormalDbfId') and not c.get('battlegroundsTimewarpCard') and not c.get('isBattlegroundsBuddy')]
 def convert(c):
  g=by.get(c.get('battlegroundsPremiumDbfId'),{})
  p=by.get(c.get('heroPowerDbfId'),{})

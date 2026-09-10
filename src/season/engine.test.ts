@@ -60,6 +60,11 @@ function add(
   return m;
 }
 function apply(s: Game, a: Action) {
+  if (a.type === "discover" && s.season?.discoveryKind === "choose" && !a.target) {
+    const chosenUid = a.uid;
+    const card = s.discovery.find((m) => m.uid === chosenUid);
+    if (card) a = { ...a, target: seasonTargets(s, card, "cast")[0]?.uid };
+  }
   const r = act(s, a, rng);
   assert.equal(r.error, undefined, JSON.stringify(a) + " " + r.error);
   assertPool(r.state);
@@ -380,7 +385,7 @@ test("seeded current-season play stays valid across all supported heroes", () =>
       else if (s.season!.powerChoice)
         action = { type: "choosePower", uid: s.season!.powerChoice.offers[0] };
       else if (s.discovery.length)
-        action = { type: "discover", uid: s.discovery[0].uid };
+        action = { type: "discover", uid: s.discovery[0].uid, target: s.season?.discoveryKind === "choose" ? seasonTargets(s, s.discovery[0], "cast")[0]?.uid : undefined };
       else if (s.season!.trinketOffers.length)
         action = { type: "buyTrinket", uid: s.season!.trinketOffers[0] };
       else if (s.rewards.length) action = { type: "reward" };
@@ -389,7 +394,7 @@ test("seeded current-season play stays valid across all supported heroes", () =>
           event = getDef(m.id).kind === "spell" ? "cast" : "battlecry";
         const targets = seasonTargets(s, m, event);
         if (
-          getDef(m.id).kind === "spell" &&
+          (m.lockedUntil || 0) > s.turn || (m.lockedTier || 0) > s.tier || getDef(m.id).kind === "spell" && ![...(getDef(m.id).abilities || []), ...(m.extraAbilities || [])].some((a) => a.event === "cast") || getDef(m.id).kind === "spell" &&
           (getDef(m.id).abilities || m.extraAbilities || []).some(
             (a) => a.target === "selected",
           ) &&
@@ -420,6 +425,7 @@ test("seeded current-season play stays valid across all supported heroes", () =>
         `${h.id}, ${JSON.stringify(action)}: ${result.error}`,
       );
       s = result.state;
+      assert.ok(s.hand.length + s.rewards.length <= 10, `${h.id} turn ${s.turn} ${JSON.stringify(action)}: ${s.hand.map((m) => getDef(m.id).name).join(",")} rewards ${s.rewards.length}`);
       assertPool(s);
       assert.ok(s.gold >= 0);
       assert.ok(s.board.length <= 7);
@@ -867,4 +873,261 @@ test("Temperature Shift is not offered in lobbies without Elementals", () => {
     assert.ok(s.season!.spellShop.every((m) => m.id !== "s14_BG31_819"));
   }
   assertPool(s);
+});
+
+test("Balinda repeats friendly targeted spells, golden repeats three times, copies do not multiply", () => {
+  for (const golden of [false, true]) {
+    let s = fixture();
+    add(s, "BG35_883", "board", golden); add(s, "BG35_883", "board");
+    const friend = add(s, "BG25_001", "board"), shop = s.shop[0];
+    const spell = add(s, "BG28_897"), before = friend.attack;
+    s = apply(s, { type: "cast", uid: spell.uid, target: friend.uid });
+    assert.equal(s.board.find((m) => m.uid === friend.uid)!.attack, before + (golden ? 6 : 4));
+    assert.equal(s.season!.spellsCast, golden ? 3 : 2);
+    const other = add(s, "BG28_897"), old = shop.attack;
+    s = apply(s, { type: "cast", uid: other.uid, target: shop.uid });
+    assert.equal(s.shop.find((m) => m.uid === shop.uid)!.attack, old + 2);
+  }
+});
+
+test("Balinda stops when Butchering destroys its target and returns finite pool copies once", () => {
+  let s = fixture(); add(s, "BG35_883", "board", true);
+  const victim = add(s, "BG25_001", "board"), spell = add(s, "BG28_604");
+  const available = s.pool[victim.id];
+  assert.ok(!seasonTargets(s, spell, "cast").some((x) => s.shop.includes(x)));
+  s = apply(s, { type: "cast", uid: spell.uid, target: victim.uid });
+  assert.equal(s.season!.buffs.undead.attack, 5);
+  assert.equal(s.season!.spellsCast, 1);
+  assert.equal(s.pool[victim.id], available + 1);
+});
+
+test("Lava Lurker keeps the first spellcraft permanent including Balinda repeats, later spells expire", () => {
+  let s = fixture(); add(s, "BG35_883", "board");
+  const lurker = add(s, "BG23_009", "board"), caster = add(s, "BG23_000");
+  s = apply(s, { type: "play", uid: caster.uid });
+  const spell = s.hand.find((m) => m.tempSpell)!;
+  s = apply(s, { type: "cast", uid: spell.uid, target: lurker.uid });
+  const first = s.board.find((m) => m.uid === lurker.uid)!;
+  assert.equal(first.attack, lurker.attack + 4); assert.equal(first.temporary, undefined);
+  const secondCaster = add(s, "BG23_000"); s = apply(s, { type: "play", uid: secondCaster.uid });
+  const secondSpell = s.hand.find((m) => m.tempSpell)!;
+  s = apply(s, { type: "cast", uid: secondSpell.uid, target: lurker.uid });
+  assert.equal(s.board.find((m) => m.uid === lurker.uid)!.temporary!.attack, 4);
+  advanceRecruit(s, rng);
+  assert.equal(s.board.find((m) => m.uid === lurker.uid)!.attack, lurker.attack + 4);
+});
+
+test("Choose One waits for selection, rejects bad targets, and Brann does not duplicate it", () => {
+  let s = fixture(); add(s, "BG_LOE_077", "board");
+  const beast = add(s, "BG31_803", "board"), beetle = add(s, "BG27_084");
+  s = apply(s, { type: "play", uid: beetle.uid });
+  assert.equal(s.discovery.length, 2); assert.equal(s.season!.discoveryKind, "choose");
+  assert.ok(act(s, { type: "discover", uid: s.discovery[0].uid, target: "missing" }).error);
+  s = apply(s, { type: "discover", uid: s.discovery[0].uid, target: beast.uid });
+  assert.equal(s.board.find((m) => m.uid === beast.uid)!.attack, beast.attack + 1);
+  assert.ok(s.board.find((m) => m.uid === beast.uid)!.keywords.includes("复生"));
+  assert.equal(s.discovery.length, 0);
+});
+
+test("Choose One tavern spell counts under its original ID and Balinda repeats the selected effect", () => {
+  let s = fixture(); add(s, "BG35_883", "board");
+  const target = add(s, "BG25_001", "board"), spell = add(s, "BG31_880");
+  s = apply(s, { type: "cast", uid: spell.uid });
+  assert.equal(s.season!.spellsCast, 0);
+  s = apply(s, { type: "discover", uid: s.discovery[0].uid, target: target.uid });
+  assert.equal(s.board.find((m) => m.uid === target.uid)!.attack, target.attack + 6);
+  assert.equal(s.season!.spellsCast, 2); assert.equal(s.season!.lastSpell, spell.id);
+});
+
+test("Bristleback gives both Choose One options once per turn and Gem Training has real options", () => {
+  let s = fixture(); add(s, "BG31_327", "board");
+  const miner = add(s, "BG31_320"); s = apply(s, { type: "play", uid: miner.uid });
+  assert.ok(s.season!.activeDiscovery?.both);
+  s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+  assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG20_GEM").length, 2);
+  const training = s.hand.find((m) => m.id === PREFIX + "BG31_893")!;
+  assert.ok(training); s = apply(s, { type: "cast", uid: training.uid });
+  assert.equal(s.season!.activeDiscovery?.both, false);
+  s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+  assert.equal(s.season!.buffs.gem.attack, 1); assert.equal(s.season!.buffs.gem.health, 0);
+});
+
+test("health-priced spell spends health rather than gold and can trigger damage watchers", () => {
+  let s = fixture(); s.gold = 0;
+  const demon = add(s, "BG26_523", "board"), spell = makeMinion(PREFIX + "BG28_571");
+  s.season!.spellShop = [spell];
+  const armor = s.season!.armor;
+  s = apply(s, { type: "buySpell", uid: spell.uid });
+  assert.equal(s.gold, 0); assert.equal(s.season!.armor, armor - getDef(spell.id).cost!);
+  assert.equal(s.board.find((m) => m.uid === demon.uid)!.attack, demon.attack + 4);
+});
+
+test("locked discoveries cannot be played early and delayed buffs resolve at the next recruit start", () => {
+  let s = fixture(); const spell = add(s, "BG34_330");
+  s = apply(s, { type: "cast", uid: spell.uid }); const discovered = s.discovery[0];
+  s = apply(s, { type: "discover", uid: discovered.uid });
+  assert.match(act(s, { type: "play", uid: discovered.uid }).error!, /解锁/);
+  advanceRecruit(s, rng);
+  s = apply(s, { type: "play", uid: discovered.uid });
+  assert.ok(s.board.some((m) => m.uid === discovered.uid));
+});
+
+test("Lockbox opens after five turns or acceleration, generates a golden typed minion without triple reward", () => {
+  let s = fixture(); const maker = add(s, "BG36_520");
+  s = apply(s, { type: "play", uid: maker.uid });
+  const chest = s.hand.find((m) => m.id === PREFIX + "BG36_520t")!;
+  assert.equal(chest.lockedUntil, 6);
+  for (let i = 0; i < 4; i++) advanceRecruit(s, rng);
+  assert.ok(s.hand.some((m) => m.id === chest.id));
+  s.season!.trinketOffers = [];
+  const second = add(s, "BG36_520"); s = apply(s, { type: "play", uid: second.uid });
+  assert.ok(!s.hand.some((m) => m.id === chest.id));
+  assert.ok(s.hand.some((m) => m.golden && getDef(m.id).races?.length));
+  assert.equal(s.rewards.length, 0);
+});
+
+test("Elemental of Surprise joins a triple and preserves each source pool copy", () => {
+  let s = fixture(); add(s, "BG31_816", "board"); add(s, "BG31_816"); add(s, "BG26_175");
+  s = apply(s, { type: "freeze" });
+  const golden = s.hand.find((m) => m.golden)!;
+  assert.ok(golden); assert.equal(golden.id, PREFIX + "BG31_816");
+  assert.equal(golden.copies[PREFIX + "BG31_816"], 2); assert.equal(golden.copies[PREFIX + "BG26_175"], 1);
+  assert.ok(golden.keywords.includes("圣盾"));
+});
+
+test("Fishbait can replace a shop spell and recruits trigger Rally without consuming a hand slot", () => {
+  let s = fixture(); s.gold = 10;
+  const beast = add(s, "BG36_200", "board"), fish = add(s, "BG36_201", "board"), target = s.season!.spellShop[0];
+  assert.ok(seasonTargets(s, fish, "activate").some((x) => x.uid === target.uid));
+  s = apply(s, { type: "activate", uid: fish.uid, target: target.uid });
+  assert.equal(s.gold, 8);
+  assert.equal(s.board.find((m) => m.uid === beast.uid)!.attack, beast.attack + 5);
+  assert.ok(s.board.length > 2); assert.equal(s.hand.length, 0);
+});
+
+test("Leeroy kills the minion that dealt lethal damage", () => {
+  const s = fixture(); add(s, "BG23_318", "board");
+  const giant = makeMinion(PREFIX + "BG25_001"); giant.attack = giant.health = 200; giant.keywords = [];
+  const result = seasonCombat(s, [giant], 6, () => 0);
+  assert.equal(result.result, "tie");
+});
+
+test("every pinned pool minion and tavern spell has executable rules", () => {
+  assert.equal(SEASON_CARDS.length, 234); assert.equal(SEASON_SPELLS.length, 67);
+  for (const d of SEASON_CARDS) {
+    let s = fixture(); s.tier = 6; s.gold = 50; s.health = 200;
+    add(s, "BG25_001", "board"); const minion = add(s, d.sourceId!);
+    s = apply(s, { type: "play", uid: minion.uid, target: seasonTargets(s, minion)[0]?.uid });
+    for (let i = 0; i < 12 && s.discovery.length; i++) s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+    const own = s.board.find((m) => m.uid === minion.uid);
+    if (own && d.abilities?.some((a) => a.event === "activate")) {
+      const result = act(s, { type: "activate", uid: own.uid, target: seasonTargets(s, own, "activate")[0]?.uid }, rng);
+      if (!result.error) { s = result.state; assertPool(s); }
+    }
+    const enemy = makeMinion(PREFIX + "BG25_001"); enemy.attack = 1000; enemy.health = 10000;
+    seasonCombat(s, [enemy], 6, rng); assertPool(s);
+  }
+});
+
+test("Clockwork triples with two copies, awards a coin on play, and keeps finite pool accounting", () => {
+  let s = fixture("s14_clockwork"); add(s, "BG25_001"); add(s, "BG25_001");
+  s = apply(s, { type: "freeze" }); const golden = s.hand.find((m) => m.golden)!;
+  assert.equal(golden.copies[golden.id], 2); assert.ok(!golden.reward);
+  s = apply(s, { type: "play", uid: golden.uid });
+  assert.equal(s.rewards.length, 0); assert.ok(s.hand.some((m) => m.id === PREFIX + "BG28_810"));
+});
+
+test("Mutanus sells a target and transfers its stats; Zerek creates a copy only once per game", () => {
+  let s = fixture("s14_mutanus");
+  const a = add(s, "BG25_001", "board"), b = add(s, "BG31_803", "board");
+  s = apply(s, { type: "power", target: a.uid });
+  assert.equal(s.board.length, 1); assert.equal(s.board[0].attack, a.attack + b.attack); assert.equal(s.gold, 4);
+  let z = fixture("s14_zerek"); const target = add(z, "BG25_001", "board"); target.attack = 33;
+  z = apply(z, { type: "power", target: target.uid });
+  assert.equal(z.board.length, 2); assert.equal(z.board[1].attack, 33); assert.deepEqual(z.board[1].copies, {});
+  advanceRecruit(z, rng); assert.match(seasonPowerState(z).reason!, /本局/);
+});
+
+test("Snake Eyes pays before adding gold, caps the result, and enforces the rolled cooldown", () => {
+  let s = fixture("s14_snakeEyes"); s.gold = 10;
+  s = apply(s, { type: "power" });
+  assert.equal(s.gold, 10);
+  advanceRecruit(s, rng); assert.match(seasonPowerState(s).reason!, /第3回合/);
+  advanceRecruit(s, rng); assert.equal(seasonPowerState(s).reason, undefined);
+});
+
+test("Maiev locks a purchased card and Galakrond replaces the shop with a reserved discovered copy", () => {
+  let s = fixture("s14_maiev"), target = s.shop[0];
+  s = apply(s, { type: "power", target: target.uid });
+  assert.equal(s.hand[0].lockedUntil, 3);
+  assert.match(act(s, { type: "play", uid: target.uid }).error!, /解锁/);
+  let g = fixture("s14_galakrond"); target = g.shop[0];
+  g = apply(g, { type: "power", target: target.uid });
+  assert.ok(g.discovery.every((m) => getDef(m.id).tier === getDef(target.id).tier + 1));
+  const selected = g.discovery[0]; g = apply(g, { type: "discover", uid: selected.uid });
+  assert.ok(g.shop.some((m) => m.uid === selected.uid)); assert.equal(g.hand.length, 0);
+});
+
+test("AFK skips the first two turns and receives tier three and four discoveries", () => {
+  let s = fixture("s14_afk"); assert.equal(s.gold, 0);
+  advanceRecruit(s, rng); assert.equal(s.gold, 0);
+  advanceRecruit(s, rng); assert.ok(s.discovery.every((m) => getDef(m.id).tier === 3));
+  s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+  assert.ok(s.discovery.every((m) => getDef(m.id).tier === 4));
+});
+
+test("Rokara kill buff is permanent and Greyborough affects summoned bodies only", () => {
+  const s = fixture("s14_rokara"), minion = add(s, "BG25_001", "board"); minion.attack = 20; minion.health = 40;
+  const enemy = makeMinion(PREFIX + "BG31_803"); enemy.attack = 0; enemy.health = 1;
+  seasonCombat(s, [enemy], 1, () => 0); assert.ok(minion.attack > 20);
+  const g = fixture("s14_greybough"), raptor = add(g, "BG25_806", "board"); raptor.health = 1;
+  const giant = makeMinion(PREFIX + "BG36_356"); giant.attack = 50; giant.health = 100;
+  const result = seasonCombat(g, [giant], 6, () => 0);
+  assert.ok(result.frames.some((f) => f.allies.some((m) => m.uid !== raptor.uid && m.health === 8 && m.keywords.includes("嘲讽"))));
+});
+
+test("newly acquired purchase powers do not inherit purchases made under another hero power", async () => {
+  const { equipPowers } = await import("./powers");
+  const { spellCost } = await import("./engine");
+  let s = fixture(); s.gold = 30;
+  for (let i = 0; i < 2; i++) {
+    const spell = makeMinion(PREFIX + "BG28_897"); s.season!.spellShop = [spell];
+    s = apply(s, { type: "buySpell", uid: spell.uid });
+  }
+  equipPowers(s, ["s14_taethelan"]);
+  assert.equal(spellCost(s, makeMinion(PREFIX + "BG28_897")), 1);
+  for (let i = 0; i < 2; i++) {
+    const spell = makeMinion(PREFIX + "BG28_897"); s.season!.spellShop = [spell];
+    s = apply(s, { type: "buySpell", uid: spell.uid });
+  }
+  assert.equal(spellCost(s, makeMinion(PREFIX + "BG28_897")), 0);
+  equipPowers(s, ["s14_lich"]);
+  const other = makeMinion(PREFIX + "BG28_897"); s.season!.spellShop = [other];
+  s = apply(s, { type: "buySpell", uid: other.uid });
+  equipPowers(s, ["s14_taethelan"]);
+  assert.equal(spellCost(s, makeMinion(PREFIX + "BG28_897")), 0);
+});
+
+test("magnetic plays attach satellites to the host and attached spell auras do not scale with a golden host", () => {
+  let s = fixture(); add(s, "BG36_851", "board");
+  const host = add(s, "BG29_611", "board", true), magnetic = add(s, "BG35_341");
+  s = apply(s, { type: "play", uid: magnetic.uid, target: host.uid });
+  assert.equal(s.board.find((m) => m.uid === host.uid)!.attack, host.attack + magnetic.attack + 2);
+  const spell = add(s, "BG28_897"), before = s.board.find((m) => m.uid === host.uid)!.attack;
+  s = apply(s, { type: "cast", uid: spell.uid, target: host.uid });
+  assert.equal(s.board.find((m) => m.uid === host.uid)!.attack, before + 3);
+});
+
+test("Fandral's Fortune discovers Choose One spells as well as minions, preserving both options", () => {
+  let s = fixture(); s.tier = 6;
+  for (const d of SEASON_CARDS.filter((d) => d.abilities?.some((a) => a.op === "choose"))) {
+    // Hold every copy so only spells can be offered, without changing pool totals.
+    const count = s.pool[d.id] || 0;
+    if (count) { const held = makeMinion(d.id); held.copies = { [d.id]: count }; s.opponents[0].board.push(held); s.pool[d.id] = 0; }
+  }
+  const spell = add(s, "BG31_892"); s = apply(s, { type: "cast", uid: spell.uid });
+  assert.equal(s.discovery.length, 3); assert.ok(s.discovery.every((m) => getDef(m.id).kind === "spell"));
+  const chosen = s.discovery[0]; s = apply(s, { type: "discover", uid: chosen.uid });
+  assert.ok(s.hand.find((m) => m.uid === chosen.uid)!.bothChoices);
+  s = apply(s, { type: "cast", uid: chosen.uid }); assert.ok(s.season!.activeDiscovery?.both);
 });

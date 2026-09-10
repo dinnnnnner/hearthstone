@@ -1,6 +1,7 @@
 import { RecruitmentRope } from "./table/RecruitmentRope";
 import { equippedPowers } from "./season/powers";
 import { PowerChoices } from "./season/PowerChoices";
+import { CardChoices } from "./season/CardChoices";
 import { RefreshPrice } from "./table/RefreshPrice";
 import type { NetworkGame } from "./online/OnlineApp";
 import { useSceneReady } from "./loading/useSceneReady";
@@ -70,6 +71,7 @@ import {
   refreshPayment,
   minionCost,
   spellCost,
+  spellUsesHealth,
 } from "./season/engine";
 import {
   SeasonBar,
@@ -174,7 +176,7 @@ function MinionCard({
         className={`minion-card spell-card ${compact ? "compact" : ""}`}
         onClick={onClick}
         disabled={disabled}
-        aria-label={`${d.name}，${d.text}`}
+        aria-label={`${d.name}，${cardText(m)}`}
       >
         <div
           className="card-art"
@@ -183,7 +185,7 @@ function MinionCard({
           <div className="tier-badge">★{d.tier}</div>
         </div>
         <div className="card-name">{d.name}</div>
-        {!compact && <div className="card-description">{d.text}</div>}
+        {!compact && <div className="card-description">{cardText(m)}</div>}
         <div className="spell-card-type">
           {m.tempSpell
             ? "塑造法术"
@@ -422,8 +424,8 @@ function App({
         zone !== "board" &&
         !(
           game.season &&
-          zone === "shop" &&
-          ["cast", "power"].includes(targeting.type)
+          ["shop", "spellshop"].includes(zone) &&
+          ["cast", "power", "activate"].includes(targeting.type)
         )
       ) {
         setToast("请选择战场上的友方随从。");
@@ -456,7 +458,7 @@ function App({
     if (ts.length) {
       setTargeting({ type: "activate", uid: m.uid });
       setSelection(null);
-      setToast("选择发动技能的友方目标。");
+      setToast("选择发动技能的目标。");
     } else dispatch({ type: "activate", uid: m.uid });
   }
   function power(powerId?: string) {
@@ -1585,7 +1587,7 @@ function App({
                         dispatch({ type: "buySpell", uid: selection.m.uid })
                       }
                     >
-                      购买法术 <Coin small />
+                      购买法术 {spellUsesHealth(selection.m) ? "消耗生命 " : <Coin small />}
                       {spellCost(game, selection.m)}
                     </button>
                   ) : selection.zone === "shop" ? (
@@ -1947,16 +1949,16 @@ function App({
       {game.discovery.length > 0 && (
         <Modal
           title={
-            game.season?.discoveryKind === "darkGift"
+            game.season?.discoveryKind === "choose" ? "抉择，选择一项效果" : game.season?.discoveryKind === "darkGift"
               ? "黑暗发现，接受这份馈赠"
               : game.season?.discoveryKind === "spell"
                 ? "发现一张酒馆法术"
                 : "发现奖励，选一位新伙伴"
           }
-          subtitle="选择一个随从加入手牌，未选择的随从将放回共享池。"
+          subtitle={game.season?.discoveryKind === "choose" ? "选择后立即结算；需要目标的效果可在下方指定随从。" : "选择一张卡牌加入手牌，未选择的随从将放回共享池。"}
           wide
         >
-          <div className="discovery-cards">
+          {game.season?.discoveryKind === "choose" ? <CardChoices key={game.discovery[0]?.uid} game={game} dispatch={dispatch} /> : <div className="discovery-cards">
             {game.discovery.map((m) => (
               <div key={m.uid}>
                 <MinionCard
@@ -1968,11 +1970,11 @@ function App({
                   className="button primary"
                   onClick={() => dispatch({ type: "discover", uid: m.uid })}
                 >
-                  选择随从
+                  选择卡牌
                 </button>
               </div>
             ))}
-          </div>
+          </div>}
         </Modal>
       )}
       {game.phase === "combat" &&

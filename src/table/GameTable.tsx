@@ -54,6 +54,7 @@ import {
   refreshPayment,
   seasonTargets,
   spellCost,
+  spellUsesHealth,
   TRINKETS,
 } from "../season/engine";
 import { GiftNote, CardSource } from "../season/Panels";
@@ -614,7 +615,7 @@ export function GameTable(p: Props) {
                     aria-label={`酒馆法术：${getDef(m.id).name}`}
                   >
                     <img src={art(m.id)} alt="" />
-                    <b>{spellCost(game, m)}</b>
+                    <b>{spellUsesHealth(m) ? "♥" : ""}{spellCost(game, m)}</b>
                     <span>{getDef(m.id).name}</span>
                     <small>酒馆法术</small>
                   </button>
@@ -963,8 +964,8 @@ export function GameTable(p: Props) {
                       className="inspect-primary"
                       onClick={primary}
                       disabled={
-                        selection.zone !== "hand" &&
-                        (game.gold < cost ||
+                        selection.zone === "hand" ? (selection.m.lockedUntil || 0) > game.turn || (selection.m.lockedTier || 0) > game.tier :
+                        ((!spellUsesHealth(selection.m) && game.gold < cost) ||
                           game.hand.length + game.rewards.length >= 10)
                       }
                     >
@@ -977,7 +978,7 @@ export function GameTable(p: Props) {
                           : "招募随从"}
                       {cost > 0 && (
                         <>
-                          <Coins size={13} />
+                          {spellUsesHealth(selection.m) ? <Heart size={13} /> : <Coins size={13} />}
                           {cost}
                         </>
                       )}

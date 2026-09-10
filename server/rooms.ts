@@ -314,7 +314,12 @@ export class Rooms {
   }
   apply(r: Room, p: Seat, a: Action) {
     p.game!.pool = r.pool;
-    const result = actSeason(p.game!, a, this.random);
+    const pair = r.pairings?.find((pair) => pair.includes(p.id));
+    const opponentId = pair?.find((id) => id !== p.id);
+    const opponent = r.seats.find((seat) => seat.id === opponentId);
+    // Hero powers may inspect the paired warband inside the rules engine; it must
+    // never become part of the player's serialized state or polling response.
+    const result = actSeason(p.game!, a, this.random, { opponentBoard: opponent?.game?.board || r.grave?.board || [] });
     if (result.error) return result.error;
     p.game = result.state;
     r.pool = result.state.pool;
@@ -338,6 +343,7 @@ export class Rooms {
         a = {
           type: "discover",
           uid: [...s.discovery].sort((a, b) => score(b) - score(a))[0].uid,
+          ...(s.season?.discoveryKind === "choose" ? { target: seasonTargets(s, [...s.discovery].sort((a, b) => score(b) - score(a))[0], "cast")[0]?.uid } : {}),
         };
       else if (s.season!.trinketOffers.length) {
         const t = s
@@ -363,7 +369,8 @@ export class Rooms {
         if (s.phase === "over") break;
         let a: Action | undefined;
         const hand = s.hand.find(
-          (m) => getDef(m.id).kind === "spell" || s.board.length < 7,
+          (m) => (m.lockedUntil || 0) <= s.turn && (m.lockedTier || 0) <= s.tier &&
+            (getDef(m.id).kind === "spell" ? !![...(getDef(m.id).abilities || []), ...(m.extraAbilities || [])].some((a) => a.event === "cast") : s.board.length < 7),
         );
         if (hand) {
           const spell = getDef(hand.id).kind === "spell";

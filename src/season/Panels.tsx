@@ -16,9 +16,11 @@ import {
   SEASON_CATALOG,
   SEASON_CARDS,
   SEASON_SPELLS,
+  SEASON_HEROES,
+  SEASON_HERO_CATALOG,
   RAW_GIFTS,
 } from "./catalog";
-import { TRINKETS, giftTierRange, spellCost } from "./engine";
+import { TRINKETS, giftTierRange, spellCost, spellUsesHealth } from "./engine";
 import assets from "./assets.json" with { type: "json" };
 export function SeasonBar({
   game,
@@ -144,9 +146,9 @@ export function SpellShelf({
               <button
                 className="small-button"
                 onClick={() => dispatch({ type: "buySpell", uid: m.uid })}
-                disabled={game.phase !== "recruit" || game.gold < cost}
+                disabled={game.phase !== "recruit" || (!spellUsesHealth(m) && game.gold < cost)}
               >
-                购买 <Coins size={12} />
+                购买 {spellUsesHealth(m) ? "生命 " : <Coins size={12} />}
                 {cost}
               </button>
             </div>
@@ -254,7 +256,7 @@ export function CoverageNote() {
       <span>
         36.4.2资料已收录{SEASON_CATALOG.length}种随从，其中{SEASON_CARDS.length}
         种已实现技能并可进入练习池。另有{SEASON_SPELLS.length}
-        种可购买酒馆法术。未实现的卡只在图鉴展示。
+        种可购买酒馆法术，以及{SEASON_HEROES.length}/{SEASON_HERO_CATALOG.length}位可用英雄。其余英雄尚未开放；黑暗之赐与饰品仍使用已实现的候选池。
       </span>
     </div>
   );

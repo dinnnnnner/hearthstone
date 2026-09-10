@@ -1,5 +1,7 @@
 import snapshot from "./snapshot.json" with { type: "json" };
 import type { CardDef, Hero, Tribe, Keyword, Ability } from "../data";
+import { expandedMinions, expandedSpells } from "./expanded-catalog";
+import { expandedHeroKeys, expandedPassiveHeroes } from "./expanded-heroes";
 export const SEASON_META = snapshot.meta;
 export const PREFIX = "s14_";
 const races: Record<string, Tribe> = {
@@ -44,6 +46,7 @@ const stat = (event: string, key: string, attack: number, health: number) =>
   A(event, "scale", { key, attack, health });
 // Only explicitly implemented cards can enter the playable pool. The complete snapshot remains browsable.
 const effects: Record<string, Ability[]> = {
+  ...expandedMinions,
   BG26_146: [b("end", 0, 1)],
   BG20_104: [A("rally", "gem", { target: "others" })],
   BG27_002: [spell("battlecry", "BG27_002t", 2)],
@@ -133,7 +136,7 @@ const effects: Record<string, Ability[]> = {
   ],
   BG29_816: [b("attackDragon", 3, 1, "event")],
   BG30_125: [summon("death", "BG_ICC_026t", 3)],
-  BG31_326: [spell("end", "BG31_320t2")],
+  BG31_326: [spell("end", "BG31_893")],
   BG31_843: [b("sellElemental", 4, 4)],
   BG33_323: [stat("rally", "undead", 1, 0)],
   BG33_830: [stat("battlecry", "spell", 1, 0)],
@@ -229,6 +232,7 @@ const effects: Record<string, Ability[]> = {
   BG36_640: [spell("targetSpell", "BG28_888")],
 };
 const spellEffects: Record<string, Ability[]> = {
+  ...expandedSpells,
   EBG_Spell_037: [A("cast", "replacePower")],
   BG33_101: [A("cast", "discoverMinion", { tier: 1 })],
   BG28_882: [A("cast", "discoverMinion", { key: "DEATHRATTLE" })],
@@ -316,7 +320,7 @@ const spellEffects: Record<string, Ability[]> = {
   BG36_884: [spell("cast", "EBG_Spell_014", 3)],
   BG20_GEM: [A("cast", "gem", { target: "selected" })],
   EBG_Spell_014: [b("cast", 4, 0, "selected")],
-  BG31_320t2: [stat("cast", "gem", 1, 1)],
+  BG31_320t2: [A("cast", "generate", { id: "BG31_893" })],
 };
 type RawCard = {
   id: string;
@@ -331,7 +335,9 @@ type RawCard = {
   goldenText?: string;
   goldenAttack?: number;
   goldenHealth?: number;
+  school?: string;
 };
+const relatedById = new Map(snapshot.related.map((c) => [c.id, c]));
 function convert(
   c: RawCard,
   kind: CardDef["kind"] = "minion",
@@ -339,6 +345,7 @@ function convert(
 ): CardDef {
   const abilities = kind === "spell" ? spellEffects[c.id] : effects[c.id];
   const ks = (c.mechanics || []).map((k) => keywords[k]).filter(Boolean);
+  const goldenChoice = kind === "spell" ? relatedById.get(c.id.replace(/t(\d*)$/, "_Gt$1")) : undefined;
   return {
     id: PREFIX + c.id,
     sourceId: c.id,
@@ -350,13 +357,14 @@ function convert(
     tribe: races[c.races[0]] || "无",
     races: c.races.map((r) => races[r]).filter(Boolean),
     text: c.text,
-    goldenText: c.goldenText || c.text,
+    goldenText: c.goldenText || goldenChoice?.text || c.text,
     goldenAttack: c.goldenAttack ?? c.attack * 2,
     goldenHealth: c.goldenHealth ?? c.health * 2,
     keywords: ks,
     mechanics: c.mechanics,
     token,
     kind,
+    spellSchool: c.school,
     season: true,
     playable: abilities !== undefined,
     abilities: abilities || [],
@@ -376,6 +384,7 @@ export const SEASON_RELATED: CardDef[] = snapshot.related.map((c) =>
   convert(c, c.attack || c.health ? "minion" : "spell", true),
 );
 const heroKeys: Record<string, string> = {
+  ...expandedHeroKeys,
   TB_BaconShop_HERO_40: "finley",
   BG20_HERO_202: "nguyen",
   BG35_HERO_001: "genn",
@@ -411,7 +420,7 @@ export const SEASON_HEROES: Hero[] = snapshot.heroes
     health: h.health,
     armor: h.armor,
     art: h.id,
-    passive: [
+    passive: expandedPassiveHeroes.has(heroKeys[h.id]) || [
       "finley", "nguyen", "genn",
       "patchwerk",
       "nozdormu",
@@ -429,6 +438,7 @@ export const HERO_TRIBES: Record<string, Tribe> = {
   s14_alexstrasza: "龙",
   s14_blackthorn: "野猪人",
   s14_chenvaala: "元素",
+  s14_patches: "海盗", s14_ysera: "龙", s14_flurgl: "鱼人", s14_jailer: "亡灵",
 };
 export const SEASON_HERO_CATALOG = snapshot.heroes;
 export const RAW_GIFTS = snapshot.gifts;
