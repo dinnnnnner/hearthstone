@@ -3,7 +3,8 @@ import { getDef } from "../src/data";
 import { seasonTargets } from "../src/season/engine";
 import { equippedPowers } from "../src/season/powers";
 
-export const LIMITS = { board: 7, shop: 16, spellShop: 4, hand: 10, discovery: 4, powers: 2, choices: 4 } as const;
+// Chromie's full spell tavern contains SHOP_SIZE[tier] + 1 cards, up to seven.
+export const LIMITS = { board: 7, shop: 16, spellShop: 7, hand: 10, discovery: 4, powers: 2, choices: 4 } as const;
 // Target 0 means no target; remaining slots are board, shop, spell shop, hand.
 export const TARGET_COUNT = 1 + LIMITS.board + LIMITS.shop + LIMITS.spellShop + LIMITS.hand;
 export interface ActionSpec { type: Action["type"]; source: number; target: number; position: number }

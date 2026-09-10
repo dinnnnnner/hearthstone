@@ -9,7 +9,7 @@ import coverage from "../docs/rules-coverage.json";
 
 declare const RL_SOURCE_HASH: string;
 export const META = {
-  schema: "tavern-selfplay-v1", observationVersion: 1, actionVersion: 1,
+  schema: "tavern-selfplay-v2", observationVersion: 2, actionVersion: 2,
   sourceHash: typeof RL_SOURCE_HASH === "undefined" ? "development" : RL_SOURCE_HASH,
   actionCount: ACTIONS.length, cardIds: CARD_IDS, heroIds: HERO_IDS,
   patch: coverage.patch, coverage: { minions: coverage.minions, heroes: coverage.heroes, spells: coverage.tavernSpells, trinkets: coverage.trinkets },

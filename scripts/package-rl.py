@@ -7,13 +7,15 @@ import io
 
 ROOT = Path(__file__).resolve().parents[1]
 files = [ROOT / path for path in ["rl-dist/bridge.cjs", "rl-dist/build.json", "rl/README.md",
-    "rl/requirements.txt", "rl/run.sh", "docs/rules-coverage.json", "docs/rl-roadmap.md"]]
+    "rl/requirements.txt", "rl/run.sh", "docs/rules-coverage.json", "docs/rl-roadmap.md", "docs/rl-server.md"]]
 files += sorted((ROOT / "rl/python").rglob("*.py"))
 files += sorted((ROOT / "rl/tests").rglob("*.py"))
 validation = ROOT / "docs/rl-validation.json"
 if validation.exists(): files.append(validation)
+server_validation = ROOT / "docs/rl-server-validation.json"
+if server_validation.exists(): files.append(server_validation)
 manifest = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
-archive = ROOT / "rl-dist/tavern-selfplay-v1.tar.gz"
+archive = ROOT / "rl-dist/tavern-selfplay-v2.tar.gz"
 with tarfile.open(archive, "w:gz") as package:
     for path in files:
         package.add(path, arcname=f"tavern-selfplay/{path.relative_to(ROOT)}", recursive=False)

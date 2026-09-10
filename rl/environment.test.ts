@@ -6,6 +6,8 @@ import { observe } from "./observation";
 import { makeMinion } from "../src/engine";
 import { withSimulation } from "../src/simulation";
 import { equipPowers } from "../src/season/powers";
+import { SHOP_SIZE } from "../src/data";
+import chromieReplay from "./fixtures/chromie-spells.json";
 
 function checkPool(env: SelfPlayEnv) {
   const r = env.room;
@@ -84,6 +86,43 @@ test("target slots cover hand spells, play positions and locked-hand legality", 
   const legal = env.legalActions();
   assert.ok([...legal].some(([id]) => ACTIONS[id].type === "cast"));
   assert.ok(![...legal].some(([id]) => ACTIONS[id].type === "play" && ACTIONS[id].source === 1));
+});
+
+test("Chromie's full spell tavern is observable and every slot remains actionable at all tiers", () => {
+  for (let tier = 1; tier <= 6; tier++) {
+    const env = new SelfPlayEnv(); env.reset(59);
+    const seat = env.actor, s = env.room.seats[seat].game!;
+    s.season!.powerChoice = undefined; s.discovery = []; s.season!.trinketOffers = [];
+    s.tier = tier; s.gold = 10;
+    equipPowers(s, ["s14_chromie"]);
+    env.restore(env.snapshot());
+    env.step(actionId("power"));
+    const changed = env.room.seats[seat].game!;
+    assert.equal(changed.season!.spellShop.length, SHOP_SIZE[tier] + 1);
+    assert.equal(observe(changed, 1, 64).length, 2705);
+    env.actor = seat;
+    env.restore(env.snapshot());
+    for (let index = 0; index < changed.season!.spellShop.length; index++) {
+      assert.ok(env.legalActions().has(actionId("buySpell", index)), `tier ${tier}, spell ${index}`);
+    }
+    equipPowers(changed, ["s14_malygos"]);
+    const lastSpell = changed.season!.spellShop.at(-1)!;
+    const target = targets(changed).findIndex(m => m?.uid === lastSpell.uid);
+    assert.ok(candidates(changed).has(actionId("power", 0, target)));
+  }
+});
+
+test("recorded GPU self-play failure replays through the expanded spell shop", () => {
+  const env = new SelfPlayEnv(chromieReplay.options);
+  let state = env.reset(chromieReplay.seed);
+  for (const action of chromieReplay.actions) state = env.step(action);
+  assert.equal(env.actor, chromieReplay.expected.actor);
+  assert.equal(env.room.turn, chromieReplay.expected.turn);
+  assert.equal(env.rng.state, chromieReplay.expected.rng);
+  assert.equal(env.uidCounter, chromieReplay.expected.uidCounter);
+  assert.equal(env.room.seats[env.actor].game!.season!.spellShop.length, chromieReplay.expected.spellShop);
+  assert.ok(state.legalActions.length > 0);
+  checkPool(env);
 });
 
 test("decision budgets force end, truncations do not fabricate rankings, and scopes unwind", () => {
