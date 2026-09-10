@@ -1,0 +1,386 @@
+{
+  "schema": "tavern-v3-validation-v1",
+  "date": "2026-09-10",
+  "implementation_commit": "0bad9fc",
+  "sourceHash": "6fffd064ada15971d8502f6fdb37c86483b4a740b819f38101d7e2b5edd927d1",
+  "rulesHash": "64858c3986277e2ad0f86f59f693a0cd3996db723a3cd434faa0fadec948690a",
+  "entity_count": 73,
+  "action_count": 4316,
+  "checks": {
+    "typescript_tests": 10,
+    "python_tests": 13,
+    "standalone_package_tests": 13,
+    "isolated_build_same": true,
+    "ui_change_does_not_change_source_hash": true,
+    "rule_change_invalidates_hash_and_legacy_import": true,
+    "local_resume": {
+      "iteration": 2,
+      "episodes": 2,
+      "model_equal": true,
+      "optimizer_equal": true,
+      "torch_rng_equal": true,
+      "league_equal": true,
+      "trainerHash": "b9bd9a840fb40aff01b3db0cf61b0faebc47d119672792f7bc0bf875f609575f"
+    }
+  },
+  "gpu": {
+    "device": "RTX 3080 Ti 12 GiB",
+    "python": "3.12.3",
+    "torch": "2.12.1+cu130",
+    "numpy": "2.4.6",
+    "workers": 4,
+    "hidden": 128,
+    "heads": 4,
+    "layers": 2,
+    "max_actions": 64,
+    "iterations": 3,
+    "games": 12,
+    "optimizer_steps": [
+      27
+    ],
+    "metrics": [
+      {
+        "iteration": 1,
+        "episodes": 4,
+        "seconds": 72.9254459560616,
+        "environment_actions": 6024,
+        "actions_per_second": 82.60491137249305,
+        "policy_loss": -0.13772488137086233,
+        "value_loss": 0.3323475681245327,
+        "entropy": 2.2714322010676065,
+        "approx_kl": 0.015879454634462793,
+        "gradient_norm": 5.3919611175855,
+        "samples": 1533,
+        "optimizer_steps": 6,
+        "kl_early_stop": true,
+        "sequence_chunks": 103,
+        "completed_games": 4,
+        "league_generations": [
+          0,
+          "anchor:/root/autodl-tmp/tavern-selfplay/rl/runs/gpu-check-v2/latest.pt",
+          1
+        ]
+      },
+      {
+        "iteration": 2,
+        "episodes": 8,
+        "seconds": 64.46136292302981,
+        "environment_actions": 4306,
+        "actions_per_second": 66.79970457871929,
+        "policy_loss": -0.2610149474016258,
+        "value_loss": 0.12159941132579531,
+        "entropy": 2.3451288427625383,
+        "approx_kl": 0.01078681177127042,
+        "gradient_norm": 3.0828226804733276,
+        "samples": 1505,
+        "optimizer_steps": 7,
+        "kl_early_stop": true,
+        "sequence_chunks": 103,
+        "completed_games": 4,
+        "league_generations": [
+          0,
+          "anchor:/root/autodl-tmp/tavern-selfplay/rl/runs/gpu-check-v2/latest.pt",
+          1,
+          2
+        ]
+      },
+      {
+        "iteration": 3,
+        "iteration_seconds": 50.89064555300865,
+        "end_to_end_actions_per_second": 58.98923009088302,
+        "cuda_peak_allocated_mib": 376.5556640625,
+        "episodes": 12,
+        "seconds": 48.35720119997859,
+        "environment_actions": 3002,
+        "actions_per_second": 62.079688764148926,
+        "policy_loss": 0.07880943215319089,
+        "value_loss": 0.09384600871375628,
+        "entropy": 2.1136132223265514,
+        "approx_kl": 0.009875076656628932,
+        "gradient_norm": 1.9994909805910928,
+        "samples": 1352,
+        "optimizer_steps": 14,
+        "kl_early_stop": true,
+        "sequence_chunks": 91,
+        "optimization_seconds": 2.1082810319494456,
+        "completed_games": 4,
+        "league_generations": [
+          0,
+          "anchor:/root/autodl-tmp/tavern-selfplay/rl/runs/gpu-check-v2/latest.pt",
+          1,
+          2,
+          3
+        ]
+      }
+    ],
+    "pilotTrainerHash": "44a69711f324cfcce9c657c97ae161eb6b5bd56b60cc01f4945b231ff9ef8252",
+    "final_source_smoke": {
+      "games": 1,
+      "max_actions": 4,
+      "trainerHash": "b9bd9a840fb40aff01b3db0cf61b0faebc47d119672792f7bc0bf875f609575f",
+      "matches_final_source": true,
+      "metrics": [
+        {
+          "iteration": 1,
+          "iteration_seconds": 15.951438362011686,
+          "end_to_end_actions_per_second": 37.67685310631799,
+          "cuda_peak_allocated_mib": 129.17138671875,
+          "episodes": 1,
+          "seconds": 14.673351170960814,
+          "environment_actions": 601,
+          "actions_per_second": 40.95860536544676,
+          "policy_loss": -0.026064333505928516,
+          "value_loss": 0.17718840017914772,
+          "entropy": 2.023954689502716,
+          "approx_kl": 0.01085485692601651,
+          "gradient_norm": 4.710192918777466,
+          "samples": 232,
+          "optimizer_steps": 8,
+          "kl_early_stop": true,
+          "sequence_chunks": 30,
+          "optimization_seconds": 1.03388039895799,
+          "completed_games": 1,
+          "league_generations": [
+            0,
+            "anchor:/root/autodl-tmp/tavern-selfplay/rl/runs/gpu-check-v2/latest.pt",
+            1
+          ]
+        }
+      ]
+    },
+    "revision_note": "Cross-iteration seat rotation was corrected after the main pilot; final source received a separate one-game CUDA smoke and exact CPU resume checks. Main pilot comparison is preserved as measured.",
+    "gpu_memory_idle_mib_after_exit": 1,
+    "training_processes_running": false
+  },
+  "evaluation": {
+    "schema": "tavern-paired-arena-v1",
+    "suite_id": "ce123b1d4f927b459c794a62b2abb8e2ef0688c149a6cb2c0bcdc7da56644ceb",
+    "split": "validation",
+    "sourceHash": "6fffd064ada15971d8502f6fdb37c86483b4a740b819f38101d7e2b5edd927d1",
+    "games": 8,
+    "candidate": {
+      "checkpoint_sha256": "4df0da4d74fedf116b290f05423653ace94774677a77e6e5d241fb9a5da3b937",
+      "iteration": 3,
+      "ranks": [
+        8,
+        4,
+        5,
+        8,
+        8,
+        8,
+        7,
+        8
+      ],
+      "mean_placement": 7.0,
+      "top_four_rate": 0.125,
+      "first_rate": 0.0,
+      "by_hero": {
+        "s14_enhance": {
+          "games": 1,
+          "mean_placement": 8.0
+        },
+        "s14_lich": {
+          "games": 1,
+          "mean_placement": 4.0
+        },
+        "s14_genn": {
+          "games": 1,
+          "mean_placement": 5.0
+        },
+        "s14_blackthorn": {
+          "games": 1,
+          "mean_placement": 8.0
+        },
+        "s14_shudderwock": {
+          "games": 1,
+          "mean_placement": 8.0
+        },
+        "s14_millhouse": {
+          "games": 1,
+          "mean_placement": 8.0
+        },
+        "s14_hoggarr": {
+          "games": 1,
+          "mean_placement": 7.0
+        },
+        "s14_greybough": {
+          "games": 1,
+          "mean_placement": 8.0
+        }
+      },
+      "by_tribe": {
+        "亡灵": {
+          "games": 4,
+          "mean_placement": 7.75
+        },
+        "恶魔": {
+          "games": 4,
+          "mean_placement": 7.0
+        },
+        "龙": {
+          "games": 5,
+          "mean_placement": 6.6
+        },
+        "野猪人": {
+          "games": 4,
+          "mean_placement": 7.0
+        },
+        "纳迦": {
+          "games": 3,
+          "mean_placement": 6.666666666666667
+        },
+        "元素": {
+          "games": 3,
+          "mean_placement": 6.666666666666667
+        },
+        "野兽": {
+          "games": 5,
+          "mean_placement": 6.6
+        },
+        "海盗": {
+          "games": 4,
+          "mean_placement": 7.0
+        },
+        "鱼人": {
+          "games": 4,
+          "mean_placement": 7.0
+        },
+        "机械": {
+          "games": 4,
+          "mean_placement": 7.75
+        }
+      },
+      "performance": {
+        "seconds": 133.92738140700385,
+        "environment_actions": 16491,
+        "actions_per_second": 123.13389410552298
+      }
+    },
+    "reference": {
+      "checkpoint_sha256": "815a1b1ad6a8a8ced24762a7e293b81a792066806bf2976bffc8dd8cbc89623c",
+      "iteration": 3,
+      "ranks": [
+        3,
+        2,
+        6,
+        1,
+        7,
+        3,
+        8,
+        3
+      ],
+      "mean_placement": 4.125,
+      "top_four_rate": 0.625,
+      "first_rate": 0.125,
+      "by_hero": {
+        "s14_lich": {
+          "games": 1,
+          "mean_placement": 3.0
+        },
+        "s14_blackthorn": {
+          "games": 1,
+          "mean_placement": 2.0
+        },
+        "s14_enhance": {
+          "games": 1,
+          "mean_placement": 6.0
+        },
+        "s14_genn": {
+          "games": 1,
+          "mean_placement": 1.0
+        },
+        "s14_shudderwock": {
+          "games": 1,
+          "mean_placement": 7.0
+        },
+        "s14_millhouse": {
+          "games": 1,
+          "mean_placement": 3.0
+        },
+        "s14_greybough": {
+          "games": 1,
+          "mean_placement": 8.0
+        },
+        "s14_hoggarr": {
+          "games": 1,
+          "mean_placement": 3.0
+        }
+      },
+      "by_tribe": {
+        "纳迦": {
+          "games": 3,
+          "mean_placement": 5.333333333333333
+        },
+        "元素": {
+          "games": 3,
+          "mean_placement": 4.666666666666667
+        },
+        "野兽": {
+          "games": 5,
+          "mean_placement": 3.2
+        },
+        "野猪人": {
+          "games": 4,
+          "mean_placement": 3.5
+        },
+        "龙": {
+          "games": 5,
+          "mean_placement": 5.0
+        },
+        "海盗": {
+          "games": 4,
+          "mean_placement": 3.5
+        },
+        "机械": {
+          "games": 4,
+          "mean_placement": 3.75
+        },
+        "鱼人": {
+          "games": 4,
+          "mean_placement": 3.5
+        },
+        "亡灵": {
+          "games": 4,
+          "mean_placement": 4.75
+        },
+        "恶魔": {
+          "games": 4,
+          "mean_placement": 4.5
+        }
+      },
+      "performance": {
+        "seconds": 141.48168599698693,
+        "environment_actions": 17835,
+        "actions_per_second": 126.05871830209759
+      }
+    },
+    "comparison": {
+      "mean_placement_delta": 2.875,
+      "paired_95_percent_interval": [
+        1.0,
+        4.875
+      ],
+      "games": 8,
+      "lower_is_better": true,
+      "minimum_gate_games": 256,
+      "gate_passed": false,
+      "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+    }
+  },
+  "backup": {
+    "local": "rl/runs/server-v3-2026-09-10/v3-gpu-verification-backup.tar.gz",
+    "remote": "/root/autodl-tmp/tavern-selfplay-v3/v3-gpu-verification-backup.tar.gz",
+    "bytes": 72672672,
+    "sha256": "ffca3551071c737a9f711cd912380de2e9f313513124bf8fd862b254d3cd1dcc",
+    "pilot_code_archive": {
+      "local": "rl/runs/server-v3-2026-09-10/pilot-code-before-seat-fix.tar.gz",
+      "sha256": "b20bf927c164529f2a986a1492c9f923b7eccda85db9081c9e0105ba039ab22c"
+    }
+  },
+  "limitations": [
+    "Pilot is not equal-budget architecture comparison: candidate trained 12 games, reference 36 games.",
+    "Eight held-out games are insufficient for the 256-game gate or human-strength claims.",
+    "Final model is not integrated into website opponents.",
+    "Rules still have documented official-game coverage gaps."
+  ]
+}

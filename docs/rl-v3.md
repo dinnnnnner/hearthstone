@@ -60,3 +60,28 @@ bash rl/run.sh arena evaluate rl/runs/validation-suite rl/runs/v3-pilot/latest.p
 训练仍受项目的规则覆盖范围限制，详见 `rules-coverage.json`。官方缺失英雄、黑暗之赐、饰品和复杂事件顺序还需补齐。英雄开局自动分配，暂不学习四选一。搜索规划、独立漏洞针对模型、跨机器采样和网页推理接入也尚未实现。当前评估对手的多样性取决于收集到的神经网络，几个早期快照不足以证明高棋力。
 
 实现文件为 `rl/entities.ts`、`features.py`、`entity_model.py`、`recurrent.py`、`rollout.py`、`train.py` 和 `arena.py`。算法实现参考 [PPO 论文](https://arxiv.org/abs/1707.06347)、[CleanRL 循环 PPO](https://github.com/vwxyzjn/cleanrl/blob/master/cleanrl/ppo_atari_lstm.py)、[PyTorch GRU](https://docs.pytorch.org/docs/main/generated/torch.nn.GRU.html) 和 [TransformerEncoderLayer](https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html)。
+
+## 2026-09-10 验证记录
+
+通过 10 项 TypeScript 测试、13 项 Python 测试，独立训练包中的 Python 测试也通过。本地小配置分次续训与连续训练的模型、优化器、历史池及 PyTorch 随机状态完全一致。
+
+3080 Ti 上的 128 维、两层、4 头网络完成 12 局训练及续训，共 27 次优化器更新，每回合动作预算 64。第三轮采样约 62 动作/秒，加上 PPO 和历史网络重建约 59 动作/秒，PyTorch 峰值分配显存约 377 MiB。采样是目前主要耗时，不能按显存空闲量直接推算更大网络的训练效率。
+
+8 局固定种子对照的结果如下。新模型训练了 12 局，旧网络训练了 36 局，训练量不相同，不能用此实验断言哪种网络结构更好。
+
+| 模型 | 平均名次 | 前四率 | 第一率 |
+| --- | --- | --- | --- |
+| 新网络 | 7.000 | 12.5% | 0% |
+| 旧神经网络参照 | 4.125 | 62.5% | 12.5% |
+
+配对名次差为 +2.875，95% 区间为 `[1.000, 4.875]`，没有通过评估门槛。当前产物只能用来继续训练和调试，没有接入网页人机。
+
+试跑中修复了额外饰品位置不足的问题，出错动作序列已加入回归测试。主试跑之后又修正了跨轮座位轮换，最终源码另完成一局 CUDA 验证，未把旧评估记为修改后重训结果。机器可直接使用以下命令续训主检查点，轮次有明确上限。
+
+```bash
+cd /root/autodl-tmp/tavern-selfplay-v3
+./run-server.sh train --resume rl/runs/gpu-pilot-r2/latest.pt \
+  --output rl/runs/v3-next --iterations 2 --workers 4 --device cuda
+```
+
+详细指标、版本指纹与备份校验见 [验证数据](rl-v3-validation.json)。检查点、固定对手、评估结果和出错状态已下载至开发机 `rl/runs/server-v3-2026-09-10/`。本次实验进程已退出，租用实例是否关机需在平台管理。
