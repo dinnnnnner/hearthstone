@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Countdown, type RoomClock } from "./Countdown";
+import { HeroDraft } from "./HeroDraft";
 import { LoadingScreen } from "../loading/LoadingScreen";
 import {
   ArrowLeft,
@@ -47,6 +48,10 @@ export default function OnlineApp() {
         `旅人${Math.floor(1000 + Math.random() * 9000)}`,
     ),
     [hero, setHero] = useState("s14_lich"),
+    [heroSelection, setHeroSelection] = useState<Room["heroSelection"]>(() => {
+      try { return localStorage.getItem("bobs-tavern-hero-selection") === "draft" ? "draft" : "free"; }
+      catch { return "free"; }
+    }),
     [mode, setMode] = useState<Room["mode"]>(() => {
       try { return localStorage.getItem("bobs-tavern-room-mode") === "training" ? "training" : "timed"; }
       catch { return "timed"; }
@@ -65,6 +70,9 @@ export default function OnlineApp() {
           : "hall",
     );
   const receivedAt = useRef(performance.now());
+  useEffect(() => {
+    try { localStorage.setItem("bobs-tavern-hero-selection", heroSelection); } catch {}
+  }, [heroSelection]);
   useEffect(() => {
     try { localStorage.setItem("bobs-tavern-room-mode", mode); } catch {}
   }, [mode]);
@@ -335,21 +343,22 @@ export default function OnlineApp() {
                 <div className="online-eyebrow">
                   {room.kind === "ai" ? "人机对局" : "好友酒馆"}
                   {room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式 · 招募 90 秒"}
+                  {room.heroSelection === "draft" ? " · 随机四选一" : " · 自选英雄"}
                 </div>
                 <h1>
                   {room.stage === "waiting"
-                    ? "等朋友坐下"
+                    ? room.heroSelection === "draft" ? "选好英雄，再开局" : "等朋友坐下"
                     : room.stage === "finished"
                       ? "本局已结束"
                       : "对局进行中"}
                 </h1>
                 <p>
                   {room.stage === "waiting"
-                    ? `最多 8 人，空位自动补人机。所有朋友准备后由房主开局。${room.mode === "training" ? "每轮等所有玩家手动结束招募，战斗后手动返回酒馆。" : "招募倒计时结束自动开战。"}`
+                    ? `${room.kind === "ai" ? "选好英雄后开局，与 7 名人机对战。" : "最多 8 人，空位自动补人机。所有朋友准备后由房主开局。"}${room.mode === "training" ? "手动结束招募，战斗后手动返回酒馆。" : "招募倒计时结束自动开战。"}`
                     : status}
                 </p>
               </div>
-              <button
+              {room.kind === "friends" && <button
                 className="room-code"
                 onClick={async () => {
                   try {
@@ -364,9 +373,14 @@ export default function OnlineApp() {
                 <small>房间码</small>
                 <strong>{room.code}</strong>
                 <Copy size={16} />
-              </button>
+              </button>}
             </div>
-            <div className="room-seats">
+            {room.stage === "waiting" && room.heroSelection === "draft" && (
+              <HeroDraft offers={room.heroOffers || []} selected={me?.hero} pending={pending}
+                choose={(hero) => void command("/hero", { hero })}
+                refresh={(slot, expectedHero) => void command("/refresh-hero", { slot, expectedHero })} />
+            )}
+            {!(room.kind === "ai" && room.stage === "waiting") && <div className="room-seats">
               {Array.from({ length: 8 }, (_, i) => {
                 const p = room.seats[i],
                   h = SEASON_HEROES.find((h) => h.id === p?.hero);
@@ -375,14 +389,14 @@ export default function OnlineApp() {
                     className={`room-seat ${p.id === identity.id ? "self" : ""}`}
                     key={p.id}
                   >
-                    <img src={art(h!.art)} alt="" />
+                    {h ? <img src={art(h.art)} alt="" /> : <span className="room-hero-placeholder"><UserRound size={25} /></span>}
                     <div>
                       <strong>
                         {p.name}
                         {p.id === room.host && <Crown size={13} />}
                       </strong>
                       <span>
-                        {h?.name} ·{" "}
+                        {h?.name || "正在选择英雄"} ·{" "}
                         {p.bot
                           ? "人机"
                           : p.id === identity.id
@@ -415,8 +429,8 @@ export default function OnlineApp() {
                   </article>
                 );
               })}
-            </div>
-            {room.stage === "waiting" && (
+            </div>}
+            {room.stage === "waiting" && room.heroSelection !== "draft" && (
               <label className="online-hero-picker">
                 选择英雄
                 <select
@@ -448,17 +462,18 @@ export default function OnlineApp() {
                     className="online-primary"
                     disabled={
                       pending ||
+                      room.seats.some((p) => !p.hero) ||
                       room.seats.some((p) => p.id !== identity.id && !p.ready)
                     }
                     onClick={() => void command("/start")}
                   >
-                    开局 · 空位补人机
+                    {room.kind === "ai" ? "确认英雄并开局" : "开局 · 空位补人机"}
                     <Swords size={18} />
                   </button>
                 ) : (
                   <button
                     className="online-primary"
-                    disabled={pending}
+                    disabled={pending || !me?.hero}
                     onClick={() =>
                       void command("/ready", { ready: !me?.ready })
                     }
@@ -512,7 +527,19 @@ export default function OnlineApp() {
             <h1>
               找张椅子，<em>坐下来吧。</em>
             </h1>
-            <label className="online-hero-picker">
+            <fieldset className="recruit-mode-picker" disabled={pending}>
+              <legend>英雄选择方式</legend>
+              <label>
+                <input type="radio" name="hero-selection" checked={heroSelection === "free"} onChange={() => setHeroSelection("free")} />
+                <span><strong>自选英雄</strong><small>从已实现的英雄中自由选择。</small></span>
+              </label>
+              <label>
+                <input type="radio" name="hero-selection" checked={heroSelection === "draft"} onChange={() => setHeroSelection("draft")} />
+                <span><strong>随机四选一</strong><small>开局前抽取四位英雄，每位都能单独刷新。</small></span>
+              </label>
+              <p>创建好友房时由房主决定，所有玩家使用同一种选择方式。</p>
+            </fieldset>
+            {heroSelection === "free" && <label className="online-hero-picker">
               本局英雄
               <select
                 aria-label="匹配英雄"
@@ -525,7 +552,7 @@ export default function OnlineApp() {
                   </option>
                 ))}
               </select>
-            </label>
+            </label>}
             <fieldset className="recruit-mode-picker" disabled={pending}>
               <legend>对局模式</legend>
               <label>
@@ -543,8 +570,8 @@ export default function OnlineApp() {
                 className="match-tile"
                 disabled={pending}
                 onClick={async () => {
-                  if (await command("/create", { kind: "ai", hero, mode }))
-                    changeView("game");
+                  if (await command("/create", { kind: "ai", hero, mode, heroSelection }))
+                    changeView(heroSelection === "draft" ? "hall" : "game");
                 }}
               >
                 <span className="match-icon">
@@ -566,7 +593,7 @@ export default function OnlineApp() {
                 className="match-tile friends"
                 disabled={pending}
                 onClick={() =>
-                  void command("/create", { kind: "friends", hero, mode })
+                  void command("/create", { kind: "friends", hero, mode, heroSelection })
                 }
               >
                 <span className="match-icon">

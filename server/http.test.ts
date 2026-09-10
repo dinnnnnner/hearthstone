@@ -107,6 +107,24 @@ test("HTTP authentication, action validation and a graceful server restart prese
     assert.equal(restored.battleId, combat.battleId);
     assert.deepEqual(restored.game.battle.frames, combat.game.battle.frames);
     assert.equal((await call("/leave", {})).status, 200);
+    assert.equal((await call("/create", { kind: "ai", heroSelection: "invalid" })).status, 400);
+    const draft = await (await call("/create", { kind: "ai", heroSelection: "draft", mode: "training" })).json() as any;
+    assert.equal(draft.room.stage, "waiting");
+    assert.equal(draft.room.heroOffers.length, 4);
+    assert.equal((await call("/start", {})).status, 400);
+    assert.equal((await call("/refresh-hero", { slot: -1, expectedHero: draft.room.heroOffers[0] })).status, 400);
+    const refreshed = await (await call("/refresh-hero", { slot: 1, expectedHero: draft.room.heroOffers[1] })).json() as any;
+    assert.notEqual(refreshed.room.heroOffers[1], draft.room.heroOffers[1]);
+    assert.equal((await call("/refresh-hero", { slot: 1, expectedHero: draft.room.heroOffers[1] })).status, 400);
+    await stop(); await start();
+    const resumedDraft = await (await call("/state")).json() as any;
+    assert.deepEqual(resumedDraft.room.heroOffers, refreshed.room.heroOffers);
+    assert.equal(resumedDraft.room.heroSelection, "draft");
+    assert.equal((await call("/hero", { hero: resumedDraft.room.heroOffers[0] })).status, 200);
+    const startedDraft = await (await call("/start", {})).json() as any;
+    assert.equal(startedDraft.room.stage, "recruit");
+    assert.equal(new Set(startedDraft.room.seats.map((p: any) => p.hero)).size, 8);
+    assert.equal((await call("/leave", {})).status, 200);
   } finally {
     await stop();
     rmSync(temp, { recursive: true, force: true });

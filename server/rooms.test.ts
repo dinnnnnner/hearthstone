@@ -501,3 +501,101 @@ test("legacy rooms retain the timed deadline and invalid mode cannot create a ro
   assert.throws(() => restored.create(fresh, "ai", "s14_lich", "invalid" as Room["mode"]), /无效对局模式/);
   assert.equal(fresh.room, undefined);
 });
+
+test("eight players reserve distinct four-hero offers across repeated slot refreshes", () => {
+  const service = new Rooms(() => 100000, () => .37);
+  const guests = Array.from({ length: 8 }, (_, i) => service.auth(service.guest(`选将${i}`).token));
+  const room = service.create(guests[0], "friends", "s14_lich", "timed", "draft");
+  for (const g of guests.slice(1)) service.join(g, room.code);
+  const unique = () => {
+    const offers = room.seats.flatMap((p) => p.heroOffers!);
+    assert.equal(offers.length, 32);
+    assert.equal(new Set(offers).size, 32);
+    for (const p of room.seats) if (p.hero) assert.ok(p.heroOffers!.includes(p.hero));
+  };
+  unique();
+  assert.throws(() => service.start(guests[0]), /选择英雄/);
+  assert.throws(() => service.ready(guests[1], true), /选择英雄/);
+  assert.throws(() => service.hero(guests[0], room.seats[1].heroOffers![0]), /候选/);
+  for (let i = 0; i < 128; i++) {
+    const index = i % 8, slot = Math.floor(i / 8) % 4, p = room.seats[index];
+    const previous = [...p.heroOffers!];
+    service.hero(guests[index], previous[slot]);
+    service.ready(guests[index], true);
+    service.refreshHero(guests[index], slot, previous[slot]);
+    assert.equal(p.hero, "");
+    assert.equal(p.ready, false);
+    assert.notEqual(p.heroOffers![slot], previous[slot]);
+    for (let j = 0; j < 4; j++) if (j !== slot) assert.equal(p.heroOffers![j], previous[j]);
+    const after = [...p.heroOffers!];
+    assert.throws(() => service.refreshHero(guests[index], slot, previous[slot]), /已更新/);
+    assert.deepEqual(p.heroOffers, after);
+    unique();
+  }
+  const view = service.view(guests[0]).room!;
+  assert.deepEqual(view.heroOffers, room.seats[0].heroOffers);
+  assert.ok(view.seats.every((p) => !("heroOffers" in p)));
+  const released = [...room.seats[7].heroOffers!];
+  service.leave(guests[7]);
+  assert.ok(released.every((id) => service.availableHeroes(room).some((h) => h.id === id)));
+  for (const [i, g] of guests.slice(0, 7).entries()) {
+    service.hero(g, room.seats[i].heroOffers![0]);
+    service.ready(g, true);
+  }
+  service.start(guests[0]);
+  assert.equal(new Set(room.seats.map((p) => p.hero)).size, 8);
+  assert.ok(room.seats.every((p) => !p.heroOffers));
+  assert.throws(() => service.refreshHero(guests[0], 0, released[0]), /不能刷新/);
+});
+
+test("draft AI waits for selection, saves offers and redraws them on rematch; old rooms stay free choice", () => {
+  const service = new Rooms(() => 100000, () => .37);
+  const identity = service.guest("四选一恢复"), guest = service.auth(identity.token);
+  const room = service.create(guest, "ai", "s14_lich", "training", "draft");
+  assert.equal(room.stage, "waiting");
+  assert.equal(room.seats.length, 1);
+  service.hero(guest, room.seats[0].heroOffers![2]);
+  const before = service.view(guest).room!;
+  const restored = new Rooms(service.now, service.random);
+  restored.restore(service.dump());
+  const g = restored.auth(identity.token), r = restored.member(g).r;
+  assert.equal(r.heroSelection, "draft");
+  assert.deepEqual(restored.view(g).room!.heroOffers, before.heroOffers);
+  assert.equal(r.seats[0].hero, room.seats[0].hero);
+  restored.start(g);
+  assert.equal(r.stage, "recruit");
+  assert.equal(new Set(r.seats.map((p) => p.hero)).size, 8);
+  r.stage = "finished";
+  restored.rematch(g);
+  assert.equal(r.stage, "waiting");
+  assert.equal(r.seats[0].hero, "");
+  assert.equal(r.seats[0].heroOffers!.length, 4);
+  assert.equal(new Set(r.seats[0].heroOffers).size, 4);
+  const old = JSON.parse(service.dump());
+  delete old.rooms[0].heroSelection;
+  restored.restore(JSON.stringify(old));
+  assert.equal(restored.member(restored.auth(identity.token)).r.heroSelection, "free");
+});
+
+test("Finley may discover and use the power of another hero already seated in the same room", () => {
+  let matched = false;
+  for (let seed = 1; seed <= 100 && !matched; seed++) {
+    let value = seed;
+    const service = new Rooms(() => 100000, () => {
+      value = (value * 1664525 + 1013904223) >>> 0;
+      return value / 2 ** 32;
+    });
+    const guest = service.auth(service.guest("芬利共享技能").token);
+    const room = service.create(guest, "ai", "s14_finley");
+    const p = room.seats[0];
+    const overlap = p.game!.season!.powerChoice!.offers.find((id) => room.seats.some((other) => other.id !== p.id && other.hero === id));
+    if (!overlap) continue;
+    const identities = room.seats.map((p) => p.hero);
+    service.action(guest, { type: "choosePower", uid: overlap }, "finley-overlap", 1);
+    assert.equal(p.game!.season!.powerChoice, undefined);
+    assert.deepEqual(p.game!.season!.powers, [overlap]);
+    assert.deepEqual(room.seats.map((p) => p.hero), identities);
+    matched = true;
+  }
+  assert.equal(matched, true, "Expected a naturally dealt Finley power matching an occupied hero");
+});

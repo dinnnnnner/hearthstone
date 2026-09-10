@@ -34,6 +34,7 @@ export type Seat = {
   id: string;
   name: string;
   hero: string;
+  heroOffers?: string[];
   bot: boolean;
   left?: boolean;
   ready: boolean;
@@ -50,6 +51,7 @@ export type Room = {
   host: string;
   kind: "friends" | "ai";
   mode: "timed" | "training";
+  heroSelection: "free" | "draft";
   stage: "waiting" | "recruit" | "combat" | "finished";
   seats: Seat[];
   pool: Record<string, number>;
@@ -133,8 +135,9 @@ export class Rooms {
       requests: [],
     };
   }
-  create(g: Guest, kind: "friends" | "ai", hero: string, mode: Room["mode"] = "timed") {
+  create(g: Guest, kind: "friends" | "ai", hero: string, mode: Room["mode"] = "timed", heroSelection: Room["heroSelection"] = "free") {
     if (mode !== "timed" && mode !== "training") throw Error("无效对局模式");
+    if (heroSelection !== "free" && heroSelection !== "draft") throw Error("无效英雄选择方式");
     if (g.room && this.rooms.has(g.room)) throw Error("请先离开当前房间");
     if (this.rooms.size >= 24) throw Error("房间已满，请稍后再试");
     this.validHero(hero);
@@ -150,8 +153,9 @@ export class Rooms {
       host: g.id,
       kind,
       mode,
+      heroSelection,
       stage: "waiting",
-      seats: [this.seat(g, hero)],
+      seats: [this.seat(g, heroSelection === "draft" ? "" : hero)],
       pool: {},
       initial: {},
       tribes: [],
@@ -160,11 +164,36 @@ export class Rooms {
       deadline: 0,
       updated: this.now(),
     };
+    if (heroSelection === "draft") this.dealHeroes(r, r.seats[0]);
     this.rooms.set(code, r);
     g.room = code;
     this.touch(r);
-    if (kind === "ai") this.start(g);
+    if (kind === "ai" && heroSelection === "free") this.start(g);
     return r;
+  }
+  availableHeroes(r: Room) {
+    const reserved = new Set(r.seats.flatMap((s) => [s.hero, ...(s.heroOffers || [])]));
+    return SEASON_HEROES.filter((h) => !reserved.has(h.id));
+  }
+  dealHeroes(r: Room, p: Seat) {
+    const available = this.availableHeroes(r);
+    if (available.length < 4) throw Error("英雄池不足，请稍后重试");
+    p.heroOffers = Array.from({ length: 4 }, () =>
+      available.splice(Math.floor(this.random() * available.length), 1)[0].id);
+  }
+  refreshHero(g: Guest, slot: number, expectedHero: string) {
+    const { r, p } = this.member(g);
+    if (r.stage !== "waiting" || r.heroSelection !== "draft") throw Error("当前不能刷新候选英雄");
+    if (!Number.isInteger(slot) || slot < 0 || slot >= 4 || !p.heroOffers || p.heroOffers[slot] !== expectedHero)
+      throw Error("候选英雄已更新，请重试");
+    // Draw before returning the old offer, so refreshing always changes this slot.
+    const available = this.availableHeroes(r);
+    if (!available.length) throw Error("英雄池暂时没有可用英雄");
+    const replacement = available[Math.floor(this.random() * available.length)].id;
+    p.heroOffers[slot] = replacement;
+    if (p.hero === expectedHero) p.hero = "";
+    p.ready = false;
+    this.touch(r);
   }
   validHero(hero: string) {
     if (!SEASON_HEROES.some((h) => h.id === hero))
@@ -176,10 +205,9 @@ export class Rooms {
     if (!r || r.kind !== "friends") throw Error("房间码无效或房间已关闭");
     if (r.stage !== "waiting") throw Error("这局已经开始，暂时不能加入");
     if (r.seats.length >= 8) throw Error("房间已有 8 人");
-    const hero = SEASON_HEROES.find(
-      (h) => !r.seats.some((s) => s.hero === h.id),
-    )!;
-    r.seats.push(this.seat(g, hero.id));
+    const p = this.seat(g, r.heroSelection === "draft" ? "" : this.availableHeroes(r)[0].id);
+    if (r.heroSelection === "draft") this.dealHeroes(r, p);
+    r.seats.push(p);
     g.room = r.code;
     this.touch(r);
   }
@@ -187,6 +215,7 @@ export class Rooms {
     const { r, p } = this.member(g);
     if (r.stage !== "waiting") throw Error("对局中不能换英雄");
     this.validHero(hero);
+    if (r.heroSelection === "draft" && !p.heroOffers?.includes(hero)) throw Error("请选择四个候选中的英雄");
     if (r.seats.some((s) => s.id !== p.id && s.hero === hero))
       throw Error("该英雄已被选择");
     p.hero = hero;
@@ -196,6 +225,7 @@ export class Rooms {
   ready(g: Guest, ready: boolean) {
     const { r, p } = this.member(g);
     if (r.stage !== "waiting") throw Error("对局已经开始");
+    if (ready && !p.hero) throw Error("请先选择英雄");
     p.ready = ready;
     this.touch(r);
   }
@@ -203,6 +233,7 @@ export class Rooms {
     const { r } = this.member(g);
     if (r.host !== g.id) throw Error("只有房主可以开局");
     if (r.stage !== "waiting") throw Error("对局已经开始");
+    if (r.seats.some((s) => !s.hero)) throw Error("请等待所有玩家选择英雄");
     if (r.seats.some((s) => s.id !== g.id && !s.ready))
       throw Error("请等待朋友准备");
     if (
@@ -214,6 +245,7 @@ export class Rooms {
     const unused = SEASON_HEROES.filter(
       (h) => !r.seats.some((s) => s.hero === h.id),
     );
+    for (const p of r.seats) p.heroOffers = undefined;
     while (r.seats.length < 8) {
       const h = unused.splice(Math.floor(this.random() * unused.length), 1)[0];
       r.seats.push({
@@ -736,6 +768,11 @@ export class Rooms {
     r.initial = {};
     r.turn = 1;
     r.stage = "waiting";
+    r.deadline = 0;
+    if (r.heroSelection === "draft") {
+      for (const p of r.seats) { p.hero = ""; p.heroOffers = undefined; }
+      for (const p of r.seats) this.dealHeroes(r, p);
+    }
     r.grave = undefined;
     r.pairings = undefined;
     this.touch(r);
@@ -819,6 +856,8 @@ export class Rooms {
         host: r.host,
         kind: r.kind,
         mode: r.mode,
+        heroSelection: r.heroSelection,
+        heroOffers: r.stage === "waiting" ? p.heroOffers : undefined,
         stage: r.stage,
         turn: r.turn,
         deadline: r.deadline,
@@ -861,6 +900,7 @@ export class Rooms {
     this.roomSnapshots = new WeakMap();
     for (const r of this.rooms.values()) {
       r.mode = r.mode === "training" ? "training" : "timed";
+      r.heroSelection = r.heroSelection === "draft" ? "draft" : "free";
       if (r.mode === "training") r.deadline = 0;
       // The previous server did not persist idle heartbeats. Give its rooms
       // one grace period on migration instead of evicting connected guests.

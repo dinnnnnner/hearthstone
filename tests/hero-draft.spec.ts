@@ -1,0 +1,62 @@
+import { test, expect } from "@playwright/test";
+import { Rooms, type Room } from "../server/rooms";
+const path = process.env.TAVERN_TEST_PATH || "/";
+for (const width of [1440, 390]) {
+  test(`random four-hero UI refreshes individual offers, restores choices and gates start at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+    const errors: string[] = [];
+    page.on("pageerror", e => errors.push(e.message));
+    const rooms = new Rooms(() => 100000, () => .37);
+    const identity = rooms.guest("随机选将验证"), guest = rooms.auth(identity.token);
+    let room: Room;
+    await page.addInitScript(identity => {
+      localStorage.setItem("bobs-tavern-guest-v1", JSON.stringify(identity));
+      localStorage.setItem("bobs-tavern-sound", "off");
+    }, identity);
+    await page.route("**/tavern-api/**", async route => {
+      const url = new URL(route.request().url()), data = route.request().postDataJSON();
+      if (url.pathname.endsWith("/create")) room = rooms.create(guest, data.kind, data.hero, data.mode, data.heroSelection);
+      if (url.pathname.endsWith("/refresh-hero")) rooms.refreshHero(guest, data.slot, data.expectedHero);
+      if (url.pathname.endsWith("/hero")) rooms.hero(guest, data.hero);
+      if (url.pathname.endsWith("/start")) rooms.start(guest);
+      const view = rooms.view(guest);
+      if (url.searchParams.get("version") === view.version) return route.fulfill({ status: 204 });
+      await route.fulfill({ json: view });
+    });
+    await page.goto(path);
+    await page.getByRole("radio", { name: /随机四选一/ }).check();
+    await expect(page.getByLabel("匹配英雄")).toHaveCount(0);
+    await page.reload();
+    await expect(page.getByRole("radio", { name: /随机四选一/ })).toBeChecked();
+    await page.getByRole("button", { name: /人机匹配/ }).click();
+    const cards = page.locator(".hero-draft-card");
+    await expect(cards).toHaveCount(4);
+    const start = page.getByRole("button", { name: "确认英雄并开局", exact: true });
+    await expect(start).toBeDisabled();
+    expect(room!.stage).toBe("waiting");
+    const before = [...room!.seats[0].heroOffers!];
+    await cards.nth(1).getByRole("button", { name: /刷新候选/ }).click();
+    await expect(cards.nth(1)).not.toHaveAttribute("data-hero", before[1]);
+    for (const slot of [0, 2, 3]) await expect(cards.nth(slot)).toHaveAttribute("data-hero", before[slot]);
+    await cards.first().getByRole("button", { name: /选择英雄/ }).click();
+    await expect(start).toBeEnabled();
+    await cards.first().getByRole("button", { name: /刷新候选/ }).click();
+    await expect(start).toBeDisabled();
+    const refreshed = [...room!.seats[0].heroOffers!];
+    await page.reload();
+    await expect(cards).toHaveCount(4);
+    expect(await cards.evaluateAll(els => els.map(el => el.getAttribute("data-hero")))).toEqual(refreshed);
+    await cards.nth(2).getByRole("button", { name: /选择英雄/ }).click();
+    await expect(cards.nth(2).locator(".hero-draft-choose")).toHaveAttribute("aria-pressed", "true");
+    await page.reload();
+    await expect(cards.nth(2).locator(".hero-draft-choose")).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#boot-screen")).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: `/tmp/tavern-hero-draft-${width}.png`, fullPage: true });
+    await start.click();
+    await expect(page.locator(".game-table")).toBeVisible();
+    expect(room!.seats[0].hero).toBe(refreshed[2]);
+    expect(new Set(room!.seats.map(p => p.hero)).size).toBe(8);
+    expect(errors).toEqual([]);
+  });
+}

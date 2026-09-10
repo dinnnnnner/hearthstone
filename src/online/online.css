@@ -712,3 +712,27 @@
 .recruit-mode-picker small { display: block; margin-top: 5px; font-size: 12px; line-height: 1.7; color: #bba995; }
 .recruit-mode-picker p { grid-column: 1 / -1; margin: 0; font-size: 11px; color: #bba995; line-height: 1.7; }
 @media (max-width: 600px) { .recruit-mode-picker { grid-template-columns: 1fr; } }
+
+.hero-draft { margin: 28px 0; }
+.hero-draft h2 { margin: 0 0 8px; color: #edd0a0; font-size: 21px; }
+.hero-draft > p, .hero-draft > small { color: #baa68d; font-size: 12px; line-height: 1.8; }
+.hero-draft-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 18px 0 12px; }
+.hero-draft-card { display: flex; flex-direction: column; min-width: 0; padding: 7px; background: linear-gradient(145deg, #43302e, #241d27); border: 1px solid #8b6849; border-radius: 12px; }
+.hero-draft-card.selected { border-color: #f2cd85; box-shadow: 0 0 0 2px #d7a96455; }
+.hero-draft-choose { display: flex; flex: 1; flex-direction: column; align-items: center; gap: 7px; padding: 8px; color: #efdab7; background: transparent; border-radius: 7px; width: 100%; }
+.hero-draft-choose img { width: 100%; height: 145px; object-fit: cover; border-radius: 8px; }
+.hero-draft-choose strong { font-size: 15px; }
+.hero-draft-choose > span { font-size: 12px; color: #d8b47b; }
+.hero-draft-choose p { font-size: 12px; line-height: 1.7; font-weight: 400; color: #cbbb9f; margin: 0 0 8px; }
+.hero-draft-choose b { display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: auto; font-size: 12px; padding: 9px; width: 100%; background: #78543166; border-radius: 5px; }
+.hero-draft-refresh { display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; width: 100%; margin-top: 6px; color: #dfc399; background: #19161e; border: 1px solid #8b684977; border-radius: 6px; font-size: 12px; }
+.hero-draft button:focus-visible { outline: 2px solid #f2cd85; outline-offset: 2px; }
+.hero-draft button:disabled { opacity: .5; cursor: wait; }
+.room-hero-placeholder { flex-shrink: 0; width: 42px; height: 54px; display: grid; place-items: center; color: #ae9575; background: #1d1922; border-radius: 8px; }
+@media (max-width: 650px) {
+  .hero-draft-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .hero-draft-choose { padding: 4px; }
+  .hero-draft-choose img { height: 105px; }
+  .hero-draft-choose strong { font-size: 13px; }
+  .hero-draft-choose p { font-size: 11px; }
+}

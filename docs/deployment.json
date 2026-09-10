@@ -1,6 +1,6 @@
 {
-  "release": "20260910T053244Z",
-  "remote": "/var/www/playroom/releases/20260910T053244Z",
+  "release": "20260910T055037Z",
+  "remote": "/var/www/playroom/releases/20260910T055037Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -9,37 +9,37 @@
   },
   "validation": {
     "engineAndStateTests": 96,
-    "serverTests": 25,
-    "localBrowserTests": 11,
-    "publicBrowserTests": 19,
-    "publicEightBrowserRoom": "passed, 15.3 seconds with separate caches",
+    "serverTests": 28,
+    "localBrowserTests": 9,
+    "publicBrowserTests": 22,
+    "publicEightBrowserRoom": "passed, 14.7 seconds with separate caches",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
     "sectorPidAtFinalActivation": 110058,
     "sectorPidAfterFinalValidation": 110058,
-    "tavernPid": 116560,
-    "tavernMemoryBytesAfterTests": 34516992,
+    "tavernPid": 116826,
+    "tavernMemoryBytesAfterTests": 34693120,
     "tavernAutomaticRestarts": 0,
     "uiImageCount": 598,
     "uiImageBytes": 9499166,
     "originalImageBytes": 143250968,
     "tavernRestarted": true,
     "buildSite": "passed",
-    "finalReleasePublicBrowserTests": 19,
-    "browserValidationScope": "11 local controlled browser cases; 19 public cases including live training AI and two-human friend rooms, default timed AI/two-player/eight-player rooms, controlled mode deadline/reload tests, rope and tribe layouts, homepage and SECTOR WebSocket. 25 server tests include training HTTP restart persistence and old-save migration. All file hashes verified at activation.",
+    "finalReleasePublicBrowserTests": 22,
+    "browserValidationScope": "9 distinct local browser cases and 22 public cases. Includes real two-human shared hero draft with concurrent refresh and stale request rejection; desktop/390px four-offer selection, refresh, persistence and start gating; real training AI/friends and default timed two/eight-player rooms; rope, tribes, homepage and SECTOR WebSocket. 28 server tests include eight-human 32-offer uniqueness, 128 refreshes, restore/rematch, API validation and Finley skill overlap. All file hashes verified at activation.",
     "engineAndStateTestsSourceRelease": "20260910T035242Z",
-    "serverTestsSourceRelease": "20260910T053244Z",
-    "publicEightBrowserRoomSourceRelease": "20260910T053244Z",
-    "tavernMemoryMeasurementSourceRelease": "20260910T053244Z"
+    "serverTestsSourceRelease": "20260910T055037Z",
+    "publicEightBrowserRoomSourceRelease": "20260910T055037Z",
+    "tavernMemoryMeasurementSourceRelease": "20260910T055037Z"
   },
-  "previousRelease": "20260910T052522Z",
+  "previousRelease": "20260910T053244Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
   "backend": {
-    "release": "/opt/bobs-tavern/releases/20260910T053244Z",
+    "release": "/opt/bobs-tavern/releases/20260910T055037Z",
     "service": "bobs-tavern",
     "listen": "127.0.0.1:8787",
     "state": "/var/lib/bobs-tavern/state.json",
@@ -47,8 +47,8 @@
     "memoryLimitMiB": 384,
     "offlineGraceSeconds": 300,
     "snapshotWrites": "serialized async atomic replacement with per-room serialization cache",
-    "previousRelease": "/opt/bobs-tavern/releases/20260910T035242Z",
-    "bundleSha256": "153eb92bdb1ca25bb721c42c18a616f226c705fa468386edb49d6d39d574135b"
+    "previousRelease": "/opt/bobs-tavern/releases/20260910T053244Z",
+    "bundleSha256": "f4de6266895a16a48a5294d8b7cf6f559e23db5bf620b013585e0ce8cef50dfe"
   },
   "replayBenchmark": {
     "frames": 180,
@@ -75,7 +75,7 @@
   ],
   "healthRefresh": "Shared payment calculation; per-minion counters with old-save migration; free refresh has priority; zero-gold use and health/charge labels in every layout",
   "keywordVisuals": "Separate SVG taunt guard, golden shield with reflected light and broken-shell fragments, cyan reborn, green poison, skull deathrattle and windfury badges",
-  "homepagePreservedFromRelease": "20260910T052522Z",
+  "homepagePreservedFromRelease": "20260910T053244Z",
   "supportedMinions": 234,
   "supportedSpells": 67,
   "powerReplacement": {
@@ -98,7 +98,7 @@
     "extraAssets": 0,
     "scope": "Timed online AI and friend rooms; training rooms and local practice remain untimed"
   },
-  "checkpoint": "recruit-modes-2026-09-10",
+  "checkpoint": "hero-draft-2026-09-10",
   "rulesCoverageReport": "docs/rules-coverage.json",
   "matchTribes": {
     "source": "game.season.tribes",
@@ -123,5 +123,22 @@
     "trainingManualAdvance": true,
     "legacyDefault": "timed",
     "offlineGraceSeconds": 300
+  },
+  "heroSelection": {
+    "default": "free",
+    "options": [
+      "free",
+      "draft"
+    ],
+    "offersPerHuman": 4,
+    "perSlotRefresh": true,
+    "sharedRoomReservations": true,
+    "staleRefreshRejected": true,
+    "offersPrivateToPlayer": true,
+    "savedOffersAndSelection": true,
+    "rematchDealsNewOffers": true,
+    "finleyPowerOverlapAllowed": true,
+    "refreshReturnsPreviousHeroToPool": true,
+    "extraImageAssets": 0
   }
 }
