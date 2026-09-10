@@ -7,7 +7,7 @@ import io
 
 ROOT = Path(__file__).resolve().parents[1]
 files = [ROOT / path for path in ["rl-dist/bridge.cjs", "rl-dist/build.json", "rl/README.md",
-    "rl/requirements.txt", "rl/run.sh", "docs/rules-coverage.json", "docs/rl-roadmap.md", "docs/rl-server.md", "docs/rl-v3.md"]]
+    "rl/requirements.txt", "rl/run.sh", "docs/rules-coverage.json", "docs/rl-roadmap.md", "docs/rl-server.md", "docs/rl-v3.md", "docs/rl-campaign.md"]]
 files += sorted((ROOT / "rl/python").rglob("*.py"))
 files += sorted((ROOT / "rl/tests").rglob("*.py"))
 validation = ROOT / "docs/rl-validation.json"

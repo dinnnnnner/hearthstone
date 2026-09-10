@@ -103,6 +103,9 @@ def parser():
     p = argparse.ArgumentParser(description="Eight-seat neural self-play PPO; no online game server or scripted bots")
     p.add_argument("--output", default="rl/runs/selfplay")
     p.add_argument("--resume", type=Path)
+    p.add_argument("--resume-games-per-iteration", type=int, help="Explicitly change the saved rollout batch for a new experiment")
+    p.add_argument("--resume-learning-rate", type=float, help="Explicitly change Adam learning rate when resuming")
+    p.add_argument("--rollout-device", choices=['cpu','cuda'], help="Inference device; defaults to the optimizer device")
     p.add_argument("--iterations", type=int, default=100, help="Additional PPO iterations, including when resuming")
     p.add_argument("--games-per-iteration", type=int, default=8)
     p.add_argument("--workers", type=int, default=4)
@@ -135,9 +138,14 @@ def main():
     if min(args.sequence_length,args.sequence_batch_size,args.heads,args.layers) < 1 or args.burn_in < 0:
         raise ValueError("Invalid recurrent sizes")
     if args.resume and args.anchors: raise ValueError("Resume restores its frozen league; do not add anchors during resume")
+    if (args.resume_games_per_iteration is not None or args.resume_learning_rate is not None) and not args.resume:
+        raise ValueError('Resume overrides require --resume')
+    if args.resume_games_per_iteration is not None and args.resume_games_per_iteration < 1: raise ValueError('Invalid rollout batch')
+    if args.resume_learning_rate is not None and not 0 < args.resume_learning_rate < 1: raise ValueError('Invalid learning rate')
+    rollout_device = args.rollout_device or args.device
     torch.set_num_threads(args.threads)
     torch.manual_seed(args.seed); np.random.seed(args.seed); random.seed(args.seed)
-    if args.device == "cuda" and not torch.cuda.is_available(): raise RuntimeError("CUDA is not available")
+    if 'cuda' in [args.device,rollout_device] and not torch.cuda.is_available(): raise RuntimeError("CUDA is not available")
     output = Path(args.output); output.mkdir(parents=True, exist_ok=True)
     lock = (output / ".train.lock").open("a")
     try:
@@ -149,7 +157,7 @@ def main():
         lock.close()
         raise ValueError("Output already contains a checkpoint; use --resume or choose a new --output")
     code_hash = trainer_hash()
-    pool = SimulationPool(min(args.workers, args.games_per_iteration))
+    pool = SimulationPool(args.workers)
     try:
         state = pool.simulators[0].reset(args.seed & 0xffffffff)
         config = {"gamma": 1.0, "gae_lambda": .95, "clip": .2, "value_coef": .5, "entropy_coef": .01,
@@ -163,6 +171,8 @@ def main():
         if args.resume:
             saved, model = load_checkpoint(args.resume, pool.meta, args.device)
             config = saved["config"]  # Resume the actual reward/action budget, not accidental CLI defaults.
+            if args.resume_games_per_iteration is not None: config['games_per_iteration'] = args.resume_games_per_iteration
+            if args.resume_learning_rate is not None: config['learning_rate'] = args.resume_learning_rate
             iteration, episodes, league = saved["iteration"], saved["episodes"], saved["league"]
         else:
             spec = dict(observation_size=len(state['observation']),action_size=pool.meta['actionCount'],hidden=args.hidden) if args.architecture == 'mlp' else dict(
@@ -176,7 +186,15 @@ def main():
         optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"], eps=1e-5)
         if saved:
             optimizer.load_state_dict(saved["optimizer"])
-        opponents = frozen_models(league, model.specification(), args.device)
+            for group in optimizer.param_groups: group['lr'] = config['learning_rate']
+        def inference_model():
+            if rollout_device == args.device: return model
+            copy = make_model(model.specification()).to(rollout_device)
+            copy.load_state_dict(cpu_weights(model));copy.eval()
+            for parameter in copy.parameters(): parameter.requires_grad_(False)
+            return copy
+        actor = inference_model()
+        opponents = frozen_models(league, model.specification(), rollout_device)
         if saved:
             torch.set_rng_state(saved["torch_rng"])
             np.random.set_state(saved["numpy_rng"]); random.setstate(saved["python_rng"])
@@ -193,13 +211,13 @@ def main():
             (output / "manifest.json").write_text(json.dumps({"format": 1, "trainerHash": code_hash, "meta": {k:v for k,v in pool.meta.items() if k not in ["actions", "cardIds", "heroIds", "entitySchema"]},
                 "config": config, "iteration": iteration, "episodes": episodes, "model_spec": {k:v for k,v in model.specification().items() if k not in ["entity_schema","actions"]},
                 "league_generations": [entry["generation"] for entry in league], "torch": torch.__version__, "numpy": np.__version__,
-                "device": args.device, "workers": len(pool.simulators)}, indent=2))
+                "device": args.device, "rollout_device": rollout_device, "workers": len(pool.simulators)}, indent=2))
         checkpoint()
         for _ in range(args.iterations):
             iteration_started = time.monotonic()
             if args.device == "cuda": torch.cuda.reset_peak_memory_stats()
             seeds = [(config["seed"] + episodes + i) & 0xffffffff for i in range(config["games_per_iteration"])]
-            tracks, games, performance = pool.collect(model, opponents, seeds, config["options"], args.device,
+            tracks, games, performance = pool.collect(actor, opponents, seeds, config["options"], rollout_device,
                 learner_seats=8 if iteration == 0 and len(league) == 1 else config["learner_seats"],
                 opponent_weights=league_weights(league), seat_offset=episodes, progress=lambda row: print(json.dumps(row),flush=True),
                 replay_dir=output / "replays" if args.replays else None, error_dir=output / "debug")
@@ -213,7 +231,8 @@ def main():
             update_league_scores(league,games)
             league.append(league_entry(model,iteration))
             league = prune_league(league,config["league_size"])
-            opponents = frozen_models(league, model.specification(), args.device)
+            actor = inference_model()
+            opponents = frozen_models(league, model.specification(), rollout_device)
             total_seconds = time.monotonic()-iteration_started
             row = {"iteration": iteration, "iteration_seconds": total_seconds,
                    "end_to_end_actions_per_second": performance["environment_actions"]/total_seconds,
