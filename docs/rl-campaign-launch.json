@@ -1,0 +1,62 @@
+{
+  "schema": "tavern-campaign-launch-v1",
+  "implementation_commit": "daf3df0",
+  "remote_directory": "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001",
+  "supervisor_pid": 5078,
+  "config": {
+    "resume": "rl/runs/gpu-pilot-r2/latest.pt",
+    "output": "rl/runs/strong-selfplay-v3-001",
+    "anchors": [
+      "/root/autodl-tmp/tavern-selfplay/rl/runs/gpu-check-v2/latest.pt"
+    ],
+    "games": 1024,
+    "hours": 4.0,
+    "games_per_iteration": 16,
+    "evaluate_every_games": 128,
+    "workers": 8,
+    "device": "cuda",
+    "rollout_device": "cuda",
+    "learning_rate": 0.0001,
+    "initial_sha256": "4df0da4d74fedf116b290f05423653ace94774677a77e6e5d241fb9a5da3b937",
+    "initial_episodes": 12,
+    "target_episodes": 1036,
+    "started_utc": "2026-09-10T08:10:38.785417+00:00"
+  },
+  "verified_checkpoint_episodes": 28,
+  "verified_metrics": [
+    {
+      "iteration": 4,
+      "iteration_seconds": 207.45504969800822,
+      "end_to_end_actions_per_second": 81.4875319960086,
+      "cuda_peak_allocated_mib": 387.17041015625,
+      "episodes": 28,
+      "seconds": 177.9227645699866,
+      "environment_actions": 16905,
+      "actions_per_second": 95.01313696904901,
+      "policy_loss": -0.02087088508415036,
+      "value_loss": 0.06991456203888027,
+      "entropy": 2.197794269483823,
+      "approx_kl": 0.01235019714019869,
+      "gradient_norm": 1.9917233945945134,
+      "samples": 6140,
+      "optimizer_steps": 208,
+      "kl_early_stop": false,
+      "sequence_chunks": 413,
+      "optimization_seconds": 29.010881745023653,
+      "completed_games": 16,
+      "league_generations": [
+        0,
+        "anchor:/root/autodl-tmp/tavern-selfplay/rl/runs/gpu-check-v2/latest.pt",
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "python_tests_passed": 16,
+  "timeout_preserves_checkpoint_test": true,
+  "explicit_resume_parameter_override_test": true,
+  "status_at_verification": "running_next_iteration",
+  "note": "Launch snapshot only. Read remote status.json and training/manifest.json for current progress; a time limit does not power off the rented instance."
+}
