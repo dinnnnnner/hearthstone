@@ -1,6 +1,6 @@
 # 常规卡池扩充检查点
 
-固定数据为第 14 赛季 36.4.2，build 251332。标签 `season-pool-2026-09-10` 保存本轮代码与素材；部署位置见 `docs/deployment.json`。
+固定数据为第 14 赛季 36.4.2，build 251332。标签 `season-pool-2026-09-10-r2` 保存本轮代码与素材；部署位置见 `docs/deployment.json`。
 
 本轮将常规单人模式 1 至 6 星随从从 124 种补到 234 种，酒馆法术从 42 种补到 67 种，英雄从 22 位补到 89 位。旧对局保留创建时的有限池，新对局采用新池。未实现的英雄与黑暗之赐名单由 `scripts/rules-coverage.ts` 生成在 `docs/rules-coverage.json`。
 

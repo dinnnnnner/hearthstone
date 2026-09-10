@@ -165,4 +165,4 @@ python3 scripts/download-season-art.py   # 下载原画和可用的中文完整�
 
 人机匹配和好友房招募最后 20 秒有燃绳动画，最后 5 秒加强火光，到零燃尽并等待服务器进入战斗。手机横竖屏、旧布局及减少动态效果均支持。版本另存为 `rope-animation-2026-09-10`，见 [烧绳更新记录](docs/checkpoints/rope-animation-2026-09-10.md)。
 
-常规卡池 234 随从、67 法术及 89 英雄版本另存为 `season-pool-2026-09-10`，见 [本轮规则与剩余缺口](docs/checkpoints/season-pool-2026-09-10.md)。
+常规卡池 234 随从、67 法术及 89 英雄版本另存为 `season-pool-2026-09-10-r2`，见 [本轮规则与剩余缺口](docs/checkpoints/season-pool-2026-09-10.md)。
