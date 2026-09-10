@@ -1,0 +1,43 @@
+.match-tribes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 10px;
+  min-height: 28px;
+  padding: 4px max(8px, env(safe-area-inset-right)) 4px max(8px, env(safe-area-inset-left));
+  box-sizing: border-box;
+  background: #1d1720;
+  border-bottom: 1px solid #70543b55;
+  color: #ecd5a9;
+  font-size: 11px;
+  line-height: 18px;
+}
+.match-tribes-label {
+  flex-shrink: 0;
+  color: #b4a18a;
+}
+.match-tribes ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.match-tribes li {
+  white-space: nowrap;
+}
+.mobile-arena > .match-tribes {
+  color: #654625;
+  background: #f3e8d3;
+  border-color: #ddd0b9;
+}
+.mobile-arena > .match-tribes .match-tribes-label {
+  color: #79664d;
+}
+@media (min-width: 601px) {
+  .touch-mode .mobile-arena:has(> .match-tribes) .mobile-table {
+    height: calc(100dvh - 76px - env(safe-area-inset-bottom));
+  }
+}

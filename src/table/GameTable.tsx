@@ -1,4 +1,5 @@
 import { equippedPowers } from "../season/powers";
+import { MatchTribes } from "../season/MatchTribes";
 import { KeywordEffects } from "./KeywordEffects";
 import { RefreshPrice } from "./RefreshPrice";
 import {
@@ -435,7 +436,7 @@ export function GameTable(p: Props) {
           </span>
         </div>
         <div className="table-header-center">
-          {p.roomStatus || game.season?.tribes.join(" · ") || "经典随从练习"}
+          {p.roomStatus || (game.season ? "赛季随从练习" : "经典随从练习")}
         </div>
         <nav>
           {p.lobby && (
@@ -470,6 +471,7 @@ export function GameTable(p: Props) {
           </button>
         </nav>
       </header>
+      <MatchTribes game={game} />
       <div className="table-game">
         <aside className="opponent-rail" aria-label="对局英雄">
           <span className="rail-caption">本局英雄</span>

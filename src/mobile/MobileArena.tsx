@@ -1,4 +1,5 @@
 import { equippedPowers } from "../season/powers";
+import { MatchTribes } from "../season/MatchTribes";
 import { RefreshPrice } from "../table/RefreshPrice";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -129,6 +130,7 @@ export function MobileArena({
           <Plus size={17} />
         </button>
       </div>
+      <MatchTribes game={game} />
       <p className="rotate-hint">
         <Smartphone size={14} />
         横过手机，酒馆、战场和手牌可同屏操作。

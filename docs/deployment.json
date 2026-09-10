@@ -1,6 +1,6 @@
 {
-  "release": "20260910T035242Z",
-  "remote": "/var/www/playroom/releases/20260910T035242Z",
+  "release": "20260910T052522Z",
+  "remote": "/var/www/playroom/releases/20260910T052522Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -10,8 +10,8 @@
   "validation": {
     "engineAndStateTests": 96,
     "serverTests": 22,
-    "localBrowserTests": 20,
-    "publicBrowserTests": 17,
+    "localBrowserTests": 9,
+    "publicBrowserTests": 12,
     "publicEightBrowserRoom": "passed, 14.3 seconds with separate caches",
     "nginxConfig": "passed",
     "httpVersion": 2,
@@ -25,14 +25,16 @@
     "uiImageCount": 598,
     "uiImageBytes": 9499166,
     "originalImageBytes": 143250968,
-    "tavernRestarted": true,
+    "tavernRestarted": false,
     "buildSite": "passed",
-    "finalReleasePublicBrowserTests": 17,
-    "browserValidationScope": "20 targeted local cases; 17 final public cases. Includes 390px/desktop Choose One, save reload and Lockbox, actual guest/AI/two-player/eight-player rooms and Finley, controlled-clock Rooms rope tests, homepage and SECTOR WebSocket. Engine/server suites validate the final bundle; all file hashes verified at activation.",
+    "finalReleasePublicBrowserTests": 12,
+    "browserValidationScope": "9 local and 12 public browser cases: authoritative online match tribes at desktop/portrait/landscape widths, combat and reload, saved touch panels, classic mode, rope timing/layout, live homepage and SECTOR WebSocket. Room/rope cases use controlled Rooms responses; backend bundle unchanged from 20260910T035242Z. All release file hashes verified at activation.",
     "engineAndStateTestsSourceRelease": "20260910T035242Z",
-    "serverTestsSourceRelease": "20260910T035242Z"
+    "serverTestsSourceRelease": "20260910T035242Z",
+    "publicEightBrowserRoomSourceRelease": "20260910T035242Z",
+    "tavernMemoryMeasurementSourceRelease": "20260910T035242Z"
   },
-  "previousRelease": "20260910T022740Z",
+  "previousRelease": "20260910T035242Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
@@ -73,7 +75,7 @@
   ],
   "healthRefresh": "Shared payment calculation; per-minion counters with old-save migration; free refresh has priority; zero-gold use and health/charge labels in every layout",
   "keywordVisuals": "Separate SVG taunt guard, golden shield with reflected light and broken-shell fragments, cyan reborn, green poison, skull deathrattle and windfury badges",
-  "homepagePreservedFromRelease": "20260910T022740Z",
+  "homepagePreservedFromRelease": "20260910T035242Z",
   "supportedMinions": 234,
   "supportedSpells": 67,
   "powerReplacement": {
@@ -96,6 +98,16 @@
     "extraAssets": 0,
     "scope": "Online AI and friend rooms; practice remains untimed"
   },
-  "checkpoint": "season-pool-2026-09-10-r2",
-  "rulesCoverageReport": "docs/rules-coverage.json"
+  "checkpoint": "match-tribes-2026-09-10",
+  "rulesCoverageReport": "docs/rules-coverage.json",
+  "matchTribes": {
+    "source": "game.season.tribes",
+    "alwaysVisibleIn": [
+      "game-table",
+      "touch-panels"
+    ],
+    "onlineStatusIndependent": true,
+    "classicModeHidden": true,
+    "extraAssets": 0
+  }
 }
