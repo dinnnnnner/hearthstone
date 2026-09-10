@@ -3,11 +3,38 @@ import assert from "node:assert/strict";
 import { SelfPlayEnv, Random } from "./environment";
 import { ACTIONS, candidates, actionId, targets } from "./actions";
 import { observe } from "./observation";
+import { observeEntities, OFFSETS, ENTITY_SCHEMA } from "./entities";
 import { makeMinion } from "../src/engine";
 import { withSimulation } from "../src/simulation";
 import { equipPowers } from "../src/season/powers";
+import { TRINKETS } from "../src/season/engine";
 import { SHOP_SIZE } from "../src/data";
 import chromieReplay from "./fixtures/chromie-spells.json";
+import trinketReplay from "./fixtures/extra-trinkets.json";
+
+test("entity input retains effect fields and resolves instance links without leaking private state", () => {
+  const env = new SelfPlayEnv(); env.reset(10);
+  const own = env.room.seats[env.actor].game!, enemy = env.room.seats[(env.actor + 1) % 8].game!;
+  own.board = [makeMinion("s14_BG25_001"), makeMinion("s14_BG25_001")];
+  own.board[0].counters = { effectA: 2, effectB: 9 };
+  own.board[0].extraAbilities = [{ event: "battlecry", op: "buff", attack: 3, health: 5 }];
+  own.board[0].remembered = [own.board[1].uid, "private-unknown-uid"];
+  const before = structuredClone(observeEntities(own, 0, 64));
+  assert.equal(before.length, ENTITY_SCHEMA.count);
+  const card = before[OFFSETS[1]]!;
+  assert.deepEqual(card.details.counters, { effectA: 2, effectB: 9 });
+  assert.deepEqual(card.details.extraAbilities, own.board[0].extraAbilities);
+  assert.deepEqual(card.details.remembered, [OFFSETS[1] + 1, -1]);
+  enemy.hand = [makeMinion("s14_BG25_001")]; enemy.board = [makeMinion("s14_BG25_001")];
+  enemy.board[0].attack = 999999; env.room.pool.s14_BG25_001 = 0;
+  assert.deepEqual(observeEntities(own, 0, 64), before);
+  own.board[1].uid = "different-instance"; own.board[0].remembered![0] = "different-instance";
+  assert.deepEqual(observeEntities(own, 0, 64), before);
+  const json = JSON.stringify(before);
+  for (const forbidden of ['private-unknown-uid','different-instance','"copies"','"pool"','"initialPool"']) assert.ok(!json.includes(forbidden));
+  own.board[0].counters.effectA = 3;
+  assert.notDeepEqual(observeEntities(own, 0, 64), before);
+});
 
 function checkPool(env: SelfPlayEnv) {
   const r = env.room;
@@ -134,4 +161,21 @@ test("decision budgets force end, truncations do not fabricate rankings, and sco
   assert.throws(() => env.step(0), /reset required/);
   assert.throws(() => withSimulation({ uid: () => "forced-id", recordFrames: false, recordLogs: false }, () => { throw Error("scope"); }));
   assert.notEqual(makeMinion("s14_BG25_001").uid, "forced-id");
+});
+
+
+test("extra trinkets from Marin and Buttons remain observable", () => {
+  const env = new SelfPlayEnv(); env.reset(45);
+  const s = env.room.seats[env.actor].game!;
+  s.season!.trinkets = TRINKETS.slice(0, 4).map(t => t.id);
+  const input = observeEntities(s, 0, 64);
+  assert.deepEqual(input.slice(OFFSETS[11]).map(e => ENTITY_SCHEMA.ids[e!.id - 1]), s.season!.trinkets);
+});
+
+test("GPU action tape passes the third-trinket decision without input overflow", () => {
+  const env = new SelfPlayEnv(trinketReplay.options); env.reset(trinketReplay.seed);
+  for (const action of trinketReplay.actions) env.step(action);
+  assert.ok(env.room.seats.some(p => p.game!.season!.trinkets.length === 3));
+  assert.equal(env.view().entities.length, 73);
+  checkPool(env);
 });

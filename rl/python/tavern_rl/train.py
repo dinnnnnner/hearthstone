@@ -5,10 +5,19 @@ import json
 import os
 from pathlib import Path
 import random
+import time
+import hashlib
 import numpy as np
 import torch
-from .model import ActorCritic, ppo_update
+from .model import make_model, ppo_update
 from .rollout import SimulationPool
+
+
+def trainer_hash():
+    digest = hashlib.sha256()
+    for path in sorted(Path(__file__).parent.glob('*.py')):
+        digest.update(path.name.encode());digest.update(path.read_bytes())
+    return digest.hexdigest()
 
 
 def cpu_weights(model):
@@ -24,13 +33,23 @@ def atomic_checkpoint(path, payload):
     os.replace(temporary, path)
 
 
-def load_checkpoint(path, meta, device="cpu"):
+def load_checkpoint(path, meta, device="cpu", allow_legacy=False):
     # Checkpoints include optimizer and RNG state. Load only your own trusted files.
     saved = torch.load(path, map_location="cpu", weights_only=False)
-    for key in ["schema", "sourceHash", "observationVersion", "actionVersion", "actionCount", "cardIds", "heroIds"]:
+    legacy = (allow_legacy and meta.get('legacyV2SourceHash') is not None
+              and saved['meta'].get('sourceHash') == meta['legacyV2SourceHash']
+              and saved['meta'].get('schema') == 'tavern-selfplay-v2'
+              and saved['meta'].get('observationVersion') == 2
+              and saved['model_spec'].get('observation_size') == 2705
+              and saved['model_spec'].get('architecture', 'mlp') == 'mlp')
+    keys = ["actionVersion", "actionCount", "cardIds", "heroIds"]
+    if not legacy: keys += ["schema", "sourceHash", "observationVersion"]
+    for key in keys:
         if saved["meta"][key] != meta[key]:
             raise ValueError(f"Checkpoint incompatible with simulator: {key}")
-    model = ActorCritic(**saved["model_spec"]).to(device)
+    if saved['meta'].get('actions') != meta.get('actions'):
+        raise ValueError('Checkpoint action definitions differ')
+    model = make_model(saved["model_spec"]).to(device)
     model.load_state_dict(saved["model"])
     return saved, model
 
@@ -38,12 +57,46 @@ def load_checkpoint(path, meta, device="cpu"):
 def frozen_models(saved_states, specification, device):
     result = []
     for entry in saved_states:
-        model = ActorCritic(**specification).to(device)
+        model = make_model(entry.get("model_spec", specification)).to(device)
         model.load_state_dict(entry["weights"])
         model.eval()
         for parameter in model.parameters(): parameter.requires_grad_(False)
         result.append(model)
     return result
+
+
+def league_entry(model, generation, anchor=False):
+    return dict(generation=generation,anchor=anchor,model_spec=model.specification(),weights=cpu_weights(model),comparisons=0,learner_wins=0.)
+
+
+def league_weights(league):
+    # Smoothed multiplayer relative placement is a difficulty proxy, not a two-player Elo.
+    difficulty = np.array([1-(e.get('learner_wins',0)+2)/(e.get('comparisons',0)+4) for e in league])
+    weight = difficulty**2
+    return .5/len(league) + .5*weight/weight.sum()
+
+
+def update_league_scores(league,games):
+    for game in games:
+        learners = [i for i,c in enumerate(game['controllers']) if c == -1]
+        for seat,c in enumerate(game['controllers']):
+            if c < 0: continue
+            e = league[c]
+            e['comparisons'] = e.get('comparisons',0)+len(learners)
+            e['learner_wins'] = e.get('learner_wins',0)+sum(game['placements'][i] < game['placements'][seat] for i in learners)
+
+
+def prune_league(league,size):
+    anchors = [e for e in league if e.get('anchor',e['generation']==0)]
+    history = [e for e in league if not e.get('anchor',e['generation']==0)]
+    keep = size-len(anchors)
+    if keep < 1: raise ValueError('No league history slots remain')
+    if len(history) > keep:
+        # Keep recent policies and spread remaining slots across older generations.
+        recent = max(1,keep//2); older = history[:-recent]
+        indices = np.linspace(0,len(older)-1,keep-recent,dtype=int).tolist() if keep > recent else []
+        history = [older[i] for i in indices]+history[-recent:]
+    return anchors+history
 
 
 def parser():
@@ -56,13 +109,20 @@ def parser():
     p.add_argument("--learner-seats", type=int, default=4)
     p.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--architecture", choices=['entity-gru','mlp'], default='entity-gru')
+    p.add_argument("--heads", type=int, default=4)
+    p.add_argument("--layers", type=int, default=2)
+    p.add_argument("--sequence-length", type=int, default=16)
+    p.add_argument("--burn-in", type=int, default=8)
+    p.add_argument("--sequence-batch-size", type=int, default=4)
+    p.add_argument("--anchors", nargs='*', type=Path, default=[], help='Trusted frozen neural checkpoints; never resume legacy weights as the new model')
     p.add_argument("--hidden", type=int, default=128)
     p.add_argument("--max-actions", type=int, default=64)
     p.add_argument("--max-steps", type=int, default=30000)
     p.add_argument("--epochs", type=int, default=4)
     p.add_argument("--batch-size", type=int, default=256)
     p.add_argument("--learning-rate", type=float, default=3e-4)
-    p.add_argument("--league-size", type=int, default=8)
+    p.add_argument("--league-size", type=int, default=12)
     p.add_argument("--threads", type=int, default=1)
     p.add_argument("--replays", action="store_true", help="Save action tapes for deterministic offline replay")
     return p
@@ -72,6 +132,9 @@ def main():
     args = parser().parse_args()
     if min(args.iterations, args.games_per_iteration, args.workers, args.threads, args.epochs, args.batch_size) < 1 or args.league_size < 2 or not 1 <= args.learner_seats <= 8:
         raise ValueError("Invalid training sizes")
+    if min(args.sequence_length,args.sequence_batch_size,args.heads,args.layers) < 1 or args.burn_in < 0:
+        raise ValueError("Invalid recurrent sizes")
+    if args.resume and args.anchors: raise ValueError("Resume restores its frozen league; do not add anchors during resume")
     torch.set_num_threads(args.threads)
     torch.manual_seed(args.seed); np.random.seed(args.seed); random.seed(args.seed)
     if args.device == "cuda" and not torch.cuda.is_available(): raise RuntimeError("CUDA is not available")
@@ -85,11 +148,13 @@ def main():
     if (output / "latest.pt").exists() and not args.resume:
         lock.close()
         raise ValueError("Output already contains a checkpoint; use --resume or choose a new --output")
+    code_hash = trainer_hash()
     pool = SimulationPool(min(args.workers, args.games_per_iteration))
     try:
         state = pool.simulators[0].reset(args.seed & 0xffffffff)
         config = {"gamma": 1.0, "gae_lambda": .95, "clip": .2, "value_coef": .5, "entropy_coef": .01,
                   "target_kl": .03, "max_grad_norm": .5, "epochs": args.epochs, "batch_size": args.batch_size,
+                  "sequence_length": args.sequence_length, "burn_in": args.burn_in, "sequence_batch_size": args.sequence_batch_size,
                   "learning_rate": args.learning_rate, "seed": args.seed, "learner_seats": args.learner_seats,
                   "games_per_iteration": args.games_per_iteration, "league_size": args.league_size,
                   "options": {"maxActionsPerTurn": args.max_actions, "maxSteps": args.max_steps, "recordFrames": False}}
@@ -100,8 +165,14 @@ def main():
             config = saved["config"]  # Resume the actual reward/action budget, not accidental CLI defaults.
             iteration, episodes, league = saved["iteration"], saved["episodes"], saved["league"]
         else:
-            model = ActorCritic(len(state["observation"]), pool.meta["actionCount"], args.hidden).to(args.device)
-            league = [{"generation": 0, "weights": cpu_weights(model)}]
+            spec = dict(observation_size=len(state['observation']),action_size=pool.meta['actionCount'],hidden=args.hidden) if args.architecture == 'mlp' else dict(
+                architecture='entity-gru',entity_schema=pool.meta['entitySchema'],actions=pool.meta['actions'],hidden=args.hidden,heads=args.heads,layers=args.layers)
+            model = make_model(spec).to(args.device)
+            league = [league_entry(model,0,anchor=True)]
+            for path in args.anchors:
+                _, anchor = load_checkpoint(path,pool.meta,args.device,allow_legacy=True)
+                league.append(league_entry(anchor,'anchor:'+str(path),anchor=True))
+            if len(league) >= args.league_size: raise ValueError('League needs space for anchors plus history')
         optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"], eps=1e-5)
         if saved:
             optimizer.load_state_dict(saved["optimizer"])
@@ -113,30 +184,40 @@ def main():
                 torch.cuda.set_rng_state_all(saved["cuda_rng"])
 
         def checkpoint():
-            payload = {"format": 1, "meta": pool.meta, "model_spec": model.specification(), "model": cpu_weights(model),
+            payload = {"format": 1, "trainerHash": code_hash, "meta": pool.meta, "model_spec": model.specification(), "model": cpu_weights(model),
                        "optimizer": optimizer.state_dict(), "iteration": iteration, "episodes": episodes,
                        "league": league, "config": config, "torch_rng": torch.get_rng_state(),
                        "numpy_rng": np.random.get_state(), "python_rng": random.getstate(),
                        "cuda_rng": torch.cuda.get_rng_state_all() if args.device == "cuda" else None}
             atomic_checkpoint(output / "latest.pt", payload)
-            (output / "manifest.json").write_text(json.dumps({"format": 1, "meta": {k:v for k,v in pool.meta.items() if k not in ["actions", "cardIds", "heroIds"]},
-                "config": config, "iteration": iteration, "episodes": episodes, "model_spec": model.specification(),
+            (output / "manifest.json").write_text(json.dumps({"format": 1, "trainerHash": code_hash, "meta": {k:v for k,v in pool.meta.items() if k not in ["actions", "cardIds", "heroIds", "entitySchema"]},
+                "config": config, "iteration": iteration, "episodes": episodes, "model_spec": {k:v for k,v in model.specification().items() if k not in ["entity_schema","actions"]},
                 "league_generations": [entry["generation"] for entry in league], "torch": torch.__version__, "numpy": np.__version__,
                 "device": args.device, "workers": len(pool.simulators)}, indent=2))
         checkpoint()
         for _ in range(args.iterations):
+            iteration_started = time.monotonic()
+            if args.device == "cuda": torch.cuda.reset_peak_memory_stats()
             seeds = [(config["seed"] + episodes + i) & 0xffffffff for i in range(config["games_per_iteration"])]
             tracks, games, performance = pool.collect(model, opponents, seeds, config["options"], args.device,
-                learner_seats=8 if iteration == 0 else config["learner_seats"],
+                learner_seats=8 if iteration == 0 and len(league) == 1 else config["learner_seats"],
+                opponent_weights=league_weights(league), seat_offset=episodes, progress=lambda row: print(json.dumps(row),flush=True),
                 replay_dir=output / "replays" if args.replays else None, error_dir=output / "debug")
             if any(game["truncated"] for game in games):
                 raise RuntimeError("A self-play game was truncated. Inspect replay/debug files and increase maxSteps; no PPO update was applied")
+            optimization_started = time.monotonic()
             metrics = ppo_update(model, optimizer, tracks, config, args.device)
+            if args.device == "cuda": torch.cuda.synchronize()
+            metrics["optimization_seconds"] = time.monotonic()-optimization_started
             episodes += len(games); iteration += 1
-            league.append({"generation": iteration, "weights": cpu_weights(model)})
-            league = league[:1] + league[-(config["league_size"]-1):] if len(league) > config["league_size"] else league
+            update_league_scores(league,games)
+            league.append(league_entry(model,iteration))
+            league = prune_league(league,config["league_size"])
             opponents = frozen_models(league, model.specification(), args.device)
-            row = {"iteration": iteration, "episodes": episodes, **performance, **metrics,
+            total_seconds = time.monotonic()-iteration_started
+            row = {"iteration": iteration, "iteration_seconds": total_seconds,
+                   "end_to_end_actions_per_second": performance["environment_actions"]/total_seconds,
+                   "cuda_peak_allocated_mib": torch.cuda.max_memory_allocated()/2**20 if args.device == "cuda" else None, "episodes": episodes, **performance, **metrics,
                    "completed_games": len(games), "league_generations": [entry["generation"] for entry in league]}
             with (output / "metrics.jsonl").open("a") as file: file.write(json.dumps(row) + "\n")
             checkpoint()

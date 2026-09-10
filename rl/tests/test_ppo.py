@@ -83,12 +83,15 @@ class PPOTests(unittest.TestCase):
         pool.executor = ThreadPoolExecutor(max_workers=1)
         try:
             tracks, games, _ = pool.collect(ActorCritic(3, 5, 8), [ActorCritic(3, 5, 8)], [1, 2], {}, "cpu", learner_seats=1)
+            shifted, shifted_games, _ = pool.collect(ActorCritic(3, 5, 8), [ActorCritic(3, 5, 8)], [3, 4], {}, "cpu", learner_seats=1, seat_offset=7)
         finally:
             pool.executor.shutdown()
         self.assertEqual(len(tracks), 2)
         self.assertEqual([t[0][0][0][0] for t in tracks], [0, 1])
         self.assertEqual([t[1] for t in tracks], [1, (4.5-2)/3.5])
         self.assertEqual([g["controllers"].count(-1) for g in games], [1, 1])
+        self.assertEqual([g['controllers'].index(-1) for g in shifted_games], [7, 0])
+        self.assertEqual([t[0][0][0][0] for t in shifted], [7, 0])
 
 
 if __name__ == "__main__":

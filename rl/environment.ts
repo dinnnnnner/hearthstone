@@ -6,11 +6,17 @@ import { withSimulation } from "../src/simulation";
 import { ACTIONS, candidates } from "./actions";
 import { observe, CARD_IDS, HERO_IDS } from "./observation";
 import coverage from "../docs/rules-coverage.json";
+import { observeEntities, ENTITY_SCHEMA } from "./entities";
 
 declare const RL_SOURCE_HASH: string;
+declare const RL_RULES_HASH: string;
+declare const RL_LEGACY_V2_COMPATIBLE: boolean;
 export const META = {
-  schema: "tavern-selfplay-v2", observationVersion: 2, actionVersion: 2,
+  schema: "tavern-selfplay-v3", observationVersion: 3, actionVersion: 2,
   sourceHash: typeof RL_SOURCE_HASH === "undefined" ? "development" : RL_SOURCE_HASH,
+  rulesHash: typeof RL_RULES_HASH === "undefined" ? "development" : RL_RULES_HASH,
+  legacyV2SourceHash: typeof RL_LEGACY_V2_COMPATIBLE !== "undefined" && RL_LEGACY_V2_COMPATIBLE ? "b6903488d2ee12d2113c84941d5e5fdb357bf36b1b681110c019b0697eaa62d3" : null,
+  entitySchema: ENTITY_SCHEMA,
   actionCount: ACTIONS.length, cardIds: CARD_IDS, heroIds: HERO_IDS,
   patch: coverage.patch, coverage: { minions: coverage.minions, heroes: coverage.heroes, spells: coverage.tavernSpells, trinkets: coverage.trinkets },
   opponents: "neural self-play only", reward: "(4.5 - placement) / 3.5", seats: 8,
@@ -121,9 +127,10 @@ export class SelfPlayEnv {
     const done = this.terminated || this.truncated;
     const s = this.room.seats[this.actor].game!;
     const observation = this.scoped(() => observe(s, this.actionsInTurn[this.actor], this.options.maxActionsPerTurn), true);
+    const entities = this.scoped(() => observeEntities(s, this.actionsInTurn[this.actor], this.options.maxActionsPerTurn), true);
     if (observation.some(n => !Number.isFinite(n))) throw Error("Non-finite observation");
     return {
-      actor: done ? null : this.actor, observation,
+      actor: done ? null : this.actor, observation, entities,
       legalActions: [...this.legalActions().keys()],
       terminated: this.terminated, truncated: this.truncated,
       info: {
@@ -131,6 +138,7 @@ export class SelfPlayEnv {
         placements: this.room.seats.map(p => p.place ?? null),
         rewards: this.room.seats.map(p => p.place ? (4.5 - p.place) / 3.5 : 0),
         actionLimitReached: !done && this.actionsInTurn[this.actor] >= this.options.maxActionsPerTurn,
+        heroes: this.room.seats.map(p => p.hero), tribes: s.season!.tribes,
       },
     };
   }

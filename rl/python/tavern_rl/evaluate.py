@@ -24,7 +24,7 @@ def main():
     try:
         saved, model = load_checkpoint(args.checkpoint, pool.meta, args.device)
         if args.opponent_checkpoints:
-            opponents = [load_checkpoint(path, pool.meta, args.device)[1] for path in args.opponent_checkpoints]
+            opponents = [load_checkpoint(path, pool.meta, args.device, allow_legacy=True)[1] for path in args.opponent_checkpoints]
             opponent_ids = [str(path) for path in args.opponent_checkpoints]
         else:
             history = [entry for entry in saved["league"] if entry["generation"] != saved["iteration"]]

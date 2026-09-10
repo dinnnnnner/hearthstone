@@ -5,6 +5,8 @@ from torch import nn
 from torch.distributions import Categorical
 
 class ActorCritic(nn.Module):
+    observation_kind = 'flat'
+    recurrent = False
     def __init__(self, observation_size, action_size, hidden=128):
         super().__init__()
         self.observation_size, self.action_size, self.hidden = observation_size, action_size, hidden
@@ -47,6 +49,9 @@ def advantages(values, terminal_reward, gamma=1.0, gae_lambda=.95):
 
 
 def ppo_update(model, optimizer, tracks, config, device):
+    if getattr(model, 'recurrent', False):
+        from .recurrent import recurrent_update
+        return recurrent_update(model, optimizer, tracks, config, device)
     observations, masks, actions, log_probs, advs, returns = [], [], [], [], [], []
     for records, reward in tracks:
         if not records:
@@ -95,3 +100,13 @@ def ppo_update(model, optimizer, tracks, config, device):
         raise RuntimeError("PPO performed no optimizer updates")
     means = np.mean(stats, axis=0)
     return dict(zip(["policy_loss", "value_loss", "entropy", "approx_kl", "gradient_norm"], means.tolist())) | {"samples": len(obs), "optimizer_steps": len(stats), "kl_early_stop": stop}
+
+
+def make_model(specification):
+    spec = dict(specification)
+    architecture = spec.pop('architecture', 'mlp')
+    if architecture == 'mlp': return ActorCritic(**spec)
+    if architecture == 'entity-gru':
+        from .entity_model import EntityActorCritic
+        return EntityActorCritic(**spec)
+    raise ValueError(f'Unknown architecture: {architecture}')
