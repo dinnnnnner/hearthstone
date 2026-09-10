@@ -76,6 +76,7 @@ type Drag = {
   pointer: number;
 };
 type Props = {
+  rope?: import("react").ReactNode;
   lobby?: () => void;
   roomStatus?: import("react").ReactNode;
   locked?: boolean;
@@ -505,6 +506,7 @@ export function GameTable(p: Props) {
           <div
             className={`wooden-table ${game.frozen && !combat ? "frozen-table" : ""}`}
           >
+            {p.rope}
             <BoardDecoration />
             <div className="board-corner top-left">✦</div>
             <div className="board-corner top-right">✦</div>

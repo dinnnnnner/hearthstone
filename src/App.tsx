@@ -1,3 +1,4 @@
+import { RecruitmentRope } from "./table/RecruitmentRope";
 import { equippedPowers } from "./season/powers";
 import { PowerChoices } from "./season/PowerChoices";
 import { RefreshPrice } from "./table/RefreshPrice";
@@ -322,6 +323,8 @@ function App({
   const newHeroes = newSeason ? SEASON_HEROES : CLASSIC_HEROES;
   const opponent = game.opponents[game.nextOpponent];
   const recruiting = game.phase === "recruit";
+  const rope = network?.clock && recruiting
+    ? <RecruitmentRope key={`${game.turn}:${network.clock.deadline}`} clock={network.clock} /> : null;
   useEffect(() => {
     if (network) return;
     try {
@@ -689,6 +692,7 @@ function App({
           {page === "tavern" ? (
             tableMode ? (
               <GameTable
+                rope={rope}
                 lobby={onLobby}
                 roomStatus={network?.status}
                 locked={network?.locked}
@@ -735,6 +739,7 @@ function App({
               />
             ) : mobile ? (
               <MobileArena
+                rope={rope}
                 game={game}
                 dispatch={dispatch}
                 choose={choose}
@@ -767,6 +772,7 @@ function App({
             ) : (
               <>
                 <SeasonBar game={game} dispatch={dispatch} />
+                {rope}
                 <div className="game-meta">
                   <div className="meta-item">
                     <span className="meta-icon">

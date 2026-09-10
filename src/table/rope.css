@@ -1,0 +1,31 @@
+.recruitment-rope { position: relative; height: 44px; margin: 4px 22px; pointer-events: none; user-select: none; z-index: 25; animation: rope-enter .3s ease-out both; }
+.recruitment-rope * { pointer-events: none; }
+.rope-track { position: absolute; left: 0; right: 0; top: 15px; height: 8px; filter: drop-shadow(0 3px 2px #140c06b0); }
+.rope-cord, .rope-ash { position: absolute; inset: 0; border-radius: 6px; }
+.rope-cord { background: repeating-linear-gradient(115deg, #50331c 0 2px, #bc9255 3px 5px, #ebcd8c 6px, #7f582a 7px 9px); box-shadow: inset 0 2px 1px #ffdfa477, inset 0 -2px 2px #241708cc; clip-path: inset(0 0 0 var(--rope-burn)); transition: clip-path .1s linear; }
+.rope-ash { height: 3px; top: 3px; opacity: .5; background: repeating-linear-gradient(110deg, #27180e 0 4px, transparent 5px 9px, #665244 10px 12px); }
+.rope-pin { position: absolute; top: -3px; width: 12px; height: 13px; border-radius: 50%; border: 2px solid #ad864b; background: radial-gradient(circle at 35% 25%, #d4b776, #4b3320 65%); box-shadow: 0 1px 3px #140b07; }
+.rope-pin-left { left: -9px; } .rope-pin-right { right: -9px; }
+.rope-fuse { position: absolute; left: var(--rope-burn); top: 3px; width: 0; height: 0; transition: left .1s linear; }
+.rope-glow { position: absolute; width: 68px; height: 54px; left: -34px; top: -27px; border-radius: 50%; background: radial-gradient(ellipse, #fff5a7c0, #ffb02075 22%, #e8511835 45%, transparent 72%); mix-blend-mode: screen; animation: rope-glow .45s ease-in-out infinite alternate; }
+.rope-flame { position: absolute; left: -10px; bottom: -6px; width: 20px; height: 35px; border-radius: 65% 25% 65% 35%; background: linear-gradient(15deg, #fff3a9 5%, #ffd645 28%, #ff8b1f 58%, #de3e0a00 95%); transform-origin: 50% 90%; filter: drop-shadow(0 0 4px #ff831b); animation: rope-flame .18s ease-in-out infinite alternate; }
+.rope-core { position: absolute; left: -5px; top: -10px; width: 10px; height: 15px; border-radius: 65% 30% 50% 50%; background: #fff6c1; box-shadow: 0 0 9px 3px #ffcb4d; }
+.rope-sparks i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #ffd36a; box-shadow: 0 0 4px #ff931d; animation: rope-spark .85s linear infinite; animation-delay: calc(var(--spark) * -.14s); }
+.rope-caption { position: absolute; left: 50%; top: 28px; transform: translateX(-50%); white-space: nowrap; padding: 3px 11px; border: 1px solid #b68d4c8c; border-radius: 12px; color: #f4d99c; background: #302016ed; font-size: 11px; line-height: 16px; box-shadow: 0 2px 7px #160d0a40; }
+.rope-caption b { color: #fff2c4; font-size: 13px; font-variant-numeric: tabular-nums; }
+.rope-urgent .rope-glow { width: 92px; height: 70px; left: -46px; top: -35px; }
+.rope-urgent .rope-caption { color: #ffe0a0; border-color: #f29541; background: #572418ef; }
+.rope-spent .rope-fuse { opacity: 0; transition: opacity .5s; }
+.rope-spent .rope-ash { animation: rope-extinguish 1s ease-out forwards; }
+.rope-last-ember { position: absolute; right: -7px; top: -9px; width: 18px; height: 24px; border-radius: 50%; background: #ffe5a2; box-shadow: 0 0 20px 8px #ff9d29; animation: rope-final .65s ease-out forwards; }
+.wooden-table > .recruitment-rope { position: absolute; top: 48%; left: 7%; right: 12%; margin: 0; }
+.mobile-table > .recruitment-rope { position: absolute; top: 47%; left: 12px; right: 12px; margin: 0; }
+.mobile-table { position: relative; }
+@keyframes rope-enter { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rope-glow { to { opacity: .65; transform: scale(.88); } }
+@keyframes rope-flame { from { transform: rotate(-16deg) scale(.9, 1); } to { transform: rotate(8deg) scale(1.06, .85); } }
+@keyframes rope-spark { from { transform: translate(0, -2px); opacity: 1; } to { transform: translate(calc(-24px + var(--spark) * 9px), calc(-24px - var(--spark) * 5px)); opacity: 0; } }
+@keyframes rope-extinguish { to { opacity: .15; } }
+@keyframes rope-final { from { opacity: 1; transform: scale(.5); } to { opacity: 0; transform: scale(1.8); } }
+@media (max-width: 600px) { .wooden-table > .recruitment-rope { left: 5%; right: 10%; } .rope-caption { font-size: 10px; padding: 1px 8px; } }
+@media (prefers-reduced-motion: reduce) { .recruitment-rope, .recruitment-rope * { animation: none !important; transition: none !important; } .rope-sparks, .rope-last-ember { display: none; } .rope-spent .rope-ash { opacity: .15; } }

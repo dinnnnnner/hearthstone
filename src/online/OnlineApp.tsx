@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Countdown } from "./Countdown";
+import { Countdown, type RoomClock } from "./Countdown";
 import { LoadingScreen } from "../loading/LoadingScreen";
 import {
   ArrowLeft,
@@ -33,6 +33,7 @@ export interface NetworkGame {
   game: Game;
   locked: boolean;
   status: ReactNode;
+  clock?: RoomClock;
   place?: number;
   send: (action: Action) => boolean;
   lobby: () => void;
@@ -59,7 +60,7 @@ export default function OnlineApp() {
           ? "game"
           : "hall",
     );
-  const receivedAt = useRef(Date.now());
+  const receivedAt = useRef(performance.now());
   const busy = useRef(false),
     last = useRef<OnlineState | null>(null);
   const room = state?.room,
@@ -89,7 +90,7 @@ export default function OnlineApp() {
     )
       next.game = previous.game;
     last.current = next;
-    receivedAt.current = Date.now();
+    receivedAt.current = performance.now();
     setState(next);
     setConnected(true);
     if (previous?.room?.stage === "waiting" && next.room?.stage === "recruit")
@@ -235,6 +236,8 @@ export default function OnlineApp() {
                   ? !!me?.continued && state.game.health > 0
                   : false,
             status,
+            clock: room.stage === "recruit" && !me?.ended && state.game.health > 0
+              ? { deadline: room.deadline, serverNow: room.serverNow, receivedAt: receivedAt.current } : undefined,
             place: me?.place,
             send,
             lobby: () => changeView("hall"),

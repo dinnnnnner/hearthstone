@@ -59,6 +59,7 @@ export function usePlayMode() {
 }
 export type CardZone = "shop" | "board" | "hand" | "spellshop";
 export function MobileArena({
+  rope,
   game,
   dispatch,
   card,
@@ -70,6 +71,7 @@ export function MobileArena({
   targeting,
   notify,
 }: {
+  rope?: ReactNode;
   game: Game;
   dispatch: (a: Action) => boolean;
   card: (m: Minion, zone: CardZone) => ReactNode;
@@ -132,6 +134,7 @@ export function MobileArena({
         横过手机，酒馆、战场和手牌可同屏操作。
       </p>
       <div className="mobile-table">
+        {rope}
         <section
           className={`mobile-shop ${game.frozen ? "is-frozen" : ""}`}
           aria-label="酒馆随从"
