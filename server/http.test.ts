@@ -58,9 +58,11 @@ test("HTTP authentication, action validation and a graceful server restart prese
       await call("/guest", { name: "重连验证" })
     ).json()) as { token: string };
     token = guest.token;
+    assert.equal((await call("/create", { kind: "ai", mode: "invalid" })).status, 400);
     const created = (await (
-      await call("/create", { kind: "friends", hero: "s14_lich" })
-    ).json()) as { room: { code: string } };
+      await call("/create", { kind: "friends", hero: "s14_lich", mode: "training" })
+    ).json()) as { room: { code: string; mode: string } };
+    assert.equal(created.room.mode, "training");
     assert.equal(
       (
         await call("/action", {
@@ -80,6 +82,7 @@ test("HTTP authentication, action validation and a graceful server restart prese
       })
     ).json()) as any;
     assert.ok(combat.game.battle.frames.length);
+    assert.equal(combat.room.deadline, 0);
     knownBattle = combat.battleId;
     const cached = (await (await call("/state")).json()) as any;
     assert.equal(cached.game.battle.frames.length, 0);
@@ -92,12 +95,14 @@ test("HTTP authentication, action validation and a graceful server restart prese
     await stop();
     await start();
     const restored = (await (await call("/state")).json()) as {
-      room: { code: string };
+      room: { code: string; mode: string; deadline: number };
       guest: { name: string };
       battleId: string;
       game: { battle: { frames: unknown[] } };
     };
     assert.equal(restored.room.code, created.room.code);
+    assert.equal(restored.room.mode, "training");
+    assert.equal(restored.room.deadline, 0);
     assert.equal(restored.guest.name, "重连验证");
     assert.equal(restored.battleId, combat.battleId);
     assert.deepEqual(restored.game.battle.frames, combat.game.battle.frames);

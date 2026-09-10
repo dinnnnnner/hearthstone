@@ -685,3 +685,30 @@
 .room-seat.self { box-shadow: inset 3px 0 #c69c60, inset 0 1px #f0d4a30c; }
 .room-seat > img { box-shadow: 0 3px 8px #0006; }
 @media (max-height: 500px) { .guest-entry::before { display: none; } }
+
+.recruit-mode-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0;
+  padding: 0;
+  border: 0;
+}
+.recruit-mode-picker legend { padding: 0 0 10px; font-size: 13px; color: #d9bd91; }
+.recruit-mode-picker label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #725640;
+  border-radius: 10px;
+  background: #201b22;
+  cursor: pointer;
+}
+.recruit-mode-picker label:has(:checked) { border-color: #ddb77a; background: #382b2b; }
+.recruit-mode-picker label:focus-within { outline: 2px solid #edcf95; outline-offset: 3px; }
+.recruit-mode-picker input { width: 16px; height: 16px; min-width: 0; min-height: 0; padding: 0; margin: 2px 0 0; box-shadow: none; accent-color: #ddb77a; flex-shrink: 0; }
+.recruit-mode-picker strong { display: block; font-size: 14px; color: #f0d5a7; }
+.recruit-mode-picker small { display: block; margin-top: 5px; font-size: 12px; line-height: 1.7; color: #bba995; }
+.recruit-mode-picker p { grid-column: 1 / -1; margin: 0; font-size: 11px; color: #bba995; line-height: 1.7; }
+@media (max-width: 600px) { .recruit-mode-picker { grid-template-columns: 1fr; } }

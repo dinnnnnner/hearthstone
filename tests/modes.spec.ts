@@ -1,0 +1,71 @@
+import { test, expect } from "@playwright/test";
+import { Rooms, type Room } from "../server/rooms";
+
+const path = process.env.TAVERN_TEST_PATH || "/";
+for (const width of [1440, 390]) {
+  test(`mode selection controls real room deadlines and survives reload at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+    let now = 1000000;
+    const rooms = new Rooms(() => now, () => .37);
+    const identity = rooms.guest("训练验证"), guest = rooms.auth(identity.token);
+    let created: Room | undefined;
+    await page.addInitScript((identity) => {
+      localStorage.setItem("bobs-tavern-guest-v1", JSON.stringify(identity));
+      localStorage.setItem("bobs-tavern-sound", "off");
+    }, identity);
+    await page.clock.install();
+    await page.route("**/tavern-api/**", async route => {
+      const url = new URL(route.request().url());
+      const data = route.request().postDataJSON();
+      if (url.pathname.endsWith("/create")) created = rooms.create(guest, data.kind, data.hero, data.mode);
+      if (url.pathname.endsWith("/action")) rooms.action(guest, data.action, data.requestId, data.turn);
+      if (url.pathname.endsWith("/leave")) rooms.leave(guest);
+      const state = rooms.view(guest);
+      if (url.searchParams.get("version") === state.version) return route.fulfill({ status: 204 });
+      await route.fulfill({ json: state });
+    });
+    await page.goto(path);
+    const training = page.getByRole("radio", { name: /训练模式/ });
+    await training.check();
+    await expect(training).toBeChecked();
+    await expect(page.locator("#boot-screen")).toHaveCount(0);
+    await page.screenshot({ path: `/tmp/tavern-mode-picker-${width}.png` });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.reload();
+    await expect(training).toBeChecked();
+    await page.getByRole("button", { name: /人机匹配/ }).click();
+    await expect(page.locator(".game-table")).toBeVisible();
+    expect(created!.mode).toBe("training");
+    expect(created!.deadline).toBe(0);
+    await expect(page.locator(".game-table")).toContainText("训练模式 · 不限时");
+    now += 95000; rooms.auth(identity.token); rooms.tick();
+    await page.clock.fastForward(95000);
+    await expect(page.locator(".recruitment-rope")).toHaveCount(0);
+    expect(created!.stage).toBe("recruit");
+    await page.reload();
+    await expect(page.locator(".game-table")).toContainText("训练模式 · 不限时");
+    await page.getByRole("button", { name: "结束招募", exact: true }).click();
+    await expect(page.locator(".combat-table")).toBeVisible();
+    expect(created!.deadline).toBe(0);
+    now += 130000; rooms.auth(identity.token); rooms.tick();
+    await page.clock.fastForward(130000);
+    expect(created!.stage).toBe("combat");
+    await page.getByRole("button", { name: /返回酒馆/ }).click();
+    await expect(page.locator(".combat-table")).toHaveCount(0);
+    expect(created!.turn).toBe(2);
+    expect(created!.deadline).toBe(0);
+    await page.getByRole("button", { name: "对战大厅", exact: true }).click();
+    page.once("dialog", dialog => dialog.accept());
+    await page.getByRole("button", { name: "退出本局", exact: true }).click();
+    await page.getByRole("radio", { name: /烧绳模式/ }).check();
+    await page.getByRole("button", { name: /人机匹配/ }).click();
+    await expect(page.locator(".game-table")).toBeVisible();
+    expect(created!.mode).toBe("timed");
+    expect(created!.deadline).toBe(now + 90000);
+    await page.clock.fastForward(71000);
+    await expect(page.locator(".recruitment-rope")).toBeVisible();
+    now += 90001; rooms.auth(identity.token); rooms.tick();
+    await page.clock.fastForward(20000);
+    await expect(page.locator(".combat-table")).toBeVisible();
+  });
+}

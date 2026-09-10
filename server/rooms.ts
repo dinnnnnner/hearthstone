@@ -49,6 +49,7 @@ export type Room = {
   code: string;
   host: string;
   kind: "friends" | "ai";
+  mode: "timed" | "training";
   stage: "waiting" | "recruit" | "combat" | "finished";
   seats: Seat[];
   pool: Record<string, number>;
@@ -132,7 +133,8 @@ export class Rooms {
       requests: [],
     };
   }
-  create(g: Guest, kind: "friends" | "ai", hero: string) {
+  create(g: Guest, kind: "friends" | "ai", hero: string, mode: Room["mode"] = "timed") {
+    if (mode !== "timed" && mode !== "training") throw Error("无效对局模式");
     if (g.room && this.rooms.has(g.room)) throw Error("请先离开当前房间");
     if (this.rooms.size >= 24) throw Error("房间已满，请稍后再试");
     this.validHero(hero);
@@ -147,6 +149,7 @@ export class Rooms {
       code,
       host: g.id,
       kind,
+      mode,
       stage: "waiting",
       seats: [this.seat(g, hero)],
       pool: {},
@@ -243,7 +246,7 @@ export class Rooms {
       p.rev++;
     }
     r.stage = "recruit";
-    r.deadline = this.now() + 90000;
+    r.deadline = r.mode === "training" ? 0 : this.now() + 90000;
     this.opponents(r);
     this.bots(r);
     this.planPairings(r);
@@ -631,7 +634,7 @@ export class Rooms {
     const frames = Math.max(
       ...r.seats.map((p) => p.game?.battle?.frames.length || 0),
     );
-    r.deadline =
+    r.deadline = r.mode === "training" ? 0 :
       this.now() + Math.max(15000, Math.min(120000, frames * 820 + 5000));
     this.touch(r);
     if (!this.living(r).length) this.next(r);
@@ -677,7 +680,7 @@ export class Rooms {
       p.rev++;
     }
     r.stage = "recruit";
-    r.deadline = this.now() + 90000;
+    r.deadline = r.mode === "training" ? 0 : this.now() + 90000;
     this.bots(r);
     this.planPairings(r);
     this.touch(r);
@@ -748,7 +751,8 @@ export class Rooms {
       );
       if (
         this.now() - lastHumanSeen >= OFFLINE_GRACE_MS ||
-        this.now() - r.updated > (r.stage === "finished" ? 600000 : 7200000)
+        ((r.mode !== "training" || r.stage === "finished" || r.stage === "waiting") &&
+          this.now() - r.updated > (r.stage === "finished" ? 600000 : 7200000))
       ) {
         for (const g of this.guests.values())
           if (g.room === r.code) g.room = undefined;
@@ -756,8 +760,10 @@ export class Rooms {
         this.touch();
         continue;
       }
-      if (r.stage === "recruit" && this.now() >= r.deadline) this.fight(r);
-      else if (r.stage === "combat" && this.now() >= r.deadline) this.next(r);
+      if (r.deadline > 0 && r.mode !== "training") {
+        if (r.stage === "recruit" && this.now() >= r.deadline) this.fight(r);
+        else if (r.stage === "combat" && this.now() >= r.deadline) this.next(r);
+      }
       const online = r.seats
         .filter(
           (s) =>
@@ -812,6 +818,7 @@ export class Rooms {
         code: r.code,
         host: r.host,
         kind: r.kind,
+        mode: r.mode,
         stage: r.stage,
         turn: r.turn,
         deadline: r.deadline,
@@ -853,6 +860,8 @@ export class Rooms {
     this.rooms = new Map(data.rooms.map((r: Room) => [r.code, r]));
     this.roomSnapshots = new WeakMap();
     for (const r of this.rooms.values()) {
+      r.mode = r.mode === "training" ? "training" : "timed";
+      if (r.mode === "training") r.deadline = 0;
       // The previous server did not persist idle heartbeats. Give its rooms
       // one grace period on migration instead of evicting connected guests.
       if (r.storageRev === undefined) {

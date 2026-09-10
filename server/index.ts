@@ -178,7 +178,7 @@ const server = createServer(async (req, res) => {
     switch (path) {
       case "/create":
         if (!["friends", "ai"].includes(data.kind)) throw Error("无效房间类型");
-        store.create(guest, data.kind, String(data.hero || "s14_lich"));
+        store.create(guest, data.kind, String(data.hero || "s14_lich"), data.mode);
         break;
       case "/join":
         if (typeof data.code !== "string" || !/^[A-Z2-9]{6}$/i.test(data.code))

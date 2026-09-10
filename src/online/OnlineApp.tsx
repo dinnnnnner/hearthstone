@@ -18,7 +18,7 @@ import App from "../App";
 import { SEASON_HEROES } from "../season/catalog";
 import { art } from "../data";
 import type { Action, Game } from "../engine";
-import type { OnlineState } from "../../server/rooms";
+import type { OnlineState, Room } from "../../server/rooms";
 import "./online.css";
 type Identity = { token: string; id: string; name: string };
 const key = "bobs-tavern-guest-v1";
@@ -47,6 +47,10 @@ export default function OnlineApp() {
         `旅人${Math.floor(1000 + Math.random() * 9000)}`,
     ),
     [hero, setHero] = useState("s14_lich"),
+    [mode, setMode] = useState<Room["mode"]>(() => {
+      try { return localStorage.getItem("bobs-tavern-room-mode") === "training" ? "training" : "timed"; }
+      catch { return "timed"; }
+    }),
     [code, setCode] = useState(
       () => new URLSearchParams(location.search).get("room") || "",
     ),
@@ -61,6 +65,9 @@ export default function OnlineApp() {
           : "hall",
     );
   const receivedAt = useRef(performance.now());
+  useEffect(() => {
+    try { localStorage.setItem("bobs-tavern-room-mode", mode); } catch {}
+  }, [mode]);
   const busy = useRef(false),
     last = useRef<OnlineState | null>(null);
   const room = state?.room,
@@ -213,6 +220,7 @@ export default function OnlineApp() {
   const status = room ? (
     <>
       {`${room.kind === "ai" ? "人机对局" : `好友房 ${room.code}`} · 第 ${room.turn} 回合${me?.ended && room.stage === "recruit" ? " · 等待其他玩家" : me?.continued && room.stage === "combat" ? " · 等待下一回合" : ""}`}
+      <span>{room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式"}</span>
       <Countdown
         deadline={room.deadline}
         serverNow={room.serverNow}
@@ -236,7 +244,7 @@ export default function OnlineApp() {
                   ? !!me?.continued && state.game.health > 0
                   : false,
             status,
-            clock: room.stage === "recruit" && !me?.ended && state.game.health > 0
+            clock: room.stage === "recruit" && room.deadline > 0 && room.mode !== "training" && !me?.ended && state.game.health > 0
               ? { deadline: room.deadline, serverNow: room.serverNow, receivedAt: receivedAt.current } : undefined,
             place: me?.place,
             send,
@@ -326,6 +334,7 @@ export default function OnlineApp() {
               <div>
                 <div className="online-eyebrow">
                   {room.kind === "ai" ? "人机对局" : "好友酒馆"}
+                  {room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式 · 招募 90 秒"}
                 </div>
                 <h1>
                   {room.stage === "waiting"
@@ -336,7 +345,7 @@ export default function OnlineApp() {
                 </h1>
                 <p>
                   {room.stage === "waiting"
-                    ? "最多 8 人，空位自动补人机。所有朋友准备后由房主开局。"
+                    ? `最多 8 人，空位自动补人机。所有朋友准备后由房主开局。${room.mode === "training" ? "每轮等所有玩家手动结束招募，战斗后手动返回酒馆。" : "招募倒计时结束自动开战。"}`
                     : status}
                 </p>
               </div>
@@ -517,12 +526,24 @@ export default function OnlineApp() {
                 ))}
               </select>
             </label>
+            <fieldset className="recruit-mode-picker" disabled={pending}>
+              <legend>对局模式</legend>
+              <label>
+                <input type="radio" name="room-mode" value="timed" checked={mode === "timed"} onChange={() => setMode("timed")} />
+                <span><strong>烧绳模式</strong><small>招募 90 秒，最后 20 秒烧绳，到时自动开战。</small></span>
+              </label>
+              <label>
+                <input type="radio" name="room-mode" value="training" checked={mode === "training"} onChange={() => setMode("training")} />
+                <span><strong>训练模式</strong><small>不限时，手动结束招募、返回酒馆。好友房等所有玩家确认。</small></span>
+              </label>
+              <p>用于下方的人机匹配和新建好友房；加入好友房时沿用房主的选择。</p>
+            </fieldset>
             <div className="match-modes">
               <button
                 className="match-tile"
                 disabled={pending}
                 onClick={async () => {
-                  if (await command("/create", { kind: "ai", hero }))
+                  if (await command("/create", { kind: "ai", hero, mode }))
                     changeView("game");
                 }}
               >
@@ -545,7 +566,7 @@ export default function OnlineApp() {
                 className="match-tile friends"
                 disabled={pending}
                 onClick={() =>
-                  void command("/create", { kind: "friends", hero })
+                  void command("/create", { kind: "friends", hero, mode })
                 }
               >
                 <span className="match-icon">

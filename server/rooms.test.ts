@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { Rooms, OFFLINE_GRACE_MS, type Room, type Seat } from "./rooms";
 import { makeMinion } from "../src/engine";
 import { equipPowers } from "../src/season/powers";
-function setup(n = 2) {
+function setup(n = 2, mode: Room["mode"] = "timed") {
   let now = 100000,
     seed = 42;
   const random = () => {
@@ -15,7 +15,7 @@ function setup(n = 2) {
       service.guest("玩家" + i),
     ),
     guests = identities.map((x) => service.auth(x.token));
-  service.create(guests[0], "friends", "s14_lich");
+  service.create(guests[0], "friends", "s14_lich", mode);
   const room = service.member(guests[0]).r;
   for (const g of guests.slice(1)) {
     service.join(g, room.code);
@@ -440,4 +440,64 @@ test("bots and timeout auto-selection settle Nguyen and both Genn discoveries wi
     if (turn === 4) assert.equal(room.seats[0].game!.season!.powers!.length, 2);
     for (const g of guests) service.action(g, { type: "continue" }, `continue-${turn}`, turn);
   }
+});
+
+test("training rooms wait for all humans in recruit and combat and retain mode on restore", () => {
+  const { service, guests, room, advance, identities } = setup(2, "training");
+  service.start(guests[0]);
+  assert.equal(room.deadline, 0);
+  advance(100000);
+  assert.equal(room.stage, "recruit");
+  service.action(guests[0], { type: "end" }, "training-end-1", 1);
+  assert.equal(room.stage, "recruit");
+  service.action(guests[1], { type: "end" }, "training-end-2", 1);
+  assert.equal(room.stage, "combat");
+  assert.equal(room.deadline, 0);
+  advance(130000);
+  assert.equal(room.stage, "combat");
+  service.action(guests[0], { type: "continue" }, "training-next-1", 1);
+  assert.equal(room.stage, "combat");
+  service.action(guests[1], { type: "continue" }, "training-next-2", 1);
+  assert.equal(room.turn, 2);
+  assert.equal(room.deadline, 0);
+  const restored = new Rooms(service.now, service.random);
+  restored.restore(service.dump());
+  const guest = restored.auth(identities[0].token);
+  assert.equal(restored.view(guest).room!.mode, "training");
+  assert.equal(restored.view(guest).room!.deadline, 0);
+  restored.tick();
+  assert.equal(restored.member(guest).r.stage, "recruit");
+  pool(restored.member(guest).r);
+});
+
+test("training keeps an online room without a turn deadline but reclaims it after everyone disconnects", () => {
+  const { service, guests, room, advance, identities } = setup(1, "training");
+  service.start(guests[0]);
+  for (let minute = 0; minute < 130; minute++) {
+    service.auth(identities[0].token);
+    advance(60000);
+  }
+  assert.equal(service.rooms.get(room.code)?.stage, "recruit");
+  advance(OFFLINE_GRACE_MS);
+  assert.equal(service.rooms.size, 0);
+  assert.equal(guests[0].room, undefined);
+});
+
+test("legacy rooms retain the timed deadline and invalid mode cannot create a room", () => {
+  const { service, guests, room, identities } = setup(1);
+  service.start(guests[0]);
+  const data = JSON.parse(service.dump());
+  delete data.rooms[0].mode;
+  let now = service.now();
+  const restored = new Rooms(() => now, service.random);
+  restored.restore(JSON.stringify(data));
+  const guest = restored.auth(identities[0].token);
+  assert.equal(restored.view(guest).room!.mode, "timed");
+  assert.equal(restored.view(guest).room!.deadline, room.deadline);
+  now = room.deadline;
+  restored.tick();
+  assert.equal(restored.member(guest).r.stage, "combat");
+  const fresh = restored.auth(restored.guest("错误模式").token);
+  assert.throws(() => restored.create(fresh, "ai", "s14_lich", "invalid" as Room["mode"]), /无效对局模式/);
+  assert.equal(fresh.room, undefined);
 });

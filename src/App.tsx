@@ -820,7 +820,7 @@ function App({
                         : "招募阶段"}
                     <span className="phase-caption">
                       {game.phase === "recruit"
-                        ? "从容思考，不限时间"
+                        ? network?.clock ? "限时招募" : "从容思考，不限时间"
                         : "自动战斗"}
                     </span>
                   </div>

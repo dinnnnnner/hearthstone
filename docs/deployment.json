@@ -1,6 +1,6 @@
 {
-  "release": "20260910T052522Z",
-  "remote": "/var/www/playroom/releases/20260910T052522Z",
+  "release": "20260910T053244Z",
+  "remote": "/var/www/playroom/releases/20260910T053244Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -9,37 +9,37 @@
   },
   "validation": {
     "engineAndStateTests": 96,
-    "serverTests": 22,
-    "localBrowserTests": 9,
-    "publicBrowserTests": 12,
-    "publicEightBrowserRoom": "passed, 14.3 seconds with separate caches",
+    "serverTests": 25,
+    "localBrowserTests": 11,
+    "publicBrowserTests": 19,
+    "publicEightBrowserRoom": "passed, 15.3 seconds with separate caches",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
     "sectorPidAtFinalActivation": 110058,
     "sectorPidAfterFinalValidation": 110058,
-    "tavernPid": 116019,
-    "tavernMemoryBytesAfterTests": 34390016,
+    "tavernPid": 116560,
+    "tavernMemoryBytesAfterTests": 34516992,
     "tavernAutomaticRestarts": 0,
     "uiImageCount": 598,
     "uiImageBytes": 9499166,
     "originalImageBytes": 143250968,
-    "tavernRestarted": false,
+    "tavernRestarted": true,
     "buildSite": "passed",
-    "finalReleasePublicBrowserTests": 12,
-    "browserValidationScope": "9 local and 12 public browser cases: authoritative online match tribes at desktop/portrait/landscape widths, combat and reload, saved touch panels, classic mode, rope timing/layout, live homepage and SECTOR WebSocket. Room/rope cases use controlled Rooms responses; backend bundle unchanged from 20260910T035242Z. All release file hashes verified at activation.",
+    "finalReleasePublicBrowserTests": 19,
+    "browserValidationScope": "11 local controlled browser cases; 19 public cases including live training AI and two-human friend rooms, default timed AI/two-player/eight-player rooms, controlled mode deadline/reload tests, rope and tribe layouts, homepage and SECTOR WebSocket. 25 server tests include training HTTP restart persistence and old-save migration. All file hashes verified at activation.",
     "engineAndStateTestsSourceRelease": "20260910T035242Z",
-    "serverTestsSourceRelease": "20260910T035242Z",
-    "publicEightBrowserRoomSourceRelease": "20260910T035242Z",
-    "tavernMemoryMeasurementSourceRelease": "20260910T035242Z"
+    "serverTestsSourceRelease": "20260910T053244Z",
+    "publicEightBrowserRoomSourceRelease": "20260910T053244Z",
+    "tavernMemoryMeasurementSourceRelease": "20260910T053244Z"
   },
-  "previousRelease": "20260910T035242Z",
+  "previousRelease": "20260910T052522Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
   "backend": {
-    "release": "/opt/bobs-tavern/releases/20260910T035242Z",
+    "release": "/opt/bobs-tavern/releases/20260910T053244Z",
     "service": "bobs-tavern",
     "listen": "127.0.0.1:8787",
     "state": "/var/lib/bobs-tavern/state.json",
@@ -47,8 +47,8 @@
     "memoryLimitMiB": 384,
     "offlineGraceSeconds": 300,
     "snapshotWrites": "serialized async atomic replacement with per-room serialization cache",
-    "previousRelease": "/opt/bobs-tavern/releases/20260910T011701Z",
-    "bundleSha256": "15f8bb35fbde0d1fc8235a9500c286e3c8fdc9a41d479c28c6d32022889908b6"
+    "previousRelease": "/opt/bobs-tavern/releases/20260910T035242Z",
+    "bundleSha256": "153eb92bdb1ca25bb721c42c18a616f226c705fa468386edb49d6d39d574135b"
   },
   "replayBenchmark": {
     "frames": 180,
@@ -75,7 +75,7 @@
   ],
   "healthRefresh": "Shared payment calculation; per-minion counters with old-save migration; free refresh has priority; zero-gold use and health/charge labels in every layout",
   "keywordVisuals": "Separate SVG taunt guard, golden shield with reflected light and broken-shell fragments, cyan reborn, green poison, skull deathrattle and windfury badges",
-  "homepagePreservedFromRelease": "20260910T035242Z",
+  "homepagePreservedFromRelease": "20260910T052522Z",
   "supportedMinions": 234,
   "supportedSpells": 67,
   "powerReplacement": {
@@ -96,9 +96,9 @@
     "expirationSubmitsAction": false,
     "reducedMotion": true,
     "extraAssets": 0,
-    "scope": "Online AI and friend rooms; practice remains untimed"
+    "scope": "Timed online AI and friend rooms; training rooms and local practice remain untimed"
   },
-  "checkpoint": "match-tribes-2026-09-10",
+  "checkpoint": "recruit-modes-2026-09-10",
   "rulesCoverageReport": "docs/rules-coverage.json",
   "matchTribes": {
     "source": "game.season.tribes",
@@ -109,5 +109,19 @@
     "onlineStatusIndependent": true,
     "classicModeHidden": true,
     "extraAssets": 0
+  },
+  "recruitmentModes": {
+    "default": "timed",
+    "creation": [
+      "ai",
+      "friends"
+    ],
+    "savedInRoom": true,
+    "browserRemembersSelection": true,
+    "trainingRecruitDeadline": 0,
+    "trainingCombatDeadline": 0,
+    "trainingManualAdvance": true,
+    "legacyDefault": "timed",
+    "offlineGraceSeconds": 300
   }
 }
