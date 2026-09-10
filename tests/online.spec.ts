@@ -24,7 +24,15 @@ async function api(page: Page, path: string, data?: unknown) {
     { path, data },
   );
 }
+async function choosePower(page: Page) {
+  const state = await api(page, "/state");
+  if (state.data.game?.season?.powerChoice) {
+    await page.locator(".power-choice-card").first().click();
+    await expect(page.locator(".power-choice-modal")).toBeHidden();
+  }
+}
 async function buyPlay(page: Page) {
+  await choosePower(page);
   await page.locator(".tavern-row .table-piece").first().click();
   await page.getByRole("button", { name: /招募随从/ }).click();
   await expect(page.locator(".table-hand .hand-card-button")).toHaveCount(1);
@@ -198,6 +206,7 @@ test("eight guest browsers fill one room and get synchronized combat without bot
     await pages[0].getByRole("button", { name: /开局 ·/ }).click();
     for (const p of pages) {
       await expect(p.locator(".game-table")).toBeVisible();
+      await choosePower(p);
       await p.getByRole("button", { name: "结束招募", exact: true }).click();
     }
     for (const p of pages)

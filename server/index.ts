@@ -79,6 +79,7 @@ const allowed = new Set([
   "discover",
   "play",
   "power",
+  "choosePower",
   "move",
 ]);
 function action(input: unknown): Action {
@@ -87,11 +88,11 @@ function action(input: unknown): Action {
   if (
     !allowed.has(String(a.type)) ||
     Object.keys(a).some(
-      (k) => !["type", "uid", "target", "position", "to"].includes(k),
+      (k) => !["type", "uid", "target", "position", "to", "powerId"].includes(k),
     )
   )
     throw Error("无效操作");
-  for (const k of ["uid", "target"])
+  for (const k of ["uid", "target", "powerId"])
     if (
       a[k] !== undefined &&
       (typeof a[k] !== "string" || (a[k] as string).length > 120)
@@ -104,7 +105,7 @@ function action(input: unknown): Action {
     )
       throw Error("无效站位");
   if (
-    ["buy", "sell", "discover", "play", "move"].includes(a.type as string) &&
+    ["buy", "sell", "discover", "choosePower", "play", "move"].includes(a.type as string) &&
     !a.uid
   )
     throw Error("缺少随从");

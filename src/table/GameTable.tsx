@@ -1,3 +1,4 @@
+import { equippedPowers } from "../season/powers";
 import { KeywordEffects } from "./KeywordEffects";
 import { RefreshPrice } from "./RefreshPrice";
 import {
@@ -85,7 +86,7 @@ type Props = {
   close: () => void;
   play: (m: Minion, position?: number) => void;
   activate: (m: Minion) => void;
-  power: () => void;
+  power: (id?: string) => void;
   targeting: boolean;
   frame: number;
   setFrame: (n: number) => void;
@@ -165,7 +166,6 @@ function Piece({
 }
 export function GameTable(p: Props) {
   const { game, dispatch, selection, choose, close, targeting, frame } = p;
-  const powerState = heroPowerState(game);
   const payment = refreshPayment(game);
   const hero = heroOf(game),
     combat = game.phase === "combat",
@@ -711,24 +711,28 @@ export function GameTable(p: Props) {
                     : Math.max(0, game.health)}
                 </span>
               </button>
-              <button
+          <div className={`hero-power-group ${equippedPowers(game).length > 1 ? "dual" : ""}`}>
+            {equippedPowers(game).map((id) => { const powerState = heroPowerState(game, id), powerHero = powerState.definition; return (
+              <button key={id}
                 className={`hero-power-orb ${powerState.used ? "used" : ""}`}
-                onClick={p.power}
+                onClick={() => p.power(id)}
                 disabled={!recruit || powerState.used}
                 aria-label={
                   powerState.used
                     ? `${powerState.status}英雄技能`
-                    : `使用英雄技能：${hero.power}`
+                    : `使用英雄技能：${powerHero.power}`
                 }
-                title={[hero.text, powerState.status].filter(Boolean).join("\n")}
+                title={[powerHero.text, powerState.status].filter(Boolean).join("\n")}
               >
                 <span className="orb-core">
                   <Sparkles size={30} />
                 </span>
-                <b>{hero.passive ? "∞" : powerState.cost}</b>
-                <small>{powerState.used ? powerState.status : hero.power}</small>
-                {!powerState.used && powerState.status && !hero.passive && <span className="hero-power-status">{powerState.status}</span>}
+                <b>{powerHero.passive ? "∞" : powerState.cost}</b>
+                <small>{powerState.used ? powerState.status : powerHero.power}</small>
+                {!powerState.used && powerState.status && !powerHero.passive && <span className="hero-power-status">{powerState.status}</span>}
               </button>
+            ); })}
+          </div>
             </div>
             <div className="round-medallion">
               <span>第 {game.turn} 回合</span>

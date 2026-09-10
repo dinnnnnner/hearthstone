@@ -1,3 +1,4 @@
+import { equippedPowers } from "../src/season/powers";
 import { randomBytes, createHash, randomInt } from "node:crypto";
 import {
   createSeason,
@@ -331,7 +332,9 @@ export class Rooms {
     for (let i = 0; i < 24; i++) {
       const s = p.game!;
       let a: Action | undefined;
-      if (s.discovery.length)
+      if (s.season!.powerChoice)
+        a = { type: "choosePower", uid: s.season!.powerChoice.offers[0] };
+      else if (s.discovery.length)
         a = {
           type: "discover",
           uid: [...s.discovery].sort((a, b) => score(b) - score(a))[0].uid,
@@ -356,7 +359,7 @@ export class Rooms {
       for (let n = 0; n < 36; n++) {
         this.autoChoices(r, p);
         const s = p.game!;
-        const power = heroPowerState(s);
+        const power = equippedPowers(s).map((id) => heroPowerState(s, id)).find((p) => !p.reason);
         if (s.phase === "over") break;
         let a: Action | undefined;
         const hand = s.hand.find(
@@ -374,11 +377,10 @@ export class Rooms {
           };
         } else if (
           !powered &&
-          (s.board.length > 0 || s.hero === "s14_xyrella") &&
-          !heroOf(s).passive &&
-          !power.reason
+          power &&
+          (s.board.length > 0 || power.id === "s14_xyrella")
         ) {
-          a = { type: "power", ...(power.needsTarget ? { target: power.targets[0].uid } : {}) };
+          a = { type: "power", powerId: power.id, ...(power.needsTarget ? { target: power.targets[0].uid } : {}) };
         } else if (
           !upgraded &&
           s.turn >= 3 &&
@@ -422,8 +424,8 @@ export class Rooms {
     if (turn !== r.turn) throw Error("回合已更新，请重试");
     if (action.type === "end") {
       if (r.stage !== "recruit" || p.ended) throw Error("正在等待其他玩家");
-      if (p.game.discovery.length || p.game.season!.trinketOffers.length)
-        throw Error("请先完成发现或饰品选择");
+      if (p.game.discovery.length || p.game.season!.trinketOffers.length || p.game.season!.powerChoice)
+        throw Error("请先完成英雄技能、发现或饰品选择");
       p.ended = true;
       this.touch(r);
       if (this.living(r).every((x) => x.ended)) this.fight(r);

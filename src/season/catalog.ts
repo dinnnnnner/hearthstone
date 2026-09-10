@@ -44,6 +44,16 @@ const stat = (event: string, key: string, attack: number, health: number) =>
   A(event, "scale", { key, attack, health });
 // Only explicitly implemented cards can enter the playable pool. The complete snapshot remains browsable.
 const effects: Record<string, Ability[]> = {
+  BG26_146: [b("end", 0, 1)],
+  BG20_104: [A("rally", "gem", { target: "others" })],
+  BG27_002: [spell("battlecry", "BG27_002t", 2)],
+  BG27_080: [A("death", "buff", { attack: 3, health: 3, target: "menagerie", permanent: true })],
+  BG28_550: [A("battlecry", "discoverSpell")],
+  BG32_111: [A("battlecry", "generate", { id: "BG28_888" }), A("death", "generate", { id: "BG28_888" })],
+  BG36_241: [A("rally", "castTavern", { id: "BG36_246" })],
+  BG36_243: [A("activate", "rally", { target: "selected" })],
+  BG26_354: [A("combat", "handStats")],
+  BG32_341: [A("aura", "spellAura", { attack: 1, health: 2 })],
   BG20_100: [spell("battlecry", "BG20_GEM", 2)],
   BG23_000: [A("spellcraft", "craft", { attack: 2, health: 0 })],
   BG25_001: [],
@@ -219,6 +229,17 @@ const effects: Record<string, Ability[]> = {
   BG36_640: [spell("targetSpell", "BG28_888")],
 };
 const spellEffects: Record<string, Ability[]> = {
+  EBG_Spell_037: [A("cast", "replacePower")],
+  BG33_101: [A("cast", "discoverMinion", { tier: 1 })],
+  BG28_882: [A("cast", "discoverMinion", { key: "DEATHRATTLE" })],
+  BG28_GIL_836: [A("cast", "discoverMinion", { key: "BATTLECRY" })],
+  BG28_521: [A("cast", "majorityDiscover")],
+  BG33_814: [A("cast", "majorityDraw")],
+  BG31_819: [A("cast", "drawId", { id: "BG31_816" }), A("cast", "drawId", { id: "BG31_818" })],
+  BG28_845: [A("cast", "buffType", { attack: 2, health: 1, target: "selected" })],
+  BG28_830: [A("cast", "golden")],
+  EBG_Spell_017: [A("cast", "golden", { target: "selected", tier: 4 })],
+  BG27_002t: [A("cast", "buff", { attack: 1, health: 1, target: "selected", keyword: "嘲讽" })],
   BG28_168: [b("cast", 1, 1, "all")],
   BG28_169: [b("cast", 2, 2, "all"), b("cast", 2, 2, "all")],
   BG28_500: [A("cast", "armor", { amount: 5 })],
@@ -355,6 +376,9 @@ export const SEASON_RELATED: CardDef[] = snapshot.related.map((c) =>
   convert(c, c.attack || c.health ? "minion" : "spell", true),
 );
 const heroKeys: Record<string, string> = {
+  TB_BaconShop_HERO_40: "finley",
+  BG20_HERO_202: "nguyen",
+  BG35_HERO_001: "genn",
   TB_BaconShop_HERO_22: "lich",
   TB_BaconShop_HERO_15: "george",
   TB_BaconShop_HERO_34: "patchwerk",
@@ -388,6 +412,7 @@ export const SEASON_HEROES: Hero[] = snapshot.heroes
     armor: h.armor,
     art: h.id,
     passive: [
+      "finley", "nguyen", "genn",
       "patchwerk",
       "nozdormu",
       "omu",

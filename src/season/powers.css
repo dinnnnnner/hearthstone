@@ -1,0 +1,30 @@
+.power-choice-shade { z-index: 1200; }
+.power-choice-modal { max-width: 840px; }
+.power-choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; padding: 12px 4px; }
+.power-choice-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 16px; color: #f5e6c6; border: 2px solid #a47c44; border-radius: 18px; background: radial-gradient(ellipse at top, #604170, #251a30 70%); box-shadow: inset 0 0 18px #0008, 0 8px 18px #0005; cursor: pointer; transition: transform .18s, border-color .18s; }
+.power-choice-card:hover, .power-choice-card:focus-visible { transform: translateY(-4px); border-color: #f6d688; outline: 2px solid #f6d688; outline-offset: 3px; }
+.power-choice-card img { width: 96px; height: 116px; object-fit: cover; border-radius: 50% 50% 38% 38%; border: 3px solid #b69252; }
+.power-choice-card strong { font-size: 19px; }
+.power-choice-card small { color: #c6b0d0; }
+.power-choice-card p { font-size: 14px; line-height: 1.65; flex: 1; margin: 0; }
+.power-choice-cost { position: absolute; right: 10px; top: 12px; border-radius: 16px; padding: 5px 9px; background: #392958; border: 1px solid #c7a75b; font-size: 12px; }
+.power-choice-confirm { color: #f8d98c; padding-top: 6px; }
+.power-chosen { color: #ead18b; }
+.hero-power-group { display: flex; align-items: center; gap: 12px; }
+.hero-power-group.dual { gap: 14px; }
+.hero-power-group.dual .hero-power-orb { width: 66px; height: 66px; }
+.hero-power-group.dual .hero-power-orb > small { max-width: 80px; font-size: 9px; }
+.mobile-power-group { display: flex; gap: 5px; min-width: 0; }
+.mobile-power-group .mobile-power { flex: 1; min-width: 0; }
+@media (max-width: 600px) {
+  .power-choice-grid { gap: 8px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .power-choice-grid:has(> :last-child:nth-child(2)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .power-choice-card { padding: 14px 7px; gap: 7px; border-radius: 12px; }
+  .power-choice-card img { width: 60px; height: 74px; }
+  .power-choice-card strong { font-size: 14px; }
+  .power-choice-card small, .power-choice-card p { font-size: 11px; }
+  .power-choice-cost { font-size: 10px; top: 5px; right: 4px; padding: 3px 5px; }
+  .hero-power-group.dual { gap: 7px; }
+  .hero-power-group.dual .hero-power-orb { width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .power-choice-card { transition: none; } }

@@ -28,13 +28,19 @@ import {
   PREFIX,
   RAW_TRINKETS,
 } from "./catalog";
+import { equippedPowers, hasPower, powerDefinition, powerProgress, savePowerProgress, equipPowers, type PowerProgress, type PowerChoice } from "./powers";
 export interface SeasonState {
+  powers?: string[];
+  powerProgress?: Record<string, PowerProgress>;
+  powerChoice?: PowerChoice;
+  powerCycle?: boolean;
   patch: "36.4.2";
   armor: number;
   tribes: Tribe[];
   spellShop: Minion[];
   initialPool: Record<string, number>;
   freeRefresh: number;
+  nozdormuRefreshTurn?: number;
   nextGold: number;
   maxGold: number;
   giftsUsed: number;
@@ -45,6 +51,7 @@ export interface SeasonState {
     tiers?: number[];
     tribe?: string;
     magnetic?: boolean;
+    mechanic?: string;
   }[];
   trinkets: string[];
   trinketOffers: string[];
@@ -176,7 +183,9 @@ function drawSpell(
   rng: () => number,
   filter: (c: CardDef) => boolean = (d) => d.tier <= s.tier,
 ) {
-  const ds = SEASON_SPELLS.filter(filter);
+  const ds = SEASON_SPELLS.filter(filter).filter((d) =>
+    d.id !== PREFIX + "BG31_819" || ss(s).tribes.includes("元素"),
+  );
   const weights = [0, 5, 7, 9, 11, 7, 5];
   let n = rng() * ds.reduce((v, d) => v + weights[d.tier], 0);
   for (const d of ds) {
@@ -238,8 +247,10 @@ export function refreshPayment(s: Game) {
   const remaining = sources.reduce((sum, m) => sum + left(m), 0);
   const source = sources.find((m) => left(m) > 0)?.uid;
   if (ss(s).freeRefresh > 0) return { gold: 0, health: 0, remaining, source: undefined };
+  if (hasPower(s, "nozdormu") && (ss(s).nozdormuRefreshTurn ?? s.turn) !== s.turn)
+    return { gold: 0, health: 0, remaining, source: undefined };
   if (source) return { gold: 0, health: 1, remaining, source };
-  return { gold: s.hero === PREFIX + "millhouse" ? 2 : 1, health: 0, remaining, source: undefined };
+  return { gold: hasPower(s, "millhouse") ? 2 : 1, health: 0, remaining, source: undefined };
 }
 export function refreshCost(s: Game) {
   return refreshPayment(s).gold;
@@ -249,41 +260,42 @@ export function minionCost(s: Game, m: Minion) {
     ss(s).trinketBuys < 2 &&
     ability(m, "battlecry").length
     ? 0
-    : s.hero === PREFIX + "millhouse" ? 2 : 3;
+    : hasPower(s, "millhouse") ? 2 : 3;
 }
 export function spellCost(s: Game, m: Minion) {
   return Math.max(0, (getDef(m.id).cost || 0) - ss(s).spellDiscount);
 }
-export function seasonPowerState(s: Game) {
-  const h = SEASON_HEROES.find((h) => h.id === s.hero)!;
-  const key = s.hero.slice(4), st = ss(s);
+export function seasonPowerState(s: Game, id = equippedPowers(s)[0]) {
+  const h = powerDefinition(s, id) || powerDefinition(s);
+  const key = h.id.slice(4), progress = powerProgress(s, h.id);
   const limit = ["blackthorn", "inge"].includes(key) ? 2 : 1;
-  const spent = st.heroPowerUsesTurn ?? (s.powerUsed ? limit : 0);
-  const exhausted = key === "reno" && (st.heroPowerUses || 0) > 0;
+  const spent = progress.turnUses;
+  const exhausted = key === "reno" && progress.uses > 0;
   const remaining = exhausted ? 0 : Math.max(0, limit - spent);
-  const cost = h.cost + (key === "elise" ? st.heroPowerUses || 0 : 0);
+  const cost = h.cost + (key === "elise" ? progress.uses : 0);
   const needsTarget = ["lich", "george", "xyrella", "reno", "inge"].includes(key);
   let targets = key === "xyrella" ? s.shop : key === "reno" ? s.board : [...s.board, ...s.shop];
   if (key === "reno") targets = targets.filter((m) => !m.golden);
   if (key === "george") targets = targets.filter((m) => !m.keywords.includes("圣盾"));
   const locked = ["millificent", "alexstrasza"].includes(key) && s.tier < 4;
   const used = remaining === 0;
-  const status = exhausted ? "本局已使用" : used ? "本回合已使用"
+  const status = key === "genn" ? `第4回合选择两个技能 · 还剩${Math.max(0, 4 - s.turn)}回合` : exhausted ? "本局已使用" : used ? "本回合已使用"
     : locked ? "酒馆4星解锁"
     : key === "inge" ? `${s.turn % 2 ? "攻击力" : "生命值"} +${s.tier} · 剩余${remaining}次`
     : limit === 2 ? `本回合剩余${remaining}次`
     : key === "elise" ? `当前费用 ${cost} 金币`
     : key === "reno" ? "本局剩余1次"
-    : key === "chenvaala" ? `再使用${3 - (st.elementalsPlayed || 0) % 3}张元素减费`
+    : key === "chenvaala" ? `再使用${3 - progress.elementalsPlayed % 3}张元素减费`
     : h.passive ? "被动技能" : "";
-  const reason = h.passive ? "这是被动技能，持续生效。"
+  const reason = !equippedPowers(s).includes(id) ? "你没有这个英雄技能。"
+    : ss(s).powerChoice ? "请先选择英雄技能。" : h.passive ? "这是被动技能，持续生效。"
     : used ? status + "英雄技能。"
     : locked ? "英雄技能在酒馆4星时解锁。"
     : s.gold < cost ? `英雄技能需要${cost}枚金币。`
     : needsTarget && !targets.length ? "没有可用的英雄技能目标。"
     : ["xyrella", "pyramid", "elise", "alexstrasza", "blackthorn", "hollidae", "millificent"].includes(key) && !room(s)
       ? "请先腾出一个手牌位置。" : undefined;
-  return { cost, remaining, used, status, needsTarget, targets, reason };
+  return { definition: h, id: h.id, cost, remaining, used, status, needsTarget, targets, reason };
 }
 function refill(s: Game, rng: () => number, keep = false) {
   if (!keep) {
@@ -320,7 +332,7 @@ function refill(s: Game, rng: () => number, keep = false) {
 function queueDiscover(
   s: Game,
   kind: string,
-  opts: { tiers?: number[]; tribe?: string; magnetic?: boolean } = {},
+  opts: { tiers?: number[]; tribe?: string; magnetic?: boolean; mechanic?: string } = {},
 ) {
   ss(s).pendingDiscoveries.push({ kind, ...opts });
 }
@@ -348,6 +360,7 @@ function nextDiscovery(s: Game, rng: () => number) {
                 d.races?.includes(request.tribe as Tribe) ||
                 d.tribe === "全部") &&
               (!request.magnetic || !!d.magnetic) &&
+              (!request.mechanic || !!d.mechanics?.includes(request.mechanic)) &&
               !s.discovery.some((m) => m.id === d.id),
           );
     if (m) s.discovery.push(m);
@@ -418,7 +431,8 @@ export function createSeason(
       tribes: types,
       spellShop: [],
       initialPool: { ...initialPool },
-      freeRefresh: hero.id === PREFIX + "nozdormu" ? 1 : 0,
+      freeRefresh: 0,
+      nozdormuRefreshTurn: 0,
       nextGold: 0,
       maxGold: 10,
       giftsUsed: 0,
@@ -445,6 +459,8 @@ export function createSeason(
     },
   };
   refill(s, rng);
+  if (hero.id === PREFIX + "finley") offerPowers(s, "finley", rng);
+  if (hero.id === PREFIX + "nguyen") { ss(s).powerCycle = true; offerPowers(s, "nguyen", rng); }
   return s;
 }
 function triples(s: Game) {
@@ -502,8 +518,10 @@ export function seasonTargets(
     ...(event === "cast" && a.op !== "consume" ? [...s.shop] : []),
   ].filter((x) => x.uid !== m.uid);
   if (a.tribe) ts = ts.filter((x) => tribe(x, a.tribe!));
-  if (a.op === "battlecry")
-    ts = ts.filter((x) => ability(x, "battlecry").length > 0);
+  if (["battlecry", "rally"].includes(a.op))
+    ts = ts.filter((x) => ability(x, a.op).length > 0);
+  if (a.op === "golden") ts = ts.filter((x) => s.board.includes(x) && !x.golden && getDef(x.id).tier <= (a.tier || 6));
+  if (a.op === "buffType") ts = ts.filter((x) => ALL_TRIBES.some((t) => tribe(x, t)));
   return ts;
 }
 interface Context {
@@ -619,6 +637,13 @@ function run(ctx: Context, m: Minion, event: string) {
   for (const a of ability(m, event))
     effect({ ...ctx, depth: (ctx.depth || 0) + 1 }, m, a);
 }
+function makeGolden(m: Minion) {
+  if (m.golden) return;
+  const d = getDef(m.id);
+  addStats(m, (d.goldenAttack ?? d.attack * 2) - d.attack, (d.goldenHealth ?? d.health * 2) - d.health);
+  m.golden = true;
+  // A transformation retains its original pool copies and awards no triple reward.
+}
 function effect(ctx: Context, m: Minion, a: Ability) {
   const { s, rng } = ctx,
     f = m.golden && !a.noScale ? 2 : 1,
@@ -629,6 +654,12 @@ function effect(ctx: Context, m: Minion, a: Ability) {
       let attack = (a.attack || 0) * f,
         health = (a.health || 0) * f;
       if (a.event === "cast" && getDef(m.id).kind === "spell" && !m.tempSpell) {
+        if (SEASON_SPELLS.some((c) => c.id === m.id)) {
+          for (const source of ctx.board) for (const aura of ability(source).filter((a) => a.op === "spellAura")) {
+            attack += (aura.attack || 0) * (source.golden ? 2 : 1);
+            health += (aura.health || 0) * (source.golden ? 2 : 1);
+          }
+        }
         const b = delta(s, "spell");
         attack += b.attack;
         health += b.health;
@@ -747,8 +778,50 @@ function effect(ctx: Context, m: Minion, a: Ability) {
         if (c) putHand(s, c);
       }
       break;
+    case "replacePower":
+      offerPowers(s, "replace", rng);
+      break;
+    case "discoverMinion":
+      for (let i = 0; i < n; i++) queueDiscover(s, "minion", {
+        ...(a.tier ? { tiers: [a.tier] } : {}), mechanic: a.key,
+      });
+      break;
+    case "majorityDiscover":
+    case "majorityDraw": {
+      const counts = ALL_TRIBES.map((t) => ({ t, count: ctx.board.filter((x) => tribe(x, t)).length }));
+      const max = Math.max(...counts.map((x) => x.count));
+      const t = max ? pick(counts.filter((x) => x.count === max), rng)?.t : undefined;
+      if (a.op === "majorityDiscover") queueDiscover(s, "minion", { tribe: t });
+      else {
+        const card = draw(s, rng, (d) => d.tier <= s.tier && (!t || d.races?.includes(t) || d.tribe === "全部"));
+        if (card) putHand(s, card);
+      }
+      break;
+    }
+    case "drawId": {
+      const card = draw(s, rng, (d) => d.id === PREFIX + a.id);
+      if (card) putHand(s, card);
+      break;
+    }
+    case "handStats":
+      for (const card of s.hand.filter((x) => getDef(x.id).kind !== "spell")) addStats(m, card.attack * f, card.health * f);
+      break;
+    case "castTavern":
+      for (let i = 0; i < n; i++) castSpell({ ...ctx, target: undefined }, makeMinion(PREFIX + a.id));
+      break;
+    case "buffType": {
+      const races = ALL_TRIBES.filter((t) => ctx.target && tribe(ctx.target, t));
+      for (const t of [...ctx.board, ...s.shop].filter((x) => races.some((r) => tribe(x, r))))
+        effect({ ...ctx, target: t }, m, { ...a, op: "buff", target: "selected" });
+      break;
+    }
+    case "golden": {
+      const target = a.target === "selected" ? ctx.target : pick(s.shop.filter((m) => !m.golden), rng);
+      if (target) makeGolden(target);
+      break;
+    }
     case "discoverSpell":
-      queueDiscover(s, "spell");
+      for (let i = 0; i < n; i++) queueDiscover(s, "spell");
       break;
     case "steal":
     case "stealHighest": {
@@ -826,6 +899,9 @@ function effect(ctx: Context, m: Minion, a: Ability) {
           }
         }
       }
+      break;
+    case "rally":
+      if (ctx.target) for (let i = 0; i < n; i++) run(ctx, ctx.target, "rally");
       break;
     case "battlecry":
       for (const t of targets())
@@ -911,9 +987,10 @@ function played(ctx: Context, m: Minion) {
     }
     giftEvent(ctx, x, "play");
   }
-  if (ctx.s.hero === PREFIX + "chenvaala" && tribe(m, "元素")) {
-    const count = (ss(ctx.s).elementalsPlayed || 0) + 1;
-    ss(ctx.s).elementalsPlayed = count;
+  if (hasPower(ctx.s, "chenvaala") && tribe(m, "元素")) {
+    const progress = powerProgress(ctx.s, PREFIX + "chenvaala");
+    const count = progress.elementalsPlayed + 1;
+    savePowerProgress(ctx.s, PREFIX + "chenvaala", { ...progress, elementalsPlayed: count });
     if (count % 3 === 0) ctx.s.upgrade = Math.max(0, ctx.s.upgrade - 3);
   }
   ss(ctx.s).playedTurn++;
@@ -1220,6 +1297,16 @@ export function endEffects(s: Game, rng: () => number) {
     return true;
   });
 }
+function startPowerEffects(s: Game, rng: () => number) {
+  if (hasPower(s, "xavius") && s.turn % 4 === 0 && !s.discovery.length) darkDiscover(s, rng);
+}
+function offerPowers(s: Game, mode: PowerChoice["mode"], rng: () => number, selected: string[] = []) {
+  const excluded = new Set([...equippedPowers(s), ...selected, ...["finley", "nguyen", "genn", "patchwerk"].map((k) => PREFIX + k)]);
+  const offers = shuffled(SEASON_HEROES.filter((h) => !excluded.has(h.id) &&
+    (!HERO_TRIBES[h.id] || ss(s).tribes.includes(HERO_TRIBES[h.id]))), rng)
+    .slice(0, mode === "nguyen" ? 2 : 3).map((h) => h.id);
+  ss(s).powerChoice = { mode, offers, selected };
+}
 function startEffects(s: Game, rng: () => number) {
   const ctx = { s, board: s.board, rng };
   ss(s).playedTurn = 0;
@@ -1240,10 +1327,7 @@ function startEffects(s: Game, rng: () => number) {
     run(ctx, m, "start");
     run(ctx, m, "spellcraft");
   }
-  if (s.hero === PREFIX + "nozdormu") ss(s).freeRefresh++;
-  if (s.hero === PREFIX + "xavius" && s.turn % 4 === 0) {
-    if (!s.discovery.length) darkDiscover(s, rng);
-  }
+  if (!ss(s).powerChoice) startPowerEffects(s, rng);
   if (trinket(s, "220"))
     gold(s, new Set(s.board.flatMap((m) => getDef(m.id).races || [])).size);
   if (trinket(s, "390"))
@@ -1362,7 +1446,7 @@ export function seasonCombat(
     }
     if (
       (side === 0 || other) &&
-      ctx.s.hero === PREFIX + "alakir" &&
+      hasPower(ctx.s, "alakir") &&
       boards[side][0]
     )
       ["风怒", "圣盾", "嘲讽"].forEach((k) =>
@@ -1522,19 +1606,43 @@ export function actSeason(
     st = ss(s),
     ctx: Context = { s, board: s.board, rng };
   st.healthRefreshUses ??= refreshUses(s);
+  if (st.nozdormuRefreshTurn === undefined) {
+    const oldFree = hasPower(s, "nozdormu") && st.freeRefresh > 0;
+    st.nozdormuRefreshTurn = hasPower(s, "nozdormu") && !oldFree ? s.turn : 0;
+    if (oldFree) st.freeRefresh--;
+  }
   const fail = (error: string) => ({ state, error });
   if (s.phase === "over") return fail("本局已结束，请开始新对局。");
   if (s.phase === "combat" && action.type !== "continue")
     return fail("请先完成当前战斗。");
-  if (s.discovery.length && action.type !== "discover")
+  if (st.powerChoice && action.type !== "choosePower") return fail("请先选择英雄技能。");
+  if (!st.powerChoice && s.discovery.length && action.type !== "discover")
     return fail("请先选择发现的卡牌。");
   if (
-    st.trinketOffers.length &&
+    !st.powerChoice && st.trinketOffers.length &&
     action.type !== "buyTrinket" &&
     !s.discovery.length
   )
     return fail("请先选择本回合的饰品。");
   switch (action.type) {
+    case "choosePower": {
+      const choice = st.powerChoice;
+      if (!choice || !choice.offers.includes(action.uid)) return fail("请选择候选中的英雄技能。");
+      choice.selected.push(action.uid);
+      if (choice.mode === "genn" && choice.selected.length < 2) {
+        offerPowers(s, "genn", rng, choice.selected);
+        break;
+      }
+      const ids = choice.mode === "replace"
+        ? [action.uid, ...equippedPowers(s).slice(1)] : choice.selected;
+      equipPowers(s, ids);
+      st.powerChoice = undefined;
+      if (choice.mode === "replace") st.powerCycle = false;
+      if (choice.mode !== "replace") startPowerEffects(s, rng);
+      s.powerUsed = seasonPowerState(s).used;
+      log(s, `获得英雄技能：${ids.map((id) => powerDefinition(s, id).power).join("、")}。`);
+      break;
+    }
     case "freeze":
       s.frozen = !s.frozen;
       log(s, s.frozen ? "已冻结随从和酒馆法术。" : "已解除冻结。");
@@ -1548,6 +1656,7 @@ export function actSeason(
         st.healthRefreshes++;
         heroDamage(s, payment.health, ctx);
       } else if (st.freeRefresh > 0) st.freeRefresh--;
+      else if (payment.gold === 0 && hasPower(s, "nozdormu")) st.nozdormuRefreshTurn = s.turn;
       else s.gold -= payment.gold;
       s.frozen = false;
       refill(s, rng);
@@ -1569,7 +1678,7 @@ export function actSeason(
       s.shop = s.shop.filter((x) => x.uid !== m.uid);
       s.hand.push(m);
       s.purchases++;
-      if (s.hero === PREFIX + "hoggarr" && tribe(m, "海盗")) gold(s, 1);
+      if (hasPower(s, "hoggarr") && tribe(m, "海盗")) gold(s, 1);
       if (trinket(s, "840") && tribe(m, "机械")) {
         const spell = drawSpell(s, rng);
         if (spell) putHand(s, spell);
@@ -1713,15 +1822,15 @@ export function actSeason(
       if (s.gold < s.upgrade) return fail(`升级需要${s.upgrade}金币。`);
       s.gold -= s.upgrade;
       s.tier++;
-      s.upgrade = UPGRADE_COST[s.tier] + (s.hero === PREFIX + "millhouse" ? 1 : 0);
-      if (s.hero === PREFIX + "omu") gold(s, 2);
+      s.upgrade = UPGRADE_COST[s.tier] + (hasPower(s, "millhouse") ? 1 : 0);
+      if (hasPower(s, "omu")) gold(s, 2);
       log(s, `酒馆升至${s.tier}星。`);
       break;
     case "power": {
-      const h = SEASON_HEROES.find((h) => h.id === s.hero)!;
-      const info = seasonPowerState(s);
+      const info = seasonPowerState(s, action.powerId);
+      const h = info.definition;
       if (info.reason) return fail(info.reason);
-      const key = s.hero.slice(4),
+      const key = h.id.slice(4),
         target = info.targets.find((m) => m.uid === action.target);
       if (info.needsTarget && !target) return fail("请选择有效的英雄技能目标。");
       if (key === "pyramid" && (!s.shop.length || !room(s)))
@@ -1752,13 +1861,7 @@ export function actSeason(
         }
         putHand(s, target!);
       }
-      if (key === "reno") {
-        const d = getDef(target!.id);
-        addStats(target!, (d.goldenAttack ?? d.attack * 2) - d.attack,
-          (d.goldenHealth ?? d.health * 2) - d.health);
-        target!.golden = true;
-        // Only a natural triple awards a discovery; keep the original pool copies.
-      }
+      if (key === "reno") makeGolden(target!);
       if (key === "elise") queueDiscover(s, "minion", { tiers: [s.tier] });
       if (key === "alexstrasza") queueDiscover(s, "minion", { tribe: "龙", tiers: [1, 2, 3, 4, 5, 6] });
       if (key === "blackthorn") {
@@ -1767,8 +1870,8 @@ export function actSeason(
       }
       if (key === "inge") addStats(target!, s.turn % 2 ? s.tier : 0, s.turn % 2 ? 0 : s.tier);
       s.gold -= info.cost;
-      st.heroPowerUses = (st.heroPowerUses || 0) + 1;
-      st.heroPowerUsesTurn = (st.heroPowerUsesTurn || 0) + 1;
+      const progress = powerProgress(s, h.id);
+      savePowerProgress(s, h.id, { ...progress, uses: progress.uses + 1, turnUses: progress.turnUses + 1 });
       s.powerUsed = seasonPowerState(s).used;
       log(s, `使用英雄技能：${h.power}。`);
       break;
@@ -1901,15 +2004,22 @@ export function assertSeasonPool(s: Game) {
 
 export function advanceRecruit(s: Game, rng: () => number = Math.random) {
   const st = ss(s);
+  if (st.nozdormuRefreshTurn === undefined) {
+    if (hasPower(s, "nozdormu") && st.freeRefresh > 0) st.freeRefresh--;
+    st.nozdormuRefreshTurn = s.turn;
+  }
   s.turn++;
   s.gold = Math.min(st.maxGold, Math.min(st.maxGold, s.turn + 2) + st.nextGold);
   st.nextGold = 0;
   s.upgrade = Math.max(0, s.upgrade - 1);
   s.powerUsed = false;
   st.heroPowerUsesTurn = 0;
+  for (const progress of Object.values(st.powerProgress || {})) progress.turnUses = 0;
   s.powerUsed = seasonPowerState(s).used;
   s.phase = "recruit";
   s.battle = null;
+  if (st.powerCycle) offerPowers(s, "nguyen", rng);
+  else if (hasPower(s, "genn") && s.turn >= 4) offerPowers(s, "genn", rng);
   startEffects(s, rng);
   refill(s, rng, s.frozen);
   s.frozen = false;

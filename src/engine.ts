@@ -91,19 +91,20 @@ export type Action =
       target?: string;
     }
   | { type: "refresh" | "freeze" | "upgrade" | "end" | "continue" | "reward" }
-  | { type: "buy" | "sell" | "discover"; uid: string }
+  | { type: "buy" | "sell" | "discover" | "choosePower"; uid: string }
   | { type: "play"; uid: string; target?: string; position?: number }
-  | { type: "power"; target?: string }
+  | { type: "power"; target?: string; powerId?: string }
   | { type: "move"; uid: string; to: number };
 let serial = 0;
 const uid = () =>
   `${Date.now().toString(36)}-${++serial}-${Math.random().toString(36).slice(2, 7)}`;
 export const clone = <T>(v: T): T => structuredClone(v);
 export const heroOf = (s: Game) => HEROES.find((h) => h.id === s.hero)!;
-export function heroPowerState(s: Game) {
-  if (s.season) return seasonPowerState(s);
+export function heroPowerState(s: Game, id?: string) {
+  if (s.season) return seasonPowerState(s, id);
   const hero = heroOf(s);
   return {
+    definition: hero, id: hero.id,
     cost: hero.cost,
     remaining: s.powerUsed ? 0 : 1,
     used: s.powerUsed,

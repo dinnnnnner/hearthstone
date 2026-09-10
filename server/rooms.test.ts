@@ -233,6 +233,7 @@ test("the opponent shown throughout recruit is the actual opponent for consecuti
   const { service, guests, room } = setup(8);
   service.start(guests[0]);
   for (let turn = 1; turn <= 3; turn++) {
+    for (const p of room.seats) service.autoChoices(room, p);
     const shown = room.seats.map(
       (p) => p.game!.opponents[p.game!.nextOpponent].name,
     );
@@ -250,6 +251,7 @@ test("the opponent shown throughout recruit is the actual opponent for consecuti
 test("a mid-recruit forfeit changes only its paired opponent to a ghost", () => {
   const { service, guests, room } = setup(8);
   service.start(guests[0]);
+  for (const p of room.seats) service.autoChoices(room, p);
   const shown = room.seats.map(
     (p) => p.game!.opponents[p.game!.nextOpponent].name,
   );
@@ -272,6 +274,7 @@ test("a mid-recruit forfeit changes only its paired opponent to a ghost", () => 
 test("known replays omit frames; unrelated ready updates preserve game version; restart restores full replay", () => {
   const { service, guests, room, identities } = setup(8);
   service.start(guests[0]);
+  for (const p of room.seats) service.autoChoices(room, p);
   for (const g of guests) service.action(g, { type: "end" }, "end", 1);
   const first = service.view(guests[0]);
   assert.ok(first.battleId);
@@ -387,4 +390,39 @@ test("zero-gold health refresh can eliminate a room player and returns their poo
   assert.equal(p.place, 8);
   assert.equal(p.game!.board.length, 0);
   pool(room);
+});
+
+test("Finley choices survive room restore, gate ready actions, and validate ownership on the server", () => {
+  const { service, guests, room, identities } = setup(2);
+  room.seats[0].hero = "s14_finley";
+  service.start(guests[0]);
+  const offers = room.seats[0].game!.season!.powerChoice!.offers;
+  assert.throws(() => service.action(guests[0], { type: "end" }, "end-pending", 1), /选择/);
+  const restored = new Rooms(service.now);
+  restored.restore(service.dump());
+  const guest = restored.auth(identities[0].token);
+  assert.deepEqual(restored.view(guest).game!.season!.powerChoice!.offers, offers);
+  assert.throws(() => restored.action(guest, { type: "choosePower", uid: "s14_genn" }, "forged", 1), /候选/);
+  restored.action(guest, { type: "choosePower", uid: offers[0] }, "choice", 1);
+  assert.deepEqual(restored.view(guest).game!.season!.powers, [offers[0]]);
+  assert.equal(restored.view(guest).game!.hero, "s14_finley");
+  assert.throws(() => restored.action(guest, { type: "power", powerId: "s14_genn" }, "forged-power", 1), /没有/);
+  pool(restored.member(guest).r);
+});
+
+test("bots and timeout auto-selection settle Nguyen and both Genn discoveries without blocking combat", () => {
+  const { service, guests, room, advance, identities } = setup(2);
+  room.seats[0].hero = "s14_genn"; room.seats[1].hero = "s14_nguyen";
+  service.start(guests[0]);
+  for (let turn = 1; turn <= 4; turn++) {
+    assert.ok(room.seats[1].game!.season!.powerChoice);
+    if (turn === 4) assert.ok(room.seats[0].game!.season!.powerChoice);
+    for (const identity of identities) service.auth(identity.token);
+    advance(90001);
+    assert.equal(room.stage, "combat");
+    for (const p of room.seats) assert.equal(p.game!.season!.powerChoice, undefined);
+    pool(room);
+    if (turn === 4) assert.equal(room.seats[0].game!.season!.powers!.length, 2);
+    for (const g of guests) service.action(g, { type: "continue" }, `continue-${turn}`, turn);
+  }
 });

@@ -368,7 +368,7 @@ test("all declared generated cards have data and all playable tiers have candida
   assert.ok(SEASON_SPELLS.length > 20);
   assert.ok(TRINKETS.length >= 8);
 });
-test("seeded current-season play stays valid across all eleven heroes", () => {
+test("seeded current-season play stays valid across all supported heroes", () => {
   for (const h of SEASON_HEROES) {
     const random = seed(812);
     let s = createGame(h.id, random);
@@ -377,6 +377,8 @@ test("seeded current-season play stays valid across all eleven heroes", () => {
       let action: Action;
       if (s.phase === "over") break;
       if (s.phase === "combat") action = { type: "continue" };
+      else if (s.season!.powerChoice)
+        action = { type: "choosePower", uid: s.season!.powerChoice.offers[0] };
       else if (s.discovery.length)
         action = { type: "discover", uid: s.discovery[0].uid };
       else if (s.season!.trinketOffers.length)
@@ -646,4 +648,223 @@ test("Malchezaar self damage triggers Soul Rewinder and can eliminate an unprote
   s = apply(s, { type: "sell", uid: rewinder.uid });
   s = apply(s, { type: "refresh" });
   assert.equal(s.phase, "over"); assert.equal(s.health, 0);
+});
+
+test("Finley offers three unique supported powers, gates actions, rejects forged choices and preserves identity", () => {
+  let s = fixture("s14_finley");
+  const before = JSON.stringify(s), choice = s.season!.powerChoice!;
+  assert.equal(choice.offers.length, 3); assert.equal(new Set(choice.offers).size, 3);
+  assert.ok(act(s, { type: "buy", uid: s.shop[0].uid }).error);
+  assert.ok(act(s, { type: "choosePower", uid: "s14_genn" }).error);
+  assert.equal(JSON.stringify(s), before);
+  const id = choice.offers[0], hp = s.health, armor = s.season!.armor;
+  s = apply(s, { type: "choosePower", uid: id });
+  assert.deepEqual(s.season!.powers, [id]); assert.equal(s.hero, "s14_finley");
+  assert.equal(s.health, hp); assert.equal(s.season!.armor, armor);
+  assert.equal(s.season!.powerChoice, undefined);
+  assert.ok(act(s, { type: "power", powerId: "s14_genn" }).error);
+  assertPool(s);
+});
+
+test("Nguyen offers two fresh powers every turn including after save restore, Identity Reveal ends the cycle", () => {
+  let s = fixture("s14_nguyen");
+  const id = s.season!.powerChoice!.offers[0];
+  s = apply(s, { type: "choosePower", uid: id });
+  s = JSON.parse(JSON.stringify(s)); advanceRecruit(s, rng);
+  assert.equal(s.season!.powerChoice!.offers.length, 2);
+  assert.ok(!s.season!.powerChoice!.offers.includes(id));
+  s = apply(s, { type: "choosePower", uid: s.season!.powerChoice!.offers[0] });
+  const spell = add(s, "EBG_Spell_037");
+  s = apply(s, { type: "cast", uid: spell.uid });
+  const selected = s.season!.powerChoice!.offers[0];
+  s = apply(s, { type: "choosePower", uid: selected });
+  advanceRecruit(s, rng);
+  assert.equal(s.season!.powerChoice, undefined);
+  assert.deepEqual(s.season!.powers, [selected]); assert.equal(s.hero, "s14_nguyen");
+});
+
+test("Genn discovers twice on turn four; choices survive restore and cannot duplicate", () => {
+  let s = fixture("s14_genn");
+  advanceRecruit(s, rng); advanceRecruit(s, rng);
+  assert.equal(s.season!.powerChoice, undefined);
+  advanceRecruit(s, rng);
+  const first = s.season!.powerChoice!.offers[0];
+  s = apply(s, { type: "choosePower", uid: first });
+  assert.ok(!s.season!.powerChoice!.offers.includes(first));
+  assert.ok(act(s, { type: "end" }).error);
+  s = JSON.parse(JSON.stringify(s));
+  const second = s.season!.powerChoice!.offers[0];
+  s = apply(s, { type: "choosePower", uid: second });
+  assert.deepEqual(s.season!.powers, [first, second]);
+  while (s.discovery.length) s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+  const spell = add(s, "EBG_Spell_037");
+  s = apply(s, { type: "cast", uid: spell.uid });
+  assert.ok(s.season!.powerChoice!.offers.every((id) => id !== first && id !== second));
+  const replacement = s.season!.powerChoice!.offers[0];
+  s = apply(s, { type: "choosePower", uid: replacement });
+  assert.deepEqual(s.season!.powers, [replacement, second]);
+});
+
+test("dual powers track independent costs, targets and turn limits across a save", async () => {
+  const { equipPowers } = await import("./powers");
+  let s = fixture("s14_genn"); s.gold = 10;
+  equipPowers(s, ["s14_george", "s14_inge"]);
+  const m = add(s, "BG25_001", "board");
+  s = apply(s, { type: "power", powerId: "s14_george", target: m.uid });
+  s = apply(s, { type: "power", powerId: "s14_inge", target: m.uid });
+  s = JSON.parse(JSON.stringify(s));
+  s = apply(s, { type: "power", powerId: "s14_inge", target: m.uid });
+  assert.ok(s.board[0].keywords.includes("圣盾"));
+  assert.equal(s.board[0].attack, 4);
+  assert.equal(seasonPowerState(s, "s14_george").remaining, 0);
+  assert.equal(seasonPowerState(s, "s14_inge").remaining, 0);
+  assert.equal(s.gold, 9);
+  advanceRecruit(s, rng);
+  assert.equal(seasonPowerState(s, "s14_george").remaining, 1);
+  assert.equal(seasonPowerState(s, "s14_inge").remaining, 2);
+});
+
+test("changing powers updates economic passives, never banks Nozdormu refreshes and preserves Reno exhaustion", async () => {
+  const { equipPowers } = await import("./powers");
+  let s = fixture("s14_reno"); const m = add(s, "BG25_001", "board");
+  s = apply(s, { type: "power", target: m.uid });
+  equipPowers(s, ["s14_millhouse"]);
+  assert.equal(refreshCost(s), 2); assert.equal(minionCost(s, s.shop[0]), 2); assert.equal(s.upgrade, 6);
+  equipPowers(s, ["s14_nozdormu"]);
+  assert.equal(s.upgrade, 5); assert.equal(refreshCost(s), 0);
+  advanceRecruit(s, rng); advanceRecruit(s, rng);
+  s = apply(s, { type: "refresh" }); assert.equal(refreshCost(s), 1);
+  equipPowers(s, ["s14_omu"]); equipPowers(s, ["s14_nozdormu"]);
+  assert.equal(refreshCost(s), 1);
+  equipPowers(s, ["s14_reno"]);
+  assert.equal(seasonPowerState(s).status, "本局已使用");
+});
+
+test("filtered discoveries reserve only eligible pool copies and return unchosen candidates", () => {
+  for (const [id, mechanic] of [["BG33_101", ""], ["BG28_882", "DEATHRATTLE"], ["BG28_GIL_836", "BATTLECRY"]]) {
+    let s = fixture(); s.tier = 6;
+    const spell = add(s, id); s = apply(s, { type: "cast", uid: spell.uid });
+    assert.equal(s.discovery.length, 3);
+    assert.ok(s.discovery.every((m) => mechanic ? getDef(m.id).mechanics?.includes(mechanic) : getDef(m.id).tier === 1));
+    const chosen = s.discovery[0]; s = apply(s, { type: "discover", uid: chosen.uid });
+    assert.ok(s.hand.some((m) => m.uid === chosen.uid)); assertPool(s);
+  }
+});
+
+test("golden battlecry discovery queues twice and golden transformations keep buffs without triple rewards", () => {
+  let s = fixture(); s.tier = 6;
+  const performer = add(s, "BG28_550", "hand", true);
+  s = apply(s, { type: "play", uid: performer.uid });
+  for (let i = 0; i < 2; i++) {
+    assert.equal(s.discovery.length, 3);
+    s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+  }
+  assert.equal(s.discovery.length, 0); assert.equal(s.hand.length, 2);
+  const target = add(s, "BG25_001", "board"); target.attack += 7;
+  const eye = add(s, "EBG_Spell_017");
+  assert.ok(act(s, { type: "cast", uid: eye.uid, target: performer.uid }).error);
+  s = apply(s, { type: "cast", uid: eye.uid, target: target.uid });
+  const golden = s.board.find((m) => m.uid === target.uid)!;
+  assert.equal(golden.attack, 11); assert.equal(golden.golden, true);
+  assert.deepEqual(golden.copies, target.copies); assert.equal(s.rewards.length, 0);
+  const touch = add(s, "BG28_830"); s = apply(s, { type: "cast", uid: touch.uid });
+  assert.equal(s.shop.filter((m) => m.golden).length, 1); assertPool(s);
+});
+
+test("Skylancer targets only Rally minions, golden repeats twice and Dragonbreath casts during recruit", () => {
+  let s = fixture(); s.gold = 10;
+  const dragon = add(s, "BG36_243", "board", true);
+  const gemmer = add(s, "BG20_104", "board");
+  const plain = add(s, "BG25_001", "board");
+  assert.ok(!seasonTargets(s, dragon, "activate").some((m) => m.uid === plain.uid));
+  s = apply(s, { type: "activate", uid: dragon.uid, target: gemmer.uid });
+  assert.equal(s.board.find((m) => m.uid === plain.uid)!.attack, plain.attack + 2);
+  assert.equal(s.gold, 9);
+  assert.ok(act(s, { type: "activate", uid: dragon.uid, target: gemmer.uid }).error);
+  advanceRecruit(s, rng);
+  const caster = add(s, "BG36_241", "board");
+  const before = s.board.find((m) => m.uid === plain.uid)!.attack;
+  s = apply(s, { type: "activate", uid: dragon.uid, target: caster.uid });
+  assert.equal(s.board.find((m) => m.uid === plain.uid)!.attack, before + 6);
+  assert.equal(s.hand.length, 0);
+});
+
+test("Sticky Shields give permanent taunt; Humon'gozz aura follows repeated stat grants and stops after sale", () => {
+  let s = fixture();
+  const slime = add(s, "BG27_002"); s = apply(s, { type: "play", uid: slime.uid });
+  assert.equal(s.hand.length, 2);
+  s = apply(s, { type: "cast", uid: s.hand[0].uid, target: slime.uid });
+  assert.equal(s.board[0].attack, 3); assert.ok(s.board[0].keywords.includes("嘲讽"));
+  const aura = add(s, "BG32_341", "board");
+  const dragon = add(s, "BG36_241", "board");
+  const breath = add(s, "BG36_246");
+  s = apply(s, { type: "cast", uid: breath.uid });
+  assert.equal(s.board.find((m) => m.uid === dragon.uid)!.attack, dragon.attack + 9 + 3);
+  assert.equal(s.board.find((m) => m.uid === dragon.uid)!.health, dragon.health + 6 + 6);
+  s = apply(s, { type: "sell", uid: aura.uid });
+  const buff = add(s, "BG28_897");
+  const before = s.board[0].attack;
+  s = apply(s, { type: "cast", uid: buff.uid, target: slime.uid });
+  assert.equal(s.board[0].attack, before + 2);
+});
+
+test("Choral Mrrrglr reads its own hand in combat; Motley Phalanx buffs persist; Tea Master generates into hand", () => {
+  const s = fixture();
+  const choral = add(s, "BG26_354", "board");
+  const tea = add(s, "BG32_111", "board"); tea.health = 1;
+  const motley = add(s, "BG27_080", "board"); motley.health = 1;
+  const hand = add(s, "BG25_001"); hand.attack = 40; hand.health = 50;
+  const enemy = makeMinion("s14_BG25_001"); enemy.attack = 200; enemy.health = 500;
+  const battle = seasonCombat(s, [enemy], 6, rng);
+  const opened = battle.frames.find((f) => f.allies.some((m) => m.uid === choral.uid && m.attack >= 46));
+  assert.ok(opened);
+  assert.ok(s.hand.some((m) => m.id === "s14_BG28_888"));
+  assert.equal(s.board.find((m) => m.uid === choral.uid)!.attack, 6);
+  const permanent = fixture();
+  const guard = add(permanent, "BG27_080", "board"); guard.health = 1;
+  const fish = add(permanent, "BG26_354", "board"); fish.attack = 0;
+  seasonCombat(permanent, [enemy], 6, rng);
+  assert.equal(permanent.board.find((m) => m.uid === fish.uid)!.attack, 3);
+  assertPool(s);
+});
+
+test("new tribal spells respect the shared finite pool and same-type buffs include the tavern", () => {
+  let s = fixture(); s.tier = 6;
+  add(s, "BG31_816", "board"); add(s, "BG31_818", "board");
+  const shop = add(s, "BG31_816", "shop");
+  for (const id of ["BG28_521", "BG33_814", "BG31_819"]) {
+    const spell = add(s, id); s = apply(s, { type: "cast", uid: spell.uid });
+    if (s.discovery.length) {
+      assert.ok(s.discovery.every((m) => getDef(m.id).races?.includes("元素") || getDef(m.id).tribe === "全部"));
+      s = apply(s, { type: "discover", uid: s.discovery[0].uid });
+    }
+  }
+  assert.ok(s.hand.filter((m) => getDef(m.id).races?.includes("元素") || getDef(m.id).tribe === "全部").reduce((n, m) => n + Object.values(m.copies).reduce((a, b) => a + b, 0), 0) >= 4);
+  const buff = add(s, "BG28_845");
+  s = apply(s, { type: "cast", uid: buff.uid, target: shop.uid });
+  assert.equal(s.shop.find((m) => m.uid === shop.uid)!.attack, shop.attack + 2);
+  assertPool(s);
+});
+
+test("Lullabot magnetic end-of-turn growth carries over to the host, without extra golden scaling", () => {
+  let s = fixture();
+  const mech = add(s, "BG29_611", "board", true);
+  const magnetic = add(s, "BG26_146");
+  s = apply(s, { type: "play", uid: magnetic.uid, target: mech.uid });
+  const before = s.board[0].health;
+  s = apply(s, { type: "end" });
+  assert.equal(s.board[0].health, before + 1); assertPool(s);
+});
+
+test("Temperature Shift is not offered in lobbies without Elementals", () => {
+  let s = fixture(); s.tier = 6;
+  s.season!.tribes = ["机械", "海盗", "野兽", "龙", "亡灵"];
+  s.season!.freeRefresh = 150;
+  const random = seed(893);
+  for (let i = 0; i < 150; i++) {
+    const result = act(s, { type: "refresh" }, random);
+    assert.equal(result.error, undefined); s = result.state;
+    assert.ok(s.season!.spellShop.every((m) => m.id !== "s14_BG31_819"));
+  }
+  assertPool(s);
 });

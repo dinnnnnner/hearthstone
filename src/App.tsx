@@ -1,3 +1,5 @@
+import { equippedPowers } from "./season/powers";
+import { PowerChoices } from "./season/PowerChoices";
 import { RefreshPrice } from "./table/RefreshPrice";
 import type { NetworkGame } from "./online/OnlineApp";
 import { useSceneReady } from "./loading/useSceneReady";
@@ -286,7 +288,7 @@ function App({
   const [onlyPlayable, setOnlyPlayable] = useState(false);
   const [targeting, setTargeting] = useState<
     | { type: "play" | "cast" | "activate"; uid: string; position?: number }
-    | { type: "power" }
+    | { type: "power"; powerId?: string }
     | null
   >(null);
   const [dragged, setDragged] = useState<{ uid: string; zone: string } | null>(
@@ -311,7 +313,6 @@ function App({
   const [playing, setPlaying] = useState(true);
   const [poolOpen, setPoolOpen] = useState(false);
   const hero = heroOf(game);
-  const powerState = heroPowerState(game);
   const catalog = game.season
     ? collectionType === "spells"
       ? SEASON_SPELL_CATALOG
@@ -410,7 +411,7 @@ function App({
   }
   function choose(m: Minion, zone: Selection["zone"]) {
     if (targeting) {
-      if (targeting.type === "power" && !powerState.targets.some((t) => t.uid === m.uid)) {
+      if (targeting.type === "power" && !heroPowerState(game, targeting.powerId).targets.some((t) => t.uid === m.uid)) {
         setToast("这个随从不是有效的英雄技能目标。");
         return;
       }
@@ -455,9 +456,10 @@ function App({
       setToast("选择发动技能的友方目标。");
     } else dispatch({ type: "activate", uid: m.uid });
   }
-  function power() {
-    if (hero.passive) {
-      setToast(hero.text);
+  function power(powerId?: string) {
+    const powerState = heroPowerState(game, powerId), powerHero = powerState.definition;
+    if (powerHero.passive) {
+      setToast(powerHero.text);
       return;
     }
     if (powerState.reason) {
@@ -465,12 +467,12 @@ function App({
       return;
     }
     if (powerState.needsTarget) {
-      setTargeting({ type: "power" });
+      setTargeting({ type: "power", powerId });
       setSelection(null);
-      setToast(hero.id === "s14_xyrella" ? "点击酒馆中的随从，将其变为2/2并获取。"
-        : hero.id === "s14_reno" ? "选择战场上的非金色随从。每局只能使用一次。"
+      setToast(powerHero.id === "s14_xyrella" ? "点击酒馆中的随从，将其变为2/2并获取。"
+        : powerHero.id === "s14_reno" ? "选择战场上的非金色随从。每局只能使用一次。"
         : "点击酒馆或战场中的随从，施放英雄技能。");
-    } else dispatch({ type: "power" });
+    } else dispatch({ type: "power", powerId });
   }
   function start() {
     setGame(createGame(newHero));
@@ -1132,14 +1134,15 @@ function App({
                       )}
                       <h3>{hero.name}</h3>
                       <p className="hero-subtitle">{hero.title}</p>
-                      <div className="hero-power">
+                      {equippedPowers(game).map((id) => { const powerState = heroPowerState(game, id), powerHero = powerState.definition; return (
+                      <div className="hero-power" key={id}>
                         <div className="power-heading">
                           <span className="power-icon">
                             <WandSparkles size={18} />
                           </span>
-                          <strong>{hero.power}</strong>
+                          <strong>{powerHero.power}</strong>
                           <span>
-                            {hero.passive ? (
+                            {powerHero.passive ? (
                               "被动"
                             ) : (
                               <>
@@ -1149,14 +1152,14 @@ function App({
                             )}
                           </span>
                         </div>
-                        <p>{hero.text}</p>
+                        <p>{powerHero.text}</p>
                         {powerState.status && <small>{powerState.status}</small>}
                         <button
                           className={`power-button ${powerState.used ? "used" : ""}`}
-                          onClick={power}
+                          onClick={() => power(id)}
                           disabled={!recruiting || powerState.used}
                         >
-                          {hero.passive ? (
+                          {powerHero.passive ? (
                             <>
                               <Check size={13} />
                               被动技能已生效
@@ -1173,6 +1176,7 @@ function App({
                           )}
                         </button>
                       </div>
+                      ); })}
                     </section>
                     <section className="opponent-panel panel">
                       <div className="right-heading">
@@ -2116,6 +2120,7 @@ function App({
           </button>
         </Modal>
       )}
+      <PowerChoices game={game} dispatch={dispatch} />
     </div>
   );
 }

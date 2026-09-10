@@ -78,7 +78,7 @@ test("new heroes appear online and Xyrella uses the server skill to acquire a 2/
   await page.getByLabel("你的酒馆昵称").fill("英雄验证");
   await page.getByRole("button", { name: "游客进入", exact: true }).click();
   const select = page.getByLabel("匹配英雄");
-  await expect(select.locator("option")).toHaveCount(19);
+  await expect(select.locator("option")).toHaveCount(22);
   await select.selectOption("s14_xyrella");
   await page.getByRole("button", { name: /人机匹配/ }).click();
   await expect(page.locator(".game-table")).toBeVisible();
