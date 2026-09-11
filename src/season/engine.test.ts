@@ -1181,3 +1181,58 @@ test("Gem Confiscation handles row edges without stealing gems across board and 
     assert.deepEqual(s[otherZone], before);
   }
 });
+
+// Treasure Parrot keeps its damage progress between combats.
+test("Treasure Parrot accumulates damage across combats and rewards only once", () => {
+  for (const golden of [false, true]) {
+    const s = fixture();
+    const parrot = add(s, "BG36_763", "board", golden);
+    const fight = (attack: number) => {
+      parrot.attack = attack;
+      const enemy = makeMinion(PREFIX + "BG25_001");
+      enemy.attack = enemy.health = 100;
+      enemy.keywords = [];
+      seasonCombat(s, [enemy], 1, rng);
+    };
+    const rewards = () => s.hand.filter((m) => m.id === PREFIX + "BG28_830");
+    fight(20);
+    assert.equal(parrot.counters?.parrotDamage, 20);
+    assert.equal(rewards().length, 0);
+    fight(14);
+    assert.equal(parrot.counters?.parrotDamage, 34);
+    assert.equal(rewards().length, 0);
+    fight(1);
+    assert.equal(parrot.counters?.parrotDamage, 35);
+    assert.equal(rewards().length, golden ? 2 : 1);
+    fight(40);
+    assert.equal(parrot.counters?.parrotDamage, 35);
+    assert.equal(rewards().length, golden ? 2 : 1);
+    assertPool(s);
+  }
+});
+
+test("Treasure Parrot persists progress and awards the correct player on both combat sides", () => {
+  const left = fixture(), right = fixture();
+  const parrots = [add(left, "BG36_763", "board"), add(right, "BG36_763", "board", true)];
+  for (const parrot of parrots) {
+    parrot.attack = parrot.health = 5;
+    parrot.counters = { parrotDamage: 30 };
+  }
+  seasonCombat(left, right.board, right.tier, rng, right);
+  for (const [index, s] of [left, right].entries()) {
+    assert.equal(parrots[index].counters?.parrotDamage, 35);
+    assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG28_830").length, index + 1);
+    assertPool(s);
+  }
+});
+
+test("Treasure Parrot does not count damage blocked by Divine Shield", () => {
+  const s = fixture(), parrot = add(s, "BG36_763", "board");
+  parrot.counters = { parrotDamage: 34 };
+  const enemy = makeMinion(PREFIX + "BG25_001");
+  enemy.attack = enemy.health = 100;
+  enemy.keywords = ["圣盾"];
+  seasonCombat(s, [enemy], 1, rng);
+  assert.equal(parrot.counters.parrotDamage, 34);
+  assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG28_830").length, 0);
+});

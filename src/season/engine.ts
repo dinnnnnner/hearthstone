@@ -1591,7 +1591,14 @@ function expandedEffect(ctx: Context, m: Minion, a: Ability) {
       if (choice === 0) gain(ctx, x, 8 * f, 8 * f);
       else keyword(x, (["嘲讽", "圣盾", "风怒"] as Keyword[])[choice - 1]);
     } break;
-    case "parrotGold": if (mcount(m, "parrotDamage") < 35 && mbump(m, "parrotDamage", ctx.amount || 0) >= 35) for (let i = 0; i < f; i++) putHand(s, makeMinion(PREFIX + "BG28_830")); break;
+    case "parrotGold": {
+      const amount = ctx.amount || 0;
+      if (mcount(m, "parrotDamage") >= 35 || amount <= 0) break;
+      const total = mbump(m, "parrotDamage", amount);
+      ctx.remember?.(m, "parrotDamage", amount);
+      if (total >= 35) for (let i = 0; i < f; i++) putHand(s, makeMinion(PREFIX + "BG28_830"));
+      break;
+    }
     case "satelliteGrowing": {
       const value = 2 + mcount(m, "satelliteSize");
       if (ctx.eventMinion) { gain(ctx, ctx.eventMinion, value * f, value * f); ctx.eventMinion.magneticCount = (ctx.eventMinion.magneticCount || 0) + 1; }
