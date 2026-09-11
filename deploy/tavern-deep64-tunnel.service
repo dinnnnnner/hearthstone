@@ -1,0 +1,14 @@
+[Unit]
+Description=Forward public Battlegrounds inference to this computer
+Wants=tavern-deep64-inference.service
+After=tavern-deep64-inference.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -NT -o BatchMode=yes -o ExitOnForwardFailure=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -R 127.0.0.1:18791:127.0.0.1:18790 root@100.121.69.44
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

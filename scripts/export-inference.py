@@ -14,8 +14,12 @@ saved = torch.load(a.checkpoint, map_location='cpu', weights_only=False)
 raw = a.schema.read_bytes()
 current = json.loads(raw)
 spec = dict(saved['model_spec'])
-if spec['architecture'] != 'entity-gru' or spec['actions'] != current['actions']:
+if spec['architecture'] not in ('entity-gru', 'entity-gru-resnet') or spec['actions'] != current['actions']:
     raise ValueError('Model architecture/action encoding requires migration')
+if spec['hidden'] != 128:
+    raise ValueError('Online recurrent state requires hidden=128')
+if not all(torch.isfinite(t).all().item() for t in saved['model'].values()):
+    raise ValueError('Checkpoint contains non-finite weights')
 old = spec['entity_schema']
 for key in ('version', 'ids', 'zones', 'sizes', 'offsets', 'count'):
     if old[key] != current['entity_schema'][key]:
@@ -26,6 +30,8 @@ metadata = dict(episodes=saved['episodes'], architecture=spec['architecture'],
     checkpointSha256=hashlib.sha256(a.checkpoint.read_bytes()).hexdigest(),
     trainedRulesHash=saved['meta']['rulesHash'], adaptedDefinitions=changed,
     contract=hashlib.sha256(raw).hexdigest(), hidden=spec['hidden'], actionCount=len(spec['actions']))
+metadata.update(policyDepth=spec.get('policy_depth'), valueDepth=spec.get('value_depth'),
+                observationVersion=saved['meta']['observationVersion'], entityVersion=old['version'])
 a.output.parent.mkdir(parents=True, exist_ok=True)
 torch.save(dict(model=saved['model'], model_spec=spec, metadata=metadata), a.output)
 print(json.dumps(metadata, indent=2))

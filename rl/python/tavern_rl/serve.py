@@ -2,10 +2,23 @@
 import argparse
 import json
 import time
+import gzip
+import zlib
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import torch
 from .model import make_model
 from .features import prepare_entities
+
+
+def decode_request(body, encoding='identity'):
+    if encoding == 'gzip':
+        decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
+        body = decoder.decompress(body, 2_000_001)
+        if len(body) > 2_000_000 or not decoder.eof or decoder.unused_data:
+            raise ValueError('Invalid or oversized compressed request')
+    elif encoding != 'identity':
+        raise ValueError('Unsupported content encoding')
+    return json.loads(body)
 
 
 class Policy:
@@ -41,7 +54,7 @@ class Policy:
         if not ((previous >= 0) & (previous <= self.model.action_size)).all():
             raise ValueError('Invalid previous action')
         start = time.perf_counter()
-        dist, _, updated = self.model.act([prepare_entities(r['entities']) for r in rows], masks, memories, previous)
+        dist, _, updated = self.model.act([prepare_entities(r['entities']) for r in rows], masks, memories, previous, with_value=False)
         if not torch.isfinite(updated).all() or not torch.isfinite(dist.probs).all():
             raise ValueError('Non-finite model output')
         actions = dist.sample().tolist()
@@ -64,8 +77,13 @@ def main():
 
         def reply(self, status, value):
             body = json.dumps(value, allow_nan=False).encode()
+            compressed = 'gzip' in self.headers.get('Accept-Encoding', '') and len(body) > 1024
+            if compressed:
+                body = gzip.compress(body)
             self.send_response(status)
             self.send_header('Content-Type', 'application/json')
+            if compressed:
+                self.send_header('Content-Encoding', 'gzip')
             self.send_header('Content-Length', str(len(body)))
             self.end_headers()
             self.wfile.write(body)
@@ -84,9 +102,9 @@ def main():
                 size = int(self.headers.get('Content-Length', '0'))
                 if not 0 < size <= 2_000_000:
                     raise ValueError('Invalid request size')
-                result = policy.predict(json.loads(self.rfile.read(size)))
+                result = policy.predict(decode_request(self.rfile.read(size), self.headers.get('Content-Encoding', 'identity')))
                 self.reply(200, result)
-            except (ValueError, KeyError, TypeError, IndexError, RuntimeError) as e:
+            except (ValueError, KeyError, TypeError, IndexError, RuntimeError, zlib.error) as e:
                 self.reply(400, {'error': str(e)})
 
     print(json.dumps(dict(listen=f'127.0.0.1:{args.port}', **policy.metadata)), flush=True)

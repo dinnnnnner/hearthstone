@@ -1,0 +1,201 @@
+{
+  "deployedAtUtc": "2026-09-11T07:41:05Z",
+  "inferenceLocation": "current local computer, CPU; every request forwarded from public backend through reverse SSH",
+  "checkpoint": {
+    "episodes": 680,
+    "iteration": 44,
+    "checkpoint_sha256": "7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8",
+    "bytes": 213722044,
+    "sourceHash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+    "rulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+    "observationVersion": 4,
+    "entityVersion": 3,
+    "parameters_finite": true
+  },
+  "campaign": {
+    "stopReason": "time_limit",
+    "elapsedSeconds": 14400.4,
+    "policyDepth": 64,
+    "valueDepth": 64,
+    "parameters": 3421950,
+    "adaptedDefinitions": 0
+  },
+  "model": {
+    "sha256": "7ea3263c27824830003a6555c9dc61c1e8ddd0be5c4147ad624e9e4b83359e15",
+    "bytes": 14737795,
+    "release": "~/.local/share/tavern-deep64/releases/20260911-680",
+    "profile": "scouting-v4",
+    "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d"
+  },
+  "public": {
+    "url": "https://8.153.150.101/tavern-api",
+    "release": "/opt/bobs-tavern/releases/20260911T074105Z",
+    "backendSha256": "9b1c5964d9e0ddfb4baefa2a782605c4d5b51525c6ce3769e6934545ab7cc71c",
+    "pid": 125149,
+    "legacyInference": "stopped; files and systemd unit preserved",
+    "unrelatedSectorPid": 119165
+  },
+  "relay": {
+    "publicLoopbackPort": 18791,
+    "localLoopbackPort": 18790,
+    "userServices": [
+      "tavern-deep64-inference.service",
+      "tavern-deep64-tunnel.service"
+    ],
+    "enabled": true,
+    "reconnectVerified": true,
+    "linger": false,
+    "availability": "requires local computer powered on, network connected, and user logged in",
+    "inferenceMemoryMaxBytes": 1073741824,
+    "inferenceMemoryDuringLoadBytes": 438480896,
+    "inferenceMemoryPeakBytes": 525815808
+  },
+  "bandwidth": {
+    "publicMbps": 3,
+    "requestBudgetKbps": 512,
+    "compression": "gzip requests and responses",
+    "pacingOverheadAllowanceBytesPerRequest": 512,
+    "measuredRequestPayloadMbps": 0.40374648658553386,
+    "note": "Application pacing, not network interface shaping; payload counters exclude actual SSH/TCP overhead. Response bytes are public ingress."
+  },
+  "threeRoundBenchmark": {
+    "decisions": 555,
+    "rooms": 3,
+    "rounds": 3,
+    "totalSeconds": 27.194288911,
+    "meanMs": 43.69530815135125,
+    "p50Ms": 43.00185099999908,
+    "p95Ms": 51.16688299999987,
+    "maxMs": 344.864593,
+    "nodeRssMiB": 106.43359375,
+    "traffic": {
+      "requests": 555,
+      "rawRequestBytes": 3906140,
+      "requestBytes": 1381075,
+      "responseBytes": 758430,
+      "maxKbps": 512
+    }
+  },
+  "eightRoundBenchmark": {
+    "decisions": 1794,
+    "rooms": 3,
+    "rounds": 8,
+    "totalSeconds": 102.555899248,
+    "meanMs": 42.08487170847279,
+    "p50Ms": 41.12422399999923,
+    "p95Ms": 52.55862799999886,
+    "maxMs": 205.90747399999998,
+    "nodeRssMiB": 112.62890625,
+    "traffic": {
+      "requests": 1794,
+      "rawRequestBytes": 16364932,
+      "requestBytes": 5175823,
+      "responseBytes": 2451382,
+      "maxKbps": 512
+    }
+  },
+  "validation": {
+    "serverTestsPassed": 46,
+    "pythonTestsPassed": 37,
+    "typescriptBuild": true,
+    "benchmarkErrors": 0,
+    "benchmarkFallbackRounds": 0
+  },
+  "rollback": {
+    "legacyBackendRelease": "/opt/bobs-tavern/releases/20260911T024800Z",
+    "legacyUnitBackup": "/opt/bobs-tavern/releases/20260911T073324Z/previous.service",
+    "legacyModelRelease": "/opt/tavern-inference/releases/20260911T022600Z",
+    "steps": [
+      "Start public tavern-inference service on 8790",
+      "Restore legacy backend symlink and legacyUnitBackup, daemon-reload and restart bobs-tavern",
+      "Verify legacy-v3 contract and public health"
+    ]
+  },
+  "publicSmoke": {
+    "url": "https://8.153.150.101/tavern-api",
+    "rounds": [
+      {
+        "turn": 1,
+        "waitSeconds": 1.7599709630012512,
+        "botHealth": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ]
+      },
+      {
+        "turn": 2,
+        "waitSeconds": 3.8312140990019543,
+        "botHealth": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ]
+      },
+      {
+        "turn": 3,
+        "waitSeconds": 3.8304512840004463,
+        "botHealth": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ]
+      }
+    ],
+    "totalSeconds": 9.764048229000764,
+    "before": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "ai": {
+        "mode": "neural",
+        "decisions": 0,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 0,
+          "rawRequestBytes": 0,
+          "requestBytes": 0,
+          "responseBytes": 0,
+          "maxKbps": 512
+        }
+      }
+    },
+    "after": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "ai": {
+        "mode": "neural",
+        "decisions": 175,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 175,
+          "rawRequestBytes": 1260258,
+          "requestBytes": 438805,
+          "responseBytes": 239205,
+          "maxKbps": 512
+        }
+      }
+    }
+  }
+}

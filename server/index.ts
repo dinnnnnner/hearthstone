@@ -10,7 +10,11 @@ import { NeuralRooms, httpInference } from "./neural";
 import { SnapshotWriter } from "./persistence";
 import type { Action } from "../src/engine";
 const store = process.env.TAVERN_INFERENCE_URL
-    ? new NeuralRooms(httpInference(process.env.TAVERN_INFERENCE_URL)) : new Rooms(),
+    ? new NeuralRooms(httpInference(process.env.TAVERN_INFERENCE_URL, {
+      compress: process.env.TAVERN_INFERENCE_COMPRESS === '1',
+      maxKbps: Number(process.env.TAVERN_INFERENCE_MAX_KBPS || 0),
+    }), Date.now, Math.random,
+      process.env.TAVERN_INFERENCE_PROFILE || 'legacy-v3') : new Rooms(),
   saveFile = process.env.TAVERN_STATE || "/tmp/tavern-online-state.json";
 if (existsSync(saveFile)) store.restore(readFileSync(saveFile, "utf8"));
 const writer = new SnapshotWriter(store, saveFile);

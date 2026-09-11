@@ -1,50 +1,72 @@
 # 已训练模型的在线推理
 
-在线房间通过 `server/neural.ts` 调用独立的 CPU PyTorch 进程。没有设置 `TAVERN_INFERENCE_URL` 时，继续使用原来的脚本人机。设置为 `http://127.0.0.1:8790` 后，补位人机和人机匹配使用训练模型。
+2026-09-11 公网人机已切换到 64 层、680 局检查点。每次模型推理都在当前本机完成，公网游戏后端通过反向 SSH 隧道发送观察并接收动作。浏览器仍访问原来的公网地址。256、1024 层模型尚未接入，模型选择入口仍在后续计划中。
 
-本文记录的部署接入了四小时训练结束的 780 局检查点，SHA-256 为 `f98f4e2225049f74b4601ca13a2520c32d8a3b250927da17fa9266c06f2c2666`。原模型有 1,275,134 个训练参数，包含两层实体注意力和 128 维 GRU。这次部署使用原架构。
+当前检查点 SHA-256 为 `7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8`。四小时任务到时停止，最后完成 680 局、44 次迭代。部署冻结了这个版本，后续训练不会覆盖它。层数和局数不代表经过统一评估的棋力排名。
 
-2026-09-11 另行启动的 64、256、1024 层训练有各自的四小时预算，不能把它们的中途检查点当作最终模型替换公网人机。先保持现有部署，等任务结束核验产物后，再评估公网资源；不足时在当前本机推理并转发。模型选择入口及多模型转发尚未实现，安排见 [训练完成后的接入计划](rl-serving-plan.md)。
+## 本机服务与公网转发
 
-## 规则适配
+本机的 `~/.local/share/tavern-deep64/releases/20260911-680` 保存约 14 MB 的推理文件、观察定义和 Python 运行代码，`current` 指向该目录。导出文件只含权重、模型定义和部署元数据，不含优化器和历史对手；服务使用 `weights_only=True` 加载。
 
-`server/neural-observation.ts` 固定了旧模型使用的实体观察格式，避免后续训练代码升级观察版本后意外改变在线模型输入。它使用当前游戏规则计算合法动作、费用和自身状态，但没有加入旧模型未训练过的新增侦察字段。
-
-导出工具核对所有动作编号、实体编号和槽位布局，替换当前静态卡牌定义，并记录原训练规则哈希和变更定义数。本次有 9 个定义不同。这是已有权重对新规则的推理适配，不代表模型已经学习这些规则修复。新训练检查点仍须遵守训练代码的严格版本检查。
-
-Python 和 Node 对完整动作及实体定义计算相同的 SHA-256。定义不匹配时拒绝推理，不会把错位的动作编号应用到游戏。
-
-## 导出和运行
-
-在项目根目录生成对应在线输入的元数据：
+两个用户服务分别运行模型和隧道，配置保存在 `deploy/tavern-deep64-inference.service` 与 `deploy/tavern-deep64-tunnel.service`。
 
 ```sh
-node --import tsx --input-type=module -e 'import {runtimeSchema} from "./server/neural.ts"; import {writeFileSync} from "node:fs"; writeFileSync("/tmp/tavern-serving-schema.json", runtimeSchema)'
-.venv/bin/python scripts/export-inference.py PATH_TO_TRUSTED_CHECKPOINT /tmp/tavern-serving-schema.json rl/runs/inference-780/model.pt
-PYTHONPATH=rl/python .venv/bin/python -m tavern_rl.serve rl/runs/inference-780/model.pt --port 8790
-TAVERN_INFERENCE_URL=http://127.0.0.1:8790 npm run dev:server
+systemctl --user status tavern-deep64-inference tavern-deep64-tunnel
+curl -fsS http://127.0.0.1:18790/health
+ssh root@100.121.69.44 'curl -fsS http://127.0.0.1:18791/health'
 ```
 
-训练检查点只在导出步骤按可信文件加载。推理文件仅包含权重、模型定义和部署元数据，约 6 MB；不包含优化器或历史对手。服务端使用 `weights_only=True` 加载。
+公网 `127.0.0.1:18791` 转发到本机 `127.0.0.1:18790`。模型端口仅监听回环地址。本机模型进程限用一个逻辑核、1 GiB 内存，压测时约占 418 MiB，峰值约 501 MiB。隧道由 systemd 自动重启，并用 SSH 心跳检测断线。
 
-服务器环境是 Python 3.13.5、PyTorch 2.14.0+cpu、NumPy 2.5.2。服务配置见 `deploy/tavern-inference.service`，CPU 限额为一个逻辑核的 80%，内存上限 512 MiB，端口只监听回环地址。CPU 推理不需要 CUDA，不消耗游戏服务器的公网出站带宽。
+本机必须保持开机、联网并登录。两个服务已设置为登录后启动，但当前账户的 `Linger=no`，无权开启注销后常驻，不能保证注销或重启后未登录时仍可用。本机 Python 环境位于 `~/hearthstone/.venv`，迁移工作目录时需同步修改 unit。
 
-## 房间行为和故障处理
+公网后端使用以下环境变量：
 
-全局队列轮流处理各房间、各人机的一步操作，每个操作异步等待模型。每个座位有独立 GRU 状态和上一步动作；跨回合保留，离开房间后随座位对象回收。服务重启后隐藏状态从零开始。
+```ini
+Environment=TAVERN_INFERENCE_URL=http://127.0.0.1:18791
+Environment=TAVERN_INFERENCE_PROFILE=scouting-v4
+Environment=TAVERN_INFERENCE_COMPRESS=1
+Environment=TAVERN_INFERENCE_MAX_KBPS=512
+```
 
-推理超时为 5 秒。模型不可用或响应无效时，本轮回退到脚本人机，清空对应隐藏状态，10 秒后允许重试。`/tavern-api/health` 中的 `ai` 包含实际应用的模型决策数、错误数、回退回合数和模式。回退不会被计为模型决策。
+## 3 Mbps 带宽预算
 
-响应返回后重新检查房间、阶段、回合和座位修订号，丢弃过期响应。共享卡池变化引起的操作失败会重新观察和预测。每回合按训练配置限制到 64 次普通操作；强制选择有额外保护上限。计时对局到期仍由原房间规则处理。
+推理请求和响应使用 gzip。公网后端按压缩请求大小加每次 512 字节的协议开销预留，控制发送间隔，预算为 512 kbps，约占 3 Mbps 的 17%。这属于应用层请求调度，不是网卡硬限速；流量计数也不包含 SSH、TCP 的实际开销。公网收到的动作响应属于入站方向。
 
-## 验证和回滚
+公网经 SSH 到本机的三房间、八回合测试完成 1,794 次模型决策，耗时 102.56 秒，错误和回退均为零。平均请求耗时 42.1 ms，p95 为 52.6 ms。原始请求共 16,364,932 字节，压缩后 5,175,823 字节，平均出站请求载荷约 0.404 Mbps；响应载荷共 2,451,382 字节。此结果只覆盖本次三房间负载，房间增多仍会增加排队时间。
+
+`/tavern-api/health` 的 `ai.traffic` 给出累计请求数、原始及压缩请求字节数、响应字节数和发送预算，服务重启后清零。
+
+## 观察格式与导出
+
+`server/neural-profile.ts` 按配置选择输入。`legacy-v3` 保留旧 780 局模型的观察投影；`scouting-v4` 使用当前训练格式，包含已公开的战况信息，不传入其他玩家私有手牌或未公开阵容。64 层模型使用观察版本 4、实体版本 3。
+
+导出工具核对动作编号、实体编号及槽位布局，检查权重有限性，并记录静态定义适配数。本次 64 层模型适配数为零。Python 与 Node 对完整动作和实体定义计算同一个 SHA-256，契约不匹配则拒绝推理。
+
+```sh
+node --import tsx --input-type=module -e 'import {inferenceProfile} from "./server/neural-profile.ts"; import {writeFileSync} from "node:fs"; writeFileSync("/tmp/tavern-serving-schema.json", inferenceProfile("scouting-v4").schema)'
+.venv/bin/python scripts/export-inference.py PATH_TO_TRUSTED_CHECKPOINT /tmp/tavern-serving-schema.json PATH_TO_MODEL_PT
+PYTHONPATH=rl/python .venv/bin/python -m tavern_rl.serve PATH_TO_MODEL_PT --port 18790
+```
+
+新模型需要独立冻结版本、端口和输入契约。后续安排见 [多模型接入计划](rl-serving-plan.md)。
+
+## 房间行为与故障处理
+
+全局异步队列轮流处理各房间、各人机的一步操作，每个座位维护独立的 128 维 GRU 状态和上一步动作。状态跨回合保留，随座位回收，服务重启后从零开始。64 层模型推理只计算策略，不运行训练用的价值分支。
+
+单次 HTTP 推理超时为 5 秒。模型不可用或响应无效时，本轮回退到脚本人机，清空对应隐藏状态，10 秒后允许重试。健康接口分别记录实际模型决策数、错误数和回退回合数。当前界面没有独立的模型可用状态提示。
+
+响应返回后重新检查房间、阶段、回合和座位修订号，丢弃过期响应。共享卡池变化导致操作失败时重新观察和预测。每回合最多执行 64 次普通操作，强制选择另有保护上限。计时对局继续遵循原房间计时规则。
+
+## 验证与回滚
 
 ```sh
 npm run test:server
-npm run test:rl
-node --import tsx scripts/benchmark-inference.ts http://127.0.0.1:8790 8 3
+PYTHONPATH=rl/python .venv/bin/python -m unittest discover -s rl/tests
+node --import tsx scripts/benchmark-inference.ts http://127.0.0.1:18790 8 3 scouting-v4 512
 ```
 
-基准测试创建内存中的独立房间，八个座位全部由模型决策，不写入公开房间或线上存档。参数依次是推理地址、回合数、房间数。
+基准测试使用内存中的独立房间，八个座位均由模型决策，不写入公开房间或线上存档。参数依次为推理地址、回合数、房间数、观察配置和 kbps 预算。部署记录见 [64 层本机转发验证](neural-deep64-local-2026-09-11.json)。
 
-线上后端发布目录保留 `rollback.json` 和 `previous.service`。回滚时恢复后端旧软链接及旧 unit，然后重启 `bobs-tavern`；推理服务可以单独停止。网站资源和 SECTOR 服务独立部署。没有推理进程时，也可以通过移除 `TAVERN_INFERENCE_URL` 后重启来恢复脚本人机。
+旧 780 局模型进程已停止，文件与 `tavern-inference` 服务配置保留在公网，历史记录见 [旧模型部署](neural-deployment-2026-09-11.json)。恢复旧模型时，先启动公网 `tavern-inference`，再恢复旧后端 `/opt/bobs-tavern/releases/20260911T024800Z` 和 `/opt/bobs-tavern/releases/20260911T073324Z/previous.service` 保存的旧 unit，并重启 `bobs-tavern`。回滚必须同时恢复旧观察配置，不能将新观察直接发给旧模型。移除 `TAVERN_INFERENCE_URL` 后重启则恢复脚本人机。

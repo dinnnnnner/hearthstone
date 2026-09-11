@@ -1,30 +1,49 @@
-import { createHash } from 'node:crypto';
 import { setImmediate as yieldLoop } from 'node:timers/promises';
+import { setTimeout as delay } from 'node:timers/promises';
+import { gzipSync } from 'node:zlib';
 import { Rooms, type Room, type Seat } from './rooms';
 import { ACTIONS, candidates } from '../rl/actions';
-import { ENTITY_SCHEMA, observeEntities } from './neural-observation';
+import { inferenceProfile } from './neural-profile';
 import { actSeason } from '../src/season/engine';
 import { withSimulation } from '../src/simulation';
 import type { Action } from '../src/engine';
 
-export const runtimeSchema = JSON.stringify({ actions: ACTIONS, entity_schema: ENTITY_SCHEMA });
-export const contract = createHash('sha256').update(runtimeSchema).digest('hex');
+export const runtimeSchema = inferenceProfile().schema;
+export const contract = inferenceProfile().contract;
 type Memory = { memory: number[]; previous: number; turn: number; decisions: number };
 type Prediction = { rows: { action: number; memory: number[] }[] };
-export type Infer = (body: unknown) => Promise<Prediction>;
+type Traffic = { requests: number; rawRequestBytes: number; requestBytes: number; responseBytes: number; maxKbps: number };
+export type Infer = { (body: unknown): Promise<Prediction>; traffic?: Traffic };
 
-export function httpInference(url: string): Infer {
+export function httpInference(url: string, options: { compress?: boolean; maxKbps?: number } = {}): Infer {
   const endpoint = new URL(url);
   if (!['127.0.0.1', '[::1]', 'localhost'].includes(endpoint.hostname) || endpoint.protocol !== 'http:')
     throw Error('Inference must use loopback HTTP; use an SSH tunnel for remote inference');
-  return async body => {
+  const maxKbps = options.maxKbps ?? 0;
+  if (!Number.isFinite(maxKbps) || maxKbps < 0) throw Error('Invalid inference bandwidth limit');
+  const traffic: Traffic = { requests: 0, rawRequestBytes: 0, requestBytes: 0, responseBytes: 0, maxKbps };
+  let nextRequest = 0;
+  const infer: Infer = async body => {
+    const raw = Buffer.from(JSON.stringify(body));
+    const payload = options.compress ? gzipSync(raw) : raw;
+    if (maxKbps) {
+      const now = performance.now(), sendAt = Math.max(now, nextRequest);
+      // Include a conservative allowance for HTTP, SSH and transport headers.
+      nextRequest = sendAt + (payload.length + 512) * 8 / maxKbps;
+      if (sendAt > now) await delay(sendAt - now);
+    }
+    traffic.requests++; traffic.rawRequestBytes += raw.length; traffic.requestBytes += payload.length;
     const response = await fetch(new URL('/predict', endpoint), {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body), signal: AbortSignal.timeout(5000),
+      method: 'POST', headers: { 'Content-Type': 'application/json',
+        ...(options.compress ? { 'Content-Encoding': 'gzip', 'Accept-Encoding': 'gzip' } : {}) },
+      body: payload, signal: AbortSignal.timeout(5000),
     });
+    traffic.responseBytes += Number(response.headers.get('Content-Length')) || 0;
     if (!response.ok) throw Error(`Inference HTTP ${response.status}`);
     return await response.json() as Prediction;
   };
+  infer.traffic = traffic;
+  return infer;
 }
 
 /** One global asynchronous queue; weak seat keys release memory with recycled rooms. */
@@ -33,8 +52,14 @@ export class NeuralRooms extends Rooms {
   private running = false;
   private stopped = false;
   private retryAt = 0;
-  readonly ai = { mode: 'neural', decisions: 0, errors: 0, fallbackRounds: 0, lastError: '', contract };
-  constructor(private infer: Infer, now = Date.now, random = Math.random) { super(now, random); }
+  private profile: ReturnType<typeof inferenceProfile>;
+  readonly ai;
+  constructor(private infer: Infer, now = Date.now, random = Math.random, profile = 'legacy-v3') {
+    super(now, random);
+    this.profile = inferenceProfile(profile);
+    this.ai = { mode: 'neural', decisions: 0, errors: 0, fallbackRounds: 0, lastError: '',
+      contract: this.profile.contract, profile: this.profile.name, traffic: infer.traffic };
+  }
   override bots(_r: Room) { this.schedule(); }
   override tick() { super.tick(); this.schedule(); }
   stop() { this.stopped = true; }
@@ -94,7 +119,7 @@ export class NeuralRooms extends Rooms {
       if (!fresh()) return;
     }
     if (!valid.size || state.decisions >= 96) throw Error('Neural action limit or unresolved mandatory choice');
-    const result = await this.infer({ contract, rows: [{ entities: observeEntities(s, state.decisions, 64),
+    const result = await this.infer({ contract: this.profile.contract, rows: [{ entities: this.profile.observe(s, state.decisions, 64),
       legal: [...valid.keys()], memory: state.memory, previous: state.previous }] });
     if (!fresh()) return;
     const chosen = result.rows?.[0];
