@@ -1,6 +1,6 @@
 {
-  "release": "20260910T055037Z",
-  "remote": "/var/www/playroom/releases/20260910T055037Z",
+  "release": "20260911T012613Z",
+  "remote": "/var/www/playroom/releases/20260911T012613Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -8,38 +8,38 @@
     "tavernApi": "/tavern-api/"
   },
   "validation": {
-    "engineAndStateTests": 96,
-    "serverTests": 28,
-    "localBrowserTests": 9,
-    "publicBrowserTests": 22,
-    "publicEightBrowserRoom": "passed, 14.7 seconds with separate caches",
+    "engineAndStateTests": 124,
+    "serverTests": 30,
+    "localBrowserTests": 4,
+    "publicBrowserTests": 8,
+    "publicEightBrowserRoom": "not passed: 60s timeout, 180s retry blocked by hero power selection, controlled training retry failed to show combat within 5s",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
-    "sectorPidAtFinalActivation": 110058,
-    "sectorPidAfterFinalValidation": 110058,
-    "tavernPid": 116826,
-    "tavernMemoryBytesAfterTests": 34693120,
+    "sectorPidAtFinalActivation": 119165,
+    "sectorPidAfterFinalValidation": 119165,
+    "tavernPid": 121905,
+    "tavernMemoryBytesAfterTests": 64536576,
     "tavernAutomaticRestarts": 0,
     "uiImageCount": 598,
     "uiImageBytes": 9499166,
     "originalImageBytes": 143250968,
     "tavernRestarted": true,
-    "buildSite": "passed",
-    "finalReleasePublicBrowserTests": 22,
-    "browserValidationScope": "9 distinct local browser cases and 22 public cases. Includes real two-human shared hero draft with concurrent refresh and stale request rejection; desktop/390px four-offer selection, refresh, persistence and start gating; real training AI/friends and default timed two/eight-player rooms; rope, tribes, homepage and SECTOR WebSocket. 28 server tests include eight-human 32-offer uniqueness, 128 refreshes, restore/rematch, API validation and Finley skill overlap. All file hashes verified at activation.",
-    "engineAndStateTestsSourceRelease": "20260910T035242Z",
-    "serverTestsSourceRelease": "20260910T055037Z",
-    "publicEightBrowserRoomSourceRelease": "20260910T055037Z",
-    "tavernMemoryMeasurementSourceRelease": "20260910T055037Z"
+    "buildSite": "passed; reproducible live baseline plus three rule fixes",
+    "finalReleasePublicBrowserTests": 8,
+    "browserValidationScope": "4 local checks passed. 8 public checks passed: Meditation, Treasure Parrot, guest AI game, two-human synchronization/reconnect, mobile lobby, home links/save, mobile layout and SECTOR WebSocket. Eight-browser checks did not pass; see checkpoint for all attempts. Prior unrelated fields retain their original provenance.",
+    "engineAndStateTestsSourceRelease": "20260911T012613Z",
+    "serverTestsSourceRelease": "20260911T012613Z",
+    "publicEightBrowserRoomSourceRelease": "20260911T012613Z",
+    "tavernMemoryMeasurementSourceRelease": "20260911T012613Z"
   },
-  "previousRelease": "20260910T053244Z",
+  "previousRelease": "20260910T105128Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
   "backend": {
-    "release": "/opt/bobs-tavern/releases/20260910T055037Z",
+    "release": "/opt/bobs-tavern/releases/20260911T012613Z",
     "service": "bobs-tavern",
     "listen": "127.0.0.1:8787",
     "state": "/var/lib/bobs-tavern/state.json",
@@ -47,8 +47,8 @@
     "memoryLimitMiB": 384,
     "offlineGraceSeconds": 300,
     "snapshotWrites": "serialized async atomic replacement with per-room serialization cache",
-    "previousRelease": "/opt/bobs-tavern/releases/20260910T053244Z",
-    "bundleSha256": "f4de6266895a16a48a5294d8b7cf6f559e23db5bf620b013585e0ce8cef50dfe"
+    "previousRelease": "/opt/bobs-tavern/releases/20260910T105128Z",
+    "bundleSha256": "b36de91e09b20c2301b297623f4410091598b5442e30a9d2b44b0f9dc35a7c41"
   },
   "replayBenchmark": {
     "frames": 180,
@@ -98,7 +98,7 @@
     "extraAssets": 0,
     "scope": "Timed online AI and friend rooms; training rooms and local practice remain untimed"
   },
-  "checkpoint": "hero-draft-2026-09-10",
+  "checkpoint": "rule-fixes-2026-09-11",
   "rulesCoverageReport": "docs/rules-coverage.json",
   "matchTribes": {
     "source": "game.season.tribes",
@@ -140,5 +140,16 @@
     "finleyPowerOverlapAllowed": true,
     "refreshReturnsPreviousHeroToPool": true,
     "extraImageAssets": 0
+  },
+  "ruleFixDeployment": {
+    "baselineCommit": "0ba1e5a705c54f233a5e16352b3343c962883326",
+    "fixCommits": [
+      "fe03f7c",
+      "c7787af",
+      "643bde9"
+    ],
+    "frontendBundle": "/tavern/assets/index-BWfMFyxw.js",
+    "publicHashesVerified": true,
+    "eightBrowserValidation": "unresolved"
   }
 }
