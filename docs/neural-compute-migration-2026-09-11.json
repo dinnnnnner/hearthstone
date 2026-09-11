@@ -1,0 +1,420 @@
+{
+  "startedAt": "2026-09-11T12:26:00.065994+00:00",
+  "computeHost": "100.97.24.15",
+  "computeUser": "zich",
+  "publicHost": "100.121.69.44",
+  "models": [
+    {
+      "id": "deep64-1112",
+      "label": "64 层模型",
+      "episodes": 1112,
+      "checkpointSha256": "452a8fe616035ec39d1da05750cca3f441175a18d456ab2c6da87319176b32e1",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18891"
+    },
+    {
+      "id": "deep256-908",
+      "label": "256 层模型",
+      "episodes": 908,
+      "checkpointSha256": "4078283c8680ec7433505dfce01b4eecce0b50ea31ed9c95e82706e2ead692c2",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18893"
+    },
+    {
+      "id": "deep1024-436",
+      "label": "1024 层模型",
+      "episodes": 436,
+      "checkpointSha256": "f5208c89c1f8357aa1813966f03e1b87ceb93058e45dc2616326e74532637266",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18895"
+    }
+  ],
+  "before": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 1,
+    "ai": {
+      "mode": "neural",
+      "decisions": 1798,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 1798,
+        "rawRequestBytes": 16114899,
+        "requestBytes": 5155594,
+        "responseBytes": 2451280,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1112",
+          "decisions": 200,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-908",
+          "decisions": 1532,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-436",
+          "decisions": 66,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "backendPidBefore": 126184,
+  "sectorPidBefore": 119165,
+  "archiveSha256": "2dbf7cefb6067e4f6ffcfb6dc3a21c4e242d31856fcfbdaf4cedb7da39703100",
+  "runtime": {
+    "python": "3.13.5",
+    "torch": "2.14.0+cpu",
+    "numpy": "2.5.3"
+  },
+  "target": {
+    "cpu": "Intel Core i7-8565U",
+    "logicalCpus": 8,
+    "memoryGiB": 16,
+    "linger": true
+  },
+  "stagingPorts": [
+    18901,
+    18903,
+    18905
+  ],
+  "stagingBudgetKbps": 256,
+  "productionBudgetKbps": 512,
+  "cutover": {
+    "switchedAt": "2026-09-11T12:30:43.956266+00:00",
+    "handoffAndHealthCheckSeconds": 1.7043119820009451,
+    "before": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 1,
+      "ai": {
+        "mode": "neural",
+        "decisions": 1798,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 1798,
+          "rawRequestBytes": 16114899,
+          "requestBytes": 5155594,
+          "responseBytes": 2451280,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1112",
+            "decisions": 200,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-908",
+            "decisions": 1532,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-436",
+            "decisions": 66,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    },
+    "after": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 1,
+      "ai": {
+        "mode": "neural",
+        "decisions": 1798,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 1798,
+          "rawRequestBytes": 16114899,
+          "requestBytes": 5155594,
+          "responseBytes": 2451280,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1112",
+            "decisions": 200,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-908",
+            "decisions": 1532,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-436",
+            "decisions": 66,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    }
+  },
+  "benchmark": {
+    "totalSeconds": 288.841348276,
+    "rounds": 8,
+    "errors": 0,
+    "fallbackRounds": 0,
+    "traffic": {
+      "requests": 2654,
+      "rawRequestBytes": 23522498,
+      "requestBytes": 7647990,
+      "responseBytes": 3620055,
+      "maxKbps": 256
+    },
+    "models": [
+      {
+        "id": "deep64-1112",
+        "decisions": 927,
+        "meanMs": 90.17545405285868,
+        "p95Ms": 127.45269700000063,
+        "maxMs": 516.3185760000051
+      },
+      {
+        "id": "deep256-908",
+        "decisions": 1149,
+        "meanMs": 98.91589055265433,
+        "p95Ms": 135.38205199997174,
+        "maxMs": 173.79287000000477
+      },
+      {
+        "id": "deep1024-436",
+        "decisions": 578,
+        "meanMs": 103.66260595847768,
+        "p95Ms": 144.33032199999434,
+        "maxMs": 333.3523580000001
+      }
+    ],
+    "requestPayloadMbps": 0.21182535106274394
+  },
+  "services": [
+    {
+      "MainPID": "1200890",
+      "NRestarts": "0",
+      "MemoryCurrent": "214532096",
+      "Id": "tavern-model@deep64-1112.service",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    {
+      "MainPID": "1200891",
+      "NRestarts": "0",
+      "MemoryCurrent": "266149888",
+      "Id": "tavern-model@deep256-908.service",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    {
+      "MainPID": "1200892",
+      "NRestarts": "0",
+      "MemoryCurrent": "479457280",
+      "Id": "tavern-model@deep1024-436.service",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    {
+      "MainPID": "1206560",
+      "NRestarts": "0",
+      "MemoryCurrent": "1863680",
+      "Id": "tavern-reward-model-tunnel.service",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    }
+  ],
+  "backendPidAfter": 126184,
+  "completedAt": "2026-09-11T12:32:31.392527+00:00",
+  "after": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 1,
+    "ai": {
+      "mode": "neural",
+      "decisions": 1952,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 1952,
+        "rawRequestBytes": 16949828,
+        "requestBytes": 5488240,
+        "responseBytes": 2662050,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1112",
+          "decisions": 247,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-908",
+          "decisions": 1601,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-436",
+          "decisions": 104,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "publicSmoke": {
+    "command": "TEST_BASE_URL=https://8.153.150.101 TAVERN_TEST_PATH=/tavern/ npx playwright test tests/ai-models.spec.ts --workers=1",
+    "passed": true,
+    "seconds": 43.6,
+    "checks": [
+      "select all three models",
+      "complete first combat with each model",
+      "reload preserves model",
+      "friend room inherits model",
+      "mobile model picker fits viewport"
+    ],
+    "newDecisions": {
+      "deep64-1112": 47,
+      "deep256-908": 69,
+      "deep1024-436": 38
+    }
+  },
+  "previousComputerServices": {
+    "tavern-model@deep64-1112": {
+      "MainPID": "0",
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    },
+    "tavern-model@deep256-908": {
+      "MainPID": "0",
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    },
+    "tavern-model@deep1024-436": {
+      "MainPID": "0",
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    },
+    "tavern-reward-model-tunnel": {
+      "MainPID": "0",
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    }
+  },
+  "targetHealth": [
+    {
+      "ok": true,
+      "episodes": 1112,
+      "architecture": "entity-gru-resnet",
+      "checkpointSha256": "452a8fe616035ec39d1da05750cca3f441175a18d456ab2c6da87319176b32e1",
+      "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+      "adaptedDefinitions": 0,
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "hidden": 128,
+      "actionCount": 4316,
+      "policyDepth": 64,
+      "valueDepth": 64,
+      "observationVersion": 4,
+      "entityVersion": 3,
+      "iteration": 71,
+      "unusedGoldPenalty": 0.01,
+      "decisions": 974,
+      "meanMs": 25.95663237398241
+    },
+    {
+      "ok": true,
+      "episodes": 908,
+      "architecture": "entity-gru-resnet",
+      "checkpointSha256": "4078283c8680ec7433505dfce01b4eecce0b50ea31ed9c95e82706e2ead692c2",
+      "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+      "adaptedDefinitions": 0,
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "hidden": 128,
+      "actionCount": 4316,
+      "policyDepth": 256,
+      "valueDepth": 256,
+      "observationVersion": 4,
+      "entityVersion": 3,
+      "iteration": 59,
+      "unusedGoldPenalty": 0.01,
+      "decisions": 1218,
+      "meanMs": 35.67714063628567
+    },
+    {
+      "ok": true,
+      "episodes": 436,
+      "architecture": "entity-gru-resnet",
+      "checkpointSha256": "f5208c89c1f8357aa1813966f03e1b87ceb93058e45dc2616326e74532637266",
+      "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+      "adaptedDefinitions": 0,
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "hidden": 128,
+      "actionCount": 4316,
+      "policyDepth": 1024,
+      "valueDepth": 1024,
+      "observationVersion": 4,
+      "entityVersion": 3,
+      "iteration": 28,
+      "unusedGoldPenalty": 0.01,
+      "decisions": 616,
+      "meanMs": 55.816909223934786
+    }
+  ],
+  "sectorPidAfter": 119165,
+  "security": {
+    "dedicatedKeyFingerprint": "SHA256:13/ccy0AXNrdyx7LinpDLbKRCsZ3pg1oIVBs8H8tb/4",
+    "keyCreatedOnTarget": true,
+    "privateKeyCopiedFromPreviousComputer": false,
+    "publicHostKeyPinned": true,
+    "sshRemoteCommandsDisabledForServingKey": true,
+    "onlyLoopbackListeners": true
+  },
+  "verificationNotes": [
+    "Target systemd units verified with systemd-analyze --user verify.",
+    "Staging tunnel stopped after handoff.",
+    "Public backend PID unchanged; existing room retained.",
+    "Public smoke executed with all previous-computer inference and tunnel units inactive and disabled.",
+    "Linger and service enablement checked; target machine was not rebooted during verification."
+  ]
+}

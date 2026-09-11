@@ -1,11 +1,11 @@
 [Unit]
-Description=Forward the reward-trained Battlegrounds models to this computer
+Description=Expose Battlegrounds inference from the compute host to the public server
 Wants=tavern-model@deep64-1112.service tavern-model@deep256-908.service tavern-model@deep1024-436.service
 After=tavern-model@deep64-1112.service tavern-model@deep256-908.service tavern-model@deep1024-436.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/ssh -NT -o BatchMode=yes -o ExitOnForwardFailure=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -R 127.0.0.1:18891:127.0.0.1:18890 -R 127.0.0.1:18893:127.0.0.1:18892 -R 127.0.0.1:18895:127.0.0.1:18894 root@100.121.69.44
+ExecStart=/usr/bin/ssh -NT -i %h/.ssh/tavern_public_ed25519 -o IdentitiesOnly=yes -o UserKnownHostsFile=%h/.ssh/tavern_public_known_hosts -o StrictHostKeyChecking=yes -o BatchMode=yes -o ExitOnForwardFailure=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -R 127.0.0.1:18891:127.0.0.1:18890 -R 127.0.0.1:18893:127.0.0.1:18892 -R 127.0.0.1:18895:127.0.0.1:18894 root@100.121.69.44
 Restart=always
 RestartSec=3
 NoNewPrivileges=true
