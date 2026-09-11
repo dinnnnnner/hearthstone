@@ -11,3 +11,5 @@ server-dist/
 rl-dist/
 rl/runs/
 *.egg-info/
+references/battlegrounds-original/
+references/battlegrounds-shop-actions/

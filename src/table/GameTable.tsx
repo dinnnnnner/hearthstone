@@ -1,4 +1,5 @@
 import { equippedPowers } from "../season/powers";
+import { RivalDetails } from "./RivalDetails";
 import { MatchTribes } from "../season/MatchTribes";
 import { KeywordEffects } from "./KeywordEffects";
 import { RefreshPrice } from "./RefreshPrice";
@@ -64,7 +65,7 @@ import { BoardDecoration } from "./BoardDecoration";
 import { Effects, type EffectsHandle } from "./Effects";
 import { shortStat } from "./presentation";
 import { useSceneMotion } from "./useSceneMotion";
-import { playTableSound } from "./sound";
+import { playTableSound, stopTableSounds } from "./sound";
 export type Zone = "shop" | "hand" | "board" | "spellshop";
 type Selection = { m: Minion; zone: Zone };
 type Drag = {
@@ -228,7 +229,6 @@ export function GameTable(p: Props) {
         combat ? "战斗开始" : recruit ? `第 ${game.turn} 回合` : "对局结束",
       );
       lastPhase.current = game.phase;
-      if (combat) playTableSound("round", p.sound);
     }
   }, [game.phase, game.turn, combat, recruit, p.sound]);
   useEffect(() => {
@@ -282,6 +282,7 @@ export function GameTable(p: Props) {
     const moving =
       d.moving || Math.hypot(e.clientX - d.startX, e.clientY - d.startY) > 9;
     if (moving) {
+      if (!d.moving) playTableSound("pickup", p.sound);
       const next = { ...d, x: e.clientX, y: e.clientY, moving };
       dragRef.current = next;
       setDrag(next);
@@ -926,24 +927,7 @@ export function GameTable(p: Props) {
             </div>
           )}
           {hudText && <div className="table-hud-message">{hudText}</div>}
-          {rival !== null && (
-            <div className="rival-detail">
-              <button onClick={() => setRival(null)} aria-label="关闭对手信息">
-                <X size={16} />
-              </button>
-              <strong>{game.opponents[rival].name}</strong>
-              <span>
-                {game.opponents[rival].tier}星 ·{" "}
-                {Math.max(0, game.opponents[rival].health)}生命 ·{" "}
-                {game.opponents[rival].armor || 0}护甲
-              </span>
-              <p>
-                {rival === game.nextOpponent
-                  ? "下一轮将与你交战"
-                  : "本局练习对手"}
-              </p>
-            </div>
-          )}
+          {rival !== null && game.opponents[rival] && <RivalDetails opponent={game.opponents[rival]} turn={game.turn} onClose={() => setRival(null)} />}
           {selection && !targeting && (
             <aside className="table-inspector" aria-label="随从操作">
               <button
@@ -1088,6 +1072,7 @@ export function GameTable(p: Props) {
             </select>
             <button
               onClick={() => {
+                stopTableSounds();
                 setMotionReset((n) => n + 1);
                 p.setFrame(game.battle!.frames.length - 1);
               }}

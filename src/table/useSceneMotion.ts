@@ -266,6 +266,8 @@ export function useSceneMotion(p: Props) {
         label(r, `+${Math.max(0, c.attack)}/+${c.health}`, "buff", delay);
         clock.at(delay, () => burst(r, "buff"));
       }
+      if (combat && before.game.phase === "combat" && c.dead && !el && old)
+        clock.at(contact, () => playTableSound("death", controls.current.sound));
       if (
         combat &&
         before.game.phase === "combat" &&
@@ -302,7 +304,6 @@ export function useSceneMotion(p: Props) {
           );
         });
         burst(r, "death");
-        playTableSound("death", controls.current.sound);
       }
       if (el && !c.spawned && old && now && (!combat || !p.current?.attacker)) {
         const dx = old.rect.x - now.rect.x,
@@ -363,6 +364,8 @@ export function useSceneMotion(p: Props) {
           tp = point(tr),
           dx = (tp.x - ap.x) * 0.88,
           dy = (tp.y - ap.y) * 0.83;
+        clock.at(reduced ? 0 : COMBAT_MOTION.windup, () =>
+          playTableSound("attack", controls.current.sound));
         a.style.zIndex = "30";
         clock.cleanup(() => {
           a.style.zIndex = "";
@@ -429,12 +432,18 @@ export function useSceneMotion(p: Props) {
         clock.at(delay, () => {
           setHeroStruck(true);
           burst(vr, "hit");
-          playTableSound("hit", controls.current.sound);
+          playTableSound("heroHit", controls.current.sound);
         });
       }
     }
+    if (combat && p.game.battle && p.frame === p.game.battle.frames.length - 1) {
+      const result = p.game.battle.result;
+      clock.at(p.game.battle.damage && !reduced ? COMBAT_MOTION.contact + 180 : 1, () =>
+        playTableSound(result === "win" ? "win" : result === "loss" ? "lose" : "tie", controls.current.sound));
+    }
     if (!combat && before.game.phase === "recruit") {
       const triple = p.game.triples > before.game.triples;
+      if (triple) clock.at(reduced ? 0 : 440, () => playTableSound("triple", controls.current.sound));
       for (const m of p.game.hand) {
         if (before.game.hand.some((n) => n.uid === m.uid)) continue;
         const el = locate(m.uid),
@@ -508,7 +517,6 @@ export function useSceneMotion(p: Props) {
           );
           clock.at(440, () => {
             p.effects.current?.burst(cx, cy, "gold");
-            playTableSound("triple", controls.current.sound);
           });
         } else
           animate(

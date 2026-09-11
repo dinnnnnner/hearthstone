@@ -8,7 +8,9 @@ import { useSceneReady } from "./loading/useSceneReady";
 import { LoadingScreen } from "./loading/LoadingScreen";
 import { useBattlePlayback } from "./table/useBattlePlayback";
 import { GameTable } from "./table/GameTable";
-import { playTableSound, type TableSound } from "./table/sound";
+import { configureTableSound, playTableSound, stopTableSounds, unlockTableSound, type TableSound } from "./table/sound";
+import { useGameSound } from "./table/useGameSound";
+import { preloadSampledSounds } from "./table/sampledSounds";
 import { basePath } from "./paths";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -307,14 +309,46 @@ function App({
       return true;
     }
   });
+  const [soundVolume, setSoundVolume] = useState(() => {
+    try {
+      const stored = localStorage.getItem("bobs-tavern-volume");
+      const value = stored === null ? 0.65 : Number(stored);
+      return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0.65;
+    } catch { return 0.65; }
+  });
   useEffect(() => {
+    configureTableSound(sound, soundVolume);
     try {
       localStorage.setItem("bobs-tavern-sound", sound ? "on" : "off");
+      localStorage.setItem("bobs-tavern-volume", String(soundVolume));
     } catch {}
-  }, [sound]);
+  }, [sound, soundVolume]);
+  useEffect(() => {
+    if (entrance.ready) void preloadSampledSounds();
+  }, [entrance.ready]);
+  useEffect(() => {
+    const visibility = () => { if (document.hidden) stopTableSounds(); };
+    const unlock = () => unlockTableSound();
+    document.addEventListener("pointerdown", unlock, true);
+    document.addEventListener("keydown", unlock, true);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      document.removeEventListener("pointerdown", unlock, true);
+      document.removeEventListener("keydown", unlock, true);
+      document.removeEventListener("visibilitychange", visibility);
+      stopTableSounds();
+    };
+  }, []);
+  function toggleSound() {
+    configureTableSound(!sound, soundVolume);
+    if (!sound) { unlockTableSound(); playTableSound("select"); }
+    setSound(!sound);
+  }
   const [frame, setFrame] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [poolOpen, setPoolOpen] = useState(false);
+  useGameSound(game, frame, playing, sound, tableMode && page === "tavern", entrance.ready,
+    network ? network.place : game.health > 0 ? 1 : 8);
   const hero = heroOf(game);
   const catalog = game.season
     ? collectionType === "spells"
@@ -326,7 +360,7 @@ function App({
   const opponent = game.opponents[game.nextOpponent];
   const recruiting = game.phase === "recruit";
   const rope = network?.clock && recruiting
-    ? <RecruitmentRope key={`${game.turn}:${network.clock.deadline}`} clock={network.clock} /> : null;
+    ? <RecruitmentRope key={`${game.turn}:${network.clock.deadline}`} clock={network.clock} sound={sound} /> : null;
   useEffect(() => {
     if (network) return;
     try {
@@ -376,18 +410,24 @@ function App({
       sell: "sell",
       cast: "spell",
       activate: "spell",
-      power: "spell",
-      discover: "spell",
+      power: "power",
+      discover: "discover",
+      reward: "discover",
+      choosePower: "discover",
+      buyTrinket: "buy",
+      move: "move",
       darkGift: "spell",
-      upgrade: "round",
-      freeze: "spell",
+      upgrade: "upgrade",
+      freeze: game.frozen ? "thaw" : "freeze",
     };
-    const kind = sounds[action.type];
+    const kind = action.type === "cast" && game.hand.some((m) => m.uid === action.uid && m.id === "s14_BG20_GEM")
+      ? "bloodGem" : sounds[action.type];
     if (kind) playTableSound(kind, sound);
   }
   function dispatch(action: Action) {
     if (network) {
       if (network.locked) {
+        playTableSound("error", sound);
         setToast("已提交，正在等待其他玩家。");
         return false;
       }
@@ -401,6 +441,7 @@ function App({
     }
     const result = act(game, action);
     if (result.error) {
+      playTableSound("error", sound);
       setToast(result.error);
       return false;
     }
@@ -434,6 +475,7 @@ function App({
       dispatch({ ...targeting, target: m.uid });
       return;
     }
+    playTableSound("select", sound);
     setSelection({ m, zone });
   }
   function play(m: Minion, position?: number) {
@@ -480,6 +522,8 @@ function App({
     } else dispatch({ type: "power", powerId });
   }
   function start() {
+    stopTableSounds();
+    playTableSound("round", sound);
     setGame(createGame(newHero));
     setModal(null);
     setSelection(null);
@@ -645,7 +689,7 @@ function App({
             <button
               className="icon-button sound-toggle"
               onClick={() => {
-                setSound(!sound);
+                toggleSound();
                 setToast(sound ? "音效已关闭" : "操作音效已开启");
               }}
               aria-label={sound ? "关闭音效" : "开启音效"}
@@ -714,7 +758,7 @@ function App({
                 speed={battleSpeed}
                 setSpeed={setBattleSpeed}
                 sound={sound}
-                toggleSound={() => setSound(!sound)}
+                toggleSound={toggleSound}
                 newGame={() => {
                   if (network) {
                     onLobby?.();
@@ -1722,7 +1766,7 @@ function App({
               <button
                 className={newHero === h.id ? "chosen" : ""}
                 key={h.id}
-                onClick={() => setNewHero(h.id)}
+                onClick={() => { setNewHero(h.id); playTableSound("heroSelect", sound); }}
               >
                 <img src={art(h.art)} alt="" />
                 <strong>{h.name}</strong>
@@ -1801,16 +1845,31 @@ function App({
           <div className="setting-row">
             <div>
               <strong>操作音效</strong>
-              <p>购买、刷新和技能的轻提示音。</p>
+              <p>实机采样的金币、翻牌、冰晶与战斗音效。</p>
             </div>
             <button
               className={`toggle ${sound ? "on" : ""}`}
-              onClick={() => setSound(!sound)}
+              onClick={toggleSound}
               aria-label="切换操作音效"
               aria-pressed={sound}
             >
               <span />
             </button>
+          </div>
+          <div className="setting-row">
+            <div>
+              <strong>音效音量</strong>
+              <p>{Math.round(soundVolume * 100)}%</p>
+            </div>
+            <input type="range" aria-label="音效音量" min="0" max="100" step="5"
+              value={Math.round(soundVolume * 100)} disabled={!sound}
+              onChange={(e) => {
+                const level = Number(e.target.value) / 100;
+                configureTableSound(sound, level);
+                setSoundVolume(level);
+              }}
+              onPointerUp={() => playTableSound("buy", sound)}
+              onKeyUp={() => playTableSound("buy", sound)} />
           </div>
           <div className="setting-row">
             <div>
@@ -2059,7 +2118,7 @@ function App({
                 </span>
                 <button
                   className="small-button"
-                  onClick={() => setFrame(game.battle!.frames.length - 1)}
+                  onClick={() => { stopTableSounds(); setFrame(game.battle!.frames.length - 1); }}
                 >
                   <SkipForward size={14} />
                   跳过动画

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { Rooms, OFFLINE_GRACE_MS, type Room, type Seat } from "./rooms";
 import { makeMinion } from "../src/engine";
 import { equipPowers } from "../src/season/powers";
+import { warbandLabel } from "../src/scouting";
 function setup(n = 2, mode: Room["mode"] = "timed") {
   let now = 100000,
     seed = 42;
@@ -69,6 +70,39 @@ test("Scabbs discovers the paired warband without exposing it in the player snap
   assert.deepEqual(seat.game!.discovery[0].copies, {});
   assert.ok(service.view(guests[0]).game!.opponents.every((o) => o.board.length === 0));
   pool(room);
+});
+test("opponent scouting records real pairings and prior warbands, hides this turn and survives restore", () => {
+  const { service, guests, room, identities } = setup(8, "training");
+  service.start(guests[0]);
+  for (let turn = 1; turn <= 3; turn++) {
+    for (const [i, seat] of room.seats.entries()) {
+      for (const m of seat.game!.board) for (const [id, n] of Object.entries(m.copies)) room.pool[id] += n;
+      seat.game!.board = (i === 0 ? ["BG29_611", "BG29_611", "BG29_611"] : ["BG29_611", "BG29_611", "BGS_004", "BGS_004"]).map(id => {
+        const m = makeMinion("s14_" + id); m.attack = i === 0 ? 100 : 0; m.health = i === 0 ? 1000 : 5; return m;
+      });
+    }
+    const labels = room.seats.map(p => warbandLabel(p.game!.board));
+    service.fight(room);
+    assert.ok(room.seats.some(p => p.game!.scouting![0].battle!.result === "win"));
+    assert.ok(room.seats.some(p => p.game!.scouting![0].battle!.result === "loss"));
+    for (const [i, seat] of room.seats.entries()) {
+      const record = seat.game!.scouting![0], battle = seat.game!.battles[0];
+      assert.equal(record.turn, turn);
+      assert.equal(record.warband, labels[i]);
+      assert.deepEqual(record.battle, { opponent: battle.name, result: battle.result, damage: battle.damage });
+    }
+    assert.ok(service.view(guests[0]).game!.opponents.every(o => o.scouting!.every(r => r.turn < turn)));
+    service.next(room);
+  }
+  // A private recruit change must not rewrite the previous combat's summary.
+  room.seats[1].game!.board = [];
+  service.opponents(room);
+  const view = service.view(guests[0]).game!;
+  assert.ok(view.opponents.every(o => o.board.length === 0));
+  assert.deepEqual(view.opponents[0].scouting!.map(r => r.turn), [3, 2]);
+  assert.equal(view.opponents[0].scouting![0].warband, "混合");
+  const restored = new Rooms(service.now, service.random); restored.restore(service.dump());
+  assert.deepEqual(restored.view(restored.auth(identities[0].token)).game!.opponents, view.opponents);
 });
 test("guest tokens, host permissions, room capacity and late join are enforced", () => {
   const { service, guests, room } = setup(8);
@@ -467,6 +501,24 @@ test("training rooms wait for all humans in recruit and combat and retain mode o
   assert.equal(restored.view(guest).room!.deadline, 0);
   restored.tick();
   assert.equal(restored.member(guest).r.stage, "recruit");
+  pool(restored.member(guest).r);
+});
+
+test("Cenarius permanent gold survives room restoration and pays out on the next recruit turn", () => {
+  const { service, guests, room, identities } = setup(1, "training");
+  service.hero(guests[0], "s14_cenarius");
+  service.start(guests[0]);
+  service.action(guests[0], { type: "power" }, "wisdom", 1);
+  assert.equal(service.view(guests[0]).game!.gold, 0);
+  const restored = new Rooms(service.now, service.random);
+  restored.restore(service.dump());
+  const guest = restored.auth(identities[0].token);
+  restored.action(guest, { type: "end" }, "end-first", 1);
+  restored.action(guest, { type: "continue" }, "next-first", 1);
+  const view = restored.view(guest);
+  assert.equal(view.room!.turn, 2);
+  assert.equal(view.game!.gold, 5);
+  assert.equal(view.game!.season!.maxGold, 11);
   pool(restored.member(guest).r);
 });
 

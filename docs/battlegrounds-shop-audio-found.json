@@ -1,0 +1,1969 @@
+{
+  "client": "/mnt/d/Hearthstone",
+  "unityVersion": "2022.3.62f2",
+  "unityPyVersion": "1.25.3",
+  "processing": "Decode only; no trimming, mixing, resampling, or gain changes.",
+  "status": "References verified in client configuration; runtime timing and perceptual matching not yet reproduced.",
+  "bundleSha256": {
+    "asset_manifest.unity3d": "8229e5d593ad3fbcb5f29c93c21c3a8ffd630b7a7a3e155436e964e577b22427",
+    "initial_base_global-ffbd77eb-prefab-11.unity3d": "5a7f4579e1077fe28096bfb507b869768e3b9b08ff955910253290aca96d83ba",
+    "soundspell_base_global-ffbd77eb-audio-12.unity3d": "c42c6cbc58732b35b95ea1b084c309f0dc03b682e3018e3fe32dd6e14a2f6a98",
+    "initial_base_global-64194cb9-prefab-0.unity3d": "f5986b58c7756695d6408eadfeea68a25d9da9143d2c496d3ddcbb6b2c866a9e",
+    "soundspell_base_global-ffbd77eb-audio-15.unity3d": "542b9c06a19bfaf15f30568fdd8bf71da5ad0f0a552622da0c657608e50a8ecd",
+    "essential_base_global-prefab-0.unity3d": "acfdaa65ceeab06e296572f99ff6b576c218c449eef86d3b99282487bdee24b4",
+    "essential_base_global-audio-0.unity3d": "cfba07f4d5b4c54bb95d67a7ed72f61847de1fbd8da3ecb8307e455a2ec433ea",
+    "initial_base_global-f4c0b6f1-prefab-1.unity3d": "b77541733486016e389d68915d7ca0ad4590377a7fbb4a76dff86e5450b54b8b",
+    "initial_base_global-f4c0b6f1-audio-1.unity3d": "295f68ea6f0f42c95ab8d3840526ea210765ea3784c2a37f024e662189f901cb",
+    "initial_base_global-e70f171c-prefab-0.unity3d": "ee648ebca5381ea3656da0529b5dc18e340fbc305367d6dfa0f03984582a60b8",
+    "initial_base_global-e70f171c-audio-0.unity3d": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+    "initial_base_global-e70f171c-audio-2.unity3d": "c6b4c050580f712a0404e4d28642b72a417109b86ffff904520571421c631ef9",
+    "initial_base_global-2ebe64b8-prefab-2.unity3d": "b1b6e50af8362322d7549f8d023399310be6bea477931b267428e4ea652eec53"
+  },
+  "soundDefs": [
+    {
+      "group": "sell",
+      "bundle": "initial_base_global-ffbd77eb-prefab-11.unity3d",
+      "pathId": -7764571626953304889,
+      "m_AudioClip": "GadgetzanAuctioneer_card_spawn_coins_No_Delay.wav:e606b02b3703fe5499ba65cfe1b43e41",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "buy",
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "pathId": -524392124726337089,
+      "m_AudioClip": "Coin_Missile_Sound.wav:b83b0596b8fc64dba8f3203cb16e5f31",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "buy",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": 9122487940136582291,
+      "m_AudioClip": "mana_crystal_refresh.wav:a7b3a1ef513b98745ae739c4a0184ad1",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "buy",
+      "bundle": "initial_base_global-f4c0b6f1-prefab-1.unity3d",
+      "pathId": 1395166537394949437,
+      "m_AudioClip": "CoinBag_Underlay_Play_2.wav:ea03ed3db297bf842879cbac6299d020",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "refresh",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": -1309217977194182999,
+      "m_AudioClip": "Minion_Summon_Minion_01.wav:edb65cfaf38877d47980769b8e49f7d0",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "refresh",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": 8252197464281458970,
+      "m_AudioClip": "Minion_Drop_Basic_1.wav:8a1c406551c0b3445ba6436137a380f4",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "refresh",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": -3259001109173926916,
+      "m_AudioClip": "Minion_Drop_Basic_2.wav:2e2f54afe12cb594b961bd34ebefc52f",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "refresh",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": -4964456221999031061,
+      "m_AudioClip": "Minion_Drop_Basic_3.wav:200053a3a348aea45a41d996f67c00c8",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "refresh",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": -5252783853466478613,
+      "m_AudioClip": "Minion_Drop_Basic_4.wav:00fdf734c51d03947a7719eee63ef41a",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "refresh",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": 4638778653581165975,
+      "m_AudioClip": "Minion_Drop_Basic_5.wav:e6b5a2ad6c67f3245add83894e65d610",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "triple",
+      "bundle": "initial_base_global-e70f171c-prefab-0.unity3d",
+      "pathId": 7876605156130182355,
+      "m_AudioClip": "BG_StarMissile_1.wav:dc7cc91b1c2b5b5488627baa74ab6470",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "triple",
+      "bundle": "initial_base_global-e70f171c-prefab-0.unity3d",
+      "pathId": -4221417846849817805,
+      "m_AudioClip": "Treasure_Cards_Appear.wav:f50fc63f8609cf84e914cafe518c8db4",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 0.800000011920929,
+      "m_RandomVolumeMax": 0.800000011920929
+    },
+    {
+      "group": "triple",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": -6461385766613166340,
+      "m_AudioClip": "add_card_to_hand_1.wav:399c3b1e667bad040bb99af727fc4a9b",
+      "m_RandomClips": [
+        {
+          "m_Clip": "add_card_to_hand_1.wav:399c3b1e667bad040bb99af727fc4a9b",
+          "m_Weight": 1.0
+        },
+        {
+          "m_Clip": "add_card_to_hand_2.wav:50eb80b80f5f83040a12cba144491f4e",
+          "m_Weight": 1.0
+        },
+        {
+          "m_Clip": "add_card_to_hand_3.wav:39f15b2dc9439e546a09a4f325295a69",
+          "m_Weight": 1.0
+        }
+      ],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "freeze",
+      "bundle": "essential_base_global-prefab-0.unity3d",
+      "pathId": 7198322678668642453,
+      "m_AudioClip": "Mage_FrostNovaCast_New.wav:8a1f733703c5594478bac141c2e8bac8",
+      "m_RandomClips": [],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.0,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    },
+    {
+      "group": "thaw",
+      "bundle": "initial_base_global-2ebe64b8-prefab-2.unity3d",
+      "pathId": 5800018870951527884,
+      "m_AudioClip": "",
+      "m_RandomClips": [
+        {
+          "m_Clip": "Shared_Frost_Impact_Small_1.wav:1a10330b780c7bf49a7fcccc825faecb",
+          "m_Weight": 1.0
+        },
+        {
+          "m_Clip": "Shared_Frost_Impact_Small_2.wav:2360fd222712a0a4ca60dc090a1e5df4",
+          "m_Weight": 1.0
+        },
+        {
+          "m_Clip": "Shared_Frost_Impact_Small_3.wav:10a691bd19f5d6a49b75b4feba3f3a04",
+          "m_Weight": 1.0
+        }
+      ],
+      "m_RandomPitchMin": 1.0,
+      "m_RandomPitchMax": 1.2000000476837158,
+      "m_RandomVolumeMin": 1.0,
+      "m_RandomVolumeMax": 1.0
+    }
+  ],
+  "actions": [
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_Purchase_AE_CoinThrow",
+      "pathId": -6712124945369835678,
+      "state": "Coin Toss",
+      "audioActions": [
+        {
+          "action": "AudioPlaythroughAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {},
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 1366098715164628834
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -1217403313613875358
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 9192939337726515042
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 9192939337726515042
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 9192939337726515042
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 4283842479425673058
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ],
+      "objectRefs": []
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_Purchase_AE_CoinThrow",
+      "pathId": -6712124945369835678,
+      "state": "Impact FX",
+      "audioActions": [
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": true
+        },
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {
+        "35": "archive:/CAB-69c88b234dfa427e02d1fcee9337ae34/CAB-69c88b234dfa427e02d1fcee9337ae34",
+        "36": "archive:/CAB-c994446b62d2fe6f385668bbd3d09718/CAB-c994446b62d2fe6f385668bbd3d09718"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 7015687242301462370
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 9192939337726515042
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 35,
+          "m_PathID": 9122487940136582291
+        },
+        {
+          "m_FileID": 36,
+          "m_PathID": 1395166537394949437
+        }
+      ],
+      "objectRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_MinionSwap_CustomSpawnIn",
+      "pathId": 302446810203310067,
+      "state": "Action Init",
+      "audioActions": [
+        {
+          "action": "AudioPlayRandomClipAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {
+        "35": "archive:/CAB-69c88b234dfa427e02d1fcee9337ae34/CAB-69c88b234dfa427e02d1fcee9337ae34"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [],
+      "objectRefs": [
+        {
+          "m_FileID": 35,
+          "m_PathID": -1309217977194182999
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_MinionSwap_CustomSpawnIn",
+      "pathId": 302446810203310067,
+      "state": "Action Impact",
+      "audioActions": [
+        {
+          "action": "AudioPlayRandomClipAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {
+        "35": "archive:/CAB-69c88b234dfa427e02d1fcee9337ae34/CAB-69c88b234dfa427e02d1fcee9337ae34"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -6284825514062428173
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [],
+      "objectRefs": [
+        {
+          "m_FileID": 35,
+          "m_PathID": 8252197464281458970
+        },
+        {
+          "m_FileID": 35,
+          "m_PathID": -3259001109173926916
+        },
+        {
+          "m_FileID": 35,
+          "m_PathID": -4964456221999031061
+        },
+        {
+          "m_FileID": 35,
+          "m_PathID": -5252783853466478613
+        },
+        {
+          "m_FileID": 35,
+          "m_PathID": 4638778653581165975
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_TripleMerge_CustomSpawn",
+      "pathId": 3658462939387760554,
+      "state": "Get Side",
+      "audioActions": [
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": true
+        },
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {
+        "22": "archive:/CAB-cf317521b72ae3b0d6113173cc0a77a5/CAB-cf317521b72ae3b0d6113173cc0a77a5",
+        "35": "archive:/CAB-69c88b234dfa427e02d1fcee9337ae34/CAB-69c88b234dfa427e02d1fcee9337ae34"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 2036262856846970794
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 2036262856846970794
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 7829405383720996778
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 7829405383720996778
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 7829405383720996778
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 22,
+          "m_PathID": -4221417846849817805
+        },
+        {
+          "m_FileID": 35,
+          "m_PathID": -6461385766613166340
+        }
+      ],
+      "objectRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_TripleMerge_Impact_MergeMinion",
+      "pathId": 8964268380008794937,
+      "state": "FX!",
+      "audioActions": [
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": false
+        }
+      ],
+      "externalFiles": {
+        "22": "archive:/CAB-cf317521b72ae3b0d6113173cc0a77a5/CAB-cf317521b72ae3b0d6113173cc0a77a5"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "RootObject",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 3617422045914909497
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 2193193268720487225
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -6930701617232229575
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -8399501179551233223
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -1060956551990490311
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 22,
+          "m_PathID": 7876605156130182355
+        }
+      ],
+      "objectRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_TripleMerge_Impact_MergeMinion",
+      "pathId": 8964268380008794937,
+      "state": "Goldenize",
+      "audioActions": [
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {
+        "22": "archive:/CAB-cf317521b72ae3b0d6113173cc0a77a5/CAB-cf317521b72ae3b0d6113173cc0a77a5"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -6930701617232229575
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -6930701617232229575
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -1060956551990490311
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -1060956551990490311
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 22,
+          "m_PathID": 7876605156130182355
+        }
+      ],
+      "objectRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_FreezeMinions_AE_OpponentSide",
+      "pathId": 5379025552405481021,
+      "state": "Action 1",
+      "audioActions": [
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": true
+        },
+        {
+          "action": "AudioPlayRandomClipAction",
+          "enabled": false
+        }
+      ],
+      "externalFiles": {
+        "35": "archive:/CAB-69c88b234dfa427e02d1fcee9337ae34/CAB-69c88b234dfa427e02d1fcee9337ae34"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -8519724724910897603
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -7713043324354574787
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 1257076001911326269
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 8076975019859035709
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 928561959487653437
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 4212447965570057789
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 35,
+          "m_PathID": 7198322678668642453
+        }
+      ],
+      "objectRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        {
+          "m_FileID": 35,
+          "m_PathID": -3748813756898326839
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_Sell_Impact_MinionAnim",
+      "pathId": 7600830342359556894,
+      "state": "Coin FX",
+      "audioActions": [
+        {
+          "action": "AudioPlayClipAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {
+        "64": "archive:/CAB-1078490e024fcbcbfedfd1707ee43a02/CAB-1078490e024fcbcbfedfd1707ee43a02"
+      },
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 1,
+            "name": "Actor",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -7427599429275999458
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 64,
+          "m_PathID": -7764571626953304889
+        }
+      ],
+      "objectRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ]
+    },
+    {
+      "bundle": "initial_base_global-64194cb9-prefab-0.unity3d",
+      "prefab": "Bacon_Sell_AE_CoinThrow",
+      "pathId": 2482171102457274815,
+      "state": "Coin Toss",
+      "audioActions": [
+        {
+          "action": "AudioPlaythroughAction",
+          "enabled": false
+        }
+      ],
+      "externalFiles": {},
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 4750632668198379967
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 4483014978979209663
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 4483014978979209663
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 4483014978979209663
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -2038469977133833793
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ],
+      "objectRefs": []
+    },
+    {
+      "bundle": "initial_base_global-2ebe64b8-prefab-2.unity3d",
+      "prefab": "Card_Play_Bacon_Ability_Frozen",
+      "pathId": 2788878057917171148,
+      "state": "Death",
+      "audioActions": [
+        {
+          "action": "AudioPlaythroughAction",
+          "enabled": true
+        }
+      ],
+      "externalFiles": {},
+      "ownerRefs": [
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -4528192278338091572
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": -6468539603991476788
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 3684689144909907404
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 244803112570308044
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 4510543005695657420
+            }
+          }
+        },
+        {
+          "ownerOption": 1,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 3790961255110723020
+            }
+          }
+        },
+        {
+          "ownerOption": 0,
+          "gameObject": {
+            "useVariable": 0,
+            "name": "",
+            "tooltip": "",
+            "showInInspector": 0,
+            "networkSync": 0,
+            "value": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            }
+          }
+        }
+      ],
+      "soundRefs": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 0
+        }
+      ],
+      "objectRefs": []
+    }
+  ],
+  "clips": [
+    {
+      "group": "sell",
+      "label": "出售金币",
+      "name": "GadgetzanAuctioneer_card_spawn_coins_No_Delay",
+      "file": "GadgetzanAuctioneer_card_spawn_coins_No_Delay.wav",
+      "guid": "e606b02b3703fe5499ba65cfe1b43e41",
+      "bundle": "soundspell_base_global-ffbd77eb-audio-12.unity3d",
+      "pathId": -2629674246243825086,
+      "seconds": 1.8375625,
+      "sampleRate": 48000,
+      "channels": 2,
+      "peak": 0.959564208984375,
+      "wavSha256": "45c06a30eefcc0c8feeea9e555d352a72e80d3d133610f96b32ae6e6c849bd65"
+    },
+    {
+      "group": "buy",
+      "label": "金币飞行",
+      "name": "Coin_Missile_Sound",
+      "file": "Coin_Missile_Sound.wav",
+      "guid": "b83b0596b8fc64dba8f3203cb16e5f31",
+      "bundle": "soundspell_base_global-ffbd77eb-audio-15.unity3d",
+      "pathId": -8491504070024472675,
+      "seconds": 1.785532879818594,
+      "sampleRate": 44100,
+      "channels": 1,
+      "peak": 0.805328369140625,
+      "wavSha256": "f49bab4320907d98153d0701be2e76fd7aaefa24581ec8012d064245bc4ee7af"
+    },
+    {
+      "group": "buy",
+      "label": "金币命中提示",
+      "name": "mana_crystal_refresh",
+      "file": "mana_crystal_refresh.wav",
+      "guid": "a7b3a1ef513b98745ae739c4a0184ad1",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 7866804111902392900,
+      "seconds": 0.6099791666666666,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.31341552734375,
+      "wavSha256": "36357b4ac23a951551c59920b133c45b379eb973cd6cbd0ce866332ae3b35e85"
+    },
+    {
+      "group": "buy",
+      "label": "金币袋底声",
+      "name": "CoinBag_Underlay_Play_2",
+      "file": "CoinBag_Underlay_Play_2.wav",
+      "guid": "ea03ed3db297bf842879cbac6299d020",
+      "bundle": "initial_base_global-f4c0b6f1-audio-1.unity3d",
+      "pathId": 8048310168639415952,
+      "seconds": 1.5220833333333332,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.83062744140625,
+      "wavSha256": "badb65adf12108db2fc2b37f25648fd321099a852b392bcddb2a77cc8f351d1f"
+    },
+    {
+      "group": "refresh",
+      "label": "随从出现",
+      "name": "Minion_Summon_Minion_01",
+      "file": "Minion_Summon_Minion_01.wav",
+      "guid": "edb65cfaf38877d47980769b8e49f7d0",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 129582632500955072,
+      "seconds": 1.9010833333333332,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "wavSha256": "2056ac0df6cec732e4c869a78734ad4d534620611bf18b542176853364d57fb8"
+    },
+    {
+      "group": "refresh",
+      "label": "落桌变体 1",
+      "name": "Minion_Drop_Basic_1",
+      "file": "Minion_Drop_Basic_1.wav",
+      "guid": "8a1c406551c0b3445ba6436137a380f4",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 1651082470888464290,
+      "seconds": 0.7605208333333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.976165771484375,
+      "wavSha256": "7d9f42d18f4f14afa08feca6c24010dd77b451062082f0b46a0ef781406faeaa"
+    },
+    {
+      "group": "refresh",
+      "label": "落桌变体 2",
+      "name": "Minion_Drop_Basic_2",
+      "file": "Minion_Drop_Basic_2.wav",
+      "guid": "2e2f54afe12cb594b961bd34ebefc52f",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": -7472452364843376474,
+      "seconds": 0.788375,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.98370361328125,
+      "wavSha256": "dc30795c43430e83efff5cc235df335b9aeee3ad05deed750d1b26fee25af0d2"
+    },
+    {
+      "group": "refresh",
+      "label": "落桌变体 3",
+      "name": "Minion_Drop_Basic_3",
+      "file": "Minion_Drop_Basic_3.wav",
+      "guid": "200053a3a348aea45a41d996f67c00c8",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 1328519536980660897,
+      "seconds": 0.779875,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.953277587890625,
+      "wavSha256": "fb3a94d4a5c07fb2d2e1aef8ac66e86c1cb5f12c353b9628c613ca296a0ca51a"
+    },
+    {
+      "group": "refresh",
+      "label": "落桌变体 4",
+      "name": "Minion_Drop_Basic_4",
+      "file": "Minion_Drop_Basic_4.wav",
+      "guid": "00fdf734c51d03947a7719eee63ef41a",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": -6043937274860878339,
+      "seconds": 0.8122916666666666,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "wavSha256": "583d34c3650d07aa434aa8eccf79d45acf015b6ebe13a005dc6c929ef09ef548"
+    },
+    {
+      "group": "refresh",
+      "label": "落桌变体 5",
+      "name": "Minion_Drop_Basic_5",
+      "file": "Minion_Drop_Basic_5.wav",
+      "guid": "e6b5a2ad6c67f3245add83894e65d610",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 3957065276852564952,
+      "seconds": 0.9306666666666666,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.963134765625,
+      "wavSha256": "c897ef4d3bf2671023b06dbdada3bdc2b47a17a09c5222b3d0ea7c5e1e1e8233"
+    },
+    {
+      "group": "triple",
+      "label": "变金阶段",
+      "name": "BG_StarMissile_1",
+      "file": "BG_StarMissile_1.wav",
+      "guid": "dc7cc91b1c2b5b5488627baa74ab6470",
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -2315069980133972357,
+      "seconds": 1.9123333333333334,
+      "sampleRate": 48000,
+      "channels": 2,
+      "peak": 0.777984619140625,
+      "wavSha256": "2fd681118c806b10551b4110cdd175404795001187c3be7d96ea6c62de9b5bc4"
+    },
+    {
+      "group": "triple",
+      "label": "合成卡牌显现",
+      "name": "Treasure_Cards_Appear",
+      "file": "Treasure_Cards_Appear.wav",
+      "guid": "f50fc63f8609cf84e914cafe518c8db4",
+      "bundle": "initial_base_global-e70f171c-audio-2.unity3d",
+      "pathId": -3301175017373247503,
+      "seconds": 1.9713958333333332,
+      "sampleRate": 48000,
+      "channels": 2,
+      "peak": 0.87078857421875,
+      "wavSha256": "4a744744e99891232d039dac42fd57ee2cbfbe105d41f88852b8ad9ee61817a7"
+    },
+    {
+      "group": "triple",
+      "label": "卡牌入手变体 1",
+      "name": "add_card_to_hand_1",
+      "file": "add_card_to_hand_1.wav",
+      "guid": "399c3b1e667bad040bb99af727fc4a9b",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 7055292543106833956,
+      "seconds": 0.7870208333333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.5360107421875,
+      "wavSha256": "f2ffd2dd18e818acba7ee8661426dd5b5e89e140c57f79e896ca11f0c89b4a42"
+    },
+    {
+      "group": "triple",
+      "label": "卡牌入手变体 2",
+      "name": "add_card_to_hand_2",
+      "file": "add_card_to_hand_2.wav",
+      "guid": "50eb80b80f5f83040a12cba144491f4e",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": -4319643229543438479,
+      "seconds": 0.7424791666666667,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.54608154296875,
+      "wavSha256": "f8264abb9b6d74c0d80a9df173984c62857066a3482eba728fbd77ebf37f74a5"
+    },
+    {
+      "group": "triple",
+      "label": "卡牌入手变体 3",
+      "name": "add_card_to_hand_3",
+      "file": "add_card_to_hand_3.wav",
+      "guid": "39f15b2dc9439e546a09a4f325295a69",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 209681883178517954,
+      "seconds": 0.7785833333333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.776611328125,
+      "wavSha256": "2276d01c3f92f3351993bacb052d3516b6ce6aea29c1969d3298c75b54ce97e7"
+    },
+    {
+      "group": "freeze",
+      "label": "冻结主音",
+      "name": "Mage_FrostNovaCast_New",
+      "file": "Mage_FrostNovaCast_New.wav",
+      "guid": "8a1f733703c5594478bac141c2e8bac8",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": -2300417902949919193,
+      "seconds": 3.3188333333333335,
+      "sampleRate": 48000,
+      "channels": 2,
+      "peak": 0.9920654296875,
+      "wavSha256": "8478e99ff5c97411b03ffdeebe2b8006d9b368a235706bb9f55cf82bcd754da2"
+    },
+    {
+      "group": "thaw",
+      "label": "碎冰变体 1",
+      "name": "Shared_Frost_Impact_Small_1",
+      "file": "Shared_Frost_Impact_Small_1.wav",
+      "guid": "1a10330b780c7bf49a7fcccc825faecb",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 3692340727251170092,
+      "seconds": 1.0378684807256235,
+      "sampleRate": 44100,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "wavSha256": "3016d1b1c660946dc676d6d3b992dc7b3f94220cef30f3804708073edb1b6c97"
+    },
+    {
+      "group": "thaw",
+      "label": "碎冰变体 2",
+      "name": "Shared_Frost_Impact_Small_2",
+      "file": "Shared_Frost_Impact_Small_2.wav",
+      "guid": "2360fd222712a0a4ca60dc090a1e5df4",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": 8703446140724687831,
+      "seconds": 0.8960090702947846,
+      "sampleRate": 44100,
+      "channels": 1,
+      "peak": 0.999969482421875,
+      "wavSha256": "e0be836766ce1860df66618c6bb449604eb2b6e6bbceee8880f44cb949d9db0e"
+    },
+    {
+      "group": "thaw",
+      "label": "碎冰变体 3",
+      "name": "Shared_Frost_Impact_Small_3",
+      "file": "Shared_Frost_Impact_Small_3.wav",
+      "guid": "10a691bd19f5d6a49b75b4feba3f3a04",
+      "bundle": "essential_base_global-audio-0.unity3d",
+      "pathId": -7187665122044439515,
+      "seconds": 1.0410204081632652,
+      "sampleRate": 44100,
+      "channels": 1,
+      "peak": 0.880706787109375,
+      "wavSha256": "9bbad14074505f273df91b4d6aabdd89500ca899a80f0c1ed8fd8a92504536fc"
+    }
+  ]
+}
