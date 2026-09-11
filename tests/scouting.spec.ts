@@ -1,5 +1,38 @@
 import { test, expect } from "@playwright/test";
-import { createGame } from "../src/engine";
+import { createGame, makeMinion } from "../src/engine";
+
+test("practice AI battles update health and remain visible after returning and reloading", async ({ page }) => {
+  const game = createGame("s14_lich", () => .37);
+  game.health = 100;
+  for (const [i, opponent] of game.opponents.entries()) {
+    opponent.health = 30; opponent.armor = 0; opponent.name = `练习对手${i}`;
+    opponent.board = Array.from({ length: 7 }, () => {
+      const m = makeMinion("s14_BG25_001");
+      m.attack = i < 4 ? 100 : 0; m.health = i < 4 ? 1000 : 1; m.keywords = [];
+      return m;
+    });
+  }
+  await page.addInitScript(game => {
+    localStorage.setItem("bobs-tavern-entry", "practice");
+    localStorage.setItem("bobs-tavern-sound", "off");
+    if (!sessionStorage.getItem("practice-combat-fixture")) {
+      localStorage.setItem("bobs-tavern-season14-v1", JSON.stringify(game));
+      sessionStorage.setItem("practice-combat-fixture", "yes");
+    }
+  }, game);
+  await page.goto(process.env.TAVERN_TEST_PATH || "/");
+  await page.getByRole("button", { name: /开始战斗|结束招募/ }).click();
+  await page.getByRole("button", { name: /跳过动画/ }).click();
+  await page.getByRole("button", { name: /返回酒馆/ }).click();
+  const bot = page.getByRole("button", { name: /^练习对手6，/ });
+  await expect(bot).toHaveAttribute("aria-label", /25生命/);
+  await bot.click();
+  await expect(page.getByRole("region", { name: "对手战绩" })).toContainText("练习对手1 对 练习对手6 造成 5 点伤害");
+  await page.reload();
+  await expect(bot).toHaveAttribute("aria-label", /25生命/);
+  await bot.click();
+  await expect(page.getByRole("region", { name: "对手战绩" })).toContainText("练习对手1 对 练习对手6 造成 5 点伤害");
+});
 
 for (const mobile of [false, true]) test(`opponent scouting shows past damage and tribe summary on ${mobile ? "mobile" : "desktop"}`, async ({ page }) => {
   if (mobile) await page.setViewportSize({ width: 390, height: 844 });
@@ -22,7 +55,7 @@ for (const mobile of [false, true]) test(`opponent scouting shows past damage an
     }
   }, game);
   await page.goto(process.env.TAVERN_TEST_PATH || "/");
-  await page.locator(".rival-token").nth(0).click();
+  await page.getByRole("button", { name: /^机械玩家，/ }).click();
   const panel = page.getByRole("region", { name: "对手战绩" });
   await expect(panel.locator(".rival-warband")).toHaveText("上回合阵容3机械");
   await expect(panel).toContainText("机械玩家 对 鱼人玩家 造成 8 点伤害");
@@ -35,12 +68,12 @@ for (const mobile of [false, true]) test(`opponent scouting shows past damage an
   await page.screenshot({ path: `/tmp/scouting-${mobile ? "mobile" : "desktop"}.png` });
   await page.getByRole("button", { name: "关闭对手信息" }).click();
   await expect(panel).toBeHidden();
-  await page.locator(".rival-token").nth(1).click();
+  await page.getByRole("button", { name: /^混合玩家，/ }).click();
   await expect(panel.locator(".rival-warband")).toHaveText("上回合阵容混合");
   await expect(panel).toContainText("混合玩家 与 机械玩家 平局，0 点伤害");
   await page.keyboard.press("Escape");
   await expect(panel).toBeHidden();
   await page.reload();
-  await page.locator(".rival-token").nth(0).click();
+  await page.getByRole("button", { name: /^机械玩家，/ }).click();
   await expect(panel).toContainText("机械玩家 对 鱼人玩家 造成 8 点伤害");
 });

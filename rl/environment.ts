@@ -12,7 +12,7 @@ declare const RL_SOURCE_HASH: string;
 declare const RL_RULES_HASH: string;
 declare const RL_LEGACY_V2_COMPATIBLE: boolean;
 export const META = {
-  schema: "tavern-selfplay-v3", observationVersion: 3, actionVersion: 2,
+  schema: "tavern-selfplay-v3", observationVersion: 4, actionVersion: 2,
   sourceHash: typeof RL_SOURCE_HASH === "undefined" ? "development" : RL_SOURCE_HASH,
   rulesHash: typeof RL_RULES_HASH === "undefined" ? "development" : RL_RULES_HASH,
   legacyV2SourceHash: typeof RL_LEGACY_V2_COMPATIBLE !== "undefined" && RL_LEGACY_V2_COMPATIBLE ? "b6903488d2ee12d2113c84941d5e5fdb357bf36b1b681110c019b0697eaa62d3" : null,

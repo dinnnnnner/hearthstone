@@ -4,6 +4,8 @@ import { SEASON_HEROES, GIFTS } from "../src/season/catalog";
 import { TRINKETS, minionCost, spellCost, refreshPayment } from "../src/season/engine";
 import { equippedPowers, powerProgress } from "../src/season/powers";
 import { assertActionBounds } from "./actions";
+import { publicScouting } from "./scouting";
+import { gameRankingHealth, opponentRankingHealth } from "../src/ranking";
 
 // Extra trinkets can occur at turns 5 (Marin), 6, 8 (Buttons), and 9, at most once per turn.
 // Stable entity slots are shared by observations and the candidate-action scorer.
@@ -32,7 +34,7 @@ for (const c of ALL_CARDS) DEFINITIONS[identity(c.id)] = {
 for (const h of SEASON_HEROES) DEFINITIONS[identity(h.id)] = { kind: "hero", cost: h.cost, passive: h.passive };
 for (const t of TRINKETS) DEFINITIONS[identity(t.id)] = { kind: "trinket" };
 for (const g of GIFTS) DEFINITIONS[identity(g.id)] = { kind: "gift" };
-export const ENTITY_SCHEMA = { version: 2, ids: IDS, definitions: DEFINITIONS, zones: ZONES, sizes: SIZES, offsets: OFFSETS, count: ENTITY_COUNT };
+export const ENTITY_SCHEMA = { version: 3, ids: IDS, definitions: DEFINITIONS, zones: ZONES, sizes: SIZES, offsets: OFFSETS, count: ENTITY_COUNT };
 
 /** Full dynamic own-card effects, with instance links converted to visible slot indices. */
 function cardDetails(m: Minion, ref: (uid: string) => number, historical = false): Detail {
@@ -62,6 +64,8 @@ export function observeEntities(s: Game, decisions: number, budget: number): (En
   // Explicit allowlist: never serialize Game, pool, initialPool or opponents' boards.
   put(0, 0, identity(s.hero), {
     turn: s.turn, tier: s.tier, gold: s.gold, health: s.health, armor: st.armor,
+    seatIndex: s.seatIndex, spellArmor: st.spellArmor || 0, rankingHealth: gameRankingHealth(s),
+    scouting: publicScouting(s, s.scouting),
     upgrade: s.upgrade, frozen: s.frozen, powerUsed: s.powerUsed, triples: s.triples, purchases: s.purchases,
     refreshes: s.refreshes, rewards: s.rewards, pogo: s.pogo, decisions, budget,
     tribes: st.tribes, freeRefresh: st.freeRefresh, refreshPayment: refreshPayment(s),
@@ -95,7 +99,11 @@ export function observeEntities(s: Game, decisions: number, budget: number): (En
     if (i === 2) details.buyCost = spellCost(s, m);
     put(i + 1, position, identity(m.id), details);
   }));
-  s.opponents.forEach((o, i) => put(7, i, identity(o.hero), { health: o.health, armor: o.armor || 0, tier: o.tier, next: i === s.nextOpponent }));
+  s.opponents.forEach((o, i) => put(7, i, identity(o.hero), {
+    health: o.health, armor: o.armor || 0, tier: o.tier, next: i === s.nextOpponent,
+    seatIndex: o.seatIndex, spellArmor: o.spellArmor || 0, rankingHealth: opponentRankingHealth(o),
+    scouting: publicScouting(s, o.scouting),
+  }));
   equippedPowers(s).forEach((id, i) => {
     const p = heroPowerState(s, id);
     put(8, i, identity(id), { ...powerProgress(s, id), cost: p.cost, remaining: p.remaining, unavailable: !!p.reason });

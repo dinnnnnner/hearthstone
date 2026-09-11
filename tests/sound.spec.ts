@@ -134,7 +134,7 @@ test("volume and mute persist while shop interactions keep working", async ({ pa
 
 
 test("missing samples stay silent instead of changing into electronic cues", async ({ page }) => {
-  await page.route("**/audio/shop/*.wav", (route) => route.fulfill({ status: 404 }));
+  await page.route("**/audio/shop/*", (route) => route.fulfill({ status: 404 }));
   await page.goto(path);
   const result = await page.evaluate(async () => {
     const Original = window.AudioContext;
@@ -160,7 +160,7 @@ test("missing samples stay silent instead of changing into electronic cues", asy
 });
 
 test("a stalled sample does not block other cues or replay stale actions", async ({ page }) => {
-  await page.route("**/audio/shop/triple-*.wav", () => {});
+  await page.route("**/audio/shop/triple-*", () => {});
   await page.goto(path);
   const result = await page.evaluate(async () => {
     const Original = window.AudioContext;

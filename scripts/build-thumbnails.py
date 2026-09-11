@@ -2,6 +2,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import subprocess
+import json
 
 root = Path(__file__).resolve().parent.parent
 source = root / 'public/art'
@@ -25,3 +26,6 @@ with ThreadPoolExecutor(max_workers=4) as pool:
 original = sum(p.stat().st_size for p in paths)
 compact = sum(p.stat().st_size for p in target.glob('*.webp'))
 print(f'{len(paths)} UI images: {original:,} -> {compact:,} bytes ({compact/original:.1%})')
+(root / 'src/loading/matchAssets.json').write_text(json.dumps([
+    path.relative_to(root / 'public').as_posix() for path in sorted(target.glob('*.webp'))
+], indent=2) + '\n')

@@ -1,5 +1,7 @@
 import { equippedPowers } from "../src/season/powers";
 import { recordScoutRound, warbandLabel, previousScoutRounds } from "../src/scouting";
+import { gameRankingHealth, absorbArmor } from "../src/ranking";
+import { createPairingCycle, cyclePairings, type PairingCycle } from "./pairing";
 import { randomBytes, createHash, randomInt } from "node:crypto";
 import {
   createSeason,
@@ -65,6 +67,9 @@ export type Room = {
   grave?: { hero: string; name: string; board: Minion[]; tier: number };
   online?: string;
   pairings?: [string, string | null][];
+  pairingCycle?: PairingCycle;
+  lastPairings?: { turn: number; pairs: [string, string | null][] };
+  lastEliminations?: { turn: number; victims: string[]; killers: Record<string, string> };
   gameRev?: number;
   storageRev?: number;
 };
@@ -273,11 +278,12 @@ export class Rooms {
       [rest[i], rest[j]] = [rest[j], rest[i]];
     }
     r.tribes = [...required, ...rest.slice(0, 5 - required.length)];
-    for (const p of r.seats) {
+    for (const [seatIndex, p] of r.seats.entries()) {
       p.game = createSeason(p.hero, this.random, {
         tribes: r.tribes,
         pool: Object.keys(r.pool).length ? r.pool : undefined,
       });
+      p.game.seatIndex = seatIndex;
       r.pool = p.game.pool;
       r.initial = { ...p.game.season!.initialPool };
       p.rev++;
@@ -290,15 +296,15 @@ export class Rooms {
     this.touch(r);
   }
   planPairings(r: Room) {
-    const order = [...this.living(r)];
-    if (order.length > 2) {
-      const tail = order.splice(1),
-        shift = (r.turn - 1) % tail.length;
-      order.push(...tail.slice(shift), ...tail.slice(0, shift));
-    }
-    r.pairings = [];
-    while (order.length)
-      r.pairings.push([order.shift()!.id, order.pop()?.id ?? null]);
+    const alive = this.living(r), members = alive.map(p => p.id);
+    if (!r.pairingCycle || JSON.stringify(r.pairingCycle.members) !== JSON.stringify(members))
+      r.pairingCycle = createPairingCycle(members, !r.pairingCycle && members.length % 2 === 0 ? 1 : r.turn);
+    const bottom = [...alive].sort((a, b) => gameRankingHealth(b.game!) - gameRankingHealth(a.game!)).slice(-3);
+    const deaths = r.lastEliminations;
+    const soleVictim = deaths?.turn === r.turn - 1 && deaths.victims.length === 1 ? deaths.victims[0] : undefined;
+    const killer = soleVictim && r.seats.find(p => p.id === soleVictim)?.hero === r.grave?.hero ? deaths!.killers[soleVictim] : undefined;
+    r.pairings = cyclePairings(r.pairingCycle, r.turn, bottom.filter(p => p.id !== killer).map(p => p.id), this.random,
+      r.lastPairings?.turn === r.turn - 1 ? r.lastPairings.pairs : []);
     this.opponents(r);
   }
   opponents(r: Room) {
@@ -309,10 +315,12 @@ export class Rooms {
       p.game.opponents = r.seats
         .filter((x) => x.id !== p.id)
         .map((x) => ({
+          seatIndex: r.seats.indexOf(x),
           hero: x.hero,
           name: x.name,
           health: x.game?.health || 0,
           armor: x.game?.season?.armor || 0,
+          spellArmor: x.game?.season?.spellArmor || 0,
           tier: x.game?.tier || 1,
           scouting: previousScoutRounds(x.game?.scouting, r.turn),
           board: [],
@@ -370,6 +378,7 @@ export class Rooms {
       this.eliminate(r, p);
       this.opponents(r);
       this.checkFinish(r);
+      if (r.stage === "recruit") this.planPairings(r);
       this.touch(r);
     }
     this.touch(r, false);
@@ -528,6 +537,8 @@ export class Rooms {
     return true;
   }
   fight(r: Room) {
+    const aliveBefore = this.living(r).map(p => p.id);
+    const killers: Record<string, string> = {};
     // Apply each player's end effects once, before taking either side's combat snapshots.
     for (const p of this.living(r)) {
       this.autoChoices(r, p);
@@ -650,13 +661,15 @@ export class Rooms {
       const loser =
         battle.result === "loss" ? a : battle.result === "win" ? b : undefined;
       if (loser) {
-        const st = loser.game!.season!,
-          absorbed = Math.min(st.armor, battle.damage);
-        st.armor -= absorbed;
-        loser.game!.health -= battle.damage - absorbed;
-        if (loser.game!.health <= 0) dead.push(loser);
+        loser.game!.health -= absorbArmor(loser.game!.season!, battle.damage);
+        if (loser.game!.health <= 0) {
+          dead.push(loser);
+          const winner = loser === a ? b : a;
+          if (winner) killers[loser.id] = winner.id;
+        }
       }
     }
+    r.lastPairings = { turn: r.turn, pairs: structuredClone(r.pairings!) };
     // Rank simultaneous eliminations by health after damage, with stable seat order for ties.
     dead.sort((a, b) => a.game!.health - b.game!.health);
     let place = this.living(r).length + dead.length;
@@ -664,6 +677,7 @@ export class Rooms {
       this.eliminate(r, p);
       p.place = place--;
     }
+    r.lastEliminations = { turn: r.turn, victims: aliveBefore.filter(id => !this.living(r).some(p => p.id === id)), killers };
     r.stage = "combat";
     for (const p of r.seats) {
       p.continued = p.bot || p.game!.health <= 0;
@@ -739,6 +753,7 @@ export class Rooms {
         p.game.health = 0;
         this.eliminate(r, p);
       }
+      if (r.stage === "recruit" && this.living(r).length > 1) this.planPairings(r);
       this.opponents(r);
       this.checkFinish(r);
     }
@@ -786,6 +801,9 @@ export class Rooms {
     }
     r.grave = undefined;
     r.pairings = undefined;
+    r.pairingCycle = undefined;
+    r.lastPairings = undefined;
+    r.lastEliminations = undefined;
     this.touch(r);
   }
   tick() {
@@ -919,7 +937,8 @@ export class Rooms {
         for (const g of this.guests.values())
           if (g.room === r.code) g.seen = this.now();
       }
-      for (const p of r.seats) {
+      for (const [seatIndex, p] of r.seats.entries()) {
+        if (p.game) p.game.seatIndex = seatIndex;
         if (p.game && p.game.health <= 0 && !p.place) this.eliminate(r, p);
         if (p.game?.battle && !p.battleId)
           p.battleId = this.identity.hex(12);

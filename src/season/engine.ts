@@ -1,5 +1,6 @@
 import { recordsFrames, recordsLogs } from "../simulation";
-import { recordScoutRound, warbandLabel } from "../scouting";
+import { practiceBattles } from "../practice";
+import { absorbArmor } from "../ranking";
 import {
   CARDS,
   POOL_COPIES,
@@ -18,6 +19,7 @@ import {
   type Action,
   type Battle,
   type BattleFrame,
+  type Opponent,
 } from "../engine";
 import {
   SEASON_CARDS,
@@ -51,6 +53,7 @@ export interface SeasonState {
   powerCycle?: boolean;
   patch: "36.4.2";
   armor: number;
+  spellArmor?: number;
   tribes: Tribe[];
   spellShop: Minion[];
   initialPool: Record<string, number>;
@@ -815,9 +818,7 @@ function scale(s: Game, key: string, a: number, h: number, board = s.board) {
 function heroDamage(s: Game, n: number, ctx: Context) {
   const rewind = ctx.board.some((m) => has(m, "rewind"));
   if (!rewind) {
-    const armor = Math.min(ss(s).armor, n);
-    ss(s).armor -= armor;
-    s.health -= n - armor;
+    s.health -= absorbArmor(ss(s), n);
   }
   for (const m of [...ctx.board]) run({ ...ctx, amount: n }, m, "heroDamage");
 }
@@ -923,6 +924,7 @@ function effect(ctx: Context, m: Minion, a: Ability) {
       ss(s).maxGold += n;
       break;
     case "armor":
+      ss(s).spellArmor = Math.max(0, n - (ss(s).armor - (ss(s).spellArmor || 0)));
       ss(s).armor = n;
       break;
     case "freeRefresh":
@@ -2509,6 +2511,22 @@ function recruitAI(s: Game, rng: () => number) {
     }
   }
 }
+function practiceCombatState(s: Game, opponent: Opponent): Game {
+  // Practice bots have a board, not a full economy or hero-power state. Keep their
+  // combat context independent of the human's buffs, hand, trinkets and powers.
+  const state = createSeason(PREFIX + "lich", () => 0.5, { tribes: ss(s).tribes, pool: {} });
+  state.hero = opponent.hero;
+  state.turn = s.turn;
+  state.tier = opponent.tier;
+  state.health = opponent.health;
+  state.board = opponent.board;
+  state.season!.powers = [];
+  state.season!.armor = opponent.armor || 0;
+  state.opponents = s.opponents.map(o => o === opponent
+    ? { name: "你", hero: s.hero, health: s.health, tier: s.tier, board: [] }
+    : { ...o, board: [] });
+  return state;
+}
 export function actSeason(
   state: Game,
   action: Action,
@@ -2875,40 +2893,21 @@ export function actSeason(
     case "end": {
       endEffects(s, rng);
       recruitAI(s, rng);
-      for (const rival of s.opponents.filter(o => o.health > 0))
-        recordScoutRound(rival, { turn: s.turn, warband: warbandLabel(rival.board) });
-      const o = s.opponents[s.nextOpponent];
-      if (!o || s.opponents.every((o) => o.health <= 0)) {
+      const battle = practiceBattles(s, (ally, enemy) => {
+        if (!ally) return seasonCombat(s, enemy.board, enemy.tier, rng);
+        return seasonCombat(practiceCombatState(s, ally), enemy.board, enemy.tier, rng, practiceCombatState(s, enemy));
+      }, m => release(s, m));
+      if (!battle) {
         s.phase = "over";
         break;
       }
-      const battle = seasonCombat(s, o.board, o.tier, rng);
-      recordScoutRound(o, {
-        turn: s.turn, warband: o.scouting![0].warband,
-        battle: { opponent: "你", result: battle.result === "win" ? "loss" : battle.result === "loss" ? "win" : "tie", damage: battle.damage },
-      });
-      battle.opponent = o.name;
       s.battle = battle;
       s.battles.unshift({
         turn: s.turn,
         result: battle.result,
         damage: battle.damage,
-        name: o.name,
+        name: battle.opponent,
       });
-      if (battle.result === "loss") {
-        const absorbed = Math.min(st.armor, battle.damage);
-        st.armor -= absorbed;
-        s.health -= battle.damage - absorbed;
-      }
-      if (battle.result === "win") {
-        const absorbed = Math.min(o.armor || 0, battle.damage);
-        o.armor = (o.armor || 0) - absorbed;
-        o.health -= battle.damage - absorbed;
-        if (o.health <= 0) {
-          o.board.forEach((m) => release(s, m));
-          o.board = [];
-        }
-      }
       s.phase = "combat";
       log(
         s,

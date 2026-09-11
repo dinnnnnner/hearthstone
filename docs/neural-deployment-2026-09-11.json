@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-11",
+  "backendRelease": "/opt/bobs-tavern/releases/20260911T023300Z",
+  "previousBackendRelease": "/opt/bobs-tavern/releases/20260911T020353Z",
+  "inferenceRelease": "/opt/tavern-inference/releases/20260911T022600Z",
+  "modelEpisodes": 780,
+  "checkpointSha256": "f98f4e2225049f74b4601ca13a2520c32d8a3b250927da17fa9266c06f2c2666",
+  "serverBundleSha256": "112e6325c42da5163681fb00d0b82f71552dbe8d20b9d873e9b1c4d7c56f98ae",
+  "contract": "1f3f636a3d358f038c0c7dff22a098c35e5d9c1a753adcb560e8a816dd3179ea",
+  "adaptedDefinitions": 9,
+  "inferenceMemoryPeakBytes": 351522816,
+  "availableMemoryMiBAfterSmoke": 577,
+  "publicSmoke": {
+    "rounds": 3,
+    "modelDecisions": 198,
+    "errors": 0,
+    "fallbackRounds": 0,
+    "meanRequestMs": 48.1619,
+    "maxRequestMs": 144.989,
+    "testRoomRemoved": true
+  },
+  "tests": {
+    "server": 41,
+    "rl": 12,
+    "pythonValidationCases": 5
+  },
+  "sectorPidBefore": 119165,
+  "sectorPidAfter": 119165,
+  "benchmark1Rooms": {
+    "decisions": 995,
+    "rooms": 1,
+    "rounds": 8,
+    "totalSeconds": 45.173858463,
+    "meanMs": 29.196263436180995,
+    "p50Ms": 26.746855999997933,
+    "p95Ms": 42.380307999999786,
+    "maxMs": 441.507524,
+    "nodeRssMiB": 114.76953125
+  },
+  "benchmark3Rooms": {
+    "decisions": 3321,
+    "rooms": 3,
+    "rounds": 8,
+    "totalSeconds": 141.081844583,
+    "meanMs": 27.720181610057182,
+    "p50Ms": 25.76309900000342,
+    "p95Ms": 40.873764000003575,
+    "maxMs": 198.013482,
+    "nodeRssMiB": 115.125
+  },
+  "inferenceArtifactSha256": "8c8d7c2e353e5aa11af9963d4a8dcb01ded01345df3ef43126b08df31105e7db"
+}

@@ -4,6 +4,8 @@ import { ALL_TRIBES, SEASON_HEROES } from "../src/season/catalog";
 import { TRINKETS, minionCost, spellCost, refreshPayment } from "../src/season/engine";
 import { equippedPowers } from "../src/season/powers";
 import { LIMITS, assertActionBounds } from "./actions";
+import { publicScouting, WARBAND_TYPES } from "./scouting";
+import { gameRankingHealth, opponentRankingHealth } from "../src/ranking";
 
 export const CARD_IDS = [...new Set(ALL_CARDS.map(c => c.id))].sort();
 export const HERO_IDS = SEASON_HEROES.map(h => h.id).sort();
@@ -67,5 +69,23 @@ export function observe(s: Game, stepsInTurn: number, turnLimit: number): number
   for (let i = 0; i < 10; i++) result.push((s.rewards[i] || 0) / 6);
   // Last combat's initial enemy board is visible history, unlike its current recruit board.
   for (let i = 0; i < 7; i++) result.push(...card(st.lastEnemy?.[i], s));
+  // Append public ranking and two fixed historical rounds for each seat, own seat first.
+  const seats = [
+    { seatIndex: s.seatIndex, spellArmor: st.spellArmor, rankingHealth: gameRankingHealth(s), scouting: s.scouting },
+    ...s.opponents.map(o => ({ ...o, rankingHealth: opponentRankingHealth(o) })),
+  ];
+  for (let i = 0; i < 8; i++) {
+    const seat = seats[i];
+    result.push(seat ? ((seat.seatIndex ?? -1) + 1) / 8 : 0,
+      scale(seat?.spellArmor || 0, 40), scale(seat?.rankingHealth || 0, 40));
+    const rounds = publicScouting(s, seat?.scouting);
+    for (let age = 1; age <= 2; age++) {
+      const r = rounds.find(r => r.turn === s.turn - age), b = r?.battle;
+      result.push(r ? 1 : 0, r ? r.turn / 50 : 0, (r?.warband.count || 0) / 7,
+        ...WARBAND_TYPES.map(type => +(r?.warband.type === type)), b ? 1 : 0,
+        ...["win", "loss", "tie"].map(result => +(b?.result === result)), scale(b?.damage || 0, 40),
+        ...Array.from({ length: 9 }, (_, seatIndex) => +(b?.opponentSeat === seatIndex)));
+    }
+  }
   return result;
 }

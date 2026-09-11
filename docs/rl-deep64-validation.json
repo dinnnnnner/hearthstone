@@ -1,0 +1,97 @@
+{
+  "episodes": 8,
+  "parameters": 3421950,
+  "model_spec": {
+    "architecture": "entity-gru-resnet",
+    "hidden": 128,
+    "heads": 4,
+    "layers": 2,
+    "policy_depth": 64,
+    "value_depth": 64
+  },
+  "sourceHash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+  "rulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+  "trainerHash": "7cdae942ebcdedb17d7dbc7f0209b1f8b669898d76675b595bc6b563575107cc",
+  "checkpointSha256": "1e060e56b41e850ca85bc9051dbc6adc603672a13e2e8a4c411dee1b97cca56f",
+  "checkpointBytes": 85904232,
+  "allWeightsFinite": true,
+  "changedTowerWeightTensors": 256,
+  "linearLayers": {
+    "policy_tower": 64,
+    "value_tower": 64
+  },
+  "oldCheckpointRejection": "Checkpoint incompatible with simulator: sourceHash",
+  "torch": "2.12.1+cu130",
+  "metrics": [
+    {
+      "iteration": 1,
+      "iteration_seconds": 69.98242623195983,
+      "end_to_end_actions_per_second": 54.22789983618609,
+      "cuda_peak_allocated_mib": 419.61328125,
+      "episodes": 4,
+      "seconds": 67.39899220189545,
+      "environment_actions": 3795,
+      "actions_per_second": 56.306479904506254,
+      "policy_loss": 0.059022309051619634,
+      "value_loss": 0.6760106103287803,
+      "entropy": 2.0705282158321805,
+      "approx_kl": 0.017502152844633596,
+      "gradient_norm": 21.070064544677734,
+      "samples": 3795,
+      "optimizer_steps": 9,
+      "kl_early_stop": true,
+      "sequence_chunks": 250,
+      "optimization_seconds": 2.1483946839580312,
+      "completed_games": 4,
+      "league_generations": [
+        0,
+        1
+      ]
+    },
+    {
+      "iteration": 2,
+      "iteration_seconds": 81.76199019607157,
+      "end_to_end_actions_per_second": 44.6050786099288,
+      "cuda_peak_allocated_mib": 434.0986328125,
+      "episodes": 8,
+      "seconds": 70.16716314700898,
+      "environment_actions": 3647,
+      "actions_per_second": 51.97587926362477,
+      "policy_loss": -0.022469359803302533,
+      "value_loss": 0.05497535228215415,
+      "entropy": 2.204372202527934,
+      "approx_kl": 0.006900791291188617,
+      "gradient_norm": 3.4622668952777467,
+      "samples": 1706,
+      "optimizer_steps": 58,
+      "kl_early_stop": false,
+      "sequence_chunks": 114,
+      "optimization_seconds": 11.11492729303427,
+      "completed_games": 4,
+      "league_generations": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "trainingRelease": "/root/autodl-tmp/tavern-selfplay-deep64-20260911",
+  "backendRelease": "/opt/bobs-tavern/releases/20260911T024800Z",
+  "previousBackendRelease": "/opt/bobs-tavern/releases/20260911T023300Z",
+  "backendSha256": "b7d030e8615bbbb41cf993677c0403c8c300dd2471fcf113271d0f3c165b4657",
+  "tests": {
+    "engine": 125,
+    "server": 43,
+    "rl": 13,
+    "pythonLocal": 22,
+    "pythonGpuServer": 22
+  },
+  "publicSmoke": {
+    "neuralDecisions": 47,
+    "errors": 0,
+    "stage": "combat"
+  },
+  "inferenceModelEpisodes": 780,
+  "sectorPid": 119165,
+  "trainingSourceArchiveSha256": "cb4da865ae64b5b47f76580c412358ebcc6e4419de2628fa5bce6549a937bae7"
+}

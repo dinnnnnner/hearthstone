@@ -1,4 +1,5 @@
 import { equippedPowers } from "../season/powers";
+import { rankingHealth, opponentRankingHealth } from "../ranking";
 import { RivalDetails } from "./RivalDetails";
 import { MatchTribes } from "../season/MatchTribes";
 import { KeywordEffects } from "./KeywordEffects";
@@ -258,6 +259,12 @@ export function GameTable(p: Props) {
       ? previousStats.current.enemyHealth
       : game.opponents[index].health;
   }
+  const rankedHeroes = [
+    ...game.opponents.map((o, i) => ({ index: i, seat: o.seatIndex ?? i + 1,
+      health: rivalHealth(i), rank: opponentRankingHealth(o, rivalHealth(i)) })),
+    { index: -1, seat: game.seatIndex ?? 0, health: game.health,
+      rank: rankingHealth(game.health, game.season?.armor, game.season?.spellArmor) },
+  ].sort((a, b) => Number(b.health > 0) - Number(a.health > 0) || b.rank - a.rank || a.seat - b.seat);
   function startDrag(
     e: PointerEvent<HTMLButtonElement>,
     m: Minion,
@@ -476,12 +483,18 @@ export function GameTable(p: Props) {
       <div className="table-game">
         <aside className="opponent-rail" aria-label="对局英雄">
           <span className="rail-caption">本局英雄</span>
-          {game.opponents.map((o, i) => (
+          {rankedHeroes.map(({ index: i }, rank) => {
+            if (i === -1) return <div className={`rail-self ${game.health <= 0 ? "eliminated" : ""}`} key="self" aria-label={`你，第${rank + 1}名`} data-rank={rank + 1}>
+              <img src={art(hero.art)} alt="" /><span>你</span>
+            </div>;
+            const o = game.opponents[i];
+            return (
             <button
               key={o.hero}
               className={`rival-token ${i === game.nextOpponent ? "next-rival" : ""} ${rivalHealth(i) <= 0 ? "eliminated" : ""}`}
               onClick={() => setRival(rival === i ? null : i)}
-              aria-label={`${o.name}，${rivalHealth(i) <= 0 ? "已淘汰" : rivalHealth(i) + "生命"}${i === game.nextOpponent ? "，下一位对手" : ""}`}
+              data-rank={rank + 1}
+              aria-label={`${o.name}，第${rank + 1}名，${rivalHealth(i) <= 0 ? "已淘汰" : rivalHealth(i) + "生命"}${i === game.nextOpponent ? "，下一位对手" : ""}`}
             >
               <img
                 src={art(HEROES.find((h) => h.id === o.hero)!.art)}
@@ -495,11 +508,7 @@ export function GameTable(p: Props) {
               </span>
               {i === game.nextOpponent && <i />}
             </button>
-          ))}
-          <div className="rail-self">
-            <img src={art(hero.art)} alt="" />
-            <span>你</span>
-          </div>
+          ); })}
         </aside>
         <div className="table-arena" ref={table}>
           <div className="table-ambience">

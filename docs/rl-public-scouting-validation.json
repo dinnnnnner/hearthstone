@@ -1,0 +1,105 @@
+{
+  "release": "/root/autodl-tmp/tavern-selfplay-v3-scouting-20260911",
+  "verified_files": 33,
+  "archive_sha256": "ae7389fc7995aeae9a215a358ce18cd40395f7a98d70c2b83b499153a88ebe94",
+  "build": {
+    "schema": 2,
+    "sourceHash": "ffdd548b2b9569762525ce2389f29f77741f7f672fcbca6b2dd1696a5256ad06",
+    "rulesHash": "462f0f427b6cb2cfd153a8bd26dcd32c9e00087a207b4a75e71e297e16619c7e",
+    "legacyV2Compatible": false,
+    "commit": "d7e2dd3500d64faf5e8e99070d02b0a15b0dc930",
+    "esbuild": "0.28.2",
+    "inputs": {
+      "docs/rules-coverage.json": "2a1c5f831d24ca223b8a30ca0306e9508b4170ffdb123ca748deac1006271093",
+      "rl/actions.ts": "73bb2b5b254a34de8ba1a6db0fdf096167f04288d425f108dc7037620e2623ee",
+      "rl/bridge.ts": "b117fb826d9b0e6d84e75ef7eb9a64840396b7319cc8ffdf4e3c0a218521afeb",
+      "rl/entities.ts": "56f0e1b4984b61742cfdc3a7c798adc4439f1fd7c82560eff6d39f6190967f41",
+      "rl/environment.ts": "2b5421b197998489d59865af22b5a9ce83a11c769c6aeb0b0631634e27af8bbc",
+      "rl/observation.ts": "68f4a0e85e62e26f08e9b63ee149261675fcf3fba55e6f8b568950d679c1c698",
+      "rl/scouting.ts": "9aef9c36a28b7f85da233bc3305114a8eb4bebe78c739360431e15467a3e8663",
+      "server/pairing.ts": "8d1688e95773f4f0b4fe1e226ef434ee1b757c23243e9a98d99c5be4f34f7004",
+      "server/rooms.ts": "719a8d929c13b451e5bdfe4cbec868d7df6f9c79fde6d71eeb3bc08b929ff90c",
+      "src/data.ts": "6f3c3f49a431d55f87f6baacbae92b27cc75e24cb1903fcc7e1cf2df48ea6e9d",
+      "src/engine.ts": "e73366f0922f4923016836237d1b7e6d2cc1c486dda681e82eeabeda69a91ec1",
+      "src/paths.ts": "22f4c053389cf97b61cacf8b08916c791a105d7931007fa86da9a1887f34273a",
+      "src/ranking.ts": "c67f5af018609401cf4c901928031856a815c47a4aefcf30eb0e0f243c2921f7",
+      "src/scouting.ts": "2a94f4abaa5c43c9e816ef95cabe5c17d6183ac2d33d2b7100039870843bee38",
+      "src/season/catalog.ts": "9aeeb7df20d24ec82f449a9cfb5b137d7805c23e59f480786fadc30903f90c17",
+      "src/season/engine.ts": "b81c738e8defc1641e2ec178be7f5929cf01aa34babdb9655c35543deb616ab0",
+      "src/season/expanded-catalog.ts": "d12e5dfba73869414a272520ab28398881e031a7cc2ce9f6175ea51a2c4edd10",
+      "src/season/expanded-heroes.ts": "9b83ffaa6a57d6a8717fb4888212675b4fc932413c848f8cee6a4313653b42ec",
+      "src/season/powers.ts": "540bda22e3b7b1cf754a90838bdecc4f397f6e282f3f7b2d5dc89dcd7fe2b264",
+      "src/season/snapshot.json": "4f8d8c6d0e1bcec5d6566a3f56fc86d0011a81f709bc509ed0ed1443e08eadf2",
+      "src/simulation.ts": "03429506ec334926b8eff85ef19b838acd72030c75504c69f2ac2c568884177f"
+    }
+  },
+  "local_tests": {
+    "rules": 125,
+    "server": 36,
+    "rl": 12,
+    "python": 17
+  },
+  "server_python_tests": 17,
+  "gpu_validation": {
+    "device": "NVIDIA GeForce RTX 3080 Ti",
+    "torch": "2.12.1+cu130",
+    "metrics": [
+      {
+        "iteration": 1,
+        "iteration_seconds": 16.12293397798203,
+        "end_to_end_actions_per_second": 28.77888110400083,
+        "cuda_peak_allocated_mib": 73.873046875,
+        "episodes": 1,
+        "seconds": 14.09245238499716,
+        "environment_actions": 464,
+        "actions_per_second": 32.9254261305133,
+        "policy_loss": -0.011261431872844696,
+        "value_loss": 0.11762110392252605,
+        "entropy": 1.675278695424398,
+        "approx_kl": 0.0016383056637922018,
+        "gradient_norm": 1.1129956761995952,
+        "samples": 464,
+        "optimizer_steps": 15,
+        "kl_early_stop": false,
+        "sequence_chunks": 120,
+        "optimization_seconds": 1.8683491109404713,
+        "completed_games": 1,
+        "league_generations": [
+          0,
+          1
+        ]
+      },
+      {
+        "iteration": 2,
+        "iteration_seconds": 15.563803419005126,
+        "end_to_end_actions_per_second": 29.29875093662347,
+        "cuda_peak_allocated_mib": 75.0478515625,
+        "episodes": 2,
+        "seconds": 13.465775821940042,
+        "environment_actions": 456,
+        "actions_per_second": 33.86362627967047,
+        "policy_loss": -0.01209809457262357,
+        "value_loss": 0.09919224282105764,
+        "entropy": 1.6273030678431193,
+        "approx_kl": 0.00035813166183894886,
+        "gradient_norm": 1.1863727152347565,
+        "samples": 456,
+        "optimizer_steps": 15,
+        "kl_early_stop": false,
+        "sequence_chunks": 116,
+        "optimization_seconds": 1.8598673909436911,
+        "completed_games": 1,
+        "league_generations": [
+          0,
+          1,
+          2
+        ]
+      }
+    ],
+    "parameters_finite": true,
+    "resume_passed": true
+  },
+  "old_checkpoint_rejection": "Checkpoint incompatible with simulator: sourceHash",
+  "old_source_hash": "6fffd064ada15971d8502f6fdb37c86483b4a740b819f38101d7e2b5edd927d1",
+  "checkpoint_sha256": "f00ab6e3ac615f68403f7e005994521393aba6974b9bfaddf38cedb445d115cc"
+}

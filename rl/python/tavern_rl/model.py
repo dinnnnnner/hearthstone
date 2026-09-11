@@ -109,4 +109,7 @@ def make_model(specification):
     if architecture == 'entity-gru':
         from .entity_model import EntityActorCritic
         return EntityActorCritic(**spec)
+    if architecture == 'entity-gru-resnet':
+        from .deep_model import DeepEntityActorCritic
+        return DeepEntityActorCritic(**spec)
     raise ValueError(f'Unknown architecture: {architecture}')

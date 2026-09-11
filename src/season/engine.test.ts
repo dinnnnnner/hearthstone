@@ -1451,54 +1451,62 @@ test("Fandral's Fortune discovers Choose One spells as well as minions, preservi
   s = apply(s, { type: "cast", uid: chosen.uid }); assert.ok(s.season!.activeDiscovery?.both);
 });
 
-// Gem Confiscation uses adjacent minions in the target's own row.
-test("Gem Confiscation targets tavern minions and transfers only adjacent tavern gems", () => {
-  let s = fixture();
-  const board = add(s, "BG25_001", "board");
-  board.gems = { attack: 40, health: 50 }; board.attack += 40; board.health += 50;
-  const left = add(s, "BG25_001", "shop"), target = add(s, "BG25_001", "shop"), right = add(s, "BG25_001", "shop");
-  left.gems = { attack: 3, health: 5 }; left.attack += 10; left.health += 14;
-  right.gems = { attack: 8, health: 12 }; right.attack += 8; right.health += 12;
-  target.gems = { attack: 2, health: 4 }; target.attack += 2; target.health += 4;
-  s.season!.buffs.gem = { attack: 2, health: 3 };
-  const spell = add(s, "BG28_698"), targets = seasonTargets(s, spell, "cast");
-  assert.ok(targets.some((m) => m.uid === target.uid));
-  assert.ok(!targets.some((m) => s.hand.includes(m) || s.season!.spellShop.includes(m)));
-  const beforeBoard = structuredClone(s.board), untouchedShop = structuredClone(s.shop.slice(0, -3));
-  s = apply(s, { type: "cast", uid: spell.uid, target: target.uid });
-  const result = s.shop.find((m) => m.uid === target.uid)!;
-  assert.deepEqual(result.gems, { attack: 19, health: 29 });
-  assert.equal(result.attack, target.attack + 17); assert.equal(result.health, target.health + 25);
-  for (const donor of [left, right]) {
-    const actual = s.shop.find((m) => m.uid === donor.uid)!;
-    assert.equal(actual.attack, donor.attack - donor.gems!.attack);
-    assert.equal(actual.health, donor.health - donor.gems!.health);
-    assert.equal(actual.gems, undefined);
+// Stillwater Meditator grants an untargeted, permanent tavern spell bonus.
+test("Stillwater Meditator generates Meditation each turn and its bonus stacks permanently", () => {
+  for (const golden of [false, true]) {
+    let s = fixture();
+    const caster = add(s, "BG32_835", "hand", golden);
+    const target = add(s, "BG25_001", "board");
+    const factor = golden ? 2 : 1;
+    s = apply(s, { type: "play", uid: caster.uid });
+    const meditation = () => s.hand.filter((m) => m.id === PREFIX + "BG32_835t");
+    assert.equal(meditation().length, 1);
+    assert.equal(meditation()[0].golden, golden);
+    assert.equal(meditation()[0].expires, true);
+    assert.equal(meditation()[0].tempSpell, false);
+    assert.deepEqual(seasonTargets(s, meditation()[0], "cast"), []);
+    s = apply(s, { type: "cast", uid: meditation()[0].uid });
+    assert.deepEqual(s.season!.buffs.spell, { attack: factor, health: factor });
+    assert.equal(s.board.find((m) => m.uid === target.uid)!.attack, target.attack);
+    assert.equal(s.season!.spellsCast, 0);
+
+    const firstBuff = add(s, "BG28_168");
+    s = apply(s, { type: "cast", uid: firstBuff.uid });
+    const buffed = s.board.find((m) => m.uid === target.uid)!;
+    assert.equal(buffed.attack, target.attack + 1 + factor);
+    assert.equal(buffed.health, target.health + 1 + factor);
+    s = next(s);
+    assert.equal(meditation().length, 1);
+    assert.deepEqual(s.season!.buffs.spell, { attack: factor, health: factor });
+    assert.equal(s.board.find((m) => m.uid === target.uid)!.attack, buffed.attack);
+    s = apply(s, { type: "cast", uid: meditation()[0].uid });
+    assert.deepEqual(s.season!.buffs.spell, { attack: 2 * factor, health: 2 * factor });
+    s = apply(s, { type: "sell", uid: caster.uid });
+    s = next(s);
+    assert.equal(meditation().length, 0);
+    assert.deepEqual(s.season!.buffs.spell, { attack: 2 * factor, health: 2 * factor });
+    const secondBuff = add(s, "BG28_168");
+    s = apply(s, { type: "cast", uid: secondBuff.uid });
+    const final = s.board.find((m) => m.uid === target.uid)!;
+    assert.equal(final.attack, buffed.attack + 1 + 2 * factor);
+    assert.equal(final.health, buffed.health + 1 + 2 * factor);
   }
-  assert.deepEqual(s.board, beforeBoard); assert.deepEqual(s.shop.slice(0, -3), untouchedShop);
-  assert.ok(!s.hand.some((m) => m.uid === spell.uid));
-  const transferred = structuredClone(result);
-  s.gold = 10; s = apply(s, { type: "buy", uid: result.uid });
-  assert.deepEqual(s.hand.find((m) => m.uid === result.uid), transferred);
 });
 
-test("Gem Confiscation handles row edges without stealing gems across board and tavern", () => {
-  for (const zone of ["board", "shop"] as const) for (const edge of ["left", "right"]) {
-    let s = fixture();
-    const target = add(s, "BG25_001", zone), neighbor = add(s, "BG25_001", zone);
-    const rest = s[zone].filter((m) => m.uid !== target.uid && m.uid !== neighbor.uid);
-    s[zone] = edge === "left" ? [target, neighbor, ...rest] : [...rest, neighbor, target];
-    neighbor.gems = { attack: 5, health: 7 }; neighbor.attack += 5; neighbor.health += 7;
-    const otherZone = zone === "board" ? "shop" : "board";
-    const unrelated = add(s, "BG25_001", otherZone);
-    unrelated.gems = { attack: 20, health: 30 }; unrelated.attack += 20; unrelated.health += 30;
-    const before = structuredClone(s[otherZone]), spell = add(s, "BG28_698");
-    s = apply(s, { type: "cast", uid: spell.uid, target: target.uid });
-    const result = s[zone].find((m) => m.uid === target.uid)!;
-    assert.deepEqual(result.gems, { attack: 7, health: 9 });
-    assert.equal(result.attack, target.attack + 7); assert.equal(result.health, target.health + 9);
-    assert.deepEqual(s[otherZone], before);
-  }
+test("Stillwater Meditator replaces unused Meditation next turn and can cast it on an empty board", () => {
+  let s = fixture();
+  const caster = add(s, "BG32_835");
+  s = apply(s, { type: "play", uid: caster.uid });
+  const first = s.hand.find((m) => m.id === PREFIX + "BG32_835t")!;
+  s = next(s);
+  const cards = s.hand.filter((m) => m.id === first.id);
+  assert.equal(cards.length, 1);
+  assert.notEqual(cards[0].uid, first.uid);
+  assert.equal(s.season!.buffs.spell, undefined);
+  s = apply(s, { type: "sell", uid: caster.uid });
+  assert.equal(s.board.length, 0);
+  s = apply(s, { type: "cast", uid: cards[0].uid });
+  assert.deepEqual(s.season!.buffs.spell, { attack: 1, health: 1 });
 });
 
 // Treasure Parrot keeps its damage progress between combats.
@@ -1556,60 +1564,52 @@ test("Treasure Parrot does not count damage blocked by Divine Shield", () => {
   assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG28_830").length, 0);
 });
 
-// Stillwater Meditator grants an untargeted, permanent tavern spell bonus.
-test("Stillwater Meditator generates Meditation each turn and its bonus stacks permanently", () => {
-  for (const golden of [false, true]) {
-    let s = fixture();
-    const caster = add(s, "BG32_835", "hand", golden);
-    const target = add(s, "BG25_001", "board");
-    const factor = golden ? 2 : 1;
-    s = apply(s, { type: "play", uid: caster.uid });
-    const meditation = () => s.hand.filter((m) => m.id === PREFIX + "BG32_835t");
-    assert.equal(meditation().length, 1);
-    assert.equal(meditation()[0].golden, golden);
-    assert.equal(meditation()[0].expires, true);
-    assert.equal(meditation()[0].tempSpell, false);
-    assert.deepEqual(seasonTargets(s, meditation()[0], "cast"), []);
-    s = apply(s, { type: "cast", uid: meditation()[0].uid });
-    assert.deepEqual(s.season!.buffs.spell, { attack: factor, health: factor });
-    assert.equal(s.board.find((m) => m.uid === target.uid)!.attack, target.attack);
-    assert.equal(s.season!.spellsCast, 0);
-
-    const firstBuff = add(s, "BG28_168");
-    s = apply(s, { type: "cast", uid: firstBuff.uid });
-    const buffed = s.board.find((m) => m.uid === target.uid)!;
-    assert.equal(buffed.attack, target.attack + 1 + factor);
-    assert.equal(buffed.health, target.health + 1 + factor);
-    s = next(s);
-    assert.equal(meditation().length, 1);
-    assert.deepEqual(s.season!.buffs.spell, { attack: factor, health: factor });
-    assert.equal(s.board.find((m) => m.uid === target.uid)!.attack, buffed.attack);
-    s = apply(s, { type: "cast", uid: meditation()[0].uid });
-    assert.deepEqual(s.season!.buffs.spell, { attack: 2 * factor, health: 2 * factor });
-    s = apply(s, { type: "sell", uid: caster.uid });
-    s = next(s);
-    assert.equal(meditation().length, 0);
-    assert.deepEqual(s.season!.buffs.spell, { attack: 2 * factor, health: 2 * factor });
-    const secondBuff = add(s, "BG28_168");
-    s = apply(s, { type: "cast", uid: secondBuff.uid });
-    const final = s.board.find((m) => m.uid === target.uid)!;
-    assert.equal(final.attack, buffed.attack + 1 + 2 * factor);
-    assert.equal(final.health, buffed.health + 1 + 2 * factor);
+// Gem Confiscation uses adjacent minions in the target's own row.
+test("Gem Confiscation targets tavern minions and transfers only adjacent tavern gems", () => {
+  let s = fixture();
+  const board = add(s, "BG25_001", "board");
+  board.gems = { attack: 40, health: 50 }; board.attack += 40; board.health += 50;
+  const left = add(s, "BG25_001", "shop"), target = add(s, "BG25_001", "shop"), right = add(s, "BG25_001", "shop");
+  left.gems = { attack: 3, health: 5 }; left.attack += 10; left.health += 14;
+  right.gems = { attack: 8, health: 12 }; right.attack += 8; right.health += 12;
+  target.gems = { attack: 2, health: 4 }; target.attack += 2; target.health += 4;
+  s.season!.buffs.gem = { attack: 2, health: 3 };
+  const spell = add(s, "BG28_698"), targets = seasonTargets(s, spell, "cast");
+  assert.ok(targets.some((m) => m.uid === target.uid));
+  assert.ok(!targets.some((m) => s.hand.includes(m) || s.season!.spellShop.includes(m)));
+  const beforeBoard = structuredClone(s.board), untouchedShop = structuredClone(s.shop.slice(0, -3));
+  s = apply(s, { type: "cast", uid: spell.uid, target: target.uid });
+  const result = s.shop.find((m) => m.uid === target.uid)!;
+  assert.deepEqual(result.gems, { attack: 19, health: 29 });
+  assert.equal(result.attack, target.attack + 17); assert.equal(result.health, target.health + 25);
+  for (const donor of [left, right]) {
+    const actual = s.shop.find((m) => m.uid === donor.uid)!;
+    assert.equal(actual.attack, donor.attack - donor.gems!.attack);
+    assert.equal(actual.health, donor.health - donor.gems!.health);
+    assert.equal(actual.gems, undefined);
   }
+  assert.deepEqual(s.board, beforeBoard); assert.deepEqual(s.shop.slice(0, -3), untouchedShop);
+  assert.ok(!s.hand.some((m) => m.uid === spell.uid));
+  const transferred = structuredClone(result);
+  s.gold = 10; s = apply(s, { type: "buy", uid: result.uid });
+  assert.deepEqual(s.hand.find((m) => m.uid === result.uid), transferred);
 });
 
-test("Stillwater Meditator replaces unused Meditation next turn and can cast it on an empty board", () => {
-  let s = fixture();
-  const caster = add(s, "BG32_835");
-  s = apply(s, { type: "play", uid: caster.uid });
-  const first = s.hand.find((m) => m.id === PREFIX + "BG32_835t")!;
-  s = next(s);
-  const cards = s.hand.filter((m) => m.id === first.id);
-  assert.equal(cards.length, 1);
-  assert.notEqual(cards[0].uid, first.uid);
-  assert.equal(s.season!.buffs.spell, undefined);
-  s = apply(s, { type: "sell", uid: caster.uid });
-  assert.equal(s.board.length, 0);
-  s = apply(s, { type: "cast", uid: cards[0].uid });
-  assert.deepEqual(s.season!.buffs.spell, { attack: 1, health: 1 });
+test("Gem Confiscation handles row edges without stealing gems across board and tavern", () => {
+  for (const zone of ["board", "shop"] as const) for (const edge of ["left", "right"]) {
+    let s = fixture();
+    const target = add(s, "BG25_001", zone), neighbor = add(s, "BG25_001", zone);
+    const rest = s[zone].filter((m) => m.uid !== target.uid && m.uid !== neighbor.uid);
+    s[zone] = edge === "left" ? [target, neighbor, ...rest] : [...rest, neighbor, target];
+    neighbor.gems = { attack: 5, health: 7 }; neighbor.attack += 5; neighbor.health += 7;
+    const otherZone = zone === "board" ? "shop" : "board";
+    const unrelated = add(s, "BG25_001", otherZone);
+    unrelated.gems = { attack: 20, health: 30 }; unrelated.attack += 20; unrelated.health += 30;
+    const before = structuredClone(s[otherZone]), spell = add(s, "BG28_698");
+    s = apply(s, { type: "cast", uid: spell.uid, target: target.uid });
+    const result = s[zone].find((m) => m.uid === target.uid)!;
+    assert.deepEqual(result.gems, { attack: 7, health: 9 });
+    assert.equal(result.attack, target.attack + 7); assert.equal(result.health, target.health + 9);
+    assert.deepEqual(s[otherZone], before);
+  }
 });

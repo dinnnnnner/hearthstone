@@ -1,0 +1,321 @@
+{
+  "codec": "MP3 192 kbit/s",
+  "sourceCount": 39,
+  "sourceBytes": 10530636,
+  "bytes": 1644523,
+  "processing": "Encoding only; source channels and sample rate retained, no trim, gain or playback-rate change.",
+  "files": [
+    {
+      "source": "audio/battlegrounds/BG20_GEM_BloodGem-7b731c0adaf4.wav",
+      "sourceSha256": "7b731c0adaf4f95cf001a3aa86f14ad129067e4a386027b4e3044356083a510d",
+      "delivery": "audio/battlegrounds/BG20_GEM_BloodGem-7b731c0adaf4-54d516ba787c.mp3",
+      "sha256": "54d516ba787c21d730a0993f79cf369330b50ff68af216fdaab680f4e3b914cc",
+      "sourceBytes": 446744,
+      "bytes": 57068
+    },
+    {
+      "source": "audio/battlegrounds/BGSPopup_Defeat_5678-d67d942ef70e.wav",
+      "sourceSha256": "d67d942ef70e595f7a33d13a10434ca427af0a85aa887a86ef447f184648bd3a",
+      "delivery": "audio/battlegrounds/BGSPopup_Defeat_5678-d67d942ef70e-3a6046991e5f.mp3",
+      "sha256": "3a6046991e5fa2e8ec2d954760738460e43699c628bbdb2a1f4a1fc855f59d0f",
+      "sourceBytes": 495924,
+      "bytes": 63404
+    },
+    {
+      "source": "audio/battlegrounds/BGSPopup_Victory_1-7b2d8f62c6a9.wav",
+      "sourceSha256": "7b2d8f62c6a90b9ecc6cd2f8d62d7efd531395a8f6968e7c26f334de0b981a2b",
+      "delivery": "audio/battlegrounds/BGSPopup_Victory_1-7b2d8f62c6a9-682b4c24d136.mp3",
+      "sha256": "682b4c24d136b000deda9ac17b4c4a7ededcdcb0681dc90179dcae0e557c84d6",
+      "sourceBytes": 810476,
+      "bytes": 102572
+    },
+    {
+      "source": "audio/battlegrounds/BGSPopup_Victory_234-6036a8fe5035.wav",
+      "sourceSha256": "6036a8fe50355b48db5e3bb8089a9e542613cc55dcfba8f8dbfcb4cefa4d082f",
+      "delivery": "audio/battlegrounds/BGSPopup_Victory_234-6036a8fe5035-073800c96f8c.mp3",
+      "sha256": "073800c96f8c2cb356d2ef8f7b6825bd89371350ba1e5494557d7bf45eecd12d",
+      "sourceBytes": 706604,
+      "bytes": 89900
+    },
+    {
+      "source": "audio/battlegrounds/BG_SelectHero-662dc2098421.wav",
+      "sourceSha256": "662dc2098421baaf292a0a3c5303791a645a8ca8d7b18ebc687ee2bb50adc794",
+      "delivery": "audio/battlegrounds/BG_SelectHero-662dc2098421-d9aeceb7bfbd.mp3",
+      "sha256": "d9aeceb7bfbdbfa77ed5409ae783c196719f5f399f9817a786ef3857d4a2a6e6",
+      "sourceBytes": 846272,
+      "bytes": 107180
+    },
+    {
+      "source": "audio/battlegrounds/BG_StarImpact_1-e517b8842723.wav",
+      "sourceSha256": "e517b88427239680dd90dfa4f3b727e49c8c91105ac5256d0187c939e2aef385",
+      "delivery": "audio/battlegrounds/BG_StarImpact_1-e517b8842723-51d5ab5f91ff.mp3",
+      "sha256": "51d5ab5f91ff664d1c5c69a8705dae4958ca06c141b16bd1c017f46fd7896c30",
+      "sourceBytes": 370916,
+      "bytes": 47852
+    },
+    {
+      "source": "audio/battlegrounds/Combat_Popup-f3e6160190a9.wav",
+      "sourceSha256": "f3e6160190a98648cfbc386ededee32b1cd16c203a7116ddfda47768957867bf",
+      "delivery": "audio/battlegrounds/Combat_Popup-f3e6160190a9-32b78331701a.mp3",
+      "sha256": "32b78331701a24807e4247a0e2e71cdf1e897b2835d436bf982f80257c700a79",
+      "sourceBytes": 568784,
+      "bytes": 72620
+    },
+    {
+      "source": "audio/battlegrounds/Recruit_Popup-4db20af3f2cc.wav",
+      "sourceSha256": "4db20af3f2cc998f2d84c0fa85ed34814abceae8ad4bfa79187d7a08906cffbb",
+      "delivery": "audio/battlegrounds/Recruit_Popup-4db20af3f2cc-0bae7886cd54.mp3",
+      "sha256": "0bae7886cd549628305440dfcc9f6f0f5a83ecdebf9f79b4f28994601e505eda",
+      "sourceBytes": 584760,
+      "bytes": 74348
+    },
+    {
+      "source": "audio/clean/attack-0b2c8483fcb3.wav",
+      "sourceSha256": "0b2c8483fcb3bdf0c7fb665f617f715d0ab4837251390992461c97c3d4f8acca",
+      "delivery": "audio/clean/attack-0b2c8483fcb3-03899a2b8b6f.mp3",
+      "sha256": "03899a2b8b6fac0bb3a414c02ca1c1c5b1743757a352c64ebfeafe42bd2f5d91",
+      "sourceBytes": 51044,
+      "bytes": 15716
+    },
+    {
+      "source": "audio/clean/death-ea9364b33e74.wav",
+      "sourceSha256": "ea9364b33e74063103783296f1d33e175299c367237e1bf3b9522734b737f9f0",
+      "delivery": "audio/clean/death-ea9364b33e74-df40a50bd9d6.mp3",
+      "sha256": "df40a50bd9d602ed12878ea562d4539bf8ebbe50310bd53757f38f877afd8d4b",
+      "sourceBytes": 81990,
+      "bytes": 23866
+    },
+    {
+      "source": "audio/clean/discover-8cc1ece63dd9.wav",
+      "sourceSha256": "8cc1ece63dd9a9014d1dbe9f76dae52ce8f2bf3cf060f888cd52f180f312174e",
+      "delivery": "audio/clean/discover-8cc1ece63dd9-935fda1fc0e4.mp3",
+      "sha256": "935fda1fc0e4ac036e293ff64890030f91999d47792cd020a76954f929cd9e6c",
+      "sourceBytes": 193250,
+      "bytes": 53959
+    },
+    {
+      "source": "audio/clean/error-5a764e9ff6c5.wav",
+      "sourceSha256": "5a764e9ff6c54a81eadd34128edb02ac46c55e176fb00d80fcc3f96b0e778424",
+      "delivery": "audio/clean/error-5a764e9ff6c5-3cf3d5320526.mp3",
+      "sha256": "3cf3d53205266cb3f5d52edf213e4752f0f5eca36f230f360a9ca624282ce855",
+      "sourceBytes": 21194,
+      "bytes": 7566
+    },
+    {
+      "source": "audio/clean/hit-a8e54cbf0755.wav",
+      "sourceSha256": "a8e54cbf0755ac45dca145f065fb8345a2096ab5325409e07eaff40d859a3f3e",
+      "delivery": "audio/clean/hit-a8e54cbf0755-2a6547735443.mp3",
+      "sha256": "2a6547735443596ee0d4b864ac85e76d6f539003dfb9a0ec6bdf49f331375756",
+      "sourceBytes": 50782,
+      "bytes": 15716
+    },
+    {
+      "source": "audio/clean/lose-8278292f962a.wav",
+      "sourceSha256": "8278292f962ad7e1291b2f8e566a2387310d12755fee1aa5cf4cf28fd1e8c4bf",
+      "delivery": "audio/clean/lose-8278292f962a-73cd102f1480.mp3",
+      "sha256": "73cd102f1480cde63d26a1d703d2d5f92b0c909d1fe5268eb7a63258d83c0573",
+      "sourceBytes": 92728,
+      "bytes": 27001
+    },
+    {
+      "source": "audio/clean/move-057fd6ff0cb8.wav",
+      "sourceSha256": "057fd6ff0cb85fddf43d0581b717fdc525ad82102b9e3c590d4901e6f9927edf",
+      "delivery": "audio/clean/move-057fd6ff0cb8-a270ac60ad69.mp3",
+      "sha256": "a270ac60ad6909313fb7d258f1015ca2d3a74db0d6642922dde4c54fbdc718c5",
+      "sourceBytes": 21494,
+      "bytes": 7566
+    },
+    {
+      "source": "audio/clean/pickup-7e67a4da3007.wav",
+      "sourceSha256": "7e67a4da3007761c1d5792f4633ae86ca860623d475ed9747eb1c72b4299cad7",
+      "delivery": "audio/clean/pickup-7e67a4da3007-fe9c03d9536e.mp3",
+      "sha256": "fe9c03d9536e345a74fe3198929cb921c99c42c5506cb9eb2909acbe4bf8734e",
+      "sourceBytes": 31284,
+      "bytes": 10074
+    },
+    {
+      "source": "audio/clean/play-8874833a723c.wav",
+      "sourceSha256": "8874833a723c37b03987aa1d2e468f8cdba08ec558e6a16aa55f8a8460376f0e",
+      "delivery": "audio/clean/play-8874833a723c-f46c44ea7f1c.mp3",
+      "sha256": "f46c44ea7f1c500ecbc07f2979677126f8a678e047ec0c3a5000f18a533b7b12",
+      "sourceBytes": 80122,
+      "bytes": 23239
+    },
+    {
+      "source": "audio/clean/power-fcdf317f309e.wav",
+      "sourceSha256": "fcdf317f309ee38f21dfa0adf8109d61ad33b99383502075179ee1c42732b54c",
+      "delivery": "audio/clean/power-fcdf317f309e-5c12e1f9add5.mp3",
+      "sha256": "5c12e1f9add5129e43e08ba9b10ba1f37a622af102a28f2774ad3fbab82be101",
+      "sourceBytes": 61722,
+      "bytes": 18224
+    },
+    {
+      "source": "audio/clean/select-5fc3a7ff4d14.wav",
+      "sourceSha256": "5fc3a7ff4d146dbb5a6fea68ad7feceb780fa881504ec4887479e73008d56b98",
+      "delivery": "audio/clean/select-5fc3a7ff4d14-175596cb097f.mp3",
+      "sha256": "175596cb097faacaf53f12235f1c1801a5731bbbaf75ea7d028ccc83403b86f6",
+      "sourceBytes": 10424,
+      "bytes": 4431
+    },
+    {
+      "source": "audio/clean/shield-ab781be21f6e.wav",
+      "sourceSha256": "ab781be21f6e2174ac7c368b0eb58d723217b25b8f43437077454ea99d34ba17",
+      "delivery": "audio/clean/shield-ab781be21f6e-8746fc4f8d94.mp3",
+      "sha256": "8746fc4f8d94eb86a19b1041d1406a0bd189a6a2362652b9524ac701ae703104",
+      "sourceBytes": 125118,
+      "bytes": 35778
+    },
+    {
+      "source": "audio/clean/spell-4df630824b7b.wav",
+      "sourceSha256": "4df630824b7b20d9569fde64c884b23b753011c08027ef84888cee7ee6931061",
+      "delivery": "audio/clean/spell-4df630824b7b-709c5bcb41f8.mp3",
+      "sha256": "709c5bcb41f8ef0c8e9d27a8491dd670ea486d0689191c04fbb4dca3475aeda1",
+      "sourceBytes": 123078,
+      "bytes": 35151
+    },
+    {
+      "source": "audio/clean/tick-b37094fad890.wav",
+      "sourceSha256": "b37094fad890294d49c33e50993ffbaaf92f9ea510da66c516664ed64243a061",
+      "delivery": "audio/clean/tick-b37094fad890-f466ddde9820.mp3",
+      "sha256": "f466ddde98207e98f312e19d84e2dc21033fe75eb16f15c316006983f28a400e",
+      "sourceBytes": 10720,
+      "bytes": 4431
+    },
+    {
+      "source": "audio/clean/tie-15542c94aed2.wav",
+      "sourceSha256": "15542c94aed29524e5b2c64b6ed278b0bbb1292337fa82f241b914050820cb93",
+      "delivery": "audio/clean/tie-15542c94aed2-8a9081b4eba3.mp3",
+      "sha256": "8a9081b4eba36341756eac1bd2cf65a7dca6c95c115e1efc4d5c01465a41ec33",
+      "sourceBytes": 13018,
+      "bytes": 5058
+    },
+    {
+      "source": "audio/clean/upgrade-787024b91ebd.wav",
+      "sourceSha256": "787024b91ebd725a65789991569ba302cd637ec63764e16dd160f65d22ae2552",
+      "delivery": "audio/clean/upgrade-787024b91ebd-a9566521e1d1.mp3",
+      "sha256": "a9566521e1d1221b1570937a1b9e440a6d870d73399d943e1b9169616b232ddd",
+      "sourceBytes": 249852,
+      "bytes": 69633
+    },
+    {
+      "source": "audio/clean/win-2fceee1be16c.wav",
+      "sourceSha256": "2fceee1be16cc176151d716ec3dcdf00deb1db70cb34ef799f328dde4274c8fc",
+      "delivery": "audio/clean/win-2fceee1be16c-265112f51e0a.mp3",
+      "sha256": "265112f51e0a557c5172c348956bc0b4f6297a463247d5401995032f59e7a37c",
+      "sourceBytes": 109638,
+      "bytes": 31390
+    },
+    {
+      "source": "audio/shop/buy-1-cf0e78063315.wav",
+      "sourceSha256": "cf0e78063315eafc6801001ee25ac1f07c8d0bd7d90715d216b251700372bf49",
+      "delivery": "audio/shop/buy-1-cf0e78063315-133442f3440e.mp3",
+      "sha256": "133442f3440ee3ca6eaa3cd53d74d48f5a5cd15f5af5e57b5b65629267ac8eff",
+      "sourceBytes": 315012,
+      "bytes": 44555
+    },
+    {
+      "source": "audio/shop/freeze-1-8478e99ff5c9.wav",
+      "sourceSha256": "8478e99ff5c97411b03ffdeebe2b8006d9b368a235706bb9f55cf82bcd754da2",
+      "delivery": "audio/shop/freeze-1-8478e99ff5c9-743b107e5ecd.mp3",
+      "sha256": "743b107e5ecd8d4da9e7643d404a80d96218fef1eec92b40165592db24157570",
+      "sourceBytes": 637260,
+      "bytes": 81260
+    },
+    {
+      "source": "audio/shop/refresh-1-3cc3a9f8cd64.wav",
+      "sourceSha256": "3cc3a9f8cd645b12d977b341f5a54014aa324df7615e9c230416ce21058f54bf",
+      "delivery": "audio/shop/refresh-1-3cc3a9f8cd64-999251e00df2.mp3",
+      "sha256": "999251e00df2546dc7824a17f42577e9f3f46b94dd3fe8ebdb79484ae59cbeb1",
+      "sourceBytes": 335396,
+      "bytes": 47063
+    },
+    {
+      "source": "audio/shop/refresh-2-704217689d38.wav",
+      "sourceSha256": "704217689d384835ea2fdbe38d1fe36d65f8c5b9084593b38aaf812ec82beac6",
+      "delivery": "audio/shop/refresh-2-704217689d38-e2886e3029c5.mp3",
+      "sha256": "e2886e3029c5b9fc38d3604435ef8d5f324e9f5258e4c85fcae35953f2141812",
+      "sourceBytes": 335396,
+      "bytes": 47063
+    },
+    {
+      "source": "audio/shop/refresh-3-bfe0f75cc65b.wav",
+      "sourceSha256": "bfe0f75cc65b903487b6208117c4aa8e2e94d69b697d31e175735ada6b14549f",
+      "delivery": "audio/shop/refresh-3-bfe0f75cc65b-e9adb8c8ff42.mp3",
+      "sha256": "e9adb8c8ff421f9084ad3d4ea59ffe281fadbe6edca9ba67f0afe5e77db638ab",
+      "sourceBytes": 335396,
+      "bytes": 47063
+    },
+    {
+      "source": "audio/shop/refresh-4-5d9fe53f5878.wav",
+      "sourceSha256": "5d9fe53f5878b3605303992349501df6f1e3c4ffdda2b7571abdc6e3ab1dd2dc",
+      "delivery": "audio/shop/refresh-4-5d9fe53f5878-ceadf6787bab.mp3",
+      "sha256": "ceadf6787bab59c13e7d1ec9ed6c8d9c811bf7644bf5791357b9c467de29e02a",
+      "sourceBytes": 335396,
+      "bytes": 47063
+    },
+    {
+      "source": "audio/shop/refresh-5-f0b3cf146240.wav",
+      "sourceSha256": "f0b3cf1462404de5864d4894328d71cfa6673da1fa285e1e55711827c7074a44",
+      "delivery": "audio/shop/refresh-5-f0b3cf146240-abef820b9acd.mp3",
+      "sha256": "abef820b9acd4de4be3352dc390990bcd9da2d9a2689aeb3c3f72abf5be7d5c9",
+      "sourceBytes": 335396,
+      "bytes": 47063
+    },
+    {
+      "source": "audio/shop/sell-1-45c06a30eefc.wav",
+      "sourceSha256": "45c06a30eefcc0c8feeea9e555d352a72e80d3d133610f96b32ae6e6c849bd65",
+      "delivery": "audio/shop/sell-1-45c06a30eefc-be9d79c8dd67.mp3",
+      "sha256": "be9d79c8dd672e217f3b84c8f3b43def26ea068bf66226066d3b826cde82521c",
+      "sourceBytes": 352856,
+      "bytes": 45548
+    },
+    {
+      "source": "audio/shop/thaw-1-3016d1b1c660.wav",
+      "sourceSha256": "3016d1b1c660946dc676d6d3b992dc7b3f94220cef30f3804708073edb1b6c97",
+      "delivery": "audio/shop/thaw-1-3016d1b1c660-f06fa1160342.mp3",
+      "sha256": "f06fa1160342b893189beb1681e59d2411f89b41f74639eff925a24b857793df",
+      "sourceBytes": 91584,
+      "bytes": 26374
+    },
+    {
+      "source": "audio/shop/thaw-2-e0be836766ce.wav",
+      "sourceSha256": "e0be836766ce1860df66618c6bb449604eb2b6e6bbceee8880f44cb949d9db0e",
+      "delivery": "audio/shop/thaw-2-e0be836766ce-6302bc6c09d8.mp3",
+      "sha256": "6302bc6c09d8486e87f4efdde028a4ad0c66d06ffa01126aaf67b7e9a9072067",
+      "sourceBytes": 79072,
+      "bytes": 23239
+    },
+    {
+      "source": "audio/shop/thaw-3-9bbad1407450.wav",
+      "sourceSha256": "9bbad14074505f273df91b4d6aabdd89500ca899a80f0c1ed8fd8a92504536fc",
+      "delivery": "audio/shop/thaw-3-9bbad1407450-420116657c7d.mp3",
+      "sha256": "420116657c7d93fafd0f3d63592a6b842a6023763e76d728622457f0118c06de",
+      "sourceBytes": 91862,
+      "bytes": 26374
+    },
+    {
+      "source": "audio/shop/triple-1-32552ed02889.wav",
+      "sourceSha256": "32552ed028891d0e6b46053d599c9cfb72736a16a0bb560231952e4bc617c3ca",
+      "delivery": "audio/shop/triple-1-32552ed02889-23cb0261f5a5.mp3",
+      "sha256": "23cb0261f5a54d280ec84c89c1ecbebb0c748c7af0bcf4f0059e26a320c615d6",
+      "sourceBytes": 376024,
+      "bytes": 52705
+    },
+    {
+      "source": "audio/shop/triple-2-a3d44c9a4136.wav",
+      "sourceSha256": "a3d44c9a4136ae6f21c032ff93ef7680bad84ac41049255b2cec98ff82497ce1",
+      "delivery": "audio/shop/triple-2-a3d44c9a4136-4d235d100da6.mp3",
+      "sha256": "4d235d100da6595d8e145c469f89010631cde31015a127e99841e79369270506",
+      "sourceBytes": 376024,
+      "bytes": 52705
+    },
+    {
+      "source": "audio/shop/triple-3-e686bce793cf.wav",
+      "sourceSha256": "e686bce793cfc4f166ee77b45056b4fcd790f3d7fbb7bb9dc236748a48c8b8c4",
+      "delivery": "audio/shop/triple-3-e686bce793cf-1af73f41d873.mp3",
+      "sha256": "1af73f41d87378d5dcd0dc08b2acad7f71cccdcf072c28e86b82a6ec9fa60f41",
+      "sourceBytes": 376024,
+      "bytes": 52705
+    }
+  ]
+}

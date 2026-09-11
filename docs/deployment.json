@@ -1,6 +1,6 @@
 {
-  "release": "20260911T012613Z",
-  "remote": "/var/www/playroom/releases/20260911T012613Z",
+  "release": "20260911T025917Z",
+  "remote": "/var/www/playroom/releases/20260911T025917Z",
   "site": "https://8.153.150.101/",
   "routes": {
     "sector": "/sector/",
@@ -8,38 +8,49 @@
     "tavernApi": "/tavern-api/"
   },
   "validation": {
-    "engineAndStateTests": 124,
-    "serverTests": 30,
-    "localBrowserTests": 4,
-    "publicBrowserTests": 8,
-    "publicEightBrowserRoom": "not passed: 60s timeout, 180s retry blocked by hero power selection, controlled training retry failed to show combat within 5s",
+    "engineAndStateTests": 125,
+    "serverTests": 36,
+    "localBrowserTests": 10,
+    "publicBrowserTests": 3,
+    "publicEightBrowserRoom": "passed: eight independent browser processes, sound on, after sequential resource preparation; buy/play and two combat rounds; reconnect and deliberate hall return; no new audio requests during combat",
     "nginxConfig": "passed",
     "httpVersion": 2,
     "websocket": "pong",
     "sectorRestarted": false,
     "sectorPidAtFinalActivation": 119165,
     "sectorPidAfterFinalValidation": 119165,
-    "tavernPid": 121905,
+    "tavernPid": 123847,
     "tavernMemoryBytesAfterTests": 64536576,
     "tavernAutomaticRestarts": 0,
     "uiImageCount": 598,
     "uiImageBytes": 9499166,
     "originalImageBytes": 143250968,
-    "tavernRestarted": true,
-    "buildSite": "passed; reproducible live baseline plus three rule fixes",
-    "finalReleasePublicBrowserTests": 8,
-    "browserValidationScope": "4 local checks passed. 8 public checks passed: Meditation, Treasure Parrot, guest AI game, two-human synchronization/reconnect, mobile lobby, home links/save, mobile layout and SECTOR WebSocket. Eight-browser checks did not pass; see checkpoint for all attempts. Prior unrelated fields retain their original provenance.",
-    "engineAndStateTestsSourceRelease": "20260911T012613Z",
-    "serverTestsSourceRelease": "20260911T012613Z",
-    "publicEightBrowserRoomSourceRelease": "20260911T012613Z",
-    "tavernMemoryMeasurementSourceRelease": "20260911T012613Z"
+    "tavernRestarted": false,
+    "buildSite": "passed; live baseline copied; frontend and audio assets updated; temporary audio rate limit removed",
+    "finalReleasePublicBrowserTests": 1,
+    "browserValidationScope": "Entry preloading before login; create/join/ready/start gated on completed assets; retry; resource request priority during API requests. Local audio/game tests pass. Final public eight-browser room passed after sequential resource preparation. Simultaneous cold entry remains unvalidated by a passing test. Prior engine/server test counts retain provenance.",
+    "engineAndStateTestsSourceRelease": "20260911T020353Z",
+    "serverTestsSourceRelease": "20260911T020353Z",
+    "publicEightBrowserRoomSourceRelease": "20260911T025917Z",
+    "tavernMemoryMeasurementSourceRelease": "20260911T012613Z",
+    "localBrowserTestsSourceRelease": "20260911T024906Z",
+    "resourceGateTests": 2,
+    "resourceGateTestsSourceRelease": "20260911T025917Z",
+    "publicBrowserTestsScope": "Two resource loading tests on 20260911T024906Z and one prepared eight-browser room test on 20260911T025917Z; not a full-suite count",
+    "simultaneousColdStart": "not passed: simultaneous fresh navigations encountered slow initial script/assets and request timeouts; prepared-room success does not establish concurrent cold-download capacity",
+    "preparedEightBrowserTimingsMs": {
+      "allResourcesReadySequentially": 220523,
+      "allEnteredGame": 223192,
+      "roundOneCombatAndReturn": 3506,
+      "roundTwoCombatAndReturn": 3122
+    }
   },
-  "previousRelease": "20260910T105128Z",
+  "previousRelease": "20260911T024906Z",
   "presentation": "game-table",
   "animationPass": 2,
   "onlineRooms": true,
   "backend": {
-    "release": "/opt/bobs-tavern/releases/20260911T012613Z",
+    "release": "/opt/bobs-tavern/releases/20260911T024800Z",
     "service": "bobs-tavern",
     "listen": "127.0.0.1:8787",
     "state": "/var/lib/bobs-tavern/state.json",
@@ -47,8 +58,8 @@
     "memoryLimitMiB": 384,
     "offlineGraceSeconds": 300,
     "snapshotWrites": "serialized async atomic replacement with per-room serialization cache",
-    "previousRelease": "/opt/bobs-tavern/releases/20260910T105128Z",
-    "bundleSha256": "b36de91e09b20c2301b297623f4410091598b5442e30a9d2b44b0f9dc35a7c41"
+    "previousRelease": "/opt/bobs-tavern/releases/20260911T023300Z",
+    "bundleSha256": "b7d030e8615bbbb41cf993677c0403c8c300dd2471fcf113271d0f3c165b4657"
   },
   "replayBenchmark": {
     "frames": 180,
@@ -100,7 +111,7 @@
     "extraAssets": 0,
     "scope": "Timed online AI and friend rooms; training rooms and local practice remain untimed"
   },
-  "checkpoint": "rule-fixes-2026-09-11",
+  "checkpoint": "eight-player-stall-2026-09-11",
   "rulesCoverageReport": "docs/rules-coverage.json",
   "matchTribes": {
     "source": "game.season.tribes",
@@ -147,10 +158,10 @@
     "sampleCount": 31,
     "format": "PCM WAV: original files retain source channels/rate; composed shop cues use 44.1 kHz stereo",
     "sourceRecipe": "docs/battlegrounds-audio-active.json; docs/battlegrounds-shop-audio-active.json; remaining cues: docs/clean-audio.json",
-    "preload": "hero selection alone in lobby; full bank after board readiness or interaction, low network priority, independent decode",
+    "preload": "On tavern page entry before login; all sounds downloaded before create/join/ready/start, two at a time, paused while room requests finish",
     "fallback": "skip unavailable cues; no synthesis",
     "publicAssetHashes": "14 new shop WAVs, HTML, JS and audition page verified; activation verified all release files",
-    "publicBundle": "/tavern/assets/index-TQa4Pgbu.js",
+    "publicBundle": "/tavern/assets/index-BNJf8HCs.js",
     "publicPlayback": "39 buffers decoded; freeze, thaw, buy, triple, sell and refresh confirmed in the public game; mute/volume persistence passed",
     "volumeAndMutePersist": true,
     "backendRestarted": false,
@@ -168,7 +179,11 @@
       "refresh": 5,
       "triple": 3,
       "thaw": 3
-    }
+    },
+    "deliveryFormat": "MP3 192 kbit/s",
+    "deliveryBytes": 1644523,
+    "deliveryManifest": "docs/audio-delivery.json",
+    "deliveryOriginalsPreserved": true
   },
   "permanentGoldIncome": {
     "includesBonusBeforeTenGold": true,
@@ -221,5 +236,39 @@
     "frontendBundle": "/tavern/assets/index-BWfMFyxw.js",
     "publicHashesVerified": true,
     "eightBrowserValidation": "unresolved"
+  },
+  "matchmaking": {
+    "eightSeatCycle": 7,
+    "restartOnSurvivorChange": true,
+    "ghostCandidates": "Bottom three by health plus remaining non-spell armor",
+    "singleDeathKillerExcludedNextTurn": true,
+    "multipleDeathsAllowPreviousOpponentGhost": true,
+    "immediateLivingRematches": "Only when two remain",
+    "oddSurvivorScheduling": "Constrained to eligible ghost candidates; minimize repeated live opponents",
+    "persistedCycle": true,
+    "checkpoint": "docs/checkpoints/ranking-pairing-2026-09-11.md"
+  },
+  "leaderboard": {
+    "includesSelf": true,
+    "initialArmorCounts": true,
+    "spellArmorDoesNotRaiseRank": true,
+    "addedArmorAbsorbsFirst": true,
+    "ties": "Original seat order",
+    "eliminatedLast": true
+  },
+  "eightPlayerStall": {
+    "checkpoint": "docs/checkpoints/eight-player-stall-2026-09-11.md",
+    "initialActiveSnapshotOpensGame": true,
+    "startsBeforeLogin": true,
+    "images": 598,
+    "audioFiles": 39,
+    "downloadTotal": 637,
+    "audioConcurrentDownloads": 2,
+    "imageConcurrentDownloads": 3,
+    "roomActionsTakePriority": true,
+    "createJoinReadyStartRequireResources": true,
+    "failedResourcesRetry": true,
+    "backendRestartedByThisChange": false,
+    "publicValidation": "passed after sequential resource preparation: eight independent browsers with sound on complete two rounds without additional audio fetches; simultaneous cold entry still has slow-download/time-out failures"
   }
 }

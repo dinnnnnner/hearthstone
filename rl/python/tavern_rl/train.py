@@ -112,7 +112,10 @@ def parser():
     p.add_argument("--learner-seats", type=int, default=4)
     p.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
     p.add_argument("--seed", type=int, default=42)
-    p.add_argument("--architecture", choices=['entity-gru','mlp'], default='entity-gru')
+    p.add_argument("--architecture", choices=['entity-gru','entity-gru-resnet','mlp'],
+                   help='New runs default to entity-gru; resume restores the saved architecture')
+    p.add_argument("--policy-depth", type=int, help='Dense layers in policy residual tower; default 64 for entity-gru-resnet')
+    p.add_argument("--value-depth", type=int, help='Dense layers in value residual tower; default 64 for entity-gru-resnet')
     p.add_argument("--heads", type=int, default=4)
     p.add_argument("--layers", type=int, default=2)
     p.add_argument("--sequence-length", type=int, default=16)
@@ -124,11 +127,20 @@ def parser():
     p.add_argument("--max-steps", type=int, default=30000)
     p.add_argument("--epochs", type=int, default=4)
     p.add_argument("--batch-size", type=int, default=256)
-    p.add_argument("--learning-rate", type=float, default=3e-4)
+    p.add_argument("--learning-rate", type=float, help='Default 3e-5 for entity-gru-resnet, 3e-4 for other new runs')
     p.add_argument("--league-size", type=int, default=12)
     p.add_argument("--threads", type=int, default=1)
     p.add_argument("--replays", action="store_true", help="Save action tapes for deterministic offline replay")
     return p
+
+
+def validate_resume_architecture(args, specification):
+    expected = dict(architecture=specification.get('architecture', 'mlp'),
+                    policy_depth=specification.get('policy_depth'), value_depth=specification.get('value_depth'))
+    for key, saved in expected.items():
+        requested = getattr(args, key)
+        if requested is not None and requested != saved:
+            raise ValueError(f'Resume restores checkpoint {key}={saved}; requested {requested} requires a new run')
 
 
 def main():
@@ -137,6 +149,14 @@ def main():
         raise ValueError("Invalid training sizes")
     if min(args.sequence_length,args.sequence_batch_size,args.heads,args.layers) < 1 or args.burn_in < 0:
         raise ValueError("Invalid recurrent sizes")
+    for depth in (args.policy_depth, args.value_depth):
+        if depth is not None:
+            from .deep_model import validate_depth
+            validate_depth(depth)
+    if not args.resume and args.architecture != 'entity-gru-resnet' and any(d is not None for d in (args.policy_depth, args.value_depth)):
+        raise ValueError('Residual depths require --architecture entity-gru-resnet')
+    if args.learning_rate is not None and (not np.isfinite(args.learning_rate) or not 0 < args.learning_rate < 1):
+        raise ValueError('Invalid learning rate')
     if args.resume and args.anchors: raise ValueError("Resume restores its frozen league; do not add anchors during resume")
     if (args.resume_games_per_iteration is not None or args.resume_learning_rate is not None) and not args.resume:
         raise ValueError('Resume overrides require --resume')
@@ -163,20 +183,25 @@ def main():
         config = {"gamma": 1.0, "gae_lambda": .95, "clip": .2, "value_coef": .5, "entropy_coef": .01,
                   "target_kl": .03, "max_grad_norm": .5, "epochs": args.epochs, "batch_size": args.batch_size,
                   "sequence_length": args.sequence_length, "burn_in": args.burn_in, "sequence_batch_size": args.sequence_batch_size,
-                  "learning_rate": args.learning_rate, "seed": args.seed, "learner_seats": args.learner_seats,
+                  "learning_rate": args.learning_rate if args.learning_rate is not None else (3e-5 if args.architecture == 'entity-gru-resnet' else 3e-4),
+                  "seed": args.seed, "learner_seats": args.learner_seats,
                   "games_per_iteration": args.games_per_iteration, "league_size": args.league_size,
                   "options": {"maxActionsPerTurn": args.max_actions, "maxSteps": args.max_steps, "recordFrames": False}}
         iteration = 0; episodes = 0; league = []
         saved = None
         if args.resume:
             saved, model = load_checkpoint(args.resume, pool.meta, args.device)
+            validate_resume_architecture(args, saved['model_spec'])
             config = saved["config"]  # Resume the actual reward/action budget, not accidental CLI defaults.
             if args.resume_games_per_iteration is not None: config['games_per_iteration'] = args.resume_games_per_iteration
             if args.resume_learning_rate is not None: config['learning_rate'] = args.resume_learning_rate
             iteration, episodes, league = saved["iteration"], saved["episodes"], saved["league"]
         else:
-            spec = dict(observation_size=len(state['observation']),action_size=pool.meta['actionCount'],hidden=args.hidden) if args.architecture == 'mlp' else dict(
-                architecture='entity-gru',entity_schema=pool.meta['entitySchema'],actions=pool.meta['actions'],hidden=args.hidden,heads=args.heads,layers=args.layers)
+            architecture = args.architecture or 'entity-gru'
+            spec = dict(observation_size=len(state['observation']),action_size=pool.meta['actionCount'],hidden=args.hidden) if architecture == 'mlp' else dict(
+                architecture=architecture,entity_schema=pool.meta['entitySchema'],actions=pool.meta['actions'],hidden=args.hidden,heads=args.heads,layers=args.layers)
+            if architecture == 'entity-gru-resnet':
+                spec.update(policy_depth=args.policy_depth or 64, value_depth=args.value_depth or 64)
             model = make_model(spec).to(args.device)
             league = [league_entry(model,0,anchor=True)]
             for path in args.anchors:
@@ -211,7 +236,8 @@ def main():
             (output / "manifest.json").write_text(json.dumps({"format": 1, "trainerHash": code_hash, "meta": {k:v for k,v in pool.meta.items() if k not in ["actions", "cardIds", "heroIds", "entitySchema"]},
                 "config": config, "iteration": iteration, "episodes": episodes, "model_spec": {k:v for k,v in model.specification().items() if k not in ["entity_schema","actions"]},
                 "league_generations": [entry["generation"] for entry in league], "torch": torch.__version__, "numpy": np.__version__,
-                "device": args.device, "rollout_device": rollout_device, "workers": len(pool.simulators)}, indent=2))
+                "device": args.device, "rollout_device": rollout_device, "workers": len(pool.simulators),
+                "parameters": sum(p.numel() for p in model.parameters())}, indent=2))
         checkpoint()
         for _ in range(args.iterations):
             iteration_started = time.monotonic()

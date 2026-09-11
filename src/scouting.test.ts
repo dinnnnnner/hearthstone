@@ -24,7 +24,7 @@ test("scouting retains two previous rounds while excluding the currently resolvi
   assert.equal(holder.scouting!.length, 3);
   assert.equal(holder.scouting![0].warband, "混合");
 });
-test("practice records the actual opponent result without inventing AI battles", () => {
+test("practice records mirrored results for the player and every AI pairing", () => {
   const s = createGame("s14_lich", () => .37);
   const result = act(s, { type: "end" }, () => .37);
   assert.equal(result.error, undefined);
@@ -32,5 +32,11 @@ test("practice records the actual opponent result without inventing AI battles",
   assert.equal(rival.scouting![0].battle!.damage, game.battle!.damage);
   assert.equal(rival.scouting![0].battle!.opponent, "你");
   assert.equal(rival.scouting![0].battle!.result, game.battle!.result === "win" ? "loss" : game.battle!.result === "loss" ? "win" : "tie");
-  assert.ok(game.opponents.filter(o => o !== rival).every(o => !o.scouting?.[0].battle));
+  for (const bot of game.opponents.filter(o => o !== rival)) {
+    const battle = bot.scouting![0].battle!;
+    const other = game.opponents.find(o => o.name === battle.opponent)!;
+    assert.ok(other && other !== rival && other !== bot);
+    assert.equal(other.scouting![0].battle!.opponent, bot.name);
+    assert.equal(other.scouting![0].battle!.damage, battle.damage);
+  }
 });

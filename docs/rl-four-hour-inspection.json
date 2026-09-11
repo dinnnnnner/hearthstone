@@ -1,0 +1,171 @@
+{
+  "checked_utc": "2026-09-11T01:44:05.613052+00:00",
+  "remote_directory": "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001",
+  "status": {
+    "stage": "time_limit",
+    "completed_episodes": 780,
+    "target_episodes": 1036,
+    "training_complete": false,
+    "elapsed_seconds": 14400.2,
+    "chunk": 6,
+    "log": "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/train-006.log",
+    "mean_placement": 1.53125,
+    "comparison": {
+      "mean_placement_delta": -4.40625,
+      "paired_95_percent_interval": [
+        -5.0625,
+        -3.71875
+      ],
+      "games": 32,
+      "lower_is_better": true,
+      "minimum_gate_games": 256,
+      "gate_passed": false,
+      "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+    }
+  },
+  "latest_episodes": 780,
+  "new_training_games": 768,
+  "iterations_added": 48,
+  "environment_actions": 798409,
+  "training_samples": 426051,
+  "latest_checkpoint_sha256": "f98f4e2225049f74b4601ca13a2520c32d8a3b250927da17fa9266c06f2c2666",
+  "archive_sha256": "8200b92612e362c4e39298bfba9eb826b311aeaf31b8792b27fcfdead602ede6",
+  "model_spec": {
+    "architecture": "entity-gru",
+    "hidden": 128,
+    "heads": 4,
+    "layers": 2
+  },
+  "sourceHash": "6fffd064ada15971d8502f6fdb37c86483b4a740b819f38101d7e2b5edd927d1",
+  "rulesHash": "64858c3986277e2ad0f86f59f693a0cd3996db723a3cd434faa0fadec948690a",
+  "inspection": {
+    "checkpoint_load": "passed on source server using CPU",
+    "weights_finite": true,
+    "parameters_and_buffers": 1315612,
+    "optimizer_present": true,
+    "league_entries": 12,
+    "gpu_utilization_percent_at_inspection": 0,
+    "training_process_running": false,
+    "rented_instance_running": true
+  },
+  "evaluations": [
+    {
+      "episodes": 12,
+      "games": 32,
+      "mean_placement": 5.9375,
+      "top_four_rate": 0.21875,
+      "first_rate": 0.0,
+      "checkpoint_sha256": "4df0da4d74fedf116b290f05423653ace94774677a77e6e5d241fb9a5da3b937",
+      "comparison": null
+    },
+    {
+      "episodes": 140,
+      "games": 32,
+      "mean_placement": 3.0625,
+      "top_four_rate": 0.71875,
+      "first_rate": 0.3125,
+      "checkpoint_sha256": "a05bc4f1cd925c3035e0add031e35b7d70b73799b8ba6f79c91645907727b600",
+      "comparison": {
+        "mean_placement_delta": -2.875,
+        "paired_95_percent_interval": [
+          -3.6875,
+          -2.03125
+        ],
+        "games": 32,
+        "lower_is_better": true,
+        "minimum_gate_games": 256,
+        "gate_passed": false,
+        "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+      }
+    },
+    {
+      "episodes": 268,
+      "games": 32,
+      "mean_placement": 1.5625,
+      "top_four_rate": 0.96875,
+      "first_rate": 0.5625,
+      "checkpoint_sha256": "8575b74d03695a1413e85087fd1738021b4d6f27331d032e3895753326be6dd2",
+      "comparison": {
+        "mean_placement_delta": -4.375,
+        "paired_95_percent_interval": [
+          -4.9375,
+          -3.8125
+        ],
+        "games": 32,
+        "lower_is_better": true,
+        "minimum_gate_games": 256,
+        "gate_passed": false,
+        "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+      }
+    },
+    {
+      "episodes": 396,
+      "games": 32,
+      "mean_placement": 1.25,
+      "top_four_rate": 1.0,
+      "first_rate": 0.84375,
+      "checkpoint_sha256": "623f1308c379b8c744c975e274545e7f967a9212e4ee66bcd419c12b8a346b59",
+      "comparison": {
+        "mean_placement_delta": -4.6875,
+        "paired_95_percent_interval": [
+          -5.28125,
+          -4.09375
+        ],
+        "games": 32,
+        "lower_is_better": true,
+        "minimum_gate_games": 256,
+        "gate_passed": false,
+        "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+      }
+    },
+    {
+      "episodes": 524,
+      "games": 32,
+      "mean_placement": 1.375,
+      "top_four_rate": 0.96875,
+      "first_rate": 0.78125,
+      "checkpoint_sha256": "6b4a1f71cec44d69778ecc3695ea4d4bfb67aaacc76360d7196ba6ebfd0a2ab9",
+      "comparison": {
+        "mean_placement_delta": -4.5625,
+        "paired_95_percent_interval": [
+          -5.0625,
+          -4.0625
+        ],
+        "games": 32,
+        "lower_is_better": true,
+        "minimum_gate_games": 256,
+        "gate_passed": false,
+        "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+      }
+    },
+    {
+      "episodes": 652,
+      "games": 32,
+      "mean_placement": 1.53125,
+      "top_four_rate": 1.0,
+      "first_rate": 0.65625,
+      "checkpoint_sha256": "82d50087e14b75a90be41e2cc6d11f281e782490316706dc63040254b11ed918",
+      "comparison": {
+        "mean_placement_delta": -4.40625,
+        "paired_95_percent_interval": [
+          -5.0625,
+          -3.71875
+        ],
+        "games": 32,
+        "lower_is_better": true,
+        "minimum_gate_games": 256,
+        "gate_passed": false,
+        "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+      }
+    }
+  ],
+  "latest_checkpoint_evaluation": "Incomplete; no monitor-0000780.json. Last logged progress 6/32. status.json score belongs to 652 episodes.",
+  "independent_256_game_final": "not run",
+  "local_backup_directory": "/home/zich/hearthstone/rl/runs/server-four-hour-2026-09-11",
+  "saved_checkpoints": [
+    396,
+    652,
+    780
+  ],
+  "rules_note": "Pinned training rules predate the deployed Gem Confiscation, Treasure Parrot and Meditation fixes."
+}

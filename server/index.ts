@@ -6,9 +6,11 @@ import {
 import { readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { Rooms } from "./rooms";
+import { NeuralRooms, httpInference } from "./neural";
 import { SnapshotWriter } from "./persistence";
 import type { Action } from "../src/engine";
-const store = new Rooms(),
+const store = process.env.TAVERN_INFERENCE_URL
+    ? new NeuralRooms(httpInference(process.env.TAVERN_INFERENCE_URL)) : new Rooms(),
   saveFile = process.env.TAVERN_STATE || "/tmp/tavern-online-state.json";
 if (existsSync(saveFile)) store.restore(readFileSync(saveFile, "utf8"));
 const writer = new SnapshotWriter(store, saveFile);
@@ -124,7 +126,8 @@ const server = createServer(async (req, res) => {
       reply(
         res,
         200,
-        { ok: true, service: "tavern", rooms: store.rooms.size },
+        { ok: true, service: "tavern", rooms: store.rooms.size,
+          ...(store instanceof NeuralRooms ? { ai: store.ai } : {}) },
         req,
       );
       return;
@@ -252,6 +255,7 @@ for (const signal of ["SIGTERM", "SIGINT"])
     if (closing) return;
     closing = true;
     clearInterval(ticker);
+    if (store instanceof NeuralRooms) store.stop();
     server.close(() => {
       void writer.flush().then(
         () => process.exit(0),

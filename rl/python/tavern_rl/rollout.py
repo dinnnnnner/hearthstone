@@ -34,6 +34,7 @@ class SimulationPool:
             raise ValueError("Need games and 1..8 learning seats")
         active, summaries, tracks = {}, [], []
         cursor = 0; start_time = time.monotonic(); action_count = 0; last_progress = start_time
+        inference_seconds = 0.; simulator_wait_seconds = 0.; inference_batches = 0; inference_decisions = 0
         if schedule is not None and len(schedule) != len(seeds): raise ValueError("Schedule length differs from seeds")
         models = {-1: current, **{i: model for i, model in enumerate(opponents)}}
         for model in models.values(): model.eval()
@@ -67,16 +68,19 @@ class SimulationPool:
                 controller = models[game["controllers"][seat]]
                 obs = prepare_entities(state['entities']) if controller.observation_kind == 'entities' else np.asarray(state["observation"], dtype=np.float32)
                 groups[game["controllers"][seat]].append((worker, seat, obs, mask))
-            requests = []
+            futures = {}
+            inference_started = time.monotonic()
             with torch.inference_mode():
                 for controller in sorted(groups):
                     group = groups[controller]
                     model = models[controller]
+                    need_value = collect and controller == -1
+                    inference_batches += 1; inference_decisions += len(group)
                     masks = torch.as_tensor(np.stack([g[3] for g in group]), device=device)
                     if model.recurrent:
                         memories = torch.as_tensor(np.stack([active[w]['memory'][s] for w,s,_,_ in group]), device=device)
                         previous = torch.tensor([active[w]['previous'][s] for w,s,_,_ in group], device=device)
-                        distribution, values, updated = model.act([g[2] for g in group], masks, memories, previous)
+                        distribution, values, updated = model.act([g[2] for g in group], masks, memories, previous, with_value=need_value)
                         updated = updated.cpu().numpy()
                     else:
                         obs = torch.as_tensor(np.stack([g[2] for g in group]), device=device)
@@ -88,8 +92,9 @@ class SimulationPool:
                     uniforms = torch.tensor([active[w]['action_rng'][s].random() for w,s,_,_ in group], device=device, dtype=cdf.dtype)
                     uniforms = uniforms.clamp_max(torch.nextafter(torch.ones((),device=device),torch.zeros((),device=device)))
                     actions = torch.searchsorted(cdf.contiguous(), uniforms[:,None], right=True).squeeze(-1)
-                    logs = distribution.log_prob(actions).cpu().numpy()
-                    values = values.cpu().numpy(); actions = actions.cpu().numpy()
+                    logs = distribution.log_prob(actions).cpu().numpy() if need_value else None
+                    values = values.cpu().numpy() if need_value else None
+                    actions = actions.cpu().numpy()
                     for i, (worker, seat, observation, mask) in enumerate(group):
                         action = int(actions[i]); game = active[worker]
                         if collect and controller == -1:
@@ -98,8 +103,11 @@ class SimulationPool:
                             game["tracks"][seat].append(record)
                         if model.recurrent: game['memory'][seat] = updated[i].copy()
                         game['previous'][seat] = action
-                        requests.append((worker, action))
-            futures = {worker: self.executor.submit(self.simulators[worker].step, action) for worker, action in requests}
+                        # Start this simulator immediately. Its CPU work can
+                        # overlap inference for the next historical policy.
+                        futures[worker] = self.executor.submit(self.simulators[worker].step, action)
+            inference_seconds += time.monotonic() - inference_started
+            simulator_started = time.monotonic()
             for worker in sorted(futures):
                 try:
                     state = futures[worker].result()
@@ -132,9 +140,12 @@ class SimulationPool:
                 del active[worker]
                 if cursor < len(seeds):
                     assign(worker, seeds[cursor], cursor); cursor += 1
+            simulator_wait_seconds += time.monotonic() - simulator_started
             now = time.monotonic()
             if progress and now - last_progress >= 30:
                 progress({'stage':'collect','completed_games':len(summaries),'total_games':len(seeds),'environment_actions':action_count,'seconds':round(now-start_time,1)})
                 last_progress = now
         elapsed = time.monotonic() - start_time
-        return tracks, summaries, {"seconds": elapsed, "environment_actions": action_count, "actions_per_second": action_count / max(elapsed, 1e-9)}
+        return tracks, summaries, {"seconds": elapsed, "environment_actions": action_count, "actions_per_second": action_count / max(elapsed, 1e-9),
+            "inference_seconds": inference_seconds, "simulator_wait_seconds": simulator_wait_seconds,
+            "inference_batches": inference_batches, "mean_inference_batch": inference_decisions / max(inference_batches, 1)}

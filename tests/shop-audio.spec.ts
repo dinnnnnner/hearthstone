@@ -3,11 +3,12 @@ import { createGame, makeMinion } from '../src/engine';
 import { readFileSync } from 'node:fs';
 const path = process.env.TAVERN_TEST_PATH || '/';
 const assets = JSON.parse(readFileSync(new URL('../src/table/soundAssets.json', import.meta.url), 'utf8'));
+const delivery = JSON.parse(readFileSync(new URL('../src/table/soundDelivery.json', import.meta.url), 'utf8'));
 const cues = JSON.parse(readFileSync(new URL('../docs/battlegrounds-shop-audio-active.json', import.meta.url), 'utf8')).cues;
 const count = new Set(Object.values(assets).flat()).size;
 
 test('shop variants play while one download is stalled and avoid immediate repetition', async ({ page }) => {
-  await page.route(`**/${assets.refresh[0]}`, () => {});
+  await page.route(`**/${delivery[assets.refresh[0]]}`, () => {});
   await page.goto(path);
   const result = await page.evaluate(async () => {
     const audio = await import(/* @vite-ignore */ `${location.pathname}src/table/sampledSounds.ts`);

@@ -1,5 +1,6 @@
 import { simulationUid, recordsFrames } from "./simulation";
-import { recordScoutRound, warbandLabel, type ScoutRound } from "./scouting";
+import type { ScoutRound } from "./scouting";
+import { practiceBattles } from "./practice";
 import {
   actSeason,
   createSeason,
@@ -45,6 +46,8 @@ export interface Minion {
   rebornNext?: boolean;
 }
 export interface Opponent {
+  seatIndex?: number;
+  spellArmor?: number;
   scouting?: ScoutRound[];
   armor?: number;
   name: string;
@@ -67,6 +70,8 @@ export interface Battle {
   opponent: string;
 }
 export interface Game {
+  practiceGhost?: Opponent;
+  seatIndex?: number;
   scouting?: ScoutRound[];
   season?: SeasonState;
   version: 1;
@@ -807,45 +812,22 @@ export function act(
     case "end": {
       endBuffs(s.board, rng);
       recruitAI(s, rng);
-      for (const rival of s.opponents.filter(o => o.health > 0))
-        recordScoutRound(rival, { turn: s.turn, warband: warbandLabel(rival.board) });
-      const living = s.opponents
-        .map((o, i) => ({ o, i }))
-        .filter((x) => x.o.health > 0);
-      if (!living.length) {
+      const battle = practiceBattles(s, (ally, enemy) => combat(
+        ally?.board || s.board, enemy.board, ally?.tier || s.tier, enemy.tier, rng,
+        !ally && s.hero === "nefarian" && s.powerUsed,
+      ), m => release(s, m));
+      if (!battle) {
         s.phase = "over";
         break;
       }
-      const entry = living.find((x) => x.i === s.nextOpponent) || living[0];
-      s.nextOpponent = entry.i;
-      const o = entry.o;
-      const battle = combat(
-        s.board,
-        o.board,
-        s.tier,
-        o.tier,
-        rng,
-        s.hero === "nefarian" && s.powerUsed,
-      );
-      battle.opponent = o.name;
-      recordScoutRound(o, { turn: s.turn, warband: o.scouting![0].warband,
-        battle: { opponent: "你", result: battle.result === "win" ? "loss" : battle.result === "loss" ? "win" : "tie", damage: battle.damage } });
       s.battle = battle;
       s.battles.unshift({
         turn: s.turn,
         result: battle.result,
         damage: battle.damage,
-        name: o.name,
+        name: battle.opponent,
       });
       s.phase = "combat";
-      if (battle.result === "loss") s.health -= battle.damage;
-      if (battle.result === "win") {
-        o.health -= battle.damage;
-        if (o.health <= 0) {
-          o.board.forEach((m) => release(s, m));
-          o.board = [];
-        }
-      }
       log(
         s,
         `第${s.turn}回合：${battle.result === "win" ? "胜利" : battle.result === "loss" ? "失利" : "平局"}${battle.damage ? `，${battle.damage}点伤害` : ""}。`,

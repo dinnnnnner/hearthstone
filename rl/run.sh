@@ -11,7 +11,7 @@ cd "$rl_root"
 rl_command="${1:-train}"
 if [[ $# -gt 0 ]]; then shift; fi
 case "$rl_command" in
-  train|campaign|evaluate|arena|replay|benchmark) exec "$rl_python" -m "tavern_rl.$rl_command" "$@" ;;
+  train|campaign|evaluate|arena|replay|benchmark|profile) exec "$rl_python" -m "tavern_rl.$rl_command" "$@" ;;
   test) exec "$rl_python" -m unittest discover -s rl/tests -v "$@" ;;
-  *) echo "Usage: bash rl/run.sh {train|campaign|evaluate|arena|replay|benchmark|test} [arguments]" >&2; exit 2 ;;
+  *) echo "Usage: bash rl/run.sh {train|campaign|evaluate|arena|replay|benchmark|profile|test} [arguments]" >&2; exit 2 ;;
 esac

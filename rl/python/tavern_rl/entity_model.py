@@ -29,8 +29,11 @@ class StringEncoder(nn.Module):
             encoded = [list(s.encode('utf8')) or [0] for s in missing]
             lengths = torch.tensor([len(s) for s in encoded], dtype=torch.long)
             if lengths.max() > 4096: raise ValueError('Unexpectedly long public symbol')
-            data = torch.zeros(len(missing), int(lengths.max()), dtype=torch.long, device=device)
-            for i, row in enumerate(encoded): data[i, :len(row)] = torch.tensor(row, device=device) + 1
+            # Build bytes on the CPU, then transfer once instead of launching a
+            # device copy/add kernel for every previously unseen public string.
+            data = torch.zeros(len(missing), int(lengths.max()), dtype=torch.long)
+            for i, row in enumerate(encoded): data[i, :len(row)] = torch.tensor(row) + 1
+            data = data.to(device)
             packed = pack_padded_sequence(self.bytes(data), lengths, batch_first=True, enforce_sorted=False)
             _, hidden = self.gru(packed)
             values = dict(zip(missing, hidden[0].unbind(0)))
@@ -100,6 +103,18 @@ class EntityActorCritic(nn.Module):
         for level in [1, 2]:
             mapping = getattr(self, f'prefix_{level}').tolist()
             self.register_buffer(f'representatives_{level}', torch.tensor([mapping.index(i) for i in range(self.prefix_counts[level])]))
+        # The legal tree is static. Nonpersistent buffers preserve old checkpoint
+        # keys and avoid eight CUDA scalar synchronizations per decision batch.
+        self.register_buffer('root_ids', torch.zeros_like(self.prefix_0), persistent=False)
+        self.register_buffer('leaf_ids', torch.arange(self.action_size), persistent=False)
+        self.tree_sizes = []
+        parents = [self.root_ids, self.prefix_0, self.prefix_1, self.prefix_2]
+        options = [self.prefix_0, self.prefix_1, self.prefix_2, self.leaf_ids]
+        for level, (parent, option) in enumerate(zip(parents, options)):
+            n_options, n_parents = int(option.max()) + 1, int(parent.max()) + 1
+            self.tree_sizes.append((n_options, n_parents))
+            mapping = torch.zeros(n_options, dtype=torch.long).scatter(0, option, parent)
+            self.register_buffer(f'option_parent_{level}', mapping, persistent=False)
         nn.init.orthogonal_(self.critic.weight, 1); nn.init.zeros_(self.critic.bias)
         nn.init.orthogonal_(self.action_type.weight, .01); nn.init.zeros_(self.action_type.bias)
 
@@ -132,16 +147,18 @@ class EntityActorCritic(nn.Module):
     def recurrent_step(self, encoded, memory, previous):
         return self.memory(torch.cat([encoded[:,0], self.previous_action(previous)], -1), memory)
 
-    def _conditional_log_probs(self, scores, parent_ids, option_ids, legal):
+    def head_features(self, memory, with_value=True):
+        return memory, memory if with_value else None
+
+    def _conditional_log_probs(self, scores, parent_ids, option_ids, legal, level):
         # Scores are identical for repeated leaves under an option. Reduce to each
         # unique option before normalizing so unused positions cannot bias choices.
         batch, count = scores.shape
-        options = int(option_ids.max()) + 1
-        parents = int(parent_ids.max()) + 1
+        options, parents = self.tree_sizes[level]
         index = option_ids.expand(batch,-1)
         option_scores = torch.full((batch,options), -1e9, device=scores.device)
         option_scores = option_scores.scatter_reduce(1,index,scores.masked_fill(~legal,-1e9),reduce='amax',include_self=True)
-        option_parent = torch.zeros(options,dtype=torch.long,device=scores.device).scatter(0,option_ids,parent_ids)
+        option_parent = getattr(self, f'option_parent_{level}')
         parent_index = option_parent.expand(batch,-1)
         maximum = torch.full((batch,parents),-1e9,device=scores.device).scatter_reduce(1,parent_index,option_scores,reduce='amax',include_self=True)
         weights = (option_scores-maximum.gather(1,parent_index)).exp() * (option_scores > -1e8)
@@ -149,10 +166,11 @@ class EntityActorCritic(nn.Module):
         normalizer = maximum + total.clamp_min(1e-30).log()
         return option_scores.gather(1,index)-normalizer.gather(1,parent_ids.expand(batch,-1))
 
-    def distribution_from(self, encoded, memory, masks):
+    def distribution_from(self, encoded, memory, masks, with_value=True):
         if not masks.any(-1).all(): raise ValueError('Every decision must have a legal action')
-        action_type = self.action_type(memory)[:,self.action_types]
-        contexts = memory[:,None] + self.type_embedding.weight[None]
+        policy, value = self.head_features(memory, with_value=with_value)
+        action_type = self.action_type(policy)[:,self.action_types]
+        contexts = policy[:,None] + self.type_embedding.weight[None]
         one, two = self.representatives_1, self.representatives_2
         source_features = encoded[:,self.source_slots[one]] + self.source_index(self.action_sources[one])
         source_unique = (self.source_query(contexts)[:,self.action_types[one]]*source_features).sum(-1)/math.sqrt(self.hidden)
@@ -163,16 +181,14 @@ class EntityActorCritic(nn.Module):
         source_score = source_unique[:,self.prefix_1]
         target_score = target_unique[:,self.prefix_2]
         position_score = positions[:,self.prefix_2].gather(2,self.action_positions[None,:,None].expand(len(memory),-1,1)).squeeze(-1)
-        root = torch.zeros_like(self.prefix_0)
-        leaf = torch.arange(self.action_size, device=memory.device)
-        log_probs = self._conditional_log_probs(action_type,root,self.prefix_0,masks)
-        log_probs = log_probs + self._conditional_log_probs(source_score,self.prefix_0,self.prefix_1,masks)
-        log_probs = log_probs + self._conditional_log_probs(target_score,self.prefix_1,self.prefix_2,masks)
-        log_probs = log_probs + self._conditional_log_probs(position_score,self.prefix_2,leaf,masks)
-        return Categorical(logits=log_probs.masked_fill(~masks,-1e9)), self.critic(memory).squeeze(-1)
+        log_probs = self._conditional_log_probs(action_type,self.root_ids,self.prefix_0,masks,0)
+        log_probs = log_probs + self._conditional_log_probs(source_score,self.prefix_0,self.prefix_1,masks,1)
+        log_probs = log_probs + self._conditional_log_probs(target_score,self.prefix_1,self.prefix_2,masks,2)
+        log_probs = log_probs + self._conditional_log_probs(position_score,self.prefix_2,self.leaf_ids,masks,3)
+        return Categorical(logits=log_probs.masked_fill(~masks,-1e9)), self.critic(value).squeeze(-1) if with_value else None
 
-    def act(self, observations, masks, memory, previous):
+    def act(self, observations, masks, memory, previous, with_value=True):
         encoded = self.encode(observations, masks.device)
         memory = self.recurrent_step(encoded,memory,previous)
-        dist,value = self.distribution_from(encoded,memory,masks)
+        dist,value = self.distribution_from(encoded,memory,masks,with_value=with_value)
         return dist,value,memory

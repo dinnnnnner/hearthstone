@@ -324,8 +324,8 @@ function App({
     } catch {}
   }, [sound, soundVolume]);
   useEffect(() => {
-    if (entrance.ready) void preloadSampledSounds();
-  }, [entrance.ready]);
+    if (entrance.ready && sound && soundVolume > 0) void preloadSampledSounds();
+  }, [entrance.ready, sound, soundVolume]);
   useEffect(() => {
     const visibility = () => { if (document.hidden) stopTableSounds(); };
     const unlock = () => unlockTableSound();
@@ -1940,7 +1940,7 @@ function App({
           <div className="help-note">
             <strong>关于这个练习场</strong>
             <p>
-              当前赛季模式锁定36.4.2数据。已实现的随从、法术、饰品与黑暗之赐参与练习，其他当前卡牌在图鉴中标记为待实现。10种族每局随机开放5种。AI共用有限随从池，但仍采用简化招募，未实现AI之间对战、完整AI技能、上锁宝箱与鱼饵机制。经典模式仍可在新对局中选择。
+              当前赛季模式锁定36.4.2数据。已实现的随从、法术、饰品与黑暗之赐参与练习，其他当前卡牌在图鉴中标记为待实现。10种族每局随机开放5种。AI共用有限随从池，每回合也会互相交战、扣除护甲与生命，战况可在对手信息中查看。AI仍采用简化招募，尚无完整AI技能、上锁宝箱与鱼饵机制。经典模式仍可在新对局中选择。
             </p>
             <a
               href="https://hearthstone.blizzard.com/en-gb/news/23156373/introducing-hearthstone-battlegrounds"

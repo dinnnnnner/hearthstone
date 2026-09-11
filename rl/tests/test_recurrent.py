@@ -106,7 +106,7 @@ class RecurrentTests(unittest.TestCase):
             def step(self,action):self.tick+=1;return self.state()
         class CountingModel(torch.nn.Module):
             observation_kind='flat';recurrent=True;hidden=1
-            def act(self,obs,masks,memory,previous):
+            def act(self,obs,masks,memory,previous,with_value=True):
                 expected=torch.where(memory[:,0]==0,2,previous)
                 if not torch.equal(previous,expected):raise AssertionError('Previous action leaked across games')
                 return torch.distributions.Categorical(logits=torch.zeros_like(masks,dtype=torch.float32)),memory[:,0],memory+1
@@ -134,6 +134,39 @@ class RecurrentTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):create_suite(root/'suite',[checkpoint],meta,games=8)
             opponent=root/'suite'/suite['opponents'][0]['file'];opponent.write_bytes(b'tampered')
             with self.assertRaisesRegex(ValueError,'checksum'):read_suite(root/'suite',meta)
+
+    def test_simulator_runs_while_next_policy_is_inferred(self):
+        from concurrent.futures import ThreadPoolExecutor
+        from threading import Event
+        from tavern_rl.rollout import SimulationPool
+        stepped = Event()
+        class FakeSimulator:
+            def reset(self, seed, options):
+                return dict(actor=0, observation=[0], legalActions=[0], terminated=False, truncated=False)
+            def step(self, action):
+                stepped.set()
+                return dict(actor=None, terminated=True, truncated=False,
+                            info=dict(placements=list(range(1, 9)), rewards=list(range(8))))
+        class Policy(torch.nn.Module):
+            observation_kind = 'flat'; recurrent = True; hidden = 1
+            def __init__(self, wait=False): super().__init__(); self.wait = wait
+            def act(self, obs, masks, memory, previous, with_value=True):
+                if self.wait and not stepped.wait(timeout=2):
+                    raise AssertionError('Simulator was held until every policy finished inference')
+                if self.wait and with_value: raise AssertionError('Frozen opponent requested a critic')
+                dist = torch.distributions.Categorical(probs=torch.ones(len(obs), 1))
+                return dist, torch.zeros(len(obs)) if with_value else None, memory + 1
+        pool = SimulationPool.__new__(SimulationPool)
+        pool.simulators = [FakeSimulator(), FakeSimulator()]; pool.meta = dict(actionCount=1)
+        pool.executor = ThreadPoolExecutor(max_workers=2)
+        try:
+            tracks, games, perf = pool.collect(Policy(), [Policy(wait=True)], [1, 2], {}, 'cpu',
+                schedule=[[-1] * 8, [0] * 7 + [-1]])
+        finally: pool.executor.shutdown()
+        self.assertEqual(len(tracks), 1)
+        self.assertEqual(len(games), 2)
+        self.assertEqual(perf['environment_actions'], 2)
+        self.assertEqual(perf['mean_inference_batch'], 1)
 
     def test_comparison_needs_enough_games_and_clear_improvement(self):
         self.assertFalse(comparison([1]*8,[8]*8)['gate_passed'])

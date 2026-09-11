@@ -120,6 +120,35 @@ test("guest tokens, host permissions, room capacity and late join are enforced",
   assert.throws(() => service.join(extra, room.code), /已经开始/);
   pool(room);
 });
+test("AI matchmaking settles all three bot-only fights and publishes their armor and health loss", () => {
+  const service = new Rooms(() => 100000, () => 0.37);
+  const guest = service.auth(service.guest("真人玩家").token);
+  const room = service.create(guest, "ai", "s14_lich", "training", "free");
+  for (const [i, seat] of room.seats.entries()) {
+    service.autoChoices(room, seat);
+    for (const m of seat.game!.board) for (const [id, n] of Object.entries(m.copies)) room.pool[id] += n;
+    equipPowers(seat.game!, ["s14_lich"]);
+    seat.game!.board = Array.from({ length: 7 }, () => {
+      const m = makeMinion("s14_BG25_001");
+      m.attack = i < 4 ? 100 : 0; m.health = i < 4 ? 1000 : 1; m.keywords = [];
+      return m;
+    });
+    seat.game!.health = 30; seat.game!.season!.armor = 2;
+  }
+  const pairs = room.pairings!.filter(([a, b]) => a !== guest.id && b !== guest.id);
+  assert.equal(pairs.length, 3);
+  service.action(guest, { type: "end" }, "end", 1);
+  for (const pair of pairs) {
+    const seats = pair.map(id => room.seats.find(p => p.id === id)!);
+    const loser = seats.find(p => p.game!.battle!.result === "loss")!;
+    assert.ok(loser?.bot);
+    assert.equal(loser.game!.battle!.damage, 5);
+    assert.equal(loser.game!.season!.armor, 0);
+    assert.equal(loser.game!.health, 27);
+    assert.equal(service.view(guest).game!.opponents.find(o => o.hero === loser.hero)!.health, 27);
+  }
+  pool(room);
+});
 test("friends share a finite pool and paired clients receive one mirrored battle", () => {
   const { service, guests, room } = setup(8);
   service.start(guests[0]);
@@ -297,29 +326,79 @@ test("the opponent shown throughout recruit is the actual opponent for consecuti
   }
 });
 
-test("a mid-recruit forfeit changes only its paired opponent to a ghost", () => {
+test("a mid-recruit forfeit rebuilds pairings and assigns the ghost to a bottom-three survivor", () => {
   const { service, guests, room } = setup(8);
   service.start(guests[0]);
   for (const p of room.seats) service.autoChoices(room, p);
-  const shown = room.seats.map(
-    (p) => p.game!.opponents[p.game!.nextOpponent].name,
-  );
+  for (const [i, p] of room.seats.entries()) { p.game!.health = 40 - i; p.game!.season!.armor = 0; }
   service.leave(guests[7]);
   const opponents = room.seats[0].game!.opponents;
   assert.equal(new Set(opponents.map((o) => o.hero)).size, 7);
   assert.equal(opponents.filter((o) => o.health > 0).length, 6);
-  assert.equal(
-    room.seats[0].game!.opponents[room.seats[0].game!.nextOpponent].name,
-    "幽灵阵容",
-  );
+  const ghostId = room.pairings!.find(([, b]) => b === null)![0];
+  assert.ok(room.seats.slice(4, 7).some(p => p.id === ghostId));
+  const shown = room.seats.map(p => p.game!.opponents[p.game!.nextOpponent].name);
   for (const g of guests.slice(0, 7))
     service.action(g, { type: "end" }, "end", 1);
-  assert.equal(room.seats[0].game!.battle!.opponent, "幽灵阵容");
-  for (let i = 1; i < 7; i++)
+  assert.equal(room.seats.find(p => p.id === ghostId)!.game!.battle!.opponent, "幽灵阵容");
+  for (let i = 0; i < 7; i++)
     assert.equal(room.seats[i].game!.battle!.opponent, shown[i]);
   pool(room);
 });
 
+test("single-death killers cannot face that ghost, but multiple deaths allow the previous opponent's corpse", () => {
+  for (const multiple of [false, true]) {
+    const { service, guests, room, identities } = setup(8, "training");
+    service.start(guests[0]);
+    for (const [i, p] of room.seats.entries()) {
+      for (const m of p.game!.board) for (const [id, n] of Object.entries(m.copies)) room.pool[id] += n;
+      equipPowers(p.game!, ["s14_lich"]);
+      const m = makeMinion("s14_BG25_001");
+      m.keywords = []; m.attack = i < (multiple ? 3 : 1) ? 100 : 0; m.health = 1000;
+      if (i >= (multiple ? 5 : 7)) m.health = 1;
+      p.game!.board = [m]; p.game!.season!.armor = 0;
+      p.game!.health = i >= (multiple ? 5 : 7) ? 1 : i === (multiple ? 2 : 0) ? 10 : i === 3 ? 12 : i === 4 ? 14 : 30;
+    }
+    service.fight(room);
+    assert.equal(room.lastEliminations!.victims.length, multiple ? 3 : 1);
+    const victim = room.seats.find(p => p.hero === room.grave!.hero)!;
+    const killerId = room.lastEliminations!.killers[victim.id];
+    assert.ok(killerId);
+    const killer = room.seats.find(p => p.id === killerId)!;
+    assert.equal(killer.game!.battle!.opponent, victim.name);
+    service.random = () => 0;
+    service.next(room);
+    const ghostId = room.pairings!.find(([, b]) => b === null)![0];
+    if (multiple) {
+      assert.equal(ghostId, killerId);
+      assert.equal(killer.game!.opponents[killer.game!.nextOpponent].hero, victim.hero);
+    } else assert.notEqual(ghostId, killerId);
+    const restored = new Rooms(service.now, service.random); restored.restore(service.dump());
+    const loaded = restored.member(restored.auth(identities[0].token)).r;
+    restored.planPairings(loaded);
+    assert.deepEqual(loaded.pairings, room.pairings);
+    assert.deepEqual(loaded.lastEliminations, room.lastEliminations);
+    pool(room);
+  }
+});
+test("health changes and replanning do not reset the eight-seat schedule, while a death starts a new cycle", () => {
+  const { service, guests, room } = setup(8);
+  service.start(guests[0]);
+  const first = structuredClone(room.pairings);
+  room.turn = 8;
+  room.seats[0].game!.health = 2;
+  service.planPairings(room);
+  assert.deepEqual(room.pairings, first);
+  const cycle = room.pairingCycle;
+  room.seats[0].game!.season!.armor = 5; room.seats[0].game!.season!.spellArmor = 5;
+  service.planPairings(room);
+  assert.equal(room.pairingCycle, cycle);
+  assert.deepEqual(room.pairings, first);
+  room.seats[7].game!.health = 0; service.eliminate(room, room.seats[7]);
+  room.turn = 9; service.planPairings(room);
+  assert.equal(room.pairingCycle!.startTurn, 9);
+  assert.equal(room.pairingCycle!.members.length, 7);
+});
 test("known replays omit frames; unrelated ready updates preserve game version; restart restores full replay", () => {
   const { service, guests, room, identities } = setup(8);
   service.start(guests[0]);
@@ -438,6 +517,27 @@ test("zero-gold health refresh can eliminate a room player and returns their poo
   assert.equal(p.game!.health, 0);
   assert.equal(p.place, 8);
   assert.equal(p.game!.board.length, 0);
+  assert.ok(!room.pairings!.flat().includes(p.id), 'recruit death must replace the old pairing');
+  assert.deepEqual(room.pairings!.flat().filter(Boolean).sort(), service.living(room).map(p => p.id).sort());
+  pool(room);
+});
+
+test("two recruit self-eliminations rebuild six-player pairings without a ghost match", () => {
+  const { service, guests, room } = setup(8, "training");
+  service.start(guests[0]);
+  for (let i = 0; i < 2; i++) {
+    const p = room.seats[i], id = "s14_BG26_524";
+    if (room.pool[id] === undefined) { room.pool[id] = 11; room.initial[id] = 11; }
+    p.game!.board.push(makeMinion(id, false, true)); room.pool[id]--;
+    p.game!.health = 1; p.game!.gold = 0; p.game!.season!.armor = 0;
+    service.action(guests[i], { type: "refresh" }, `self-lethal-${i}`, room.turn);
+  }
+  assert.equal(service.living(room).length, 6);
+  assert.equal(room.pairings!.length, 3);
+  assert.ok(room.pairings!.every(([, other]) => other !== null));
+  assert.deepEqual(room.pairings!.flat().sort(), service.living(room).map(p => p.id).sort());
+  const restored = new Rooms(service.now); restored.restore(service.dump());
+  assert.deepEqual(restored.rooms.get(room.code)!.pairings, room.pairings);
   pool(room);
 });
 

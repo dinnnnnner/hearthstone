@@ -8,6 +8,18 @@
   display: flex;
   flex-direction: column;
 }
+.room-resources {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border: 1px solid #ad865a50;
+  border-radius: 12px;
+  color: #e6c185;
+  background: #ffffff06;
+}
+.room-resources progress { width: 100%; accent-color: #d8ad61; }
+.room-resources small { color: #b6a898; }
 .online-lobby button,
 .online-lobby input,
 .online-lobby select {

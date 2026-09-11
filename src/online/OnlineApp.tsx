@@ -2,8 +2,9 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Countdown, type RoomClock } from "./Countdown";
 import { HeroDraft } from "./HeroDraft";
 import { configureTableSound, playTableSound, unlockTableSound } from "../table/sound";
-import { preloadSampledSounds } from "../table/sampledSounds";
 import { LoadingScreen } from "../loading/LoadingScreen";
+import { useMatchResources } from "../loading/useMatchResources";
+import { pauseResourceDownloads } from "../loading/resourceTraffic";
 import {
   ArrowLeft,
   ArrowRight,
@@ -62,6 +63,7 @@ export default function OnlineApp() {
       () => new URLSearchParams(location.search).get("room") || "",
     ),
     [error, setError] = useState(""),
+    [connectionError, setConnectionError] = useState(""),
     [pending, setPending] = useState(false),
     [connected, setConnected] = useState(false),
     [view, setView] = useState<"hall" | "game" | "practice">(() =>
@@ -72,9 +74,8 @@ export default function OnlineApp() {
           : "hall",
     );
   const receivedAt = useRef(performance.now());
-  useEffect(() => {
-    if (view === "hall") void preloadSampledSounds(undefined, ["heroSelect"]);
-  }, [view]);
+  const resources = useMatchResources(view !== "practice");
+  const visibleError = error || connectionError;
   function prepareHeroSound() {
     try {
       const level = localStorage.getItem("bobs-tavern-volume");
@@ -121,7 +122,11 @@ export default function OnlineApp() {
     receivedAt.current = performance.now();
     setState(next);
     setConnected(true);
-    if (previous?.room?.stage === "waiting" && next.room?.stage === "recruit")
+    setConnectionError("");
+    // A reconnect can miss the waiting snapshot entirely. Enter on the first
+    // active snapshot, but preserve an intentional visit to the same game's hall.
+    if (next.game && next.room && next.room.stage !== "waiting" &&
+      (!previous?.game || previous.room?.code !== next.room.code))
       changeView("game");
   }
   async function fetchApi(
@@ -129,6 +134,8 @@ export default function OnlineApp() {
     data?: unknown,
     token = identity?.token,
   ) {
+    const resumeDownloads = pauseResourceDownloads();
+    try {
     const res = await fetch("/tavern-api" + path, {
       method: data === undefined ? "GET" : "POST",
       headers: {
@@ -156,6 +163,7 @@ export default function OnlineApp() {
       throw Error(result.error || "服务暂时不可用");
     }
     return result;
+    } finally { resumeDownloads(); }
   }
   async function command(path: string, data: unknown = {}) {
     if (busy.current) return false;
@@ -205,12 +213,13 @@ export default function OnlineApp() {
           if (!cancelled) {
             if (data) accept(data);
             setConnected(true);
+            setConnectionError("");
           }
         }
       } catch (e) {
         if (!cancelled) {
           setConnected(false);
-          setError(e instanceof Error ? e.message : "连接中断，正在重连");
+          setConnectionError("连接中断，正在重连。房间进度保留。");
         }
       } finally {
         if (!cancelled) timer = setTimeout(poll, 1000);
@@ -252,6 +261,11 @@ export default function OnlineApp() {
     ""
   );
   if (view === "practice") return <App onLobby={() => changeView("hall")} />;
+  if (view === "game" && state?.game && room && !resources.ready)
+    return <LoadingScreen title="正在下载对战资源" detail={resources.failed
+      ? `${resources.failed} 个资源下载失败，请重试。` : "准备卡面与音效，完成后进入对局。"}
+      completed={resources.completed} total={resources.total}
+      onContinue={resources.phase === "error" ? resources.retry : undefined} continueLabel="重试下载" />;
   if (view === "game" && state?.game && room)
     return (
       <>
@@ -273,10 +287,10 @@ export default function OnlineApp() {
           }}
           onLobby={() => changeView("hall")}
         />
-        {error && (
+        {visibleError && (
           <div className="online-game-error" role="alert">
-            {error}
-            <button onClick={() => setError("")}>关闭</button>
+            {visibleError}
+            <button onClick={() => { setError(""); setConnectionError(""); }}>关闭</button>
           </div>
         )}
         {!connected && (
@@ -302,6 +316,15 @@ export default function OnlineApp() {
         </span>
       </header>
       <main className="online-main">
+        {<section className="room-resources" aria-label="对战资源">
+          <div role="status">{resources.ready ? "对战资源已就绪" : resources.phase === "error"
+            ? `${resources.failed} 个资源下载失败` : `正在下载对战资源 · ${resources.completed} / ${resources.total}`}</div>
+          {!resources.ready && <>
+            <progress aria-label="对战资源下载进度" value={resources.completed} max={resources.total} />
+            <small>登录、选英雄时会继续下载，完成后即可创建或加入房间。下次进入会使用缓存。</small>
+          </>}
+          {resources.phase === "error" && <button className="online-secondary" onClick={() => void resources.retry()}>重试下载</button>}
+        </section>}
         {!identity ? (
           <section className="guest-entry">
             <div className="online-eyebrow">旅人，欢迎来到酒馆</div>
@@ -474,7 +497,7 @@ export default function OnlineApp() {
                   <button
                     className="online-primary"
                     disabled={
-                      pending ||
+                      pending || !resources.ready ||
                       room.seats.some((p) => !p.hero) ||
                       room.seats.some((p) => p.id !== identity.id && !p.ready)
                     }
@@ -486,7 +509,7 @@ export default function OnlineApp() {
                 ) : (
                   <button
                     className="online-primary"
-                    disabled={pending || !me?.hero}
+                    disabled={pending || !me?.hero || (!me?.ready && !resources.ready)}
                     onClick={() =>
                       void command("/ready", { ready: !me?.ready })
                     }
@@ -581,7 +604,7 @@ export default function OnlineApp() {
             <div className="match-modes">
               <button
                 className="match-tile"
-                disabled={pending}
+                disabled={pending || !resources.ready}
                 onClick={async () => {
                   if (await command("/create", { kind: "ai", hero, mode, heroSelection }))
                     changeView(heroSelection === "draft" ? "hall" : "game");
@@ -604,7 +627,7 @@ export default function OnlineApp() {
               </button>
               <button
                 className="match-tile friends"
-                disabled={pending}
+                disabled={pending || !resources.ready}
                 onClick={() =>
                   void command("/create", { kind: "friends", hero, mode, heroSelection })
                 }
@@ -642,7 +665,7 @@ export default function OnlineApp() {
               />
               <button
                 className="online-secondary"
-                disabled={pending || code.trim().length !== 6}
+                disabled={pending || !resources.ready || code.trim().length !== 6}
               >
                 加入房间
                 <ArrowRight size={16} />
@@ -657,10 +680,10 @@ export default function OnlineApp() {
             </button>
           </section>
         )}
-        {error && (
+        {visibleError && (
           <div className="online-error" role="alert">
-            {error}
-            <button onClick={() => setError("")}>关闭</button>
+            {visibleError}
+            <button onClick={() => { setError(""); setConnectionError(""); }}>关闭</button>
           </div>
         )}
       </main>
