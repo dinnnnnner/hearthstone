@@ -653,7 +653,7 @@ export function seasonTargets(
   if (a.target === "selectedShop") return [...s.shop, ...ss(s).spellShop];
   let ts = [
     ...s.board,
-    ...(event === "cast" && !["consume", "butchering", "confiscateGems", "sellTransfer"].includes(a.op) ? [...s.shop] : []),
+    ...(event === "cast" && !["consume", "butchering", "sellTransfer"].includes(a.op) ? [...s.shop] : []),
   ].filter((x) => x.uid !== m.uid);
   if (a.tribe) ts = ts.filter((x) => tribe(x, a.tribe!));
   if (["battlecry", "rally"].includes(a.op))
@@ -1429,10 +1429,12 @@ function expandedEffect(ctx: Context, m: Minion, a: Ability) {
     }
     case "butchering": if (target && destroyRecruit(ctx, target)) scale(s, "undead", 5, 0, ctx.board); break;
     case "confiscateGems": {
-      if (!target || !ctx.board.includes(target)) break;
+      if (!target) break;
+      const zone = ctx.board.includes(target) ? ctx.board : s.shop;
+      const index = zone.indexOf(target);
+      if (index < 0) break;
       effect(ctx, m, { event: "cast", op: "gem", target: "selected", amount: 2 });
-      const index = ctx.board.indexOf(target);
-      for (const other of [ctx.board[index - 1], ctx.board[index + 1]].filter(Boolean)) {
+      for (const other of [zone[index - 1], zone[index + 1]].filter(Boolean)) {
         const gems = other.gems;
         if (!gems) continue;
         addStats(other, -gems.attack, -gems.health);

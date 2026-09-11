@@ -1131,3 +1131,53 @@ test("Fandral's Fortune discovers Choose One spells as well as minions, preservi
   assert.ok(s.hand.find((m) => m.uid === chosen.uid)!.bothChoices);
   s = apply(s, { type: "cast", uid: chosen.uid }); assert.ok(s.season!.activeDiscovery?.both);
 });
+
+// Gem Confiscation uses adjacent minions in the target's own row.
+test("Gem Confiscation targets tavern minions and transfers only adjacent tavern gems", () => {
+  let s = fixture();
+  const board = add(s, "BG25_001", "board");
+  board.gems = { attack: 40, health: 50 }; board.attack += 40; board.health += 50;
+  const left = add(s, "BG25_001", "shop"), target = add(s, "BG25_001", "shop"), right = add(s, "BG25_001", "shop");
+  left.gems = { attack: 3, health: 5 }; left.attack += 10; left.health += 14;
+  right.gems = { attack: 8, health: 12 }; right.attack += 8; right.health += 12;
+  target.gems = { attack: 2, health: 4 }; target.attack += 2; target.health += 4;
+  s.season!.buffs.gem = { attack: 2, health: 3 };
+  const spell = add(s, "BG28_698"), targets = seasonTargets(s, spell, "cast");
+  assert.ok(targets.some((m) => m.uid === target.uid));
+  assert.ok(!targets.some((m) => s.hand.includes(m) || s.season!.spellShop.includes(m)));
+  const beforeBoard = structuredClone(s.board), untouchedShop = structuredClone(s.shop.slice(0, -3));
+  s = apply(s, { type: "cast", uid: spell.uid, target: target.uid });
+  const result = s.shop.find((m) => m.uid === target.uid)!;
+  assert.deepEqual(result.gems, { attack: 19, health: 29 });
+  assert.equal(result.attack, target.attack + 17); assert.equal(result.health, target.health + 25);
+  for (const donor of [left, right]) {
+    const actual = s.shop.find((m) => m.uid === donor.uid)!;
+    assert.equal(actual.attack, donor.attack - donor.gems!.attack);
+    assert.equal(actual.health, donor.health - donor.gems!.health);
+    assert.equal(actual.gems, undefined);
+  }
+  assert.deepEqual(s.board, beforeBoard); assert.deepEqual(s.shop.slice(0, -3), untouchedShop);
+  assert.ok(!s.hand.some((m) => m.uid === spell.uid));
+  const transferred = structuredClone(result);
+  s.gold = 10; s = apply(s, { type: "buy", uid: result.uid });
+  assert.deepEqual(s.hand.find((m) => m.uid === result.uid), transferred);
+});
+
+test("Gem Confiscation handles row edges without stealing gems across board and tavern", () => {
+  for (const zone of ["board", "shop"] as const) for (const edge of ["left", "right"]) {
+    let s = fixture();
+    const target = add(s, "BG25_001", zone), neighbor = add(s, "BG25_001", zone);
+    const rest = s[zone].filter((m) => m.uid !== target.uid && m.uid !== neighbor.uid);
+    s[zone] = edge === "left" ? [target, neighbor, ...rest] : [...rest, neighbor, target];
+    neighbor.gems = { attack: 5, health: 7 }; neighbor.attack += 5; neighbor.health += 7;
+    const otherZone = zone === "board" ? "shop" : "board";
+    const unrelated = add(s, "BG25_001", otherZone);
+    unrelated.gems = { attack: 20, health: 30 }; unrelated.attack += 20; unrelated.health += 30;
+    const before = structuredClone(s[otherZone]), spell = add(s, "BG28_698");
+    s = apply(s, { type: "cast", uid: spell.uid, target: target.uid });
+    const result = s[zone].find((m) => m.uid === target.uid)!;
+    assert.deepEqual(result.gems, { attack: 7, health: 9 });
+    assert.equal(result.attack, target.attack + 7); assert.equal(result.health, target.health + 9);
+    assert.deepEqual(s[otherZone], before);
+  }
+});
