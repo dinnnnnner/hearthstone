@@ -1,0 +1,507 @@
+{
+  "source": "https://sounds.spriters-resource.com/pc_computer/hearthstone/asset/396767/",
+  "sourceArchiveSha256": "f638589633ed00e2bb624f648eae2f60fcef77d949e676042c516ca5d8d53fae",
+  "description": "Composed from isolated Hearthstone general SFX; not exact Battlegrounds action mappings. No livestream audio or oscillator synthesis.",
+  "cues": {
+    "select": {
+      "label": "选中",
+      "path": "audio/clean/select-5fc3a7ff4d14.wav",
+      "seconds": 0.11768707482993197,
+      "peak": 0.21290767435107513,
+      "sha256": "5fc3a7ff4d146dbb5a6fea68ad7feceb780fa881504ec4887479e73008d56b98",
+      "mixGain": 0.2963799016731538,
+      "inputs": [
+        {
+          "file": "UI_MouseClick_01.ogg",
+          "sha256": "59d09027dd754137f93c34b6ab7ed3872e1539de9bcfd27df71e1c9eb3263f45",
+          "trimStart": 0.0,
+          "trimEnd": 0.11768707482993197,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "pickup": {
+      "label": "拿牌",
+      "path": "audio/clean/pickup-7e67a4da3007.wav",
+      "seconds": 0.35419501133786846,
+      "peak": 0.5,
+      "sha256": "7e67a4da3007761c1d5792f4633ae86ca860623d475ed9747eb1c72b4299cad7",
+      "mixGain": 0.8442512917320031,
+      "inputs": [
+        {
+          "file": "FX_MinionSummon01_DrawFromHand_01.ogg",
+          "sha256": "2465e4be146562b4b6cb072ae59cef580c4dd15d24f95d7c48233873223b60ec",
+          "trimStart": 0.00045351473922902497,
+          "trimEnd": 0.3546485260770975,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "move": {
+      "label": "移动",
+      "path": "audio/clean/move-057fd6ff0cb8.wav",
+      "seconds": 0.24319727891156462,
+      "peak": 0.23848971683884093,
+      "sha256": "057fd6ff0cb85fddf43d0581b717fdc525ad82102b9e3c590d4901e6f9927edf",
+      "mixGain": 0.6635119509224955,
+      "inputs": [
+        {
+          "file": "collection_manager_drop_card.ogg",
+          "sha256": "0605367028ba954deec9a7d5b30d277f54092e3dc99518bb7270bbb17e9453ec",
+          "trimStart": 0.0,
+          "trimEnd": 0.24319727891156462,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "buy": {
+      "label": "购买",
+      "path": "audio/clean/buy-22fb0c314944.wav",
+      "seconds": 1.5798639455782313,
+      "peak": 0.42677255921796814,
+      "sha256": "22fb0c314944e4189bb7e873c28a8da6414228ef0c14868da5ac210d74cdc14e",
+      "mixGain": 0.9162519113107582,
+      "inputs": [
+        {
+          "file": "FX_MulliganCoin03_CoinFlip.ogg",
+          "sha256": "eac487fe7cc3f1cc426649a7b3e1d4292c49aa82a02a1d7b2ef4a53c83df1be3",
+          "trimStart": 0.0,
+          "trimEnd": 1.5798639455782313,
+          "at": 0,
+          "gain": 1
+        },
+        {
+          "file": "Card_Transition_In.ogg",
+          "sha256": "8757ad2d806e17c3eaf9beb59cef0200d7e490af6dcfb3ea86bfb70572a2811d",
+          "trimStart": 0.018616780045351475,
+          "trimEnd": 0.3899546485260771,
+          "at": 0.045,
+          "gain": 0.45
+        }
+      ]
+    },
+    "sell": {
+      "label": "出售",
+      "path": "audio/clean/sell-1963a5422e60.wav",
+      "seconds": 2.0605215419501133,
+      "peak": 0.49999999999999994,
+      "sha256": "1963a5422e60890fdad0fabeeb689f99a7c98f2b2c8d64c5d559abebe8e40756",
+      "mixGain": 0.8108571748890572,
+      "inputs": [
+        {
+          "file": "Card_Transition_Out.ogg",
+          "sha256": "6cf3049700fdd71637d11098c3e3919e9f783d0ac5b3a969f358ab9288fb813a",
+          "trimStart": 0.0007936507936507937,
+          "trimEnd": 0.5790249433106576,
+          "at": 0,
+          "gain": 0.45
+        },
+        {
+          "file": "FX_MulliganCoin01_HeroCoinDrop.ogg",
+          "sha256": "c059ecd16cb0f2bcfcb38bd337acdf3a868c46927f42ae5f4123d049be46e9c5",
+          "trimStart": 0.20113378684807257,
+          "trimEnd": 2.236666666666667,
+          "at": 0.025,
+          "gain": 1
+        }
+      ]
+    },
+    "refresh": {
+      "label": "刷新",
+      "path": "audio/clean/refresh-e27937e11adf.wav",
+      "seconds": 2.162312925170068,
+      "peak": 0.5,
+      "sha256": "e27937e11adf05faa8db2336602d726892760556abc1e5e48294af0b6db4751e",
+      "mixGain": 0.4949165582074794,
+      "inputs": [
+        {
+          "file": "FX_MulliganCoin09_DeckShuffle.ogg",
+          "sha256": "a001185392228804be8581f15dde0bbeb7a9d58917ad9f67d840f00202c8b824",
+          "trimStart": 0.0145578231292517,
+          "trimEnd": 2.17687074829932,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "play": {
+      "label": "出牌",
+      "path": "audio/clean/play-8874833a723c.wav",
+      "seconds": 0.9079138321995465,
+      "peak": 0.5,
+      "sha256": "8874833a723c37b03987aa1d2e468f8cdba08ec558e6a16aa55f8a8460376f0e",
+      "mixGain": 0.7866849392928817,
+      "inputs": [
+        {
+          "file": "play_card_from_hand_1.ogg",
+          "sha256": "ea4d04ffeb747794d65cb820bc3424fc065dd5e325ea9b9dcf071d1bd10e28a4",
+          "trimStart": 0.030226757369614513,
+          "trimEnd": 0.938140589569161,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "spell": {
+      "label": "施法",
+      "path": "audio/clean/spell-4df630824b7b.wav",
+      "seconds": 1.3949433106575964,
+      "peak": 0.36091240319420886,
+      "sha256": "4df630824b7b20d9569fde64c884b23b753011c08027ef84888cee7ee6931061",
+      "mixGain": 0.9372355419839153,
+      "inputs": [
+        {
+          "file": "Holy_Smite_Cast_01.ogg",
+          "sha256": "27ad1cfc0b8ead3887fec66c595c6ff23921414de95e924ca6258ba64fe1bd39",
+          "trimStart": 0.004399092970521542,
+          "trimEnd": 1.399342403628118,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "power": {
+      "label": "英雄技能",
+      "path": "audio/clean/power-fcdf317f309e.wav",
+      "seconds": 0.699297052154195,
+      "peak": 0.43071646673769565,
+      "sha256": "fcdf317f309ee38f21dfa0adf8109d61ad33b99383502075179ee1c42732b54c",
+      "mixGain": 0.9372355419839151,
+      "inputs": [
+        {
+          "file": "hero_power_icon_flip_on.ogg",
+          "sha256": "dd847fa389cd8e823829e24a4f1363c21912c83464e397696044294cbdd7cb96",
+          "trimStart": 0.05757369614512472,
+          "trimEnd": 0.7568707482993198,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "freeze": {
+      "label": "冻结",
+      "path": "audio/clean/freeze-7c5663a031cf.wav",
+      "seconds": 1.2929251700680273,
+      "peak": 0.3533373751555895,
+      "sha256": "7c5663a031cfe45abc4418cd6129e6f0146ce9414a998c00e48c08b265f927d4",
+      "mixGain": 0.9372355419839153,
+      "inputs": [
+        {
+          "file": "FX_FreezeEvent_SpellImpact.ogg",
+          "sha256": "9c2e573650d82544a5153b50d54ca4f430835dbfdbd6965eb0d4c8d657b11a91",
+          "trimStart": 0.004036281179138322,
+          "trimEnd": 1.2969614512471654,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "thaw": {
+      "label": "解冻",
+      "path": "audio/clean/thaw-4b5262b2c3af.wav",
+      "seconds": 1.4180725623582766,
+      "peak": 0.353840419277296,
+      "sha256": "4b5262b2c3afd181e7f97075e90f589a6f370ccd2705f463e35944b37026c00b",
+      "mixGain": 0.9372355419839152,
+      "inputs": [
+        {
+          "file": "FX_FreezeEvent_StateEnd.ogg",
+          "sha256": "b01b0f1bde2da680885af487b1b274de72c64daeb9fd26130a0b7b3a06241c35",
+          "trimStart": 0.06213151927437642,
+          "trimEnd": 1.4802040816326532,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "upgrade": {
+      "label": "升级",
+      "path": "audio/clean/upgrade-787024b91ebd.wav",
+      "seconds": 2.8322902494331066,
+      "peak": 0.3841559568554376,
+      "sha256": "787024b91ebd725a65789991569ba302cd637ec63764e16dd160f65d22ae2552",
+      "mixGain": 0.937235541983915,
+      "inputs": [
+        {
+          "file": "level_up.ogg",
+          "sha256": "26b0f743bc1e0da792b7f12739df1a54ce61fd3277c2284c8a1cde9b0b4a85c2",
+          "trimStart": 0.00709750566893424,
+          "trimEnd": 2.8393877551020408,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "discover": {
+      "label": "发现",
+      "path": "audio/clean/discover-8cc1ece63dd9.wav",
+      "seconds": 2.1905442176870746,
+      "peak": 0.5,
+      "sha256": "8cc1ece63dd9a9014d1dbe9f76dae52ce8f2bf3cf060f888cd52f180f312174e",
+      "mixGain": 0.8630605055844486,
+      "inputs": [
+        {
+          "file": "forge_rarity_card_appears.ogg",
+          "sha256": "aac2fcf12203abe02209424533d9e089f70b87044c866355ddfd76890f7c1974",
+          "trimStart": 0.04743764172335601,
+          "trimEnd": 2.237981859410431,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "attack": {
+      "label": "攻击起手",
+      "path": "audio/clean/attack-0b2c8483fcb3.wav",
+      "seconds": 0.5782312925170068,
+      "peak": 0.479115912486916,
+      "sha256": "0b2c8483fcb3bdf0c7fb665f617f715d0ab4837251390992461c97c3d4f8acca",
+      "mixGain": 0.5270462766947299,
+      "inputs": [
+        {
+          "file": "Card_Transition_Out.ogg",
+          "sha256": "6cf3049700fdd71637d11098c3e3919e9f783d0ac5b3a969f358ab9288fb813a",
+          "trimStart": 0.0007936507936507937,
+          "trimEnd": 0.5790249433106576,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "shield": {
+      "label": "破盾",
+      "path": "audio/clean/shield-ab781be21f6e.wav",
+      "seconds": 1.4180725623582766,
+      "peak": 0.2977472847783339,
+      "sha256": "ab781be21f6e2174ac7c368b0eb58d723217b25b8f43437077454ea99d34ba17",
+      "mixGain": 1.6819432234557312,
+      "inputs": [
+        {
+          "file": "WoW_unarmedparrymetala.ogg",
+          "sha256": "4769afb6ffa8648553dffc19cf08dc979f608b3aaeffaabb185af61e0a3de768",
+          "trimStart": 0.0010884353741496598,
+          "trimEnd": 0.36090702947845804,
+          "at": 0,
+          "gain": 0.65
+        },
+        {
+          "file": "FX_FreezeEvent_StateEnd.ogg",
+          "sha256": "b01b0f1bde2da680885af487b1b274de72c64daeb9fd26130a0b7b3a06241c35",
+          "trimStart": 0.06213151927437642,
+          "trimEnd": 1.4802040816326532,
+          "at": 0,
+          "gain": 0.45
+        }
+      ]
+    },
+    "hit": {
+      "label": "命中",
+      "path": "audio/clean/hit-a8e54cbf0755.wav",
+      "seconds": 0.5752607709750567,
+      "peak": 0.312543075781384,
+      "sha256": "a8e54cbf0755ac45dca145f065fb8345a2096ab5325409e07eaff40d859a3f3e",
+      "mixGain": 1.3238803912071357,
+      "inputs": [
+        {
+          "file": "Shared_DoubleClawSlash_Impact_1.ogg",
+          "sha256": "2f881909cb63403aed277b57b7467f7c48309bf2371b4c1558606973d35456e2",
+          "trimStart": 0.00015873015873015873,
+          "trimEnd": 0.5754195011337868,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "heroHit": {
+      "label": "英雄受击",
+      "path": "audio/clean/heroHit-b04fdacf5864.wav",
+      "seconds": 0.9063038548752834,
+      "peak": 0.5,
+      "sha256": "b04fdacf5864aa3e21e63f8159f77669fced635c8bf53a118d38b889b26e12e0",
+      "mixGain": 1.4172401048418446,
+      "inputs": [
+        {
+          "file": "WoW_m2haxehitmetalshieldcrit.ogg",
+          "sha256": "4f2fd8d68d9121714aa0c5a995d813af7dd61a415c3484b2ff476e95ea3aed87",
+          "trimStart": 0.0,
+          "trimEnd": 0.9063038548752834,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "death": {
+      "label": "死亡",
+      "path": "audio/clean/death-ea9364b33e74.wav",
+      "seconds": 0.9290929705215419,
+      "peak": 0.252888866000986,
+      "sha256": "ea9364b33e74063103783296f1d33e175299c367237e1bf3b9522734b737f9f0",
+      "mixGain": 0.6635119509224956,
+      "inputs": [
+        {
+          "file": "unselected_cards_dissipate.ogg",
+          "sha256": "a7899f70715528d540f84d8735a760e29134adb7849cac9160049cbd99c6e36a",
+          "trimStart": 0.0004308390022675737,
+          "trimEnd": 0.9295238095238095,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "triple": {
+      "label": "三连",
+      "path": "audio/clean/triple-0c322a73bc11.wav",
+      "seconds": 2.1905442176870746,
+      "peak": 0.5,
+      "sha256": "0c322a73bc11b137fe100d9b1c58d15cd9ae1c21a6ce7c4e9b210fe77ccb8573",
+      "mixGain": 0.8203857844013629,
+      "inputs": [
+        {
+          "file": "forge_rarity_card_appears.ogg",
+          "sha256": "aac2fcf12203abe02209424533d9e089f70b87044c866355ddfd76890f7c1974",
+          "trimStart": 0.04743764172335601,
+          "trimEnd": 2.237981859410431,
+          "at": 0,
+          "gain": 0.7
+        },
+        {
+          "file": "game_end_reward.ogg",
+          "sha256": "6c2ea0c128b08a9e38f17873bde5cf548d87dab62f1ed1c99d4fc783807cc26f",
+          "trimStart": 0.009546485260770975,
+          "trimEnd": 1.252108843537415,
+          "at": 0.1,
+          "gain": 1
+        }
+      ]
+    },
+    "combat": {
+      "label": "开战",
+      "path": "audio/clean/combat-364aa92c9285.wav",
+      "seconds": 1.0809750566893424,
+      "peak": 0.33403555465594714,
+      "sha256": "364aa92c92852b9c6667755da990edb076e1b11d2f2299af12ac8de6d73e0ea2",
+      "mixGain": 0.9372355419839152,
+      "inputs": [
+        {
+          "file": "forge_hero_portrait_plate_descend_and_impact.ogg",
+          "sha256": "e2fe203984cdc0bcbb44d08fc5cbf55e4fd963c8f2011596189e7a151fc2215d",
+          "trimStart": 0.0,
+          "trimEnd": 1.0809750566893424,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "round": {
+      "label": "招募回合",
+      "path": "audio/clean/round-9bf71b82a8cc.wav",
+      "seconds": 3.658662131519274,
+      "peak": 0.45421120791311614,
+      "sha256": "9bf71b82a8cc28f32bcbd51ebcffdaf6a5d362b27b18e442204067b3ced7c492",
+      "mixGain": 0.9372355419839152,
+      "inputs": [
+        {
+          "file": "ALERT_YourTurn_0v2.ogg",
+          "sha256": "f40159621e234b99590d2759ed8d336f75d33c2f9f1461b49378f142b38078b1",
+          "trimStart": 0.0,
+          "trimEnd": 3.658662131519274,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "win": {
+      "label": "胜利",
+      "path": "audio/clean/win-2fceee1be16c.wav",
+      "seconds": 1.242562358276644,
+      "peak": 0.5,
+      "sha256": "2fceee1be16cc176151d716ec3dcdf00deb1db70cb34ef799f328dde4274c8fc",
+      "mixGain": 0.8521314687333327,
+      "inputs": [
+        {
+          "file": "game_end_reward.ogg",
+          "sha256": "6c2ea0c128b08a9e38f17873bde5cf548d87dab62f1ed1c99d4fc783807cc26f",
+          "trimStart": 0.009546485260770975,
+          "trimEnd": 1.252108843537415,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "lose": {
+      "label": "失败",
+      "path": "audio/clean/lose-8278292f962a.wav",
+      "seconds": 1.0508390022675738,
+      "peak": 0.5,
+      "sha256": "8278292f962ad7e1291b2f8e566a2387310d12755fee1aa5cf4cf28fd1e8c4bf",
+      "mixGain": 0.8713792477572159,
+      "inputs": [
+        {
+          "file": "Shrink_Down.ogg",
+          "sha256": "930358e1c5cf8d4ceea6aabdffc4fc00915887782aa501607463988eecd18592",
+          "trimStart": 0.024625850340136056,
+          "trimEnd": 1.0754648526077097,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "tie": {
+      "label": "平局",
+      "path": "audio/clean/tie-15542c94aed2.wav",
+      "seconds": 0.14709750566893423,
+      "peak": 0.39444846734988437,
+      "sha256": "15542c94aed29524e5b2c64b6ed278b0bbb1292337fa82f241b914050820cb93",
+      "mixGain": 0.9372355419839152,
+      "inputs": [
+        {
+          "file": "FX_EndTurn_Up.ogg",
+          "sha256": "f668d21e6baaaa61e81d5d715d775668b82a76b89428d00408f7114d1b2d14a2",
+          "trimStart": 0.0,
+          "trimEnd": 0.14709750566893423,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "error": {
+      "label": "操作无效",
+      "path": "audio/clean/error-5a764e9ff6c5.wav",
+      "seconds": 0.23979591836734693,
+      "peak": 0.4709491289814622,
+      "sha256": "5a764e9ff6c54a81eadd34128edb02ac46c55e176fb00d80fcc3f96b0e778424",
+      "mixGain": 0.9372355419839152,
+      "inputs": [
+        {
+          "file": "card_limit_lock.ogg",
+          "sha256": "2b465cf1016a567d32ed9b59c8dc92fbbf8f5d248990c89e9af8916bac88a1bd",
+          "trimStart": 0.0,
+          "trimEnd": 0.23979591836734693,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    },
+    "tick": {
+      "label": "倒计时",
+      "path": "audio/clean/tick-b37094fad890.wav",
+      "seconds": 0.12104308390022676,
+      "peak": 0.11746687483168955,
+      "sha256": "b37094fad890294d49c33e50993ffbaaf92f9ea510da66c516664ed64243a061",
+      "mixGain": 0.2963799016731538,
+      "inputs": [
+        {
+          "file": "tiny_button_press_2.ogg",
+          "sha256": "0e65ea243ec83d001ca8cf0af74f4a6fb6cd5a3c0c0ba69627778c876e20c90c",
+          "trimStart": 0.0,
+          "trimEnd": 0.12104308390022676,
+          "at": 0,
+          "gain": 1
+        }
+      ]
+    }
+  }
+}

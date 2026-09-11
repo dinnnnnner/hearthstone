@@ -1,0 +1,349 @@
+{
+  "source": "docs/battlegrounds-shop-audio-found.json",
+  "status": "Client-referenced components; multi-layer cues adapted to this app animation timing. No perceptual equivalence claimed.",
+  "cues": {
+    "buy": {
+      "label": "购买",
+      "normalizationGain": 0.6898497269485181,
+      "runtimeGain": 1,
+      "variants": [
+        {
+          "path": "audio/shop/buy-1-cf0e78063315.wav",
+          "seconds": 1.785532879818594,
+          "sha256": "cf0e78063315eafc6801001ee25ac1f07c8d0bd7d90715d216b251700372bf49",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "Coin_Missile_Sound",
+              "at": 0,
+              "volume": 0.9,
+              "pitch": 1,
+              "sourceSha256": "f49bab4320907d98153d0701be2e76fd7aaefa24581ec8012d064245bc4ee7af"
+            },
+            {
+              "name": "mana_crystal_refresh",
+              "at": 0.35,
+              "volume": 0.8,
+              "pitch": 1.2,
+              "sourceSha256": "36357b4ac23a951551c59920b133c45b379eb973cd6cbd0ce866332ae3b35e85"
+            },
+            {
+              "name": "CoinBag_Underlay_Play_2",
+              "at": 0.35,
+              "volume": 0.45,
+              "pitch": 1.3,
+              "sourceSha256": "badb65adf12108db2fc2b37f25648fd321099a852b392bcddb2a77cc8f351d1f"
+            }
+          ]
+        }
+      ]
+    },
+    "refresh": {
+      "label": "刷新",
+      "normalizationGain": 0.49724688471436623,
+      "runtimeGain": 1,
+      "variants": [
+        {
+          "path": "audio/shop/refresh-1-3cc3a9f8cd64.wav",
+          "seconds": 1.9010884353741497,
+          "sha256": "3cc3a9f8cd645b12d977b341f5a54014aa324df7615e9c230416ce21058f54bf",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "Minion_Summon_Minion_01",
+              "at": 0,
+              "volume": 0.6,
+              "pitch": 1,
+              "sourceSha256": "2056ac0df6cec732e4c869a78734ad4d534620611bf18b542176853364d57fb8"
+            },
+            {
+              "name": "Minion_Drop_Basic_1",
+              "at": 0.2,
+              "volume": 0.45,
+              "pitch": 1,
+              "sourceSha256": "7d9f42d18f4f14afa08feca6c24010dd77b451062082f0b46a0ef781406faeaa"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/refresh-2-704217689d38.wav",
+          "seconds": 1.9010884353741497,
+          "sha256": "704217689d384835ea2fdbe38d1fe36d65f8c5b9084593b38aaf812ec82beac6",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "Minion_Summon_Minion_01",
+              "at": 0,
+              "volume": 0.6,
+              "pitch": 1,
+              "sourceSha256": "2056ac0df6cec732e4c869a78734ad4d534620611bf18b542176853364d57fb8"
+            },
+            {
+              "name": "Minion_Drop_Basic_2",
+              "at": 0.2,
+              "volume": 0.45,
+              "pitch": 1,
+              "sourceSha256": "dc30795c43430e83efff5cc235df335b9aeee3ad05deed750d1b26fee25af0d2"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/refresh-3-bfe0f75cc65b.wav",
+          "seconds": 1.9010884353741497,
+          "sha256": "bfe0f75cc65b903487b6208117c4aa8e2e94d69b697d31e175735ada6b14549f",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "Minion_Summon_Minion_01",
+              "at": 0,
+              "volume": 0.6,
+              "pitch": 1,
+              "sourceSha256": "2056ac0df6cec732e4c869a78734ad4d534620611bf18b542176853364d57fb8"
+            },
+            {
+              "name": "Minion_Drop_Basic_3",
+              "at": 0.2,
+              "volume": 0.45,
+              "pitch": 1,
+              "sourceSha256": "fb3a94d4a5c07fb2d2e1aef8ac66e86c1cb5f12c353b9628c613ca296a0ca51a"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/refresh-4-5d9fe53f5878.wav",
+          "seconds": 1.9010884353741497,
+          "sha256": "5d9fe53f5878b3605303992349501df6f1e3c4ffdda2b7571abdc6e3ab1dd2dc",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "Minion_Summon_Minion_01",
+              "at": 0,
+              "volume": 0.6,
+              "pitch": 1,
+              "sourceSha256": "2056ac0df6cec732e4c869a78734ad4d534620611bf18b542176853364d57fb8"
+            },
+            {
+              "name": "Minion_Drop_Basic_4",
+              "at": 0.2,
+              "volume": 0.45,
+              "pitch": 1,
+              "sourceSha256": "583d34c3650d07aa434aa8eccf79d45acf015b6ebe13a005dc6c929ef09ef548"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/refresh-5-f0b3cf146240.wav",
+          "seconds": 1.9010884353741497,
+          "sha256": "f0b3cf1462404de5864d4894328d71cfa6673da1fa285e1e55711827c7074a44",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "Minion_Summon_Minion_01",
+              "at": 0,
+              "volume": 0.6,
+              "pitch": 1,
+              "sourceSha256": "2056ac0df6cec732e4c869a78734ad4d534620611bf18b542176853364d57fb8"
+            },
+            {
+              "name": "Minion_Drop_Basic_5",
+              "at": 0.2,
+              "volume": 0.45,
+              "pitch": 1,
+              "sourceSha256": "c897ef4d3bf2671023b06dbdada3bdc2b47a17a09c5222b3d0ea7c5e1e1e8233"
+            }
+          ]
+        }
+      ]
+    },
+    "triple": {
+      "label": "三连",
+      "normalizationGain": 0.6689776871703745,
+      "runtimeGain": 1,
+      "variants": [
+        {
+          "path": "audio/shop/triple-1-32552ed02889.wav",
+          "seconds": 2.1314058956916098,
+          "sha256": "32552ed028891d0e6b46053d599c9cfb72736a16a0bb560231952e4bc617c3ca",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "BG_StarMissile_1",
+              "at": 0,
+              "volume": 0.4,
+              "pitch": 0.9,
+              "sourceSha256": "2fd681118c806b10551b4110cdd175404795001187c3be7d96ea6c62de9b5bc4"
+            },
+            {
+              "name": "Treasure_Cards_Appear",
+              "at": 0.16,
+              "volume": 0.48,
+              "pitch": 1,
+              "sourceSha256": "4a744744e99891232d039dac42fd57ee2cbfbe105d41f88852b8ad9ee61817a7"
+            },
+            {
+              "name": "add_card_to_hand_1",
+              "at": 0.32,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "f2ffd2dd18e818acba7ee8661426dd5b5e89e140c57f79e896ca11f0c89b4a42"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/triple-2-a3d44c9a4136.wav",
+          "seconds": 2.1314058956916098,
+          "sha256": "a3d44c9a4136ae6f21c032ff93ef7680bad84ac41049255b2cec98ff82497ce1",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "BG_StarMissile_1",
+              "at": 0,
+              "volume": 0.4,
+              "pitch": 0.9,
+              "sourceSha256": "2fd681118c806b10551b4110cdd175404795001187c3be7d96ea6c62de9b5bc4"
+            },
+            {
+              "name": "Treasure_Cards_Appear",
+              "at": 0.16,
+              "volume": 0.48,
+              "pitch": 1,
+              "sourceSha256": "4a744744e99891232d039dac42fd57ee2cbfbe105d41f88852b8ad9ee61817a7"
+            },
+            {
+              "name": "add_card_to_hand_2",
+              "at": 0.32,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "f8264abb9b6d74c0d80a9df173984c62857066a3482eba728fbd77ebf37f74a5"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/triple-3-e686bce793cf.wav",
+          "seconds": 2.1314058956916098,
+          "sha256": "e686bce793cfc4f166ee77b45056b4fcd790f3d7fbb7bb9dc236748a48c8b8c4",
+          "byteIdenticalToOriginal": false,
+          "layers": [
+            {
+              "name": "BG_StarMissile_1",
+              "at": 0,
+              "volume": 0.4,
+              "pitch": 0.9,
+              "sourceSha256": "2fd681118c806b10551b4110cdd175404795001187c3be7d96ea6c62de9b5bc4"
+            },
+            {
+              "name": "Treasure_Cards_Appear",
+              "at": 0.16,
+              "volume": 0.48,
+              "pitch": 1,
+              "sourceSha256": "4a744744e99891232d039dac42fd57ee2cbfbe105d41f88852b8ad9ee61817a7"
+            },
+            {
+              "name": "add_card_to_hand_3",
+              "at": 0.32,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "2276d01c3f92f3351993bacb052d3516b6ce6aea29c1969d3298c75b54ce97e7"
+            }
+          ]
+        }
+      ]
+    },
+    "freeze": {
+      "label": "冻结",
+      "normalizationGain": 0.430505155621951,
+      "runtimeGain": 0.430505155621951,
+      "variants": [
+        {
+          "path": "audio/shop/freeze-1-8478e99ff5c9.wav",
+          "seconds": 3.3188333333333335,
+          "sha256": "8478e99ff5c97411b03ffdeebe2b8006d9b368a235706bb9f55cf82bcd754da2",
+          "byteIdenticalToOriginal": true,
+          "layers": [
+            {
+              "name": "Mage_FrostNovaCast_New",
+              "at": 0,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "8478e99ff5c97411b03ffdeebe2b8006d9b368a235706bb9f55cf82bcd754da2"
+            }
+          ]
+        }
+      ]
+    },
+    "thaw": {
+      "label": "解冻",
+      "normalizationGain": 0.39648461694269654,
+      "runtimeGain": 0.39648461694269654,
+      "variants": [
+        {
+          "path": "audio/shop/thaw-1-3016d1b1c660.wav",
+          "seconds": 1.0378684807256235,
+          "sha256": "3016d1b1c660946dc676d6d3b992dc7b3f94220cef30f3804708073edb1b6c97",
+          "byteIdenticalToOriginal": true,
+          "layers": [
+            {
+              "name": "Shared_Frost_Impact_Small_1",
+              "at": 0,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "3016d1b1c660946dc676d6d3b992dc7b3f94220cef30f3804708073edb1b6c97"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/thaw-2-e0be836766ce.wav",
+          "seconds": 0.8960090702947846,
+          "sha256": "e0be836766ce1860df66618c6bb449604eb2b6e6bbceee8880f44cb949d9db0e",
+          "byteIdenticalToOriginal": true,
+          "layers": [
+            {
+              "name": "Shared_Frost_Impact_Small_2",
+              "at": 0,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "e0be836766ce1860df66618c6bb449604eb2b6e6bbceee8880f44cb949d9db0e"
+            }
+          ]
+        },
+        {
+          "path": "audio/shop/thaw-3-9bbad1407450.wav",
+          "seconds": 1.0410204081632652,
+          "sha256": "9bbad14074505f273df91b4d6aabdd89500ca899a80f0c1ed8fd8a92504536fc",
+          "byteIdenticalToOriginal": true,
+          "layers": [
+            {
+              "name": "Shared_Frost_Impact_Small_3",
+              "at": 0,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "9bbad14074505f273df91b4d6aabdd89500ca899a80f0c1ed8fd8a92504536fc"
+            }
+          ]
+        }
+      ]
+    },
+    "sell": {
+      "label": "出售",
+      "normalizationGain": 0.5210698724676398,
+      "runtimeGain": 0.5210698724676398,
+      "variants": [
+        {
+          "path": "audio/shop/sell-1-45c06a30eefc.wav",
+          "seconds": 1.8375625,
+          "sha256": "45c06a30eefcc0c8feeea9e555d352a72e80d3d133610f96b32ae6e6c849bd65",
+          "byteIdenticalToOriginal": true,
+          "layers": [
+            {
+              "name": "GadgetzanAuctioneer_card_spawn_coins_No_Delay",
+              "at": 0,
+              "volume": 1,
+              "pitch": 1,
+              "sourceSha256": "45c06a30eefcc0c8feeea9e555d352a72e80d3d133610f96b32ae6e6c849bd65"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

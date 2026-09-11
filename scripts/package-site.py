@@ -10,7 +10,7 @@ if site.exists(): shutil.rmtree(site)
 shutil.copytree(root / 'deploy/home', site)
 shutil.copytree(built, site / 'tavern')
 for p in list(site.rglob('*')):
- if p.suffix in {'.html', '.css', '.js', '.svg', '.json'}:
+ if p.suffix in {'.html', '.css', '.js', '.svg', '.json', '.wav'}:
   p.with_name(p.name + '.gz').write_bytes(gzip.compress(p.read_bytes(), compresslevel=9, mtime=0))
 files = {str(p.relative_to(site)): hashlib.sha256(p.read_bytes()).hexdigest() for p in site.rglob('*') if p.is_file()}
 (site / 'release-manifest.json').write_text(json.dumps(files, indent=2))

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Countdown, type RoomClock } from "./Countdown";
 import { HeroDraft } from "./HeroDraft";
+import { configureTableSound, playTableSound, unlockTableSound } from "../table/sound";
+import { preloadSampledSounds } from "../table/sampledSounds";
 import { LoadingScreen } from "../loading/LoadingScreen";
 import {
   ArrowLeft,
@@ -70,6 +72,17 @@ export default function OnlineApp() {
           : "hall",
     );
   const receivedAt = useRef(performance.now());
+  useEffect(() => {
+    if (view === "hall") void preloadSampledSounds(undefined, ["heroSelect"]);
+  }, [view]);
+  function prepareHeroSound() {
+    try {
+      const level = localStorage.getItem("bobs-tavern-volume");
+      configureTableSound(localStorage.getItem("bobs-tavern-sound") !== "off", level === null ? 0.65 : Number(level));
+    } catch { /* Use the current audio preferences. */ }
+    unlockTableSound(["heroSelect"]);
+  }
+  function heroSound() { prepareHeroSound(); playTableSound("heroSelect"); }
   useEffect(() => {
     try { localStorage.setItem("bobs-tavern-hero-selection", heroSelection); } catch {}
   }, [heroSelection]);
@@ -274,7 +287,7 @@ export default function OnlineApp() {
       </>
     );
   return (
-    <div className="online-lobby">
+    <div className="online-lobby" onPointerDownCapture={prepareHeroSound} onKeyDownCapture={prepareHeroSound}>
       <header className="online-top">
         <a href="/" className="online-wordmark">
           <Crown size={24} />
@@ -377,7 +390,7 @@ export default function OnlineApp() {
             </div>
             {room.stage === "waiting" && room.heroSelection === "draft" && (
               <HeroDraft offers={room.heroOffers || []} selected={me?.hero} pending={pending}
-                choose={(hero) => void command("/hero", { hero })}
+                choose={async (hero) => { if (await command("/hero", { hero })) heroSound(); }}
                 refresh={(slot, expectedHero) => void command("/refresh-hero", { slot, expectedHero })} />
             )}
             {!(room.kind === "ai" && room.stage === "waiting") && <div className="room-seats">
@@ -438,7 +451,7 @@ export default function OnlineApp() {
                   value={me?.hero}
                   disabled={pending}
                   onChange={(e) =>
-                    void command("/hero", { hero: e.target.value })
+                    void command("/hero", { hero: e.target.value }).then((ok) => { if (ok) heroSound(); })
                   }
                 >
                   {SEASON_HEROES.map((h) => (
@@ -544,7 +557,7 @@ export default function OnlineApp() {
               <select
                 aria-label="匹配英雄"
                 value={hero}
-                onChange={(e) => setHero(e.target.value)}
+                onChange={(e) => { setHero(e.target.value); heroSound(); }}
               >
                 {SEASON_HEROES.map((h) => (
                   <option key={h.id} value={h.id}>

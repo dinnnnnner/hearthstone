@@ -28,6 +28,8 @@ export interface Ability {
   target?: string;
   tribe?: string;
   amount?: number;
+  goldenAmount?: number;
+  summonGolden?: boolean;
   id?: string;
   key?: string;
   keyword?: Keyword;

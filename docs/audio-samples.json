@@ -1,0 +1,184 @@
+{
+  "sources": {
+    "reepeen": {
+      "url": "https://www.youtube.com/watch?v=zlO0YpSqU64",
+      "title": "Hearthstone Battlegrounds (PC) - Gameplay #34 (No Commentary)",
+      "creator": "Reepeen",
+      "file": "reepeen-audio.m4a",
+      "format": "YouTube AAC 140, 44.1 kHz stereo",
+      "retrieved": "2026-09-10",
+      "note": "French game dialogue; cuts selected outside identified dialogue. Timestamps refer to the original video."
+    }
+  },
+  "samples": [
+    {
+      "kind": "pickup",
+      "source": "reepeen",
+      "start": 83.51,
+      "end": 83.79,
+      "background": [
+        82.9,
+        83.35
+      ],
+      "strength": 4,
+      "peakDb": -16,
+      "event": "Hand card lifted before summon"
+    },
+    {
+      "kind": "buy",
+      "source": "reepeen",
+      "start": 74.57,
+      "end": 75.31,
+      "background": [
+        73.4,
+        73.8
+      ],
+      "strength": 4,
+      "peakDb": -11,
+      "event": "Shop spell purchased, coins and card movement"
+    },
+    {
+      "kind": "play",
+      "source": "reepeen",
+      "start": 83.94,
+      "end": 84.38,
+      "background": [
+        82.9,
+        83.35
+      ],
+      "strength": 4,
+      "peakDb": -10,
+      "event": "Minion card placed on board, before summon vocalization"
+    },
+    {
+      "kind": "sell",
+      "source": "reepeen",
+      "start": 163.35,
+      "end": 163.92,
+      "background": [
+        161.65,
+        161.95
+      ],
+      "strength": 4,
+      "peakDb": -11,
+      "event": "Board minion sold to bartender"
+    },
+    {
+      "kind": "refresh",
+      "source": "reepeen",
+      "start": 565.02,
+      "end": 566.1,
+      "background": [
+        563.5,
+        563.85
+      ],
+      "strength": 4,
+      "peakDb": -12,
+      "event": "Refresh button replaces shop row"
+    },
+    {
+      "kind": "freeze",
+      "source": "reepeen",
+      "start": 328.37,
+      "end": 329.21,
+      "background": [
+        330.1,
+        330.65
+      ],
+      "strength": 4,
+      "peakDb": -10,
+      "event": "Freeze button covers shop in ice"
+    },
+    {
+      "kind": "upgrade",
+      "source": "reepeen",
+      "start": 323.81,
+      "end": 325.34,
+      "background": [
+        322.7,
+        323.15
+      ],
+      "strength": 4,
+      "peakDb": -11,
+      "event": "Tavern tier upgraded, cut before bartender dialogue at 325.5"
+    },
+    {
+      "kind": "discover",
+      "source": "reepeen",
+      "start": 75.78,
+      "end": 76.4,
+      "background": [
+        73.4,
+        73.8
+      ],
+      "strength": 4,
+      "peakDb": -12,
+      "event": "Three discovery choices appear"
+    },
+    {
+      "kind": "combat",
+      "source": "reepeen",
+      "start": 95.88,
+      "end": 96.32,
+      "background": [
+        94.5,
+        94.9
+      ],
+      "strength": 4,
+      "peakDb": -10,
+      "event": "Combat banner impact, cut before dialogue at 96.38"
+    },
+    {
+      "kind": "round",
+      "source": "reepeen",
+      "start": 59.76,
+      "end": 60.69,
+      "background": [
+        58.1,
+        58.5
+      ],
+      "strength": 4,
+      "peakDb": -12,
+      "event": "Recruit banner appears, cut before dialogue at 61.04"
+    },
+    {
+      "kind": "hit",
+      "source": "reepeen",
+      "start": 100.44,
+      "end": 100.87,
+      "background": [
+        99.8,
+        100.15
+      ],
+      "strength": 4,
+      "peakDb": -9,
+      "event": "First minion attack makes contact"
+    },
+    {
+      "kind": "death",
+      "source": "reepeen",
+      "start": 101.55,
+      "end": 102.27,
+      "background": [
+        99.8,
+        100.15
+      ],
+      "strength": 4,
+      "peakDb": -12,
+      "event": "Enemy minion dies after first attack"
+    },
+    {
+      "kind": "triple",
+      "source": "reepeen",
+      "start": 524.9,
+      "end": 525.55,
+      "background": [
+        523.25,
+        523.7
+      ],
+      "strength": 4,
+      "peakDb": -10,
+      "event": "Three copies merge into a golden minion; cut before dialogue at 525.62"
+    }
+  ]
+}

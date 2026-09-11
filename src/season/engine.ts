@@ -1,4 +1,5 @@
 import { recordsFrames, recordsLogs } from "../simulation";
+import { recordScoutRound, warbandLabel } from "../scouting";
 import {
   CARDS,
   POOL_COPIES,
@@ -30,7 +31,7 @@ import {
   PREFIX,
   RAW_TRINKETS,
 } from "./catalog";
-import { equippedPowers, hasPower, powerDefinition, powerProgress, savePowerProgress, equipPowers, type PowerProgress, type PowerChoice } from "./powers";
+import { equippedPowers, hasPower, powerDefinition, powerProgress, savePowerProgress, equipPowers, nguyenPowerEligible, type PowerProgress, type PowerChoice } from "./powers";
 import { boardPowerTargets, shopPowerTargets, mixedPowerTargets } from "./expanded-heroes";
 export interface SeasonState {
   boughtTurn?: string[];
@@ -56,7 +57,7 @@ export interface SeasonState {
   freeRefresh: number;
   nozdormuRefreshTurn?: number;
   nextGold: number;
-  maxGold: number;
+  maxGold: number; // Normal ten-gold limit plus permanent gold increases.
   giftsUsed: number;
   giftUsedTurn: number;
   discoveryKind: string;
@@ -687,6 +688,36 @@ interface Context {
   deadMechs?: { id: string; golden: boolean }[];
   remember?: (m: Minion, key: string, amount: number) => void;
 }
+function summonCount(m: Minion, a: Ability) {
+  return m.golden && !a.noScale ? a.goldenAmount ?? a.amount ?? 1 : a.amount ?? 1;
+}
+function summonIsGolden(m: Minion, a: Ability) {
+  return a.summonGolden ?? (m.golden && !a.noScale);
+}
+function copiedAbility(m: Minion, a: Ability): Ability {
+  const factor = m.golden && !a.noScale ? 2 : 1;
+  return {
+    ...a,
+    attack: a.attack === undefined ? undefined : a.attack * factor,
+    health: a.health === undefined ? undefined : a.health * factor,
+    amount: a.op === "summon" ? summonCount(m, a) : (a.amount ?? 1) * factor,
+    ...(a.op === "summon" ? { summonGolden: summonIsGolden(m, a) } : {}),
+    noScale: true,
+  };
+}
+function combatCopy(m: Minion): Minion {
+  const copy = clone(m);
+  copy.uid = makeMinion(m.id).uid;
+  copy.copies = {};
+  copy.reward = false;
+  return copy;
+}
+function handSummonTargets(s: Game, tribeName?: string) {
+  return s.hand.filter((m) => getDef(m.id).kind !== "spell" &&
+    (!tribeName || tribe(m, tribeName)) &&
+    (m.lockedUntil || 0) <= s.turn && (m.lockedTier || 0) <= s.tier)
+    .sort((a, b) => b.attack - a.attack);
+}
 function buffTargets(ctx: Context, m: Minion, a: Ability): Minion[] {
   const b = ctx.board;
   let ts: Minion[] = [];
@@ -1049,17 +1080,18 @@ function effect(ctx: Context, m: Minion, a: Ability) {
       break;
     }
     case "summon":
-      for (let i = 0; i < (a.amount || 1); i++) {
+      for (let i = 0; i < summonCount(m, a); i++) {
         const d = getDef(PREFIX + a.id);
         if (d) {
-          const c = makeMinion(d.id, m.golden);
+          const c = makeMinion(d.id, summonIsGolden(m, a));
           applyGlobal(s, c);
           const beast = delta(s, "beastCombat");
           if (tribe(c, "野兽")) addStats(c, beast.attack, beast.health);
           if (ctx.summon)
             ctx.summon(c, (ctx.sourcePos ?? ctx.board.indexOf(m)) + 1 + i);
           else if (ctx.board.length < 7) {
-            ctx.board.push(c);
+            const pos = (ctx.sourcePos ?? ctx.board.indexOf(m)) + 1 + i;
+            ctx.board.splice(Math.max(0, Math.min(pos, ctx.board.length)), 0, c);
             notifySummon(ctx, c);
           }
         }
@@ -1315,12 +1347,18 @@ function destroyRecruit(ctx: Context, target: Minion) {
   if (pos < 0) return false;
   if (ctx.combat) { target.health = 0; return true; }
   ctx.board.splice(pos, 1);
-  death({ ...ctx, sourcePos: pos }, target);
+  let insertion = pos;
+  const summon = (m: Minion) => {
+    if (ctx.board.length >= 7) return;
+    ctx.board.splice(insertion++, 0, m);
+    notifySummon(ctx, m);
+  };
+  death({ ...ctx, sourcePos: pos, summon }, target);
   if (target.keywords.includes("复生") && ctx.board.length < 7) {
     const revived = makeMinion(target.id, target.golden);
     applyGlobal(ctx.s, revived); revived.health = 1;
     revived.keywords = revived.keywords.filter((k) => k !== "复生");
-    ctx.board.splice(pos, 0, revived); notifySummon(ctx, revived);
+    summon(revived);
     for (const x of [...ctx.board]) run({ ...ctx, eventMinion: revived }, x, "reborn");
   }
   release(ctx.s, target);
@@ -1376,8 +1414,8 @@ function expandedEffect(ctx: Context, m: Minion, a: Ability) {
       break;
     }
     case "pendingHandMurloc": {
-      const card = [...s.hand].filter((x) => tribe(x, "鱼人") && (x.lockedUntil || 0) <= s.turn && (x.lockedTier || 0) <= s.tier).sort((a, b) => b.attack - a.attack)[0];
-      if (card && ctx.pendingSummons) for (let i = 0; i < f; i++) { const c = clone(card); c.uid = makeMinion(card.id).uid; c.copies = {}; ctx.pendingSummons.push(c); }
+      for (const card of handSummonTargets(s, "鱼人").slice(0, f))
+        ctx.pendingSummons?.push(combatCopy(card));
       break;
     }
     case "destroyUndead": if (target && destroyRecruit(ctx, target)) for (let i = 0; i < f; i++) {
@@ -1408,8 +1446,8 @@ function expandedEffect(ctx: Context, m: Minion, a: Ability) {
     } break;
     case "fishbaitRefresh": refill(s, rng); fishbait(ctx, m, s.shop[0], f); break;
     case "fishbait": fishbait(ctx, m, target, f); break;
-    case "kangor": for (const dead of (ctx.deadMechs || []).slice(0, 2)) {
-      const c = makeMinion(dead.id, m.golden || dead.golden); applyGlobal(s, c); ctx.summon?.(c, ctx.sourcePos ?? ctx.board.length);
+    case "kangor": for (const dead of (ctx.deadMechs || []).slice(0, 2 * f)) {
+      const c = makeMinion(dead.id, dead.golden); applyGlobal(s, c); ctx.summon?.(c, ctx.sourcePos ?? ctx.board.length);
     } break;
     case "choose": {
       const source = clone(m); source.copies = {};
@@ -1539,7 +1577,14 @@ function expandedEffect(ctx: Context, m: Minion, a: Ability) {
       for (const x of buffTargets(ctx, m, a)) gain(ctx, x, ((a.attack || 0) + progress) * f, ((a.health || 0) + progress) * f); break;
     }
     case "goldenNeighbors": for (const x of buffTargets(ctx, m, { ...a, target: "adjacent" })) gain(ctx, x, f * (1 + ctx.board.filter((x) => x.golden).length), 0); break;
-    case "copyHand": for (let i = 0; i < f; i++) putHand(s, makeMinion(m.id)); break;
+    case "summonSelfCopy": {
+      if (!ctx.combat || !s.hand.includes(m)) break;
+      const copy = combatCopy(m);
+      copy.attack *= f;
+      copy.health *= f;
+      ctx.summon?.(copy, ctx.board.length);
+      break;
+    }
     case "adjacentSpell": case "rightSpell": {
       const ts = a.op === "rightSpell" ? [ctx.board[ctx.board.indexOf(m) + 1]].filter(Boolean) : buffTargets(ctx, m, { ...a, target: "adjacent" });
       for (const x of ts) for (let i = 0; i < f; i++) castSpell({ ...ctx, target: x, fromHand: false }, makeMinion(PREFIX + a.id)); break;
@@ -1547,10 +1592,9 @@ function expandedEffect(ctx: Context, m: Minion, a: Ability) {
     case "lowTierMurlocs": if (ctx.eventMinion && getDef(ctx.eventMinion.id).tier <= 3) for (const x of ctx.board.filter((x) => tribe(x, "鱼人"))) gain(ctx, x, 3 * f, 3 * f); break;
     case "summonHand": {
       if (!ctx.combat) break;
-      const card = [...s.hand].filter((x) => getDef(x.id).kind !== "spell" && !x.lockedUntil && !x.lockedTier).sort((a, b) => b.attack - a.attack)[0];
-      if (card) for (let i = 0; i < f; i++) {
-        const copy = clone(card); copy.uid = makeMinion(card.id).uid; copy.copies = {};
-        ctx.summon?.(copy, (ctx.sourcePos ?? ctx.board.indexOf(m)) + 1);
+      const cards = handSummonTargets(s).slice(0, f);
+      for (const [i, card] of cards.entries()) {
+        ctx.summon?.(combatCopy(card), (ctx.sourcePos ?? ctx.board.indexOf(m)) + 1 + i);
       }
       break;
     }
@@ -2028,6 +2072,7 @@ function startPowerEffects(s: Game, rng: () => number) {
 function offerPowers(s: Game, mode: PowerChoice["mode"], rng: () => number, selected: string[] = []) {
   const excluded = new Set([...equippedPowers(s), ...selected, ...["finley", "nguyen", "genn", "patchwerk"].map((k) => PREFIX + k)]);
   const offers = shuffled(SEASON_HEROES.filter((h) => !excluded.has(h.id) &&
+    (mode !== "nguyen" || nguyenPowerEligible(s, h.id)) &&
     (!HERO_TRIBES[h.id] || ss(s).tribes.includes(HERO_TRIBES[h.id]))), rng)
     .slice(0, mode === "nguyen" ? 2 : 3).map((h) => h.id);
   ss(s).powerChoice = { mode, offers, selected };
@@ -2063,7 +2108,7 @@ function startEffects(s: Game, rng: () => number) {
     run(ctx, m, "spellcraft");
   }
   if (!ss(s).powerChoice) startPowerEffects(s, rng);
-  heroStart(ctx);
+  if (ss(s).powerChoice?.mode !== "nguyen") heroStart(ctx);
   if (trinket(s, "220"))
     gold(s, new Set(s.board.flatMap((m) => getDef(m.id).races || [])).size);
   if (trinket(s, "390"))
@@ -2108,6 +2153,7 @@ export function seasonCombat(
     new Map((other?.board || []).map((m) => [m.uid, m])),
   ];
   const contexts: Context[] = [];
+  let deathPositions: { side: number; pos: number }[] = [];
   const frame = (text: string, attacker?: string, target?: string) =>
     recordsFrames() && frames.push({
       allies: clone(boards[0]),
@@ -2118,7 +2164,11 @@ export function seasonCombat(
     });
   const summon = (side: number, m: Minion, pos: number) => {
     if (boards[side].length >= 7) return;
-    boards[side].splice(Math.max(0, Math.min(pos, boards[side].length)), 0, m);
+    const insertion = Math.max(0, Math.min(pos, boards[side].length));
+    boards[side].splice(insertion, 0, m);
+    // Keep removed minions' slots aligned as earlier deathrattles fill spaces.
+    for (const slot of deathPositions)
+      if (slot.side === side && slot.pos >= insertion) slot.pos++;
     notifySummon(contexts[side], m);
   };
   for (let side = 0; side < 2; side++)
@@ -2184,13 +2234,16 @@ export function seasonCombat(
   const resolve = () => {
     let guard = 0;
     while (boards.some((b) => b.some((m) => m.health <= 0)) && guard++ < 100) {
-      const dead = boards.flatMap((b, side) =>
-        b.map((m, pos) => ({ m, side, pos })).filter((x) => x.m.health <= 0),
-      );
+      const dead = boards.flatMap((b, side) => {
+        let pos = 0;
+        return b.flatMap((m) => m.health <= 0 ? [{ m, side, pos }] : (pos++, []));
+      });
+      deathPositions = dead;
       for (const b of boards)
         for (let i = b.length - 1; i >= 0; i--)
           if (b[i].health <= 0) b.splice(i, 1);
-      for (const { m, side, pos } of dead) {
+      for (const slot of dead) {
+        const { m, side } = slot;
         const ctx = contexts[side];
         for (const game of other ? [s, other] : [s]) if ((ss(game).lastDead?.length || 0) < 100) ss(game).lastDead!.push(m.id);
         if (tribe(m, "机械")) ctx.deadMechs!.push({ id: m.id, golden: m.golden });
@@ -2203,22 +2256,30 @@ export function seasonCombat(
           putHand(opposing, makeMinion(m.id)); (ss(opposing).counters ??= {}).rafaamClaim = opposing.turn;
         }
         for (const fish of ctx.board.filter((x) => x.id === PREFIX + "TB_BaconShop_HP_105t" && x.uid !== m.uid)) {
-          for (let i = 0; i < (fish.golden ? 2 : 1); i++) fish.extraAbilities = [...(fish.extraAbilities || []), ...ability(m, "death").map((a) => ({ ...a, attack: (a.attack || 0) * (m.golden ? 2 : 1), health: (a.health || 0) * (m.golden ? 2 : 1), amount: (a.amount || 1) * (m.golden ? 2 : 1), noScale: true }))];
+          for (let i = 0; i < (fish.golden ? 2 : 1); i++) fish.extraAbilities = [...(fish.extraAbilities || []), ...ability(m, "death").map((a) => copiedAbility(m, a))];
         }
         if (m.id === PREFIX + "BG25_008") { bump(ctx.s, "knightDeaths"); syncStats(ctx.s, ctx.board); }
-        death({ ...ctx, sourcePos: pos, killer: killers.get(m.uid) }, m);
+        death({
+          ...ctx,
+          sourcePos: slot.pos,
+          killer: killers.get(m.uid),
+          // The source has left the board: insert at its slot, then advance
+          // through its summons, including additional deathrattle triggers.
+          summon: (card) => summon(side, card, slot.pos),
+        }, m);
         for (const x of [...boards[side]].filter((x) => x.health > 0)) run({ ...ctx, eventMinion: m }, x, "friendlyDeath");
         if (m.keywords.includes("复生")) {
           const revived = makeMinion(m.id, m.golden);
           applyGlobal(contexts[side].s, revived);
           revived.health = 1;
           revived.keywords = revived.keywords.filter((k) => k !== "复生");
-          summon(side, revived, pos);
+          summon(side, revived, slot.pos);
           for (const x of [...boards[side]].filter((x) => x.health > 0)) run({ ...ctx, eventMinion: revived }, x, "reborn");
           if ((side === 0 || other) && trinket(contexts[side].s, "205"))
             boards[side].forEach((t) => addStats(t, 2, 2));
         }
       }
+      deathPositions = [];
       fillSpaces();
     }
   };
@@ -2490,6 +2551,7 @@ export function actSeason(
         ? [action.uid, ...equippedPowers(s).slice(1)] : choice.selected;
       equipPowers(s, ids);
       st.powerChoice = undefined;
+      if (choice.mode === "nguyen") heroStart({ s, board: s.board, rng });
       if (choice.mode === "replace") st.powerCycle = false;
       if (choice.mode !== "replace") startPowerEffects(s, rng);
       s.powerUsed = seasonPowerState(s).used;
@@ -2592,22 +2654,7 @@ export function actSeason(
         m.keywords.forEach((k) => keyword(target, k));
         target.extraAbilities = [
           ...(target.extraAbilities || []),
-          ...Array.from({ length: magneticFactor }, () => ability(m)).flat().map((a) => ({
-            ...a,
-            attack:
-              a.attack === undefined
-                ? undefined
-                : a.attack * (m.golden ? 2 : 1),
-            health:
-              a.health === undefined
-                ? undefined
-                : a.health * (m.golden ? 2 : 1),
-            amount:
-              a.amount === undefined
-                ? undefined
-                : a.amount * (m.golden ? 2 : 1),
-            noScale: true,
-          })),
+          ...Array.from({ length: magneticFactor }, () => ability(m)).flat().map((a) => copiedAbility(m, a)),
         ];
         for (const [id, n] of Object.entries(m.copies))
           target.copies[id] = (target.copies[id] || 0) + n;
@@ -2799,7 +2846,7 @@ export function actSeason(
         } else if (request?.magnetizeTarget && magnet) {
           gain(ctx, magnet, m.attack, m.health); m.keywords.forEach((k) => keyword(magnet, k));
           magnet.magneticCount = (magnet.magneticCount || 0) + 1;
-          magnet.extraAbilities = [...(magnet.extraAbilities || []), ...ability(m).map((a) => ({ ...a, noScale: true }))];
+          magnet.extraAbilities = [...(magnet.extraAbilities || []), ...ability(m).map((a) => copiedAbility(m, a))];
           for (const [id, n] of Object.entries(m.copies)) magnet.copies[id] = (magnet.copies[id] || 0) + n;
         } else putHand(s, m);
         if (request?.damage) heroDamage(s, getDef(m.id).tier, ctx);
@@ -2828,12 +2875,18 @@ export function actSeason(
     case "end": {
       endEffects(s, rng);
       recruitAI(s, rng);
+      for (const rival of s.opponents.filter(o => o.health > 0))
+        recordScoutRound(rival, { turn: s.turn, warband: warbandLabel(rival.board) });
       const o = s.opponents[s.nextOpponent];
       if (!o || s.opponents.every((o) => o.health <= 0)) {
         s.phase = "over";
         break;
       }
       const battle = seasonCombat(s, o.board, o.tier, rng);
+      recordScoutRound(o, {
+        turn: s.turn, warband: o.scouting![0].warband,
+        battle: { opponent: "你", result: battle.result === "win" ? "loss" : battle.result === "loss" ? "win" : "tie", damage: battle.damage },
+      });
       battle.opponent = o.name;
       s.battle = battle;
       s.battles.unshift({
@@ -2911,7 +2964,9 @@ export function advanceRecruit(s: Game, rng: () => number = Math.random) {
     st.nozdormuRefreshTurn = s.turn;
   }
   s.turn++;
-  s.gold = Math.min(st.maxGold, Math.min(st.maxGold, s.turn + 2) + st.nextGold);
+  // Permanent increases also raise income before the normal ten-gold turn.
+  const income = Math.min(10, s.turn + 2) + (st.maxGold - 10);
+  s.gold = Math.min(st.maxGold, income + st.nextGold);
   st.nextGold = 0;
   s.upgrade = Math.max(0, s.upgrade - 1);
   s.powerUsed = false;

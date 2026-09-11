@@ -75,7 +75,7 @@
   ],
   "healthRefresh": "Shared payment calculation; per-minion counters with old-save migration; free refresh has priority; zero-gold use and health/charge labels in every layout",
   "keywordVisuals": "Separate SVG taunt guard, golden shield with reflected light and broken-shell fragments, cyan reborn, green poison, skull deathrattle and windfury badges",
-  "homepagePreservedFromRelease": "20260910T053244Z",
+  "homepagePreservedFromRelease": "20260910T055037Z",
   "supportedMinions": 234,
   "supportedSpells": 67,
   "powerReplacement": {
@@ -83,8 +83,10 @@
     "gennSecondaryPreserved": true,
     "independentUsageAndCosts": true,
     "savedChoices": true,
-    "candidateScope": "Implemented powers compatible with lobby tribes; no complete official weights or exclusions",
-    "independentPurchaseProgress": true
+    "candidateScope": "Implemented powers compatible with lobby tribes. Nguyen has separate exclusions and turn/tier/cooldown gates; permanent replacements keep their prior rules. Full official pool and weights remain unverified.",
+    "independentPurchaseProgress": true,
+    "nguyenStartPowerAfterSelection": true,
+    "nguyenPolicy": "docs/checkpoints/nguyen-power-pool-2026-09-10.md"
   },
   "sourceBaselineRelease": "20260910T011701Z",
   "recruitmentRope": {
@@ -140,6 +142,74 @@
     "finleyPowerOverlapAllowed": true,
     "refreshReturnsPreviousHeroToPool": true,
     "extraImageAssets": 0
+  },
+  "audioSampling": {
+    "sampleCount": 31,
+    "format": "PCM WAV: original files retain source channels/rate; composed shop cues use 44.1 kHz stereo",
+    "sourceRecipe": "docs/battlegrounds-audio-active.json; docs/battlegrounds-shop-audio-active.json; remaining cues: docs/clean-audio.json",
+    "preload": "hero selection alone in lobby; full bank after board readiness or interaction, low network priority, independent decode",
+    "fallback": "skip unavailable cues; no synthesis",
+    "publicAssetHashes": "14 new shop WAVs, HTML, JS and audition page verified; activation verified all release files",
+    "publicBundle": "/tavern/assets/index-TQa4Pgbu.js",
+    "publicPlayback": "39 buffers decoded; freeze, thaw, buy, triple, sell and refresh confirmed in the public game; mute/volume persistence passed",
+    "volumeAndMutePersist": true,
+    "backendRestarted": false,
+    "playbackRate": 1,
+    "qualityStatus": "14 cues use client-referenced audio components. Buy, refresh and triple mixes follow this app animation timing with recorded source pitch/volume; freeze/thaw/sell files retain original bytes. Upgrade and other unmapped cues retain the previous generic Hearthstone composition.",
+    "audition": "/tavern/audio/listen.html",
+    "bytes": 10530636,
+    "originalBattlegroundsCount": 14,
+    "heroSelectionPlaybackOffsetSeconds": 0.532,
+    "audioFileCount": 39,
+    "clientReferencedCueCount": 14,
+    "clientReferencedRawComponentCount": 27,
+    "transferGzipBytes": 7506401,
+    "variants": {
+      "refresh": 5,
+      "triple": 3,
+      "thaw": 3
+    }
+  },
+  "permanentGoldIncome": {
+    "includesBonusBeforeTenGold": true,
+    "existingSaveCompatible": true,
+    "oneTurnIncomePreserved": true,
+    "publicRoomVerifiedGold": [
+      5,
+      7
+    ],
+    "affected": [
+      "Wisdom of Ancients",
+      "goldCap spell effects"
+    ]
+  },
+  "deathrattlePosition": {
+    "vacatedSlot": true,
+    "simultaneousDeaths": true,
+    "repeatedTriggers": true,
+    "rebornAdjacent": true,
+    "boardLimit": 7,
+    "sharedClientServerEngine": true
+  },
+  "summonEffects": {
+    "handScoutCombatCopy": true,
+    "goldenScoutSingleDoubleStatsCopy": true,
+    "distinctTopHandTargets": true,
+    "separateGoldenCountAndQuality": true,
+    "kangorFirstFourOriginalMechs": true,
+    "inheritedSummonQuality": true,
+    "recruitDeathPosition": true,
+    "checkpoint": "docs/checkpoints/summon-effects-2026-09-10.md"
+  },
+  "opponentScouting": {
+    "previousRounds": 2,
+    "preCombatWarbandSummary": true,
+    "tribeTieLabel": "混合",
+    "currentRoundHidden": true,
+    "privateBoardHidden": true,
+    "persisted": true,
+    "practiceScope": "Actual player-opponent results and AI warband summaries; no invented AI-vs-AI results",
+    "checkpoint": "docs/checkpoints/opponent-scouting-2026-09-10.md"
   },
   "ruleFixDeployment": {
     "baselineCommit": "0ba1e5a705c54f233a5e16352b3343c962883326",

@@ -1,0 +1,289 @@
+{
+  "client": "/mnt/d/Hearthstone",
+  "unityVersion": "2022.3.62f2",
+  "unityPyVersion": "1.25.3",
+  "processing": "Decode only; original duration, channels and gain preserved.",
+  "mappingStatus": "Labels inferred from original names; buying, selling, refreshing, freezing, upgrading and tripling not yet mapped.",
+  "clips": [
+    {
+      "name": "BG_SelectHero",
+      "label": "战棋选英雄",
+      "file": "BG_SelectHero.wav",
+      "seconds": 4.407437324523926,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -5400188890389168386,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "662dc2098421baaf292a0a3c5303791a645a8ca8d7b18ebc687ee2bb50adc794"
+    },
+    {
+      "name": "BG_HeroDescend",
+      "label": "战棋英雄落下",
+      "file": "BG_HeroDescend.wav",
+      "seconds": 2.805000066757202,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -6182656839403316205,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "435ca0bb15fade8b0426d86b60e869a15388fde3a81897ddcc28160487642e59"
+    },
+    {
+      "name": "BG_HeroSocket",
+      "label": "战棋英雄入位",
+      "file": "BG_HeroSocket.wav",
+      "seconds": 2.033770799636841,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": 479453364364606465,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "900aa2f534e470a9a70a539a2c23801366f33117f1a20e84304474d6c5a65d41"
+    },
+    {
+      "name": "BG_OppsFanOut",
+      "label": "对手列表展开",
+      "file": "BG_OppsFanOut.wav",
+      "seconds": 2.2489166259765625,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": 7627977783305936972,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "25f2f70c8ee6c558ea42e325a3d918eedfdffaddfdfeb72252ac16c8021687e4"
+    },
+    {
+      "name": "BG_OppsToLeft",
+      "label": "对手列表移至左侧",
+      "file": "BG_OppsToLeft.wav",
+      "seconds": 2.635645866394043,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -8135355667604406237,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "d8dbe863557f88167f4cee074f6cb408c759d6ff4ad0dc8e7428f2c9fbe513a8"
+    },
+    {
+      "name": "Recruit_Popup",
+      "label": "招募提示",
+      "file": "Recruit_Popup.wav",
+      "seconds": 3.045395851135254,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -4514759078304810811,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "4db20af3f2cc998f2d84c0fa85ed34814abceae8ad4bfa79187d7a08906cffbb"
+    },
+    {
+      "name": "Combat_Popup",
+      "label": "战斗提示",
+      "file": "Combat_Popup.wav",
+      "seconds": 2.9621875286102295,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -1016915148757249193,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "f3e6160190a98648cfbc386ededee32b1cd16c203a7116ddfda47768957867bf"
+    },
+    {
+      "name": "CornerFlipTo_Recruit",
+      "label": "切至招募阶段",
+      "file": "CornerFlipTo_Recruit.wav",
+      "seconds": 2.3333542346954346,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": 7210035738625705749,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "5a3c879ab7c158f724ead643a66c8aeb07c6d7a1e8ea26e2ab41a888421edbd9"
+    },
+    {
+      "name": "CornerFlipTo_Combat",
+      "label": "切至战斗阶段",
+      "file": "CornerFlipTo_Combat.wav",
+      "seconds": 2.409749984741211,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": 1333899966791581638,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "56c002497e3fd72993668f959a605a8c31ec9562598a4ee28b7c44c0f84e310a"
+    },
+    {
+      "name": "BG_BuddySystem_Burst",
+      "label": "伙伴系统特效",
+      "file": "BG_BuddySystem_Burst.wav",
+      "seconds": 1.7029999494552612,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": 8243347293497984177,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "832c51affd724fabf1890d84745aa46580a9230245ed587ae05a6f4654114589"
+    },
+    {
+      "name": "BGSPopup_Victory_1",
+      "label": "战棋第一名结算",
+      "file": "BGSPopup_Victory_1.wav",
+      "seconds": 4.2210001945495605,
+      "bundle": "initial_bgs_global-e70f171c-audio-0.unity3d",
+      "pathId": 5444310714900116274,
+      "bundleSha256": "c8464d4513611e5ddd0f0c084e21c2c5f3a750dde4121389b3e1d443805a9ec1",
+      "wavSha256": "7b2d8f62c6a90b9ecc6cd2f8d62d7efd531395a8f6968e7c26f334de0b981a2b"
+    },
+    {
+      "name": "BGSPopup_Victory_234",
+      "label": "战棋第二至四名结算",
+      "file": "BGSPopup_Victory_234.wav",
+      "seconds": 3.680000066757202,
+      "bundle": "initial_bgs_global-e70f171c-audio-0.unity3d",
+      "pathId": -5017664035143460246,
+      "bundleSha256": "c8464d4513611e5ddd0f0c084e21c2c5f3a750dde4121389b3e1d443805a9ec1",
+      "wavSha256": "6036a8fe50355b48db5e3bb8089a9e542613cc55dcfba8f8dbfcb4cefa4d082f"
+    },
+    {
+      "name": "BGSPopup_Defeat_5678",
+      "label": "战棋第五至八名结算",
+      "file": "BGSPopup_Defeat_5678.wav",
+      "seconds": 2.5827083587646484,
+      "bundle": "initial_bgs_global-e70f171c-audio-0.unity3d",
+      "pathId": -9172925505853221447,
+      "bundleSha256": "c8464d4513611e5ddd0f0c084e21c2c5f3a750dde4121389b3e1d443805a9ec1",
+      "wavSha256": "d67d942ef70e595f7a33d13a10434ca427af0a85aa887a86ef447f184648bd3a"
+    },
+    {
+      "name": "BG20_GEM_BloodGem",
+      "label": "鲜血宝石",
+      "file": "BG20_GEM_BloodGem.wav",
+      "seconds": 2.3265624046325684,
+      "bundle": "soundspell_base_global-ffbd77eb-audio-14.unity3d",
+      "pathId": 7352953054025449758,
+      "bundleSha256": "54a8349eaf3e38852eca700b4a4a0d8d4deac007c5050624bf414bb8f203b32c",
+      "wavSha256": "7b731c0adaf4f95cf001a3aa86f14ad129067e4a386027b4e3044356083a510d"
+    },
+    {
+      "name": "Bacon_Treasure_Celebration_sound",
+      "label": "战棋宝藏庆祝特效",
+      "file": "Bacon_Treasure_Celebration_sound.wav",
+      "seconds": 3.7585625648498535,
+      "bundle": "soundspell_base_global-ffbd77eb-audio-13.unity3d",
+      "pathId": 8805171718808217086,
+      "bundleSha256": "e8984ef825d04cf57412869b5a943a9123b7f93fb26a2cc8d4cc94d89b04ff0a",
+      "wavSha256": "652802735d3e869d691b2478bcd6cbb96ba436a0524d902d231190ac817da046"
+    },
+    {
+      "name": "Bacon_Treasure_Deck_small_sound",
+      "label": "战棋宝藏牌堆小特效",
+      "file": "Bacon_Treasure_Deck_small_sound.wav",
+      "seconds": 2.4583542346954346,
+      "bundle": "soundspell_base_global-ffbd77eb-audio-13.unity3d",
+      "pathId": -4965585951471842567,
+      "bundleSha256": "e8984ef825d04cf57412869b5a943a9123b7f93fb26a2cc8d4cc94d89b04ff0a",
+      "wavSha256": "920beec44562ff8c7265e0bdec23cf75e16a361420d6eaaf27c1f7ef248a34ad"
+    },
+    {
+      "name": "Bacon_Treasure_Deck_large_sound",
+      "label": "战棋宝藏牌堆大特效",
+      "file": "Bacon_Treasure_Deck_large_sound.wav",
+      "seconds": 2.489854097366333,
+      "bundle": "soundspell_base_global-ffbd77eb-audio-13.unity3d",
+      "pathId": 8553632803683162065,
+      "bundleSha256": "e8984ef825d04cf57412869b5a943a9123b7f93fb26a2cc8d4cc94d89b04ff0a",
+      "wavSha256": "d3a517a341517d7b37bd2787a09970cd405d0f3fc0230e8fc81c7fb5a2ef33aa"
+    },
+    {
+      "name": "BaconFX_Quest_Choice_Reveal_Burst_sound",
+      "label": "战棋任务选项揭示",
+      "file": "BaconFX_Quest_Choice_Reveal_Burst_sound.wav",
+      "seconds": 2.0137500762939453,
+      "bundle": "soundspell_base_global-ffbd77eb-audio-13.unity3d",
+      "pathId": -2729188213897544788,
+      "bundleSha256": "e8984ef825d04cf57412869b5a943a9123b7f93fb26a2cc8d4cc94d89b04ff0a",
+      "wavSha256": "42f576f0d04bd8138f91564cd1da70fd3dd0283d00ed17e80ddba8392e9be790"
+    },
+    {
+      "name": "BaconFX_Quest_Choice_Reveal_Textblock_sound",
+      "label": "战棋任务文字揭示",
+      "file": "BaconFX_Quest_Choice_Reveal_Textblock_sound.wav",
+      "seconds": 1.8945000171661377,
+      "bundle": "soundspell_base_global-ffbd77eb-audio-13.unity3d",
+      "pathId": 3431267088113546329,
+      "bundleSha256": "e8984ef825d04cf57412869b5a943a9123b7f93fb26a2cc8d4cc94d89b04ff0a",
+      "wavSha256": "4b20d56261973a9ca052e0f028a7aa0c4de49dd58512f02ca95321cc49c6cc56"
+    },
+    {
+      "name": "BG_StarBurst_1",
+      "label": "战棋星星爆发 1",
+      "file": "BG_StarBurst_1.wav",
+      "seconds": 2.924833297729492,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -8568286160472155111,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "d0f41f9da154428b66452ae0036590c3045f7471c9d39ddfd09ef2c75be0ac07"
+    },
+    {
+      "name": "BG_StarBurst_2",
+      "label": "战棋星星爆发 2",
+      "file": "BG_StarBurst_2.wav",
+      "seconds": 3.0170624256134033,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -6633335536612472737,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "0bbb8bf676464afac37d5ed027f23fff09463130ca30c53096a673469fcc53e9"
+    },
+    {
+      "name": "BG_StarBurst_3",
+      "label": "战棋星星爆发 3",
+      "file": "BG_StarBurst_3.wav",
+      "seconds": 3.012500047683716,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -2788650464099841238,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "fc259479cdfc786e477a32e97ea3a1c1c5749ca193230e613cb730556ad096bd"
+    },
+    {
+      "name": "BG_StarMissile_1",
+      "label": "战棋星星飞行 1",
+      "file": "BG_StarMissile_1.wav",
+      "seconds": 1.912333369255066,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -2315069980133972357,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "2fd681118c806b10551b4110cdd175404795001187c3be7d96ea6c62de9b5bc4"
+    },
+    {
+      "name": "BG_StarMissile_2",
+      "label": "战棋星星飞行 2",
+      "file": "BG_StarMissile_2.wav",
+      "seconds": 1.818750023841858,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": 1186509913956917628,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "9819e07f4367946ee09f8bebec323316af3387de7c92e0805e8eac0bd416bc19"
+    },
+    {
+      "name": "BG_StarMissile_3",
+      "label": "战棋星星飞行 3",
+      "file": "BG_StarMissile_3.wav",
+      "seconds": 1.9299999475479126,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -3304639910071913294,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "728202777d7d1c6ae0a6bcbc341a159d00c59dabc8d422819602a05d0ae46672"
+    },
+    {
+      "name": "BG_StarImpact_1",
+      "label": "战棋星星命中 1",
+      "file": "BG_StarImpact_1.wav",
+      "seconds": 1.9316250085830688,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": 844952750298515389,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "e517b88427239680dd90dfa4f3b727e49c8c91105ac5256d0187c939e2aef385"
+    },
+    {
+      "name": "BG_StarImpact_2",
+      "label": "战棋星星命中 2",
+      "file": "BG_StarImpact_2.wav",
+      "seconds": 2.246833324432373,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -5438626577680435799,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "c702a11493bbc4ba1c002be9090924a848db29e264cbf8924a9e8425357d0e74"
+    },
+    {
+      "name": "BG_StarImpact_3",
+      "label": "战棋星星命中 3",
+      "file": "BG_StarImpact_3.wav",
+      "seconds": 2.2319374084472656,
+      "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+      "pathId": -8923116914028556378,
+      "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+      "wavSha256": "3c2e54e29cbfec4d127782ec033da174c9ffe2f8ebe538c188140478f4d23fc1"
+    }
+  ]
+}

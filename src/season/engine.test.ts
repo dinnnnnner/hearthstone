@@ -9,6 +9,7 @@ import {
   type Action,
 } from "../engine";
 import { getDef, POOL_COPIES } from "../data";
+import { nguyenPowerEligible } from "./powers";
 import {
   SEASON_CARDS,
   SEASON_CATALOG,
@@ -179,6 +180,47 @@ test("Private Investigator uses the 36.4.2 two-gold payoff next turn", () => {
   s = next(s);
   assert.equal(s.gold, 6);
 });
+test("Wisdom of Ancients adds income from the next turn and stacks across turns", () => {
+  let s = fixture("s14_cenarius");
+  s = apply(s, { type: "power" });
+  assert.equal(s.gold, 0);
+  assert.equal(s.season!.maxGold, 11);
+  assert.ok(act(s, { type: "power" }).error);
+  s = next(s);
+  assert.equal(s.gold, 5, "turn two includes the purchased extra gold");
+  s = apply(s, { type: "power" });
+  assert.equal(s.gold, 2);
+  s = next(s);
+  assert.equal(s.gold, 7, "turn three includes both permanent increases");
+  s = next(s);
+  assert.equal(s.gold, 8, "the bonus persists without using the power again");
+});
+test("gold-cap spells combine with Wisdom of Ancients and one-turn income in restored saves", () => {
+  let s = fixture("s14_cenarius");
+  s = apply(s, { type: "power" });
+  const oil = add(s, "BG28_805");
+  s = apply(s, { type: "cast", uid: oil.uid });
+  assert.equal(s.gold, 0, "increasing the cap does not grant spendable gold immediately");
+  s.season!.nextGold = 2;
+  s = JSON.parse(JSON.stringify(s));
+  advanceRecruit(s, rng);
+  assert.equal(s.gold, 8);
+  assert.equal(s.season!.nextGold, 0);
+  advanceRecruit(s, rng);
+  assert.equal(s.gold, 7, "only the permanent bonus carries into the following turn");
+  s.turn = 7;
+  advanceRecruit(s, rng);
+  assert.equal(s.gold, 12);
+  advanceRecruit(s, rng);
+  assert.equal(s.gold, 12, "base income stops growing at ten");
+});
+test("ordinary heroes keep the normal income curve without permanent gold increases", () => {
+  const s = fixture();
+  for (let turn = 2; turn <= 10; turn++) {
+    advanceRecruit(s, rng);
+    assert.equal(s.gold, Math.min(10, turn + 2));
+  }
+});
 test("Tyrael activates for one gold and fixes target stats to 50/50", () => {
   let s = fixture();
   const t = add(s, "BG36_356", "board"),
@@ -312,6 +354,222 @@ test("Titus stacks extra deathrattles, Rally generates resources, and combat pre
   add(r, "BG20_101", "board");
   seasonCombat(r, [makeMinion(PREFIX + "BG25_001")], 1, rng);
   assert.ok(r.hand.some((m) => m.id === PREFIX + "BG20_GEM"));
+});
+test("deathrattle summons occupy the vacated slot at either edge and in the middle", () => {
+  for (const position of [0, 1, 2]) {
+    for (const defending of [false, true]) {
+      const s = fixture();
+      const left = add(s, "BG25_001", "board");
+      const right = add(s, "BG25_001", "board");
+      for (const m of [left, right]) { m.attack = 0; m.health = 1000; m.keywords = []; }
+      const skull = add(s, "BG28_300", "board");
+      skull.attack = 0; skull.keywords = ["嘲讽"];
+      s.board.splice(s.board.indexOf(skull), 1);
+      s.board.splice(position, 0, skull);
+      const enemy = makeMinion(PREFIX + "BG25_001");
+      enemy.attack = 10; enemy.health = 1000; enemy.keywords = [];
+      const battle = defending
+        ? seasonCombat({ ...fixture(), board: [enemy] }, s.board, 1, () => 0, s)
+        : seasonCombat(s, [enemy], 1, () => 0);
+      const resolved = battle.frames.find((f) => f.text === "进击、伤害与亡语结算")!;
+      const expected = [left.uid, right.uid];
+      expected.splice(position, 0, PREFIX + "BG_ICC_026t", PREFIX + "BG_ICC_026t");
+      assert.deepEqual((defending ? resolved.enemies : resolved.allies).map((m) =>
+        [left.uid, right.uid].includes(m.uid) ? m.uid : m.id), expected);
+    }
+  }
+});
+test("simultaneous deaths keep distinct summons in their original board order", () => {
+  const s = fixture();
+  const first = add(s, "BG28_300", "board");
+  const second = add(s, "BG25_001", "board");
+  second.extraAbilities = [{ event: "death", op: "summon", id: "BG28_603t", amount: 2 }];
+  const right = add(s, "BG25_001", "board");
+  for (const m of s.board) { m.attack = 0; m.keywords = []; }
+  second.keywords = ["嘲讽"];
+  right.health = 1000;
+  const enemy = makeMinion(PREFIX + "BG25_001");
+  enemy.attack = 10; enemy.health = 1000; enemy.keywords = [];
+  enemy.extraAbilities = [{ event: "aura", op: "cleave" }];
+  const b = seasonCombat(s, [enemy], 1, () => 0);
+  const resolved = b.frames.find((f) => f.text === "进击、伤害与亡语结算")!;
+  assert.ok(!resolved.allies.some((m) => m.uid === first.uid || m.uid === second.uid));
+  assert.deepEqual(resolved.allies.map((m) => m.uid === right.uid ? right.uid : m.id), [
+    PREFIX + "BG_ICC_026t", PREFIX + "BG_ICC_026t",
+    PREFIX + "BG28_603t", PREFIX + "BG28_603t", right.uid,
+  ]);
+});
+test("repeated deathrattles and reborn stay together and respect seven board slots", () => {
+  for (const full of [false, true]) {
+    const s = fixture();
+    const skull = add(s, "BG28_300", "board");
+    const titus = add(s, "BG25_354", "board");
+    const right = add(s, "BG25_001", "board");
+    if (full) for (let i = 0; i < 3; i++) add(s, "BG25_001", "board");
+    for (const m of s.board) { m.attack = 0; m.health = 1000; m.keywords = []; }
+    skull.health = 1; skull.keywords = ["嘲讽", "复生"];
+    const survivors = s.board.slice(1).map((m) => m.uid);
+    const enemy = makeMinion(PREFIX + "BG25_001");
+    enemy.attack = 10; enemy.health = 1000; enemy.keywords = [];
+    const b = seasonCombat(s, [enemy], 1, () => 0);
+    const resolved = b.frames.find((f) => f.text === "进击、伤害与亡语结算")!;
+    assert.deepEqual(resolved.allies.map((m) => survivors.includes(m.uid) ? m.uid : m.id),
+      full ? [PREFIX + "BG_ICC_026t", PREFIX + "BG_ICC_026t", ...survivors]
+        : [...Array(4).fill(PREFIX + "BG_ICC_026t"), skull.id, titus.uid, right.uid]);
+    assert.ok(b.frames.every((f) => f.allies.length <= 7 && f.enemies.length <= 7));
+  }
+});
+test("Flighty Scout summons one buffed combat copy from hand on either side without changing ownership", () => {
+  for (const golden of [false, true]) for (const defending of [false, true]) {
+    const s = fixture("s14_greybough");
+    const scout = add(s, "BG32_330", "hand", golden);
+    scout.attack = 23; scout.health = 31; scout.keywords = ["圣盾"];
+    const beforeHand = structuredClone(s.hand), beforeBoard = structuredClone(s.board);
+    const foe = fixture();
+    const b = defending ? seasonCombat(foe, s.board, 1, rng, s) : seasonCombat(s, [], 1, rng);
+    const start = b.frames.find(f => f.text === "战斗开始技能结算")!;
+    const copies = defending ? start.enemies : start.allies;
+    assert.equal(copies.length, 1);
+    const copy = copies[0], factor = golden ? 2 : 1;
+    assert.equal(copy.id, scout.id);
+    assert.notEqual(copy.uid, scout.uid);
+    assert.equal(copy.attack, 23 * factor + 1);
+    assert.equal(copy.health, 31 * factor + 2);
+    assert.equal(copy.golden, golden);
+    assert.deepEqual(copy.copies, {});
+    assert.ok(copy.keywords.includes("圣盾") && copy.keywords.includes("嘲讽"));
+    assert.deepEqual(s.hand, beforeHand);
+    assert.deepEqual(s.board, beforeBoard);
+    assertPool(s);
+  }
+});
+test("Flighty Scout requires a hand source and space at combat start, and does not wait for later space", () => {
+  const s = fixture();
+  const held = add(s, "BG32_330");
+  const played = add(s, "BG32_330", "board");
+  for (let i = 0; i < 6; i++) add(s, "BG25_001", "board");
+  for (const m of s.board) { m.attack = 0; m.keywords = []; }
+  played.keywords = ["嘲讽"];
+  const foe = makeMinion(PREFIX + "BG25_001"); foe.attack = 100; foe.health = 1000;
+  const b = seasonCombat(s, [foe], 1, rng);
+  assert.ok(b.frames.every(f => f.allies.filter(m => m.id === held.id).every(m => m.uid === played.uid)));
+  assert.equal(s.hand.length, 1);
+  const empty = fixture(); add(empty, "BG32_330", "board");
+  assert.equal(seasonCombat(empty, [], 1, rng).frames.at(-1)!.allies.length, 1);
+});
+test("golden hand summons select distinct highest cards, respect unlocked cards and leave the hand intact", () => {
+  for (const source of ["BG27_556", "BG34_140"]) for (const golden of [false, true]) {
+    const s = fixture(); s.turn = 5; s.tier = 4;
+    const minion = add(s, source, "board", golden); minion.health = 1000;
+    const first = add(s, "BG26_137"), second = add(s, "BGS_020"), third = add(s, "BG25_001");
+    first.attack = 70; first.health = 83; first.lockedUntil = 5; first.lockedTier = 4;
+    second.attack = 60; second.health = 73; third.attack = 90;
+    const locked = add(s, "BG26_137"); locked.attack = 100; locked.lockedUntil = 6;
+    const spell = add(s, "BG28_810"); spell.attack = 200;
+    const before = structuredClone(s.hand);
+    const foe = makeMinion(PREFIX + "BG25_001"); foe.attack = 0; foe.health = 1000;
+    const b = seasonCombat(s, source === "BG27_556" ? [] : [foe], 1, () => 0);
+    const frame = b.frames.find(f => f.text === (source === "BG27_556" ? "战斗开始技能结算" : "进击、伤害与亡语结算"))!;
+    const summoned = frame.allies.filter(m => m.uid !== minion.uid);
+    const eligible = source === "BG27_556" ? [first, second] : [third, first];
+    assert.deepEqual(summoned.map(m => m.id), eligible.slice(0, golden ? 2 : 1).map(m => m.id));
+    assert.deepEqual(summoned.map(m => m.attack), eligible.slice(0, golden ? 2 : 1).map(m => m.attack));
+    assert.deepEqual(s.hand, before);
+    assertPool(s);
+  }
+});
+test("golden Hungry Snapjaw queues two distinct hand murlocs until space opens", () => {
+  const s = fixture();
+  const source = add(s, "BG27_556", "board", true);
+  for (let i = 0; i < 6; i++) add(s, "BG25_001", "board");
+  for (const m of s.board) { m.attack = 0; m.keywords = []; m.health = 1000; }
+  s.board[1].health = 1; s.board[1].keywords = ["嘲讽"];
+  const first = add(s, "BG26_137"), second = add(s, "BGS_020");
+  first.attack = 40; second.attack = 30;
+  const foe = makeMinion(PREFIX + "BG25_001"); foe.attack = 100; foe.health = 1000;
+  const b = seasonCombat(s, [foe], 1, () => 0);
+  assert.equal(b.frames.find(f => f.text === "战斗开始技能结算")!.allies.length, 7);
+  const firstSpace = b.frames.find(f => f.text === "进击、伤害与亡语结算")!;
+  assert.ok(firstSpace.allies.some(m => m.id === first.id));
+  assert.ok(!firstSpace.allies.some(m => m.id === second.id));
+  assert.ok(b.frames.some(f => f.allies.some(m => m.id === second.id)));
+  assert.ok(b.frames.every(f => f.allies.length <= 7));
+  assert.equal(s.hand.length, 2);
+  assert.ok(s.board.some(m => m.uid === source.uid));
+});
+test("golden summon text controls token count separately from token quality", () => {
+  for (const [id, token, amount, goldenToken] of [
+    ["BG28_300", "BG_ICC_026t", 4, false], ["BG30_125", "BG_ICC_026t", 6, false],
+    ["BG25_010", "BG25_010t", 2, false], ["BG31_801", "BG28_603t", 2, false],
+    ["BG31_803", "BG28_603t", 2, false], ["BG31_809", "BG28_603t", 2, false],
+    ["BG36_209", "BG28_603t", 2, false], ["BG36_200", "BG36_200t", 2, false],
+    ["BG29_611", "BG_BOT_312t", 1, true], ["BG25_009", "BG25_008", 1, true],
+    ["BG32_172", "BG_TTN_401", 1, true], ["BG35_604", "BG19_010", 2, true],
+    ["BG36_210", "BG36_202", 1, true],
+  ] as const) {
+    const s = fixture();
+    const m = add(s, id, "board", true); m.keywords = []; m.health = 1;
+    const foe = makeMinion(PREFIX + "BG25_001"); foe.attack = 100; foe.health = 1000; foe.keywords = [];
+    const b = seasonCombat(s, [foe], 1, () => 0);
+    const f = b.frames.find(f => f.text === "进击、伤害与亡语结算")!;
+    const tokens = f.allies.filter(m => m.id === PREFIX + token);
+    assert.equal(tokens.length, amount, id);
+    assert.ok(tokens.every(m => m.golden === goldenToken), id);
+    if (id === "BG28_300") assert.ok(tokens.every(m => m.attack === 1 && m.health === 1));
+    if (id === "BG31_803") assert.ok(tokens.every(m => m.attack === 2 && m.health === 2));
+  }
+});
+test("golden Kangor summons the first four dead mechs at their original quality", () => {
+  const s = fixture();
+  const mechIds = ["BG29_611", "BG31_177", "BGS_071", "BG32_172"];
+  const mechs = mechIds.map((id, i) => add(s, id, "board", i === 1));
+  for (const m of mechs) { m.attack = 0; m.health = 0; m.keywords = []; }
+  add(s, "BGS_012", "board", true).health = 0;
+  const b = seasonCombat(s, [], 1, () => 0);
+  const start = b.frames.find(f => f.text === "战斗开始技能结算")!;
+  const copies = start.allies.filter(m => mechIds.map(id => PREFIX + id).includes(m.id));
+  assert.deepEqual(copies.slice(-4).map(m => [m.id, m.golden]), mechs.map(m => [m.id, m.golden]));
+});
+test("magnetic summons keep the attachment's golden quality independently of the host", () => {
+  for (const hostGolden of [false, true]) for (const attachmentGolden of [false, true]) {
+    let s = fixture();
+    const host = add(s, "BG31_177", "board", hostGolden);
+    const attachment = add(s, "BG32_172", "hand", attachmentGolden);
+    s = apply(s, { type: "play", uid: attachment.uid, target: host.uid });
+    s.board[0].health = 0;
+    const b = seasonCombat(s, [], 1, rng);
+    const tokens = b.frames.find(f => f.text === "战斗开始技能结算")!.allies;
+    assert.equal(tokens.length, 1);
+    assert.equal(tokens[0].id, PREFIX + "BG_TTN_401");
+    assert.equal(tokens[0].golden, attachmentGolden);
+  }
+});
+test("Fish preserves copied summon counts and quality rather than using its own golden state", () => {
+  for (const fishGolden of [false, true]) for (const sourceGolden of [false, true]) {
+    const s = fixture();
+    const source = add(s, "BG29_611", "board", sourceGolden);
+    source.attack = 0; source.health = 0; source.keywords = [];
+    const fish = add(s, "TB_BaconShop_HP_105t", "board", fishGolden);
+    fish.attack = 0; fish.health = 1; fish.keywords = ["嘲讽"];
+    const foe = makeMinion(PREFIX + "BG25_001"); foe.attack = 100; foe.health = 1000;
+    const b = seasonCombat(s, [foe], 1, () => 0);
+    const initial = b.frames.find(f => f.text === "战斗开始技能结算")!.allies.map(m => m.uid);
+    const frame = b.frames.find(f => f.text === "进击、伤害与亡语结算" && !f.allies.some(m => m.uid === fish.uid))!;
+    const copies = frame.allies.filter(m => !initial.includes(m.uid));
+    assert.equal(copies.length, fishGolden ? 2 : 1);
+    assert.ok(copies.every(m => m.id === PREFIX + "BG_BOT_312t" && m.golden === sourceGolden));
+  }
+});
+test("recruit deathrattle summons stay at the destroyed minion's slot before its reborn copy", () => {
+  let s = fixture();
+  const left = add(s, "BG25_001", "board");
+  const skull = add(s, "BG28_300", "board"); skull.keywords = ["复生"];
+  const right = add(s, "BG25_001", "board");
+  const spell = add(s, "BG28_604");
+  s = apply(s, { type: "cast", uid: spell.uid, target: skull.uid });
+  assert.deepEqual(s.board.map(m => [left.uid, right.uid].includes(m.uid) ? m.uid : m.id),
+    [left.uid, ...Array(2).fill(PREFIX + "BG_ICC_026t"), skull.id, right.uid]);
+  assert.equal(s.hand.length, 0);
 });
 test("Venomous is consumed after an unshielded hit and cannot pierce Divine Shield", () => {
   const s = fixture();
@@ -687,6 +945,67 @@ test("Nguyen offers two fresh powers every turn including after save restore, Id
   advanceRecruit(s, rng);
   assert.equal(s.season!.powerChoice, undefined);
   assert.deepEqual(s.season!.powers, [selected]); assert.equal(s.hero, "s14_nguyen");
+});
+
+test("Nguyen excludes setup powers without narrowing Finley's permanent choices", () => {
+  const excluded = new Set(["curator", "nzoth", "afk", "cookie", "eudora", "cthun", "ragnaros", "aranna", "marin", "buttons", "edwin", "flurgl"].map(k => PREFIX + k));
+  const finleyOffers = new Set<string>();
+  const nguyenOffers = new Set<string>();
+  for (let i = 1; i <= 160; i++) {
+    for (const hero of ["nguyen", "finley"]) {
+      const s = createGame(PREFIX + hero, seed(i));
+      const offers = s.season!.powerChoice!.offers;
+      if (hero === "nguyen") {
+        assert.equal(new Set(offers).size, 2);
+        assert.ok(offers.every(id => !excluded.has(id)), offers.join(","));
+        offers.forEach(id => nguyenOffers.add(id));
+      } else offers.forEach(id => finleyOffers.add(id));
+    }
+  }
+  for (const id of excluded) assert.ok(finleyOffers.has(id), `Finley still offers ${id}`);
+  for (const key of ["reno", "zerek", "kaelthas", "kurtrus", "gallywix", "cenarius", "maiev"])
+    assert.ok(nguyenOffers.has(PREFIX + key), `${key} can produce an effect this turn`);
+});
+
+test("Nguyen only offers locked and scheduled powers when they can trigger this turn", () => {
+  const s = fixture("s14_nguyen");
+  for (const [key, field, threshold] of [
+    ["millificent", "tier", 4], ["alexstrasza", "tier", 4], ["jailer", "tier", 2],
+    ["shudderwock", "turn", 3], ["sylvanas", "turn", 3], ["akazamzarakScholar", "turn", 3],
+    ["yogg", "turn", 3], ["drekthar", "turn", 7], ["vanndar", "turn", 7],
+  ] as const) {
+    s[field] = threshold - 1;
+    assert.equal(nguyenPowerEligible(s, PREFIX + key), false, key);
+    s[field] = threshold;
+    assert.equal(nguyenPowerEligible(s, PREFIX + key), true, key);
+  }
+  for (let turn = 1; turn <= 12; turn++) {
+    s.turn = turn;
+    assert.equal(nguyenPowerEligible(s, PREFIX + "voone"), turn % 3 === 0);
+    assert.equal(nguyenPowerEligible(s, PREFIX + "xavius"), turn % 4 === 0);
+  }
+  s.season!.powers = [PREFIX + "george"];
+  s.season!.powerProgress = { [PREFIX + "reno"]: { uses: 1, turnUses: 0, elementalsPlayed: 0 } };
+  assert.equal(nguyenPowerEligible(s, PREFIX + "reno"), false);
+  s.season!.counters = { snakeUnlock: 14 };
+  assert.equal(nguyenPowerEligible(s, PREFIX + "snakeEyes"), false);
+  s.turn = 14;
+  assert.equal(nguyenPowerEligible(s, PREFIX + "snakeEyes"), true);
+});
+
+test("Nguyen's chosen start-of-turn power triggers immediately without replaying the old power", () => {
+  let s = fixture("s14_nguyen");
+  s.season!.powerChoice!.offers = [PREFIX + "vashj", PREFIX + "george"];
+  const before = s.hand.length;
+  s = apply(s, { type: "choosePower", uid: PREFIX + "vashj" });
+  assert.equal(s.hand.length, before + 1);
+  s = JSON.parse(JSON.stringify(s));
+  advanceRecruit(s, rng);
+  assert.equal(s.hand.length, before + 1, "old Vashj power does not trigger before the next choice");
+  s.season!.powerChoice!.offers = [PREFIX + "george", PREFIX + "reno"];
+  s = apply(s, { type: "choosePower", uid: PREFIX + "george" });
+  assert.equal(s.hand.length, before + 1);
+  assertPool(s);
 });
 
 test("Genn discovers twice on turn four; choices survive restore and cannot duplicate", () => {
