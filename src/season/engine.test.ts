@@ -1236,3 +1236,61 @@ test("Treasure Parrot does not count damage blocked by Divine Shield", () => {
   assert.equal(parrot.counters.parrotDamage, 34);
   assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG28_830").length, 0);
 });
+
+// Stillwater Meditator grants an untargeted, permanent tavern spell bonus.
+test("Stillwater Meditator generates Meditation each turn and its bonus stacks permanently", () => {
+  for (const golden of [false, true]) {
+    let s = fixture();
+    const caster = add(s, "BG32_835", "hand", golden);
+    const target = add(s, "BG25_001", "board");
+    const factor = golden ? 2 : 1;
+    s = apply(s, { type: "play", uid: caster.uid });
+    const meditation = () => s.hand.filter((m) => m.id === PREFIX + "BG32_835t");
+    assert.equal(meditation().length, 1);
+    assert.equal(meditation()[0].golden, golden);
+    assert.equal(meditation()[0].expires, true);
+    assert.equal(meditation()[0].tempSpell, false);
+    assert.deepEqual(seasonTargets(s, meditation()[0], "cast"), []);
+    s = apply(s, { type: "cast", uid: meditation()[0].uid });
+    assert.deepEqual(s.season!.buffs.spell, { attack: factor, health: factor });
+    assert.equal(s.board.find((m) => m.uid === target.uid)!.attack, target.attack);
+    assert.equal(s.season!.spellsCast, 0);
+
+    const firstBuff = add(s, "BG28_168");
+    s = apply(s, { type: "cast", uid: firstBuff.uid });
+    const buffed = s.board.find((m) => m.uid === target.uid)!;
+    assert.equal(buffed.attack, target.attack + 1 + factor);
+    assert.equal(buffed.health, target.health + 1 + factor);
+    s = next(s);
+    assert.equal(meditation().length, 1);
+    assert.deepEqual(s.season!.buffs.spell, { attack: factor, health: factor });
+    assert.equal(s.board.find((m) => m.uid === target.uid)!.attack, buffed.attack);
+    s = apply(s, { type: "cast", uid: meditation()[0].uid });
+    assert.deepEqual(s.season!.buffs.spell, { attack: 2 * factor, health: 2 * factor });
+    s = apply(s, { type: "sell", uid: caster.uid });
+    s = next(s);
+    assert.equal(meditation().length, 0);
+    assert.deepEqual(s.season!.buffs.spell, { attack: 2 * factor, health: 2 * factor });
+    const secondBuff = add(s, "BG28_168");
+    s = apply(s, { type: "cast", uid: secondBuff.uid });
+    const final = s.board.find((m) => m.uid === target.uid)!;
+    assert.equal(final.attack, buffed.attack + 1 + 2 * factor);
+    assert.equal(final.health, buffed.health + 1 + 2 * factor);
+  }
+});
+
+test("Stillwater Meditator replaces unused Meditation next turn and can cast it on an empty board", () => {
+  let s = fixture();
+  const caster = add(s, "BG32_835");
+  s = apply(s, { type: "play", uid: caster.uid });
+  const first = s.hand.find((m) => m.id === PREFIX + "BG32_835t")!;
+  s = next(s);
+  const cards = s.hand.filter((m) => m.id === first.id);
+  assert.equal(cards.length, 1);
+  assert.notEqual(cards[0].uid, first.uid);
+  assert.equal(s.season!.buffs.spell, undefined);
+  s = apply(s, { type: "sell", uid: caster.uid });
+  assert.equal(s.board.length, 0);
+  s = apply(s, { type: "cast", uid: cards[0].uid });
+  assert.deepEqual(s.season!.buffs.spell, { attack: 1, health: 1 });
+});

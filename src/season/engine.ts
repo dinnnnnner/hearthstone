@@ -1086,7 +1086,7 @@ function effect(ctx: Context, m: Minion, a: Ability) {
             ...a,
             event: "cast",
             op: a.op === "craft" ? "buff" : "scale",
-            target: "selected",
+            target: a.op === "craft" ? "selected" : undefined,
           },
         ];
         putHand(s, c);
