@@ -1,0 +1,736 @@
+{
+  "release": "20260911T114421Z",
+  "previousRelease": "/opt/bobs-tavern/releases/20260911T075457Z",
+  "publicRelease": "/opt/bobs-tavern/releases/20260911T114421Z",
+  "site": "https://8.153.150.101/tavern/",
+  "backendSha256": "996f812db39b048511aad1ccbb9a2d48709a4d4817e2d4541e98112680bf6db2",
+  "frontend": "unchanged; model names and episode counts come from /tavern-api/models",
+  "models": [
+    {
+      "id": "deep64-1112",
+      "label": "64 层模型",
+      "episodes": 1112,
+      "checkpointSha256": "452a8fe616035ec39d1da05750cca3f441175a18d456ab2c6da87319176b32e1",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18891",
+      "metadata": {
+        "episodes": 1112,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "452a8fe616035ec39d1da05750cca3f441175a18d456ab2c6da87319176b32e1",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 64,
+        "valueDepth": 64,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 71,
+        "unusedGoldPenalty": 0.01
+      },
+      "artifactHashes": {
+        "model.pt": "e45bf14784a5dcdbde9f20df8672a31c8cb758416c3cf6a9dc4c36abcd39cfd7",
+        "manifest.json": "2231190b3d443f9a3df4d6a63d9934263b4ad298dc73d0e2df9edd7048a7a0a0",
+        "metrics.jsonl": "427bb8882532959819483bfb71b784f2866e654e3d9fbd694dfbcbfa8118998f",
+        "status.json": "ccb990f96e9f6c912f8eadb2f958cc2078529fadd17779a25f87dbf4c41fa189",
+        "metadata.json": "977ad42a8cbab17cd3226691ca5443a6c7f8ac87f3d76c24ee663b3c5eee5b1a"
+      },
+      "artifactBytes": 14737859,
+      "trainingIterations": 71,
+      "lastTrainingMetrics": {
+        "iteration": 71,
+        "iteration_seconds": 742.4934118200326,
+        "end_to_end_actions_per_second": 33.2959183292958,
+        "cuda_peak_allocated_mib": 982.96630859375,
+        "episodes": 1112,
+        "seconds": 627.5633757970063,
+        "environment_actions": 24722,
+        "actions_per_second": 39.3936309119426,
+        "inference_seconds": 389.9232672356302,
+        "simulator_wait_seconds": 221.21759576071054,
+        "unused_gold_penalty_coefficient": 0.01,
+        "unused_gold_penalty_total": 8.039999999999981,
+        "unused_gold_penalized_ends": 188,
+        "inference_batches": 15314,
+        "mean_inference_batch": 1.614339819772757,
+        "policy_loss": -0.003243440077252065,
+        "value_loss": 0.008178409542657998,
+        "entropy": 1.9150202731291452,
+        "approx_kl": 0.008547413434280315,
+        "gradient_norm": 2.253117862343788,
+        "samples": 14892,
+        "optimizer_steps": 480,
+        "kl_early_stop": false,
+        "sequence_chunks": 959,
+        "optimization_seconds": 105.10460154595785,
+        "completed_games": 16,
+        "league_generations": [
+          0,
+          "external:24d520b5efa6835c",
+          "external:06b33488c0acd520",
+          "external:87de2dec5011c615",
+          "external:0fb71e0e2e76c85e",
+          1,
+          2,
+          4,
+          68,
+          69,
+          70,
+          71
+        ],
+        "opponent_sampling": [
+          {
+            "generation": 0,
+            "external": false,
+            "depth": 64,
+            "probability": 0.042582148848737136,
+            "seats": 1
+          },
+          {
+            "generation": "external:24d520b5efa6835c",
+            "external": true,
+            "depth": 256,
+            "probability": 0.0886737400530504,
+            "seats": 3
+          },
+          {
+            "generation": "external:06b33488c0acd520",
+            "external": true,
+            "depth": 1024,
+            "probability": 0.050990099009900994,
+            "seats": 4
+          },
+          {
+            "generation": "external:87de2dec5011c615",
+            "external": true,
+            "depth": 256,
+            "probability": 0.11132625994694961,
+            "seats": 5
+          },
+          {
+            "generation": "external:0fb71e0e2e76c85e",
+            "external": true,
+            "depth": 1024,
+            "probability": 0.149009900990099,
+            "seats": 11
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "depth": 64,
+            "probability": 0.04285198821591189,
+            "seats": 5
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "depth": 64,
+            "probability": 0.04260911519242378,
+            "seats": 2
+          },
+          {
+            "generation": 4,
+            "external": false,
+            "depth": 64,
+            "probability": 0.04227402811622222,
+            "seats": 2
+          },
+          {
+            "generation": 67,
+            "external": false,
+            "depth": 64,
+            "probability": 0.1343493261693963,
+            "seats": 11
+          },
+          {
+            "generation": 68,
+            "external": false,
+            "depth": 64,
+            "probability": 0.07435550551015355,
+            "seats": 5
+          },
+          {
+            "generation": 69,
+            "external": false,
+            "depth": 64,
+            "probability": 0.12523114617763897,
+            "seats": 6
+          },
+          {
+            "generation": 70,
+            "external": false,
+            "depth": 64,
+            "probability": 0.09574674176951613,
+            "seats": 9
+          }
+        ]
+      },
+      "localRelease": "/home/zich/.local/share/tavern-models/deep64-1112/releases/20260911-final",
+      "fullCheckpointBackup": "/root/autodl-tmp/serving-reward-final-20260911/deep64/checkpoint.pt",
+      "localHealthAfterBenchmark": {
+        "ok": true,
+        "episodes": 1112,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "452a8fe616035ec39d1da05750cca3f441175a18d456ab2c6da87319176b32e1",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 64,
+        "valueDepth": 64,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 71,
+        "unusedGoldPenalty": 0.01,
+        "decisions": 985,
+        "meanMs": 4.419404785958388
+      }
+    },
+    {
+      "id": "deep256-908",
+      "label": "256 层模型",
+      "episodes": 908,
+      "checkpointSha256": "4078283c8680ec7433505dfce01b4eecce0b50ea31ed9c95e82706e2ead692c2",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18893",
+      "metadata": {
+        "episodes": 908,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "4078283c8680ec7433505dfce01b4eecce0b50ea31ed9c95e82706e2ead692c2",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 59,
+        "unusedGoldPenalty": 0.01
+      },
+      "artifactHashes": {
+        "model.pt": "732ab70e33b088ce6818e2fc03382bf4fced6a61e08205873784cf35cbb56aea",
+        "manifest.json": "bee8c4a5f1fc44e4a0c6c43f8c4979c2c1a7e3cee709e2085b0ae24a5a7e6273",
+        "metrics.jsonl": "91e4e0b997c1537eb79ca3c9a805d4e7c9400b923c408e66c181704f937840ac",
+        "status.json": "ccb990f96e9f6c912f8eadb2f958cc2078529fadd17779a25f87dbf4c41fa189",
+        "metadata.json": "a12319930abdaf5927b8a2f1e98c39f42dbefebfc8c2af5b46caf8b23911e9ef"
+      },
+      "artifactBytes": 40942311,
+      "trainingIterations": 59,
+      "lastTrainingMetrics": {
+        "iteration": 59,
+        "iteration_seconds": 1085.9936294379877,
+        "end_to_end_actions_per_second": 26.84177808214714,
+        "cuda_peak_allocated_mib": 2296.466796875,
+        "episodes": 908,
+        "seconds": 965.0352615019074,
+        "environment_actions": 29150,
+        "actions_per_second": 30.206150140703834,
+        "inference_seconds": 670.7789009881672,
+        "simulator_wait_seconds": 277.7579789677402,
+        "unused_gold_penalty_coefficient": 0.01,
+        "unused_gold_penalty_total": 8.779999999999978,
+        "unused_gold_penalized_ends": 208,
+        "inference_batches": 18273,
+        "mean_inference_batch": 1.595249822141958,
+        "policy_loss": -0.0011787256160357468,
+        "value_loss": 0.009998132844462099,
+        "entropy": 1.9160613417625427,
+        "approx_kl": 0.004639439655133511,
+        "gradient_norm": 1.1826171253768492,
+        "samples": 17519,
+        "optimizer_steps": 142,
+        "kl_early_stop": false,
+        "sequence_chunks": 1128,
+        "optimization_seconds": 103.86976050108206,
+        "completed_games": 16,
+        "league_generations": [
+          0,
+          "external:da56f3292c212812",
+          "external:95d7e23570166f63",
+          "external:97e9ec74c2111c95",
+          "external:06b33488c0acd520",
+          1,
+          2,
+          5,
+          56,
+          57,
+          58,
+          59
+        ],
+        "opponent_sampling": [
+          {
+            "generation": 0,
+            "external": false,
+            "depth": 256,
+            "probability": 0.041642015868067775,
+            "seats": 0
+          },
+          {
+            "generation": "external:da56f3292c212812",
+            "external": true,
+            "depth": 64,
+            "probability": 0.10300931800877416,
+            "seats": 6
+          },
+          {
+            "generation": "external:95d7e23570166f63",
+            "external": true,
+            "depth": 1024,
+            "probability": 0.05520712797963434,
+            "seats": 2
+          },
+          {
+            "generation": "external:97e9ec74c2111c95",
+            "external": true,
+            "depth": 64,
+            "probability": 0.09699068199122585,
+            "seats": 3
+          },
+          {
+            "generation": "external:06b33488c0acd520",
+            "external": true,
+            "depth": 1024,
+            "probability": 0.14479287202036567,
+            "seats": 12
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "depth": 256,
+            "probability": 0.04331053823554365,
+            "seats": 4
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "depth": 256,
+            "probability": 0.042055901689697646,
+            "seats": 2
+          },
+          {
+            "generation": 5,
+            "external": false,
+            "depth": 256,
+            "probability": 0.041548970069405534,
+            "seats": 2
+          },
+          {
+            "generation": 55,
+            "external": false,
+            "depth": 256,
+            "probability": 0.07990980967815933,
+            "seats": 9
+          },
+          {
+            "generation": 56,
+            "external": false,
+            "depth": 256,
+            "probability": 0.0998390816744828,
+            "seats": 7
+          },
+          {
+            "generation": 57,
+            "external": false,
+            "depth": 256,
+            "probability": 0.16565979566783134,
+            "seats": 11
+          },
+          {
+            "generation": 58,
+            "external": false,
+            "depth": 256,
+            "probability": 0.08603388711681188,
+            "seats": 6
+          }
+        ]
+      },
+      "localRelease": "/home/zich/.local/share/tavern-models/deep256-908/releases/20260911-final",
+      "fullCheckpointBackup": "/root/autodl-tmp/serving-reward-final-20260911/deep256/checkpoint.pt",
+      "localHealthAfterBenchmark": {
+        "ok": true,
+        "episodes": 908,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "4078283c8680ec7433505dfce01b4eecce0b50ea31ed9c95e82706e2ead692c2",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 59,
+        "unusedGoldPenalty": 0.01,
+        "decisions": 1272,
+        "meanMs": 6.666885025078497
+      }
+    },
+    {
+      "id": "deep1024-436",
+      "label": "1024 层模型",
+      "episodes": 436,
+      "checkpointSha256": "f5208c89c1f8357aa1813966f03e1b87ceb93058e45dc2616326e74532637266",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18895",
+      "metadata": {
+        "episodes": 436,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "f5208c89c1f8357aa1813966f03e1b87ceb93058e45dc2616326e74532637266",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 28,
+        "unusedGoldPenalty": 0.01
+      },
+      "artifactHashes": {
+        "model.pt": "ed988af32b4c9fe8b70bc8e091a2cb16a0f68ba8f1b9be517893be6d017b26f2",
+        "manifest.json": "bf93cb286c098e8c4adb25663f3fe41be0c25cb5fe00979961c52d2b0c5ec1d2",
+        "metrics.jsonl": "8c30049ac0d9f72b37cc68abfcf0208fa67c2243472b28ff5c1d63320c0d1ff1",
+        "status.json": "ccb990f96e9f6c912f8eadb2f958cc2078529fadd17779a25f87dbf4c41fa189",
+        "metadata.json": "f5418fb42c6b83f01c73bc4be3d9297a1ca217b06228d4ead1265ce137ccad44"
+      },
+      "artifactBytes": 145873767,
+      "trainingIterations": 28,
+      "lastTrainingMetrics": {
+        "iteration": 28,
+        "iteration_seconds": 1185.8462752250489,
+        "end_to_end_actions_per_second": 15.07783966063118,
+        "cuda_peak_allocated_mib": 3742.91064453125,
+        "episodes": 436,
+        "seconds": 1089.9820578200743,
+        "environment_actions": 17880,
+        "actions_per_second": 16.403939745356332,
+        "inference_seconds": 924.6578920335742,
+        "simulator_wait_seconds": 155.5072106650332,
+        "unused_gold_penalty_coefficient": 0.01,
+        "unused_gold_penalty_total": 17.689999999999948,
+        "unused_gold_penalized_ends": 443,
+        "inference_batches": 13549,
+        "mean_inference_batch": 1.3196545870543952,
+        "policy_loss": 0.02545660971372854,
+        "value_loss": 0.03077282299636863,
+        "entropy": 2.178846251219511,
+        "approx_kl": 0.0021617865456003294,
+        "gradient_norm": 1.7398189837113023,
+        "samples": 7434,
+        "optimizer_steps": 64,
+        "kl_early_stop": false,
+        "sequence_chunks": 498,
+        "optimization_seconds": 75.97053537494503,
+        "completed_games": 16,
+        "league_generations": [
+          0,
+          "external:da56f3292c212812",
+          "external:600ef0dae7bf738f",
+          "external:c2e925ea4c5e31a8",
+          "external:a5311bff0271d237",
+          1,
+          2,
+          5,
+          25,
+          26,
+          27,
+          28
+        ],
+        "opponent_sampling": [
+          {
+            "generation": 0,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.0592490872593992,
+            "seats": 3
+          },
+          {
+            "generation": "external:da56f3292c212812",
+            "external": true,
+            "depth": 64,
+            "probability": 0.12296551724137933,
+            "seats": 6
+          },
+          {
+            "generation": "external:600ef0dae7bf738f",
+            "external": true,
+            "depth": 256,
+            "probability": 0.12322772277227723,
+            "seats": 8
+          },
+          {
+            "generation": "external:c2e925ea4c5e31a8",
+            "external": true,
+            "depth": 64,
+            "probability": 0.0770344827586207,
+            "seats": 5
+          },
+          {
+            "generation": "external:a5311bff0271d237",
+            "external": true,
+            "depth": 256,
+            "probability": 0.07677227722772278,
+            "seats": 8
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.05773501869632047,
+            "seats": 5
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.061173951217332136,
+            "seats": 4
+          },
+          {
+            "generation": 5,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.05864920501422327,
+            "seats": 5
+          },
+          {
+            "generation": 24,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.06713284360006141,
+            "seats": 3
+          },
+          {
+            "generation": 25,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.06254607410421424,
+            "seats": 4
+          },
+          {
+            "generation": 26,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.15148746614540168,
+            "seats": 12
+          },
+          {
+            "generation": 27,
+            "external": false,
+            "depth": 1024,
+            "probability": 0.08202635396304754,
+            "seats": 1
+          }
+        ]
+      },
+      "localRelease": "/home/zich/.local/share/tavern-models/deep1024-436/releases/20260911-final",
+      "fullCheckpointBackup": "/root/autodl-tmp/serving-reward-final-20260911/deep1024/checkpoint.pt",
+      "localHealthAfterBenchmark": {
+        "ok": true,
+        "episodes": 436,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "f5208c89c1f8357aa1813966f03e1b87ceb93058e45dc2616326e74532637266",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 28,
+        "unusedGoldPenalty": 0.01,
+        "decisions": 613,
+        "meanMs": 14.795737480951248
+      }
+    }
+  ],
+  "campaignStatus": {
+    "stage": "time_limit",
+    "deadline_utc": "2026-09-11T11:30:34.352566+00:00",
+    "workers_per_learner": 4,
+    "iterations_per_exchange": 2,
+    "games_per_iteration": 16,
+    "unused_gold_penalty": 0.01,
+    "external_fraction": 0.4,
+    "max_per_lineage": 2,
+    "members": [
+      {
+        "index": 0,
+        "root": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-0",
+        "source": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-0/training/latest.pt",
+        "round": 7,
+        "stage": "stopped",
+        "pid": null,
+        "checkpoint": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-0/training/latest.pt"
+      },
+      {
+        "index": 1,
+        "root": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-1",
+        "source": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-1/training/latest.pt",
+        "round": 6,
+        "stage": "stopped",
+        "pid": null,
+        "checkpoint": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-1/training/latest.pt"
+      },
+      {
+        "index": 2,
+        "root": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-2",
+        "source": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-2/training/latest.pt",
+        "round": 4,
+        "stage": "stopped",
+        "pid": null,
+        "checkpoint": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-2/training/latest.pt"
+      }
+    ]
+  },
+  "inferenceLocation": "current local computer, CPU; reverse SSH from public backend",
+  "publicBandwidthMbps": 3,
+  "sharedRequestBudgetKbps": 512,
+  "localMemoryMaxPerModelBytes": 1073741824,
+  "localCpuQuotaPerModel": "100% of one logical core",
+  "availability": "local computer must stay powered on, connected, and logged in; linger disabled",
+  "strengthComparison": "not evaluated; layer depth and episode count do not establish relative strength",
+  "verification": {
+    "weightsFinite": true,
+    "schemasCompatibleWithoutAdaptation": true,
+    "checkpointHealthMatchesAllThree": true,
+    "benchmark": {
+      "totalSeconds": 165.475240858,
+      "rounds": 8,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "traffic": {
+        "requests": 2808,
+        "rawRequestBytes": 25553677,
+        "requestBytes": 8207538,
+        "responseBytes": 3829263,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1112",
+          "decisions": 923,
+          "meanMs": 42.782758866739066,
+          "p95Ms": 55.9676040000013,
+          "maxMs": 170.442276
+        },
+        {
+          "id": "deep256-908",
+          "decisions": 1272,
+          "meanMs": 45.11850944182414,
+          "p95Ms": 56.88137199999983,
+          "maxMs": 129.00005099999908
+        },
+        {
+          "id": "deep1024-436",
+          "decisions": 613,
+          "meanMs": 50.329634212072065,
+          "p95Ms": 67.55631899999935,
+          "maxMs": 121.32256099999722
+        }
+      ]
+    },
+    "publicBrowser": true,
+    "requestPayloadMbps": 0.39679835883330344,
+    "publicBrowserSeconds": 42.4,
+    "publicHealth": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "ai": {
+        "mode": "neural",
+        "decisions": 203,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 203,
+          "rawRequestBytes": 1110845,
+          "requestBytes": 445390,
+          "responseBytes": 277572,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1112",
+            "decisions": 62,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-908",
+            "decisions": 75,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-436",
+            "decisions": 66,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    },
+    "oldServicesStoppedAndDisabled": true,
+    "newServicesActive": true,
+    "unrelatedSectorPid": 119165,
+    "backendPid": 126184
+  },
+  "rollback": {
+    "previousModels": [
+      {
+        "id": "deep64-680",
+        "label": "64 层模型",
+        "episodes": 680,
+        "checkpointSha256": "7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18791"
+      },
+      {
+        "id": "deep256-636",
+        "label": "256 层模型",
+        "episodes": 636,
+        "checkpointSha256": "3fa341fecaf19a5d87b430df013da5595a01578cd323bf44578df87195b0bc44",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18793"
+      },
+      {
+        "id": "deep1024-260",
+        "label": "1024 层模型",
+        "episodes": 260,
+        "checkpointSha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18795"
+      }
+    ],
+    "oldUnits": [
+      "tavern-deep64-inference",
+      "tavern-deep64-tunnel",
+      "tavern-model@deep256",
+      "tavern-model@deep1024",
+      "tavern-model-tunnel"
+    ],
+    "newUnits": [
+      "tavern-model@deep64-1112",
+      "tavern-model@deep256-908",
+      "tavern-model@deep1024-436",
+      "tavern-reward-model-tunnel"
+    ],
+    "instructions": "When there are no active rooms, start old user services, restore previous public backend symlink and unit, restart bobs-tavern, then stop the new services. Frozen artifacts remain on disk."
+  }
+}

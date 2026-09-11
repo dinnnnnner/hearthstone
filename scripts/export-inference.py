@@ -31,7 +31,8 @@ metadata = dict(episodes=saved['episodes'], architecture=spec['architecture'],
     trainedRulesHash=saved['meta']['rulesHash'], adaptedDefinitions=changed,
     contract=hashlib.sha256(raw).hexdigest(), hidden=spec['hidden'], actionCount=len(spec['actions']))
 metadata.update(policyDepth=spec.get('policy_depth'), valueDepth=spec.get('value_depth'),
-                observationVersion=saved['meta']['observationVersion'], entityVersion=old['version'])
+                observationVersion=saved['meta']['observationVersion'], entityVersion=old['version'],
+                iteration=saved['iteration'], unusedGoldPenalty=saved['config'].get('unused_gold_penalty', 0.0))
 a.output.parent.mkdir(parents=True, exist_ok=True)
 torch.save(dict(model=saved['model'], model_spec=spec, metadata=metadata), a.output)
 print(json.dumps(metadata, indent=2))

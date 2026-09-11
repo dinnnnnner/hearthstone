@@ -2,17 +2,17 @@
 
 2026-09-11 公网页面支持选择 64、256、1024 层人机。三个模型的每次推理都在当前本机完成，公网游戏后端通过反向 SSH 隧道发送观察并接收动作。浏览器仍访问原来的公网地址。默认选择 64 层，页面记住上次选择。
 
-当前检查点 SHA-256 为 `7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8`。四小时任务到时停止，最后完成 680 局、44 次迭代。部署冻结了这个版本，后续训练不会覆盖它。层数和局数不代表经过统一评估的棋力排名。
+当前上线的是完成群体续训及剩余金币惩罚训练后的三个冻结版本。训练于 UTC 2026-09-11 11:30:34 到时停止，64、256、1024 层分别保存 1,112、908、436 局，迭代数为 71、59、28。每金币 0.01 的结束招募惩罚已实际进入训练更新。层数和局数不代表经过统一评估的棋力排名。
 
 ## 按房间选择模型
 
 | 页面名称 | 冻结模型标识 | 训练局数 | 公网回环端口 | 本机端口 |
 | --- | --- | --- | --- | --- |
-| 64 层模型 | deep64-680 | 680 | 18791 | 18790 |
-| 256 层模型 | deep256-636 | 636 | 18793 | 18792 |
-| 1024 层模型 | deep1024-260 | 260 | 18795 | 18794 |
+| 64 层模型 | deep64-1112 | 1112 | 18891 | 18890 |
+| 256 层模型 | deep256-908 | 908 | 18893 | 18892 |
+| 1024 层模型 | deep1024-436 | 436 | 18895 | 18894 |
 
-三项均为四小时任务到时后最后完成的检查点。模型清单、检查点哈希、地址和观察配置保存在 `deploy/inference-models.json`。完整训练检查点另行冻结在训练机的 `deep256-serving-20260911`、`deep1024-serving-20260911` 目录，后续续训不会覆盖部署文件。
+三项均为续训任务到时后最后完成的检查点。模型清单、检查点哈希、地址和观察配置保存在 `deploy/inference-models.json`。完整训练检查点另行冻结在训练机的 `serving-reward-final-20260911/deep64`、`deep256`、`deep1024` 目录，后续续训不会覆盖部署文件。
 
 大厅的“人机对手模型”适用于人机匹配和创建好友房。房主选择同桌全部人机使用的模型，加入者沿用房间选择。`POST /tavern-api/create` 的 `modelId` 为清单中的标识，省略时使用首项。服务器拒绝未知或不可用的模型，不接受客户端提供的地址或权重路径。
 
@@ -22,21 +22,19 @@
 
 ## 本机服务与公网转发
 
-本机的 `~/.local/share/tavern-deep64/releases/20260911-680-multi` 保存约 14 MB 的推理文件、观察定义和 Python 运行代码，`current` 指向该目录。导出文件只含权重、模型定义和部署元数据，不含优化器和历史对手；服务使用 `weights_only=True` 加载。
+三个版本保存在 `~/.local/share/tavern-models/<冻结模型标识>/releases/20260911-final`，各自的 `current` 指向冻结目录。目录包含推理权重、元数据和独立 Python 代码，不含优化器和历史对手。服务使用 `weights_only=True` 加载。
 
-两个用户服务分别运行模型和隧道，配置保存在 `deploy/tavern-deep64-inference.service` 与 `deploy/tavern-deep64-tunnel.service`。
+三个用户服务使用 `deploy/tavern-model@.service`，每个模型限用一个逻辑核、1 GiB 内存。`deploy/tavern-reward-model-tunnel.service` 将公网表中端口转到本机，只监听回环地址，并通过 systemd 和 SSH 心跳自动重连。
 
 ```sh
-systemctl --user status tavern-deep64-inference tavern-deep64-tunnel
-curl -fsS http://127.0.0.1:18790/health
-ssh root@100.121.69.44 'curl -fsS http://127.0.0.1:18791/health'
+systemctl --user status tavern-model@deep64-1112 tavern-model@deep256-908 tavern-model@deep1024-436 tavern-reward-model-tunnel
+curl -fsS http://127.0.0.1:18890/health
+ssh root@100.121.69.44 'curl -fsS http://127.0.0.1:18891/health'
 ```
 
-公网 `127.0.0.1:18791` 转发到本机 `127.0.0.1:18790`。模型端口仅监听回环地址。本机模型进程限用一个逻辑核、1 GiB 内存，压测时约占 418 MiB，峰值约 501 MiB。隧道由 systemd 自动重启，并用 SSH 心跳检测断线。
+本机必须保持开机、联网并登录。服务已设置为登录后启动，当前账户的 `Linger=no`，不能保证注销或重启后未登录时仍可用。Python 环境位于 `~/hearthstone/.venv`，迁移工作目录时需同步修改 unit。
 
-本机必须保持开机、联网并登录。两个服务已设置为登录后启动，但当前账户的 `Linger=no`，无权开启注销后常驻，不能保证注销或重启后未登录时仍可用。本机 Python 环境位于 `~/hearthstone/.venv`，迁移工作目录时需同步修改 unit。
-
-256、1024 层使用 `deploy/tavern-model@.service`，分别启用 `tavern-model@deep256` 和 `tavern-model@deep1024`。权重与独立 Python 代码位于 `~/.local/share/tavern-models/<模型>/releases/<版本>`，`current` 指向冻结版本。每个进程限一个逻辑核、1 GiB 内存。`tavern-model-tunnel` 管理这两个端口的自动转发。所有用户服务同样要求本机保持开机、联网并登录。
+旧 680/636/260 局模型服务已停止并取消登录自启，目录及服务配置保留用于回滚。新版本在独立端口测试完成后，才更新公网模型清单。只有在没有活动房间时才切换版本，避免已有房间的固定模型标识失效。
 
 公网后端使用以下环境变量：
 
@@ -53,6 +51,8 @@ Environment=TAVERN_INFERENCE_MAX_KBPS=512
 
 加入三个模型后，各开一间房跑到第八回合，共 1,781 次决策，耗时 101.24 秒，错误和回退均为零。合计出站请求载荷约 0.407 Mbps。64、256、1024 层的平均请求耗时分别为 41.5、43.0、47.5 ms，p95 分别为 52.8、53.5、58.2 ms。公网浏览器逐一选择三个模型、完成一回合、刷新重连和好友房继承选择均已通过。
 
+本次奖励训练版本的三房间、八回合测试完成 2,808 次决策，耗时 165.48 秒，错误与回退均为零。三模型平均请求耗时分别为 42.8、45.1、50.3 ms，p95 为 56.0、56.9、67.6 ms。合计请求载荷约 0.397 Mbps，继续使用 512 kbps 共享发送预算。这是接入与性能验证，不是与旧版本的棋力对比。
+
 `/tavern-api/health` 的 `ai.traffic` 给出累计请求数、原始及压缩请求字节数、响应字节数和发送预算，服务重启后清零。
 
 ## 观察格式与导出
@@ -67,7 +67,7 @@ node --import tsx --input-type=module -e 'import {inferenceProfile} from "./serv
 PYTHONPATH=rl/python .venv/bin/python -m tavern_rl.serve PATH_TO_MODEL_PT --port 18790
 ```
 
-多模型部署和压测结果见 [本次部署记录](neural-multi-model-2026-09-11.json)。后续检查要求见 [多模型接入计划](rl-serving-plan.md)。
+本次奖励训练模型的部署和压测结果见 [新版本部署记录](neural-reward-models-2026-09-11.json)。首次多模型接入记录见 [历史部署](neural-multi-model-2026-09-11.json)。后续检查要求见 [多模型接入计划](rl-serving-plan.md)。
 
 ## 房间行为与故障处理
 
