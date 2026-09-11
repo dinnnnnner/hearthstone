@@ -44,10 +44,13 @@ release_id=$(date -u +%Y%m%dT%H%M%SZ)
 release_dir="/var/www/playroom/releases/$release_id"
 ssh root@100.121.69.44 "mkdir -p '$release_dir'"
 set -o pipefail
-tar -C site-dist -cf - . | ssh root@100.121.69.44 "tar -xf - -C '$release_dir'"
+tar -C site-dist -cf - . | ssh root@100.121.69.44 "tar --no-same-owner -xf - -C '$release_dir'"
 scp deploy/nginx.conf deploy/sector-proxy.conf "root@100.121.69.44:$release_dir/"
+ssh root@100.121.69.44 "chmod 755 '$release_dir'; runuser -u www-data -- test -r '$release_dir/index.html'"
 ssh root@100.121.69.44 "python3 - '$release_dir'" < scripts/activate-site.py
 ```
+
+临时打包目录可能是 0700；tar 会保留目录权限，上传后必须确保发布根目录为 0755，并检查 Nginx 用户可以读取首页。否则切换后会返回 403。
 
 激活脚本校验全部文件的 SHA-256，备份现有 Nginx 站点与当前目录链接，再原子切换 `/var/www/playroom/current`。只有 `nginx -t` 通过才 reload，随后检查 HTTPS 主页、两个游戏及各自 API；失败会自动恢复旧配置。它不重启 SECTOR，也不改防火墙或证书配置。
 

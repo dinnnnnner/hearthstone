@@ -1,4 +1,5 @@
 import { equippedPowers } from "../src/season/powers";
+import { recordScoutRound, warbandLabel, previousScoutRounds } from "../src/scouting";
 import { randomBytes, createHash, randomInt } from "node:crypto";
 import {
   createSeason,
@@ -313,6 +314,7 @@ export class Rooms {
           health: x.game?.health || 0,
           armor: x.game?.season?.armor || 0,
           tier: x.game?.tier || 1,
+          scouting: previousScoutRounds(x.game?.scouting, r.turn),
           board: [],
         }));
       p.game.nextOpponent = Math.max(
@@ -566,6 +568,7 @@ export class Rooms {
       }
       a.game!.pool = r.pool;
       if (b) enemy.pool = r.pool;
+      const aWarband = warbandLabel(a.game!.board), bWarband = warbandLabel(enemy.board);
       const battle = seasonCombat(
         a.game!,
         enemy.board,
@@ -578,6 +581,10 @@ export class Rooms {
       if (battle.frames.length > 180)
         battle.frames = [...battle.frames.slice(0, 179), battle.frames.at(-1)!];
       const enemyName = b?.name || "幽灵阵容";
+      recordScoutRound(a.game!, { turn: r.turn, warband: aWarband,
+        battle: { opponent: enemyName, result: battle.result, damage: battle.damage } });
+      if (b) recordScoutRound(b.game!, { turn: r.turn, warband: bWarband,
+        battle: { opponent: a.name, result: battle.result === "win" ? "loss" : battle.result === "loss" ? "win" : "tie", damage: battle.damage } });
       battle.opponent = enemyName;
       a.game!.battle = battle;
       a.battleId = this.identity.hex(12);

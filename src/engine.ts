@@ -1,4 +1,5 @@
 import { simulationUid, recordsFrames } from "./simulation";
+import { recordScoutRound, warbandLabel, type ScoutRound } from "./scouting";
 import {
   actSeason,
   createSeason,
@@ -44,6 +45,7 @@ export interface Minion {
   rebornNext?: boolean;
 }
 export interface Opponent {
+  scouting?: ScoutRound[];
   armor?: number;
   name: string;
   hero: string;
@@ -65,6 +67,7 @@ export interface Battle {
   opponent: string;
 }
 export interface Game {
+  scouting?: ScoutRound[];
   season?: SeasonState;
   version: 1;
   hero: string;
@@ -804,6 +807,8 @@ export function act(
     case "end": {
       endBuffs(s.board, rng);
       recruitAI(s, rng);
+      for (const rival of s.opponents.filter(o => o.health > 0))
+        recordScoutRound(rival, { turn: s.turn, warband: warbandLabel(rival.board) });
       const living = s.opponents
         .map((o, i) => ({ o, i }))
         .filter((x) => x.o.health > 0);
@@ -823,6 +828,8 @@ export function act(
         s.hero === "nefarian" && s.powerUsed,
       );
       battle.opponent = o.name;
+      recordScoutRound(o, { turn: s.turn, warband: o.scouting![0].warband,
+        battle: { opponent: "你", result: battle.result === "win" ? "loss" : battle.result === "loss" ? "win" : "tie", damage: battle.damage } });
       s.battle = battle;
       s.battles.unshift({
         turn: s.turn,

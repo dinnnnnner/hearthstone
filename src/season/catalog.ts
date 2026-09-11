@@ -42,6 +42,8 @@ const spell = (event: string, id: string, amount = 1) =>
   A(event, "spell", { id, amount });
 const summon = (event: string, id: string, amount = 1) =>
   A(event, "summon", { id, amount });
+const summonMore = (event: string, id: string, amount = 1) =>
+  A(event, "summon", { id, amount, goldenAmount: amount * 2, summonGolden: false });
 const stat = (event: string, key: string, attack: number, health: number) =>
   A(event, "scale", { key, attack, health });
 // Only explicitly implemented cards can enter the playable pool. The complete snapshot remains browsable.
@@ -60,14 +62,14 @@ const effects: Record<string, Ability[]> = {
   BG20_100: [spell("battlecry", "BG20_GEM", 2)],
   BG23_000: [A("spellcraft", "craft", { attack: 2, health: 0 })],
   BG25_001: [],
-  BG28_300: [summon("death", "BG_ICC_026t", 2)],
+  BG28_300: [summonMore("death", "BG_ICC_026t", 2)],
   BG29_611: [summon("death", "BG_BOT_312t")],
   BG29_888: [b("rally", 2, 0)],
   BG31_330: [A("battlecry", "discountSpell", { amount: 1 })],
-  BG31_803: [summon("death", "BG28_603t")],
+  BG31_803: [summonMore("death", "BG28_603t")],
   BG33_140: [A("sell", "draw", { tier: 1 })],
   BG33_886: [A("rally", "gem", { target: "self" })],
-  BG36_200: [summon("rally", "BG36_200t")],
+  BG36_200: [summonMore("rally", "BG36_200t")],
   BG36_345: [b("activate", 3, 3, "selected")],
   BG36_921: [b("targetSpell", 0, 1)],
   BGS_004: [A("playDemon", "weaver", { attack: 2, health: 2 })],
@@ -99,7 +101,7 @@ const effects: Record<string, Ability[]> = {
     }),
   ],
   BG31_177: [b("summonMech", 3, 1, "event")],
-  BG31_801: [stat("battlecry", "beetle", 2, 1), summon("death", "BG28_603t")],
+  BG31_801: [stat("battlecry", "beetle", 2, 1), summonMore("death", "BG28_603t")],
   BG31_816: [A("sell", "baller", { attack: 1, health: 0 })],
   BG31_818: [A("sell", "baller", { attack: 0, health: 1 })],
   BG32_170: [spell("death", "EBG_Spell_014")],
@@ -121,7 +123,7 @@ const effects: Record<string, Ability[]> = {
       keyword: "圣盾",
     }),
   ],
-  BG25_010: [summon("death", "BG25_010t")],
+  BG25_010: [summonMore("death", "BG25_010t")],
   BG26_147: [A("start", "gold", { amount: 1 })],
   BG26_524: [A("refresh", "healthRefresh", { amount: 2 })],
   BG27_005: [b("tavernSpell", 1, 0, "all")],
@@ -135,7 +137,7 @@ const effects: Record<string, Ability[]> = {
     }),
   ],
   BG29_816: [b("attackDragon", 3, 1, "event")],
-  BG30_125: [summon("death", "BG_ICC_026t", 3)],
+  BG30_125: [summonMore("death", "BG_ICC_026t", 3)],
   BG31_326: [spell("end", "BG31_893")],
   BG31_843: [b("sellElemental", 4, 4)],
   BG33_323: [stat("rally", "undead", 1, 0)],
@@ -190,7 +192,7 @@ const effects: Record<string, Ability[]> = {
   BG26_523: [b("heroDamage", 4, 4, "all", "恶魔")],
   BG26_ICC_901: [A("aura", "drakkari")],
   BG28_741: [b("tavernSpell", 4, 0, "shielded")],
-  BG31_809: [stat("death", "beetle", 5, 5), summon("death", "BG28_603t")],
+  BG31_809: [stat("death", "beetle", 5, 5), summonMore("death", "BG28_603t")],
   BG32_820: [spell("battlecry", "BG28_168"), spell("death", "BG28_168")],
   BG32_821: [stat("end", "spell", 1, 1)],
   BG32_835: [

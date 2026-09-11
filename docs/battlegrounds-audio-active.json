@@ -1,0 +1,98 @@
+{
+  "heroSelect": {
+    "name": "BG_SelectHero",
+    "label": "选择英雄",
+    "file": "BG_SelectHero.wav",
+    "seconds": 4.407437324523926,
+    "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+    "pathId": -5400188890389168386,
+    "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+    "wavSha256": "662dc2098421baaf292a0a3c5303791a645a8ca8d7b18ebc687ee2bb50adc794",
+    "path": "audio/battlegrounds/BG_SelectHero-662dc2098421.wav",
+    "gain": 0.4386561665194058
+  },
+  "round": {
+    "name": "Recruit_Popup",
+    "label": "招募回合",
+    "file": "Recruit_Popup.wav",
+    "seconds": 3.045395851135254,
+    "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+    "pathId": -4514759078304810811,
+    "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+    "wavSha256": "4db20af3f2cc998f2d84c0fa85ed34814abceae8ad4bfa79187d7a08906cffbb",
+    "path": "audio/battlegrounds/Recruit_Popup-4db20af3f2cc.wav",
+    "gain": 0.4726658267348621
+  },
+  "combat": {
+    "name": "Combat_Popup",
+    "label": "开战",
+    "file": "Combat_Popup.wav",
+    "seconds": 2.9621875286102295,
+    "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+    "pathId": -1016915148757249193,
+    "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+    "wavSha256": "f3e6160190a98648cfbc386ededee32b1cd16c203a7116ddfda47768957867bf",
+    "path": "audio/battlegrounds/Combat_Popup-f3e6160190a9.wav",
+    "gain": 0.45858834272682175
+  },
+  "heroHit": {
+    "name": "BG_StarImpact_1",
+    "label": "英雄受击",
+    "file": "BG_StarImpact_1.wav",
+    "seconds": 1.9316250085830688,
+    "bundle": "initial_base_global-e70f171c-audio-0.unity3d",
+    "pathId": 844952750298515389,
+    "bundleSha256": "2bd4923de513fa44e614d70972d2e49713f0be9f0df93e03f22ff03481eccee1",
+    "wavSha256": "e517b88427239680dd90dfa4f3b727e49c8c91105ac5256d0187c939e2aef385",
+    "path": "audio/battlegrounds/BG_StarImpact_1-e517b8842723.wav",
+    "gain": 0.3979205350180127
+  },
+  "bloodGem": {
+    "name": "BG20_GEM_BloodGem",
+    "label": "鲜血宝石",
+    "file": "BG20_GEM_BloodGem.wav",
+    "seconds": 2.3265624046325684,
+    "bundle": "soundspell_base_global-ffbd77eb-audio-14.unity3d",
+    "pathId": 7352953054025449758,
+    "bundleSha256": "54a8349eaf3e38852eca700b4a4a0d8d4deac007c5050624bf414bb8f203b32c",
+    "wavSha256": "7b731c0adaf4f95cf001a3aa86f14ad129067e4a386027b4e3044356083a510d",
+    "path": "audio/battlegrounds/BG20_GEM_BloodGem-7b731c0adaf4.wav",
+    "gain": 0.3722492437942389
+  },
+  "matchFirst": {
+    "name": "BGSPopup_Victory_1",
+    "label": "整局第一名",
+    "file": "BGSPopup_Victory_1.wav",
+    "seconds": 4.2210001945495605,
+    "bundle": "initial_bgs_global-e70f171c-audio-0.unity3d",
+    "pathId": 5444310714900116274,
+    "bundleSha256": "c8464d4513611e5ddd0f0c084e21c2c5f3a750dde4121389b3e1d443805a9ec1",
+    "wavSha256": "7b2d8f62c6a90b9ecc6cd2f8d62d7efd531395a8f6968e7c26f334de0b981a2b",
+    "path": "audio/battlegrounds/BGSPopup_Victory_1-7b2d8f62c6a9.wav",
+    "gain": 0.30383426159921756
+  },
+  "matchTopFour": {
+    "name": "BGSPopup_Victory_234",
+    "label": "整局第二至四名",
+    "file": "BGSPopup_Victory_234.wav",
+    "seconds": 3.680000066757202,
+    "bundle": "initial_bgs_global-e70f171c-audio-0.unity3d",
+    "pathId": -5017664035143460246,
+    "bundleSha256": "c8464d4513611e5ddd0f0c084e21c2c5f3a750dde4121389b3e1d443805a9ec1",
+    "wavSha256": "6036a8fe50355b48db5e3bb8089a9e542613cc55dcfba8f8dbfcb4cefa4d082f",
+    "path": "audio/battlegrounds/BGSPopup_Victory_234-6036a8fe5035.wav",
+    "gain": 0.2990135274853635
+  },
+  "matchDefeat": {
+    "name": "BGSPopup_Defeat_5678",
+    "label": "整局第五至八名／练习失败",
+    "file": "BGSPopup_Defeat_5678.wav",
+    "seconds": 2.5827083587646484,
+    "bundle": "initial_bgs_global-e70f171c-audio-0.unity3d",
+    "pathId": -9172925505853221447,
+    "bundleSha256": "c8464d4513611e5ddd0f0c084e21c2c5f3a750dde4121389b3e1d443805a9ec1",
+    "wavSha256": "d67d942ef70e595f7a33d13a10434ca427af0a85aa887a86ef447f184648bd3a",
+    "path": "audio/battlegrounds/BGSPopup_Defeat_5678-d67d942ef70e.wav",
+    "gain": 0.36613504842928946
+  }
+}

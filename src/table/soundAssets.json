@@ -1,0 +1,47 @@
+{
+  "select": "audio/clean/select-5fc3a7ff4d14.wav",
+  "pickup": "audio/clean/pickup-7e67a4da3007.wav",
+  "move": "audio/clean/move-057fd6ff0cb8.wav",
+  "buy": "audio/shop/buy-1-cf0e78063315.wav",
+  "sell": "audio/shop/sell-1-45c06a30eefc.wav",
+  "refresh": [
+    "audio/shop/refresh-1-3cc3a9f8cd64.wav",
+    "audio/shop/refresh-2-704217689d38.wav",
+    "audio/shop/refresh-3-bfe0f75cc65b.wav",
+    "audio/shop/refresh-4-5d9fe53f5878.wav",
+    "audio/shop/refresh-5-f0b3cf146240.wav"
+  ],
+  "play": "audio/clean/play-8874833a723c.wav",
+  "spell": "audio/clean/spell-4df630824b7b.wav",
+  "power": "audio/clean/power-fcdf317f309e.wav",
+  "freeze": "audio/shop/freeze-1-8478e99ff5c9.wav",
+  "thaw": [
+    "audio/shop/thaw-1-3016d1b1c660.wav",
+    "audio/shop/thaw-2-e0be836766ce.wav",
+    "audio/shop/thaw-3-9bbad1407450.wav"
+  ],
+  "upgrade": "audio/clean/upgrade-787024b91ebd.wav",
+  "discover": "audio/clean/discover-8cc1ece63dd9.wav",
+  "attack": "audio/clean/attack-0b2c8483fcb3.wav",
+  "shield": "audio/clean/shield-ab781be21f6e.wav",
+  "hit": "audio/clean/hit-a8e54cbf0755.wav",
+  "heroHit": "audio/battlegrounds/BG_StarImpact_1-e517b8842723.wav",
+  "death": "audio/clean/death-ea9364b33e74.wav",
+  "triple": [
+    "audio/shop/triple-1-32552ed02889.wav",
+    "audio/shop/triple-2-a3d44c9a4136.wav",
+    "audio/shop/triple-3-e686bce793cf.wav"
+  ],
+  "combat": "audio/battlegrounds/Combat_Popup-f3e6160190a9.wav",
+  "round": "audio/battlegrounds/Recruit_Popup-4db20af3f2cc.wav",
+  "win": "audio/clean/win-2fceee1be16c.wav",
+  "lose": "audio/clean/lose-8278292f962a.wav",
+  "tie": "audio/clean/tie-15542c94aed2.wav",
+  "error": "audio/clean/error-5a764e9ff6c5.wav",
+  "tick": "audio/clean/tick-b37094fad890.wav",
+  "heroSelect": "audio/battlegrounds/BG_SelectHero-662dc2098421.wav",
+  "bloodGem": "audio/battlegrounds/BG20_GEM_BloodGem-7b731c0adaf4.wav",
+  "matchFirst": "audio/battlegrounds/BGSPopup_Victory_1-7b2d8f62c6a9.wav",
+  "matchTopFour": "audio/battlegrounds/BGSPopup_Victory_234-6036a8fe5035.wav",
+  "matchDefeat": "audio/battlegrounds/BGSPopup_Defeat_5678-d67d942ef70e.wav"
+}
