@@ -1,7 +1,7 @@
 import { setImmediate as yieldLoop } from 'node:timers/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { gzipSync } from 'node:zlib';
-import { Rooms, type Room, type Seat } from './rooms';
+import { Rooms, type Room, type Seat, type AIModel, type AIModelOption } from './rooms';
 import { ACTIONS, candidates } from '../rl/actions';
 import { inferenceProfile } from './neural-profile';
 import { actSeason } from '../src/season/engine';
@@ -15,21 +15,23 @@ type Prediction = { rows: { action: number; memory: number[] }[] };
 type Traffic = { requests: number; rawRequestBytes: number; requestBytes: number; responseBytes: number; maxKbps: number };
 export type Infer = { (body: unknown): Promise<Prediction>; traffic?: Traffic };
 
-export function httpInference(url: string, options: { compress?: boolean; maxKbps?: number } = {}): Infer {
+export function inferenceBudget(maxKbps = 0) {
+  if (!Number.isFinite(maxKbps) || maxKbps < 0) throw Error('Invalid inference bandwidth limit');
+  return { nextRequest: 0, traffic: { requests: 0, rawRequestBytes: 0, requestBytes: 0, responseBytes: 0, maxKbps } as Traffic };
+}
+export function httpInference(url: string, options: { compress?: boolean; maxKbps?: number; budget?: ReturnType<typeof inferenceBudget> } = {}): Infer {
   const endpoint = new URL(url);
   if (!['127.0.0.1', '[::1]', 'localhost'].includes(endpoint.hostname) || endpoint.protocol !== 'http:')
     throw Error('Inference must use loopback HTTP; use an SSH tunnel for remote inference');
-  const maxKbps = options.maxKbps ?? 0;
-  if (!Number.isFinite(maxKbps) || maxKbps < 0) throw Error('Invalid inference bandwidth limit');
-  const traffic: Traffic = { requests: 0, rawRequestBytes: 0, requestBytes: 0, responseBytes: 0, maxKbps };
-  let nextRequest = 0;
+  const budget = options.budget ?? inferenceBudget(options.maxKbps ?? 0);
+  const traffic = budget.traffic, maxKbps = traffic.maxKbps;
   const infer: Infer = async body => {
     const raw = Buffer.from(JSON.stringify(body));
     const payload = options.compress ? gzipSync(raw) : raw;
     if (maxKbps) {
-      const now = performance.now(), sendAt = Math.max(now, nextRequest);
+      const now = performance.now(), sendAt = Math.max(now, budget.nextRequest);
       // Include a conservative allowance for HTTP, SSH and transport headers.
-      nextRequest = sendAt + (payload.length + 512) * 8 / maxKbps;
+      budget.nextRequest = sendAt + (payload.length + 512) * 8 / maxKbps;
       if (sendAt > now) await delay(sendAt - now);
     }
     traffic.requests++; traffic.rawRequestBytes += raw.length; traffic.requestBytes += payload.length;
@@ -46,22 +48,59 @@ export function httpInference(url: string, options: { compress?: boolean; maxKbp
   return infer;
 }
 
+export type NeuralModel = AIModel & { infer: Infer; profile: string; health?: () => Promise<boolean> };
+type ModelRuntime = NeuralModel & { observation: ReturnType<typeof inferenceProfile>; available: boolean;
+  retryAt: number; decisions: number; errors: number; fallbackRounds: number };
+
 /** One global asynchronous queue; weak seat keys release memory with recycled rooms. */
 export class NeuralRooms extends Rooms {
   private memories = new WeakMap<Seat, Memory>();
   private running = false;
   private stopped = false;
-  private retryAt = 0;
-  private profile: ReturnType<typeof inferenceProfile>;
+  private models = new Map<string, ModelRuntime>();
+  private healthAt = 0;
+  private checkingHealth = false;
   readonly ai;
-  constructor(private infer: Infer, now = Date.now, random = Math.random, profile = 'legacy-v3') {
+  constructor(infer: Infer, now = Date.now, random = Math.random, profile = 'legacy-v3', models?: NeuralModel[]) {
     super(now, random);
-    this.profile = inferenceProfile(profile);
+    for (const model of models ?? [{ id: 'default', label: '训练模型', infer, profile }]) {
+      if (!model.id || this.models.has(model.id)) throw Error('Duplicate or empty inference model ID');
+      this.models.set(model.id, { ...model, observation: inferenceProfile(model.profile),
+        available: !model.health, retryAt: 0, decisions: 0, errors: 0, fallbackRounds: 0 });
+    }
+    if (!this.models.size) throw Error('No inference models configured');
+    const first = [...this.models.values()][0];
     this.ai = { mode: 'neural', decisions: 0, errors: 0, fallbackRounds: 0, lastError: '',
-      contract: this.profile.contract, profile: this.profile.name, traffic: infer.traffic };
+      contract: first.observation.contract, profile: first.profile, traffic: first.infer.traffic };
   }
   override bots(_r: Room) { this.schedule(); }
-  override tick() { super.tick(); this.schedule(); }
+  override modelOptions(): AIModelOption[] {
+    return [...this.models.values()].map(({ id, label, episodes, checkpointSha256, available }) =>
+      ({ id, label, episodes, checkpointSha256, available }));
+  }
+  modelStats() {
+    return [...this.models.values()].map(({ id, decisions, errors, fallbackRounds, available }) =>
+      ({ id, decisions, errors, fallbackRounds, available }));
+  }
+  async checkModels() {
+    if (this.checkingHealth || this.stopped) return;
+    this.checkingHealth = true;
+    try {
+      await Promise.all([...this.models.values()].map(async model => {
+        if (model.health) model.available = await model.health().catch(() => false);
+      }));
+    } finally { this.checkingHealth = false; this.healthAt = this.now() + 10000; }
+  }
+  private model(r: Room) {
+    const model = this.models.get(r.aiModel?.id ?? this.modelOptions()[0].id);
+    if (!model || (r.aiModel?.checkpointSha256 && r.aiModel.checkpointSha256 !== model.checkpointSha256))
+      throw Error('Saved room model version is unavailable');
+    return model;
+  }
+  override tick() {
+    super.tick(); this.schedule();
+    if (this.now() >= this.healthAt) void this.checkModels();
+  }
   stop() { this.stopped = true; }
   private active(r: Room, p: Seat, turn: number) {
     return !this.stopped && this.rooms.get(r.code) === r && r.turn === turn &&
@@ -78,6 +117,9 @@ export class NeuralRooms extends Rooms {
   }
   private heuristic(r: Room) {
     this.ai.fallbackRounds++;
+    const model = this.models.get(r.aiModel?.id ?? this.modelOptions()[0].id);
+    if (model) model.fallbackRounds++;
+    r.aiStatus = 'fallback';
     for (const p of r.seats) if (p.bot) this.memories.delete(p);
     super.bots(r);
     this.touch(r);
@@ -87,12 +129,14 @@ export class NeuralRooms extends Rooms {
     this.ai.errors++;
     this.ai.lastError = error instanceof Error ? error.message : String(error);
     this.ai.mode = 'fallback';
-    this.retryAt = this.now() + 10000;
+    const model = this.models.get(r.aiModel?.id ?? this.modelOptions()[0].id);
+    if (model) { model.retryAt = this.now() + 10000; model.errors++; model.available = false; }
     console.error('Neural inference unavailable:', this.ai.lastError);
     if (this.rooms.get(r.code) !== r || r.stage !== 'recruit' || this.stopped) return;
     this.heuristic(r);
   }
   private async decision(r: Room, p: Seat) {
+    const model = this.model(r);
     const turn = r.turn, rev = p.rev, pairings = r.pairings;
     const fresh = () => this.active(r, p, turn) && p.rev === rev && r.pairings === pairings;
     let state = this.memories.get(p);
@@ -119,7 +163,7 @@ export class NeuralRooms extends Rooms {
       if (!fresh()) return;
     }
     if (!valid.size || state.decisions >= 96) throw Error('Neural action limit or unresolved mandatory choice');
-    const result = await this.infer({ contract: this.profile.contract, rows: [{ entities: this.profile.observe(s, state.decisions, 64),
+    const result = await model.infer({ checkpointSha256: model.checkpointSha256, contract: model.observation.contract, rows: [{ entities: model.observation.observe(s, state.decisions, 64),
       legal: [...valid.keys()], memory: state.memory, previous: state.previous }] });
     if (!fresh()) return;
     const chosen = result.rows?.[0];
@@ -134,6 +178,8 @@ export class NeuralRooms extends Rooms {
     }
     state.memory = chosen.memory; state.previous = chosen.action; state.decisions++;
     this.ai.decisions++; this.ai.mode = 'neural';
+    model.decisions++; model.available = true;
+    if (r.aiStatus !== 'neural') { r.aiStatus = 'neural'; this.touch(r); }
     if (r.stage === 'recruit' && this.living(r).every(seat => seat.ended)) this.fight(r);
   }
   private async run() {
@@ -144,7 +190,7 @@ export class NeuralRooms extends Rooms {
         if (!this.active(r, p, r.turn)) continue;
         pending = true;
         try {
-          if (this.now() < this.retryAt) {
+          if (this.now() < this.model(r).retryAt) {
             this.heuristic(r);
           } else await this.decision(r, p);
         } catch (error) { this.fallback(r, error); }

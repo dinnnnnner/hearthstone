@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { setTimeout as delay } from 'node:timers/promises';
-import { NeuralRooms, httpInference, type Infer } from './neural';
+import { NeuralRooms, httpInference, inferenceBudget, type Infer } from './neural';
 import { ACTIONS } from '../rl/actions';
 import { inferenceProfile } from './neural-profile';
 import { createServer } from 'node:http';
@@ -146,12 +146,96 @@ test('compressed inference preserves requests and replies and paces outbound ban
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   try {
     const port = (server.address() as { port: number }).port;
-    const infer = httpInference(`http://127.0.0.1:${port}`, { compress: true, maxKbps: 16 });
+    const budget = inferenceBudget(16);
+    const infer = httpInference(`http://127.0.0.1:${port}`, { compress: true, budget });
+    const otherModel = httpInference(`http://127.0.0.1:${port}`, { compress: true, budget });
     assert.deepEqual(await infer(body), reply);
-    assert.deepEqual(await infer(body), reply);
+    assert.deepEqual(await otherModel(body), reply);
     assert.ok(received[1] - received[0] >= 200, 'compressed requests respect the configured pacing');
     assert.equal(infer.traffic!.requests, 2);
     assert.ok(infer.traffic!.requestBytes < infer.traffic!.rawRequestBytes / 10);
     assert.ok(infer.traffic!.responseBytes > 0);
   } finally { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); }
+});
+
+test('rooms route to the selected frozen model and retain it across reload and rematch', async () => {
+  const seen = new Map<string, any[]>();
+  const models = ['deep64', 'deep256', 'deep1024'].map((id, i) => {
+    seen.set(id, []);
+    return { id, label: id, episodes: i + 1, profile: 'scouting-v4', checkpointSha256: String(i + 1).repeat(64),
+      infer: async (body: any) => { seen.get(id)!.push(body); return endPolicy(body); } };
+  });
+  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', models);
+  const restored = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', models);
+  try {
+    for (const model of models) {
+      const guest = store.auth(store.guest(model.id).token);
+      const room = store.create(guest, 'friends', 's14_lich', 'training', 'free', model.id);
+      store.start(guest); store.autoChoices(room, room.seats[0]);
+      store.action(guest, { type: 'end' }, 'end', 1);
+    }
+    await until(() => [...store.rooms.values()].every(r => r.stage === 'combat'));
+    for (const model of models) {
+      const requests = seen.get(model.id)!;
+      assert.equal(requests.length, 7);
+      assert.ok(requests.every(r => r.checkpointSha256 === model.checkpointSha256));
+      assert.ok(requests.every(r => r.rows[0].memory.every((n: number) => n === 0)));
+    }
+    restored.restore(store.dump());
+    for (const room of restored.rooms.values()) {
+      const original = store.rooms.get(room.code)!;
+      assert.deepEqual(room.aiModel, original.aiModel);
+      const guest = [...restored.guests.values()].find(g => g.id === room.host)!;
+      assert.deepEqual(restored.view(guest).room!.aiModel, original.aiModel);
+      room.stage = 'finished'; restored.rematch(guest);
+      assert.deepEqual(room.aiModel, original.aiModel);
+    }
+    const guest = store.auth(store.guest('invalid').token);
+    assert.throws(() => store.create(guest, 'ai', 's14_lich', 'training', 'free', 'missing'), /无效的人机模型/);
+    assert.equal(guest.room, undefined);
+  } finally { store.stop(); restored.stop(); }
+});
+
+test('one model outage falls back only its rooms and availability is refreshed', async () => {
+  let online = true;
+  const models = [
+    { id: 'offline', label: 'offline', profile: 'scouting-v4', health: async () => online,
+      infer: async () => { throw Error('disconnected'); } },
+    { id: 'working', label: 'working', profile: 'scouting-v4', infer: endPolicy },
+  ];
+  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', models);
+  try {
+    await store.checkModels();
+    for (const model of models) {
+      const guest = store.auth(store.guest(model.id).token);
+      const room = store.create(guest, 'ai', 's14_lich', 'training', 'free', model.id);
+      store.autoChoices(room, room.seats[0]); store.action(guest, { type: 'end' }, 'end', 1);
+    }
+    await until(() => [...store.rooms.values()].every(r => r.stage === 'combat'));
+    assert.equal(store.modelStats().find(m => m.id === 'working')!.decisions, 7);
+    assert.equal(store.modelStats().find(m => m.id === 'working')!.errors, 0);
+    assert.deepEqual([...store.rooms.values()].map(r => r.aiStatus), ['fallback', 'neural']);
+    online = false; await store.checkModels();
+    const guest = store.auth(store.guest('retry').token);
+    assert.throws(() => store.create(guest, 'ai', 's14_lich', 'training', 'free', 'offline'), /暂时不可用/);
+    online = true; await store.checkModels();
+    assert.equal(store.modelOptions()[0].available, true);
+  } finally { store.stop(); }
+});
+
+test('restoring a room never silently replaces its checkpoint with another version', async () => {
+  let calls = 0;
+  const model = { id: 'frozen', label: 'frozen', profile: 'scouting-v4', checkpointSha256: 'a'.repeat(64),
+    infer: async (body: any) => { calls++; return endPolicy(body); } };
+  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', [model]);
+  try {
+    const guest = store.auth(store.guest('frozen').token);
+    const room = store.create(guest, 'friends', 's14_lich', 'training', 'free', model.id);
+    room.aiModel!.checkpointSha256 = 'b'.repeat(64);
+    store.start(guest); store.autoChoices(room, room.seats[0]);
+    store.action(guest, { type: 'end' }, 'end', 1);
+    await until(() => room.stage === 'combat');
+    assert.equal(calls, 0);
+    assert.equal(room.aiStatus, 'fallback');
+  } finally { store.stop(); }
 });

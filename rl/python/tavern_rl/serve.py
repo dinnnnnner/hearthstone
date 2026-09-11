@@ -36,6 +36,8 @@ class Policy:
     def predict(self, data):
         if data['contract'] != self.metadata['contract']:
             raise ValueError('Runtime rules/schema differ from exported inference artifact')
+        if data.get('checkpointSha256', self.metadata['checkpointSha256']) != self.metadata['checkpointSha256']:
+            raise ValueError('Requested model checkpoint differs from serving artifact')
         rows = data['rows']
         if not isinstance(rows, list) or not 1 <= len(rows) <= 8:
             raise ValueError('Expected 1..8 decisions')

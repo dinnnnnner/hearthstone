@@ -1,7 +1,7 @@
 import gzip
 import json
 import unittest
-from tavern_rl.serve import decode_request
+from tavern_rl.serve import decode_request, Policy
 
 
 class ServingTests(unittest.TestCase):
@@ -16,3 +16,9 @@ class ServingTests(unittest.TestCase):
             decode_request(gzip.compress(raw)[:-4], 'gzip')
         with self.assertRaises(ValueError):
             decode_request(raw, 'unsupported')
+
+    def test_request_cannot_select_another_checkpoint_with_the_same_schema(self):
+        policy = Policy.__new__(Policy)
+        policy.metadata = {'contract': 'same-schema', 'checkpointSha256': 'frozen-checkpoint'}
+        with self.assertRaisesRegex(ValueError, 'checkpoint differs'):
+            policy.predict({'contract': 'same-schema', 'checkpointSha256': 'other-checkpoint'})

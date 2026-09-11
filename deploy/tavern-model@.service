@@ -1,0 +1,21 @@
+[Unit]
+Description=Local Battlegrounds inference for %i
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.local/share/tavern-models/%i/current
+Environment=PYTHONPATH=%h/.local/share/tavern-models/%i/current/python
+Environment=OMP_NUM_THREADS=1
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=MKL_NUM_THREADS=1
+EnvironmentFile=%h/.local/share/tavern-models/%i/current/serve.env
+ExecStart=%h/hearthstone/.venv/bin/python -m tavern_rl.serve model.pt --port ${TAVERN_MODEL_PORT}
+Restart=on-failure
+RestartSec=3
+MemoryMax=1G
+CPUQuota=100%
+TasksMax=32
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

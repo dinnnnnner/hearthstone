@@ -55,6 +55,8 @@ export type Room = {
   kind: "friends" | "ai";
   mode: "timed" | "training";
   heroSelection: "free" | "draft";
+  aiModel?: AIModel;
+  aiStatus?: "neural" | "fallback" | "script";
   stage: "waiting" | "recruit" | "combat" | "finished";
   seats: Seat[];
   pool: Record<string, number>;
@@ -73,6 +75,8 @@ export type Room = {
   gameRev?: number;
   storageRev?: number;
 };
+export type AIModel = { id: string; label: string; episodes?: number; checkpointSha256?: string };
+export type AIModelOption = AIModel & { available: boolean };
 export const OFFLINE_GRACE_MS = 5 * 60 * 1000;
 const score = (m: Minion) =>
   m.attack + m.health + getDef(m.id).tier * 2 + m.keywords.length * 3;
@@ -145,7 +149,16 @@ export class Rooms {
       requests: [],
     };
   }
-  create(g: Guest, kind: "friends" | "ai", hero: string, mode: Room["mode"] = "timed", heroSelection: Room["heroSelection"] = "free") {
+  modelOptions(): AIModelOption[] { return [{ id: "script", label: "脚本人机", available: true }]; }
+  protected selectModel(id?: string): AIModel {
+    const option = this.modelOptions().find(m => m.id === (id ?? this.modelOptions()[0]?.id));
+    if (!option) throw Error("无效的人机模型");
+    if (!option.available) throw Error("所选模型暂时不可用，请稍后重试");
+    const { available: _, ...model } = option;
+    return model;
+  }
+  create(g: Guest, kind: "friends" | "ai", hero: string, mode: Room["mode"] = "timed", heroSelection: Room["heroSelection"] = "free", modelId?: string) {
+    const aiModel = this.selectModel(modelId);
     if (mode !== "timed" && mode !== "training") throw Error("无效对局模式");
     if (heroSelection !== "free" && heroSelection !== "draft") throw Error("无效英雄选择方式");
     if (g.room && this.rooms.has(g.room)) throw Error("请先离开当前房间");
@@ -164,6 +177,8 @@ export class Rooms {
       kind,
       mode,
       heroSelection,
+      aiModel,
+      aiStatus: aiModel.id === "script" ? "script" : "neural",
       stage: "waiting",
       seats: [this.seat(g, heroSelection === "draft" ? "" : hero)],
       pool: {},
@@ -886,6 +901,8 @@ export class Rooms {
         kind: r.kind,
         mode: r.mode,
         heroSelection: r.heroSelection,
+        aiModel: r.aiModel,
+        aiStatus: r.aiStatus,
         heroOffers: r.stage === "waiting" ? p.heroOffers : undefined,
         stage: r.stage,
         turn: r.turn,
@@ -929,6 +946,10 @@ export class Rooms {
     this.roomSnapshots = new WeakMap();
     for (const r of this.rooms.values()) {
       r.mode = r.mode === "training" ? "training" : "timed";
+      if (!r.aiModel) {
+        const { available: _, ...model } = this.modelOptions()[0];
+        r.aiModel = model;
+      }
       r.heroSelection = r.heroSelection === "draft" ? "draft" : "free";
       if (r.mode === "training") r.deadline = 0;
       // The previous server did not persist idle heartbeats. Give its rooms

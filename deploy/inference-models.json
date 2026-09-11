@@ -1,0 +1,26 @@
+[
+  {
+    "id": "deep64-680",
+    "label": "64 层模型",
+    "episodes": 680,
+    "checkpointSha256": "7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8",
+    "profile": "scouting-v4",
+    "url": "http://127.0.0.1:18791"
+  },
+  {
+    "id": "deep256-636",
+    "label": "256 层模型",
+    "episodes": 636,
+    "checkpointSha256": "3fa341fecaf19a5d87b430df013da5595a01578cd323bf44578df87195b0bc44",
+    "profile": "scouting-v4",
+    "url": "http://127.0.0.1:18793"
+  },
+  {
+    "id": "deep1024-260",
+    "label": "1024 层模型",
+    "episodes": 260,
+    "checkpointSha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4",
+    "profile": "scouting-v4",
+    "url": "http://127.0.0.1:18795"
+  }
+]

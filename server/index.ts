@@ -7,9 +7,12 @@ import { readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { Rooms } from "./rooms";
 import { NeuralRooms, httpInference } from "./neural";
+import { multiModelRooms } from "./model-registry";
 import { SnapshotWriter } from "./persistence";
 import type { Action } from "../src/engine";
-const store = process.env.TAVERN_INFERENCE_URL
+const store = process.env.TAVERN_INFERENCE_MODELS
+    ? multiModelRooms(process.env.TAVERN_INFERENCE_MODELS, Number(process.env.TAVERN_INFERENCE_MAX_KBPS || 512))
+    : process.env.TAVERN_INFERENCE_URL
     ? new NeuralRooms(httpInference(process.env.TAVERN_INFERENCE_URL, {
       compress: process.env.TAVERN_INFERENCE_COMPRESS === '1',
       maxKbps: Number(process.env.TAVERN_INFERENCE_MAX_KBPS || 0),
@@ -131,9 +134,13 @@ const server = createServer(async (req, res) => {
         res,
         200,
         { ok: true, service: "tavern", rooms: store.rooms.size,
-          ...(store instanceof NeuralRooms ? { ai: store.ai } : {}) },
+          ...(store instanceof NeuralRooms ? { ai: { ...store.ai, models: store.modelStats() } } : {}) },
         req,
       );
+      return;
+    }
+    if (path === "/models" && req.method === "GET") {
+      reply(res, 200, { models: store.modelOptions() }, req);
       return;
     }
     const ip = String(
@@ -185,7 +192,7 @@ const server = createServer(async (req, res) => {
     switch (path) {
       case "/create":
         if (!["friends", "ai"].includes(data.kind)) throw Error("无效房间类型");
-        store.create(guest, data.kind, String(data.hero || "s14_lich"), data.mode, data.heroSelection);
+        store.create(guest, data.kind, String(data.hero || "s14_lich"), data.mode, data.heroSelection, data.modelId);
         break;
       case "/join":
         if (typeof data.code !== "string" || !/^[A-Z2-9]{6}$/i.test(data.code))

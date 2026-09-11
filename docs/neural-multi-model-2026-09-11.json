@@ -1,0 +1,300 @@
+{
+  "release": "20260911T075457Z",
+  "publicUrl": "https://8.153.150.101/tavern/",
+  "publicBackend": "/opt/bobs-tavern/releases/20260911T075457Z",
+  "publicSite": "/var/www/playroom/releases/20260911T075457Z",
+  "previousBackend": "/opt/bobs-tavern/releases/20260911T074105Z",
+  "previousSite": "/var/www/playroom/releases/20260911T025917Z",
+  "backendSha256": "996f812db39b048511aad1ccbb9a2d48709a4d4817e2d4541e98112680bf6db2",
+  "frontend": "/tavern/assets/index-ChB4UE_r.js",
+  "models": [
+    {
+      "id": "deep64-680",
+      "label": "64 层模型",
+      "episodes": 680,
+      "checkpointSha256": "7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18791",
+      "localHealthAfterBenchmark": {
+        "ok": true,
+        "episodes": 680,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 64,
+        "valueDepth": 64,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "decisions": 679,
+        "meanMs": 4.569557768858342
+      }
+    },
+    {
+      "id": "deep256-636",
+      "label": "256 层模型",
+      "episodes": 636,
+      "checkpointSha256": "3fa341fecaf19a5d87b430df013da5595a01578cd323bf44578df87195b0bc44",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18793",
+      "localHealthAfterBenchmark": {
+        "ok": true,
+        "episodes": 636,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "3fa341fecaf19a5d87b430df013da5595a01578cd323bf44578df87195b0bc44",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "decisions": 721,
+        "meanMs": 6.6433208071751935
+      },
+      "campaignStatus": {
+        "stage": "time_limit",
+        "completed_episodes": 636,
+        "target_episodes": 4108,
+        "training_complete": false,
+        "elapsed_seconds": 14400.4,
+        "chunk": 3,
+        "log": "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/train-003.log",
+        "mean_placement": 1.25,
+        "comparison": {
+          "mean_placement_delta": -4.3125,
+          "paired_95_percent_interval": [
+            -4.96875,
+            -3.625
+          ],
+          "games": 32,
+          "lower_is_better": true,
+          "minimum_gate_games": 256,
+          "gate_passed": false,
+          "scope": "Gate tests this fixed suite only; repeated validation is not an independent final test"
+        }
+      },
+      "artifactHashes": {
+        "model.pt": "31a5370220796d7055e4afa3fdef4fb9e1921c0af45d2845d8cf96b97989cc95",
+        "manifest.json": "cd096a701ed1e160f24b614576877da3e1cb04a6b297be29f06c7a491f439633",
+        "status.json": "09dfb98a91e9076869918d7c6d28dac627bdc5c5f5426a4c745918dc7b66f7b6",
+        "export.log": "00212a27b407500dfef25df2c204b70882d0569b6d0a70050a598c10db68ffee"
+      },
+      "artifactBytes": 40942247,
+      "fullCheckpointBackup": "/root/autodl-tmp/deep256-serving-20260911/checkpoint.pt",
+      "iteration": 42,
+      "parameters": 9860862
+    },
+    {
+      "id": "deep1024-260",
+      "label": "1024 层模型",
+      "episodes": 260,
+      "checkpointSha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18795",
+      "localHealthAfterBenchmark": {
+        "ok": true,
+        "episodes": 260,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "decisions": 479,
+        "meanMs": 14.40054391847271
+      },
+      "campaignStatus": {
+        "stage": "time_limit",
+        "completed_episodes": 260,
+        "target_episodes": 4100,
+        "training_complete": false,
+        "elapsed_seconds": 14400.3,
+        "chunk": 1,
+        "log": "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/train-001.log"
+      },
+      "artifactHashes": {
+        "model.pt": "0ba6688ddbe8e0a3a02a8be1945b08d813b1ce7c77bdb321db219be72a7a0c63",
+        "manifest.json": "17b7da21573281037da2579d3621ae34cda277bb96a5a79ec0b7397d6331d62d",
+        "status.json": "5d2411cc767a53b23cf4b57c9802b13f2605d39e44060d0a64a351d7a71c29a6",
+        "export.log": "23cc788e330a88f3ce7185deb20a9d36abd607ad207fb7107e47bb3d6f520711"
+      },
+      "artifactBytes": 145873703,
+      "fullCheckpointBackup": "/root/autodl-tmp/deep1024-serving-20260911/checkpoint.pt",
+      "iteration": 17,
+      "parameters": 35616510
+    }
+  ],
+  "placement": "All three models compute on the current local CPU; public backend sends observations through reverse SSH.",
+  "bandwidth": {
+    "publicMbps": 3,
+    "sharedRequestBudgetKbps": 512,
+    "compression": "gzip",
+    "payloadRequestMbps": 0.40682207492627676,
+    "scope": "One shared application pacing budget for all models; actual SSH/TCP overhead is excluded from byte counters."
+  },
+  "benchmark": {
+    "totalSeconds": 101.23867542699999,
+    "rounds": 8,
+    "errors": 0,
+    "fallbackRounds": 0,
+    "traffic": {
+      "requests": 1781,
+      "rawRequestBytes": 15923077,
+      "requestBytes": 5148266,
+      "responseBytes": 2428884,
+      "maxKbps": 512
+    },
+    "models": [
+      {
+        "id": "deep64-680",
+        "decisions": 650,
+        "meanMs": 41.50973116000008,
+        "p95Ms": 52.75939500000095,
+        "maxMs": 94.793994
+      },
+      {
+        "id": "deep256-636",
+        "decisions": 693,
+        "meanMs": 43.048975007214956,
+        "p95Ms": 53.506303999998636,
+        "maxMs": 75.05486499999824
+      },
+      {
+        "id": "deep1024-260",
+        "decisions": 438,
+        "meanMs": 47.49027187899508,
+        "p95Ms": 58.22099299999991,
+        "maxMs": 108.445842000001
+      }
+    ]
+  },
+  "behavior": {
+    "selection": "per room; same model for all bots, including friend-room fill-ins",
+    "default": "deep64-680",
+    "persisted": [
+      "model ID",
+      "checkpoint SHA256",
+      "label",
+      "episodes"
+    ],
+    "retainedOn": [
+      "page reload",
+      "reconnect",
+      "server restart",
+      "rematch"
+    ],
+    "privateOpponentStateSent": false,
+    "healthIntervalSeconds": 10,
+    "fallbackBackoffSeconds": 10,
+    "fallbackIsolatedPerModel": true,
+    "fallbackVisibleInRoom": true,
+    "wrongCheckpointRejectedByAllThreeServices": true
+  },
+  "validation": {
+    "serverTests": 49,
+    "pythonWorkspaceTests": 43,
+    "pythonWorkspaceScope": "Includes concurrent uncommitted training tests; serving-specific tests: 2 passed",
+    "typescript": true,
+    "frontendBuild": true,
+    "localBrowserModelSelection": true,
+    "publicBrowserModelSelection": true,
+    "mobileViewportWidth": 390,
+    "horizontalOverflow": false,
+    "unrelatedSectorPid": 119165,
+    "homepagePreserved": true,
+    "publicBrowserSeconds": 34.8
+  },
+  "availability": "Local computer must remain powered on, connected and logged in; user linger is disabled.",
+  "localUnits": [
+    "tavern-deep64-inference",
+    "tavern-deep64-tunnel",
+    "tavern-model@deep256",
+    "tavern-model@deep1024",
+    "tavern-model-tunnel"
+  ],
+  "localModelLimits": {
+    "cpuQuotaPerModel": "100% of one logical CPU",
+    "memoryMaxBytesPerModel": 1073741824
+  },
+  "rollback": "Restore both public release symlinks and the prior backend unit from the new backend release. Before restoring the old 64-only backend, finish rooms using other models; the old backend ignores their selection.",
+  "publicHealthAfterValidation": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "ai": {
+      "mode": "neural",
+      "decisions": 92,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 92,
+        "rawRequestBytes": 470864,
+        "requestBytes": 185374,
+        "responseBytes": 125915,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-680",
+          "decisions": 32,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-636",
+          "decisions": 24,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-260",
+          "decisions": 36,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "publicModelsAfterValidation": {
+    "models": [
+      {
+        "id": "deep64-680",
+        "label": "64 层模型",
+        "episodes": 680,
+        "checkpointSha256": "7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8",
+        "available": true
+      },
+      {
+        "id": "deep256-636",
+        "label": "256 层模型",
+        "episodes": 636,
+        "checkpointSha256": "3fa341fecaf19a5d87b430df013da5595a01578cd323bf44578df87195b0bc44",
+        "available": true
+      },
+      {
+        "id": "deep1024-260",
+        "label": "1024 层模型",
+        "episodes": 260,
+        "checkpointSha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4",
+        "available": true
+      }
+    ]
+  }
+}

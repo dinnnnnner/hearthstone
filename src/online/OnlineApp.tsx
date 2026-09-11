@@ -22,7 +22,7 @@ import App from "../App";
 import { SEASON_HEROES } from "../season/catalog";
 import { art } from "../data";
 import type { Action, Game } from "../engine";
-import type { OnlineState, Room } from "../../server/rooms";
+import type { OnlineState, Room, AIModelOption } from "../../server/rooms";
 import "./online.css";
 type Identity = { token: string; id: string; name: string };
 const key = "bobs-tavern-guest-v1";
@@ -59,6 +59,11 @@ export default function OnlineApp() {
       try { return localStorage.getItem("bobs-tavern-room-mode") === "training" ? "training" : "timed"; }
       catch { return "timed"; }
     }),
+    [models, setModels] = useState<AIModelOption[]>([]),
+    [modelsError, setModelsError] = useState(""),
+    [modelId, setModelId] = useState(() => {
+      try { return localStorage.getItem("bobs-tavern-ai-model") || ""; } catch { return ""; }
+    }),
     [code, setCode] = useState(
       () => new URLSearchParams(location.search).get("room") || "",
     ),
@@ -90,6 +95,29 @@ export default function OnlineApp() {
   useEffect(() => {
     try { localStorage.setItem("bobs-tavern-room-mode", mode); } catch {}
   }, [mode]);
+  useEffect(() => {
+    try { if (modelId) localStorage.setItem("bobs-tavern-ai-model", modelId); } catch {}
+  }, [modelId]);
+  useEffect(() => {
+    let stopped = false;
+    const load = async () => {
+      try {
+        const response = await fetch("/tavern-api/models", { signal: AbortSignal.timeout(5000) });
+        if (!response.ok) throw Error("暂时无法获取人机模型，正在重试…");
+        const result = await response.json() as { models: AIModelOption[] };
+        if (stopped) return;
+        setModels(result.models); setModelsError("");
+        setModelId(previous => result.models.some(m => m.id === previous) ? previous :
+          (result.models.find(m => m.available)?.id ?? result.models[0]?.id ?? ""));
+      } catch {
+        if (!stopped) setModelsError("暂时无法获取人机模型，正在重试…");
+      }
+    };
+    void load();
+    const timer = setInterval(() => void load(), 10000);
+    return () => { stopped = true; clearInterval(timer); };
+  }, []);
+  const selectedModel = models.find(m => m.id === modelId);
   const busy = useRef(false),
     last = useRef<OnlineState | null>(null);
   const room = state?.room,
@@ -251,6 +279,7 @@ export default function OnlineApp() {
     <>
       {`${room.kind === "ai" ? "人机对局" : `好友房 ${room.code}`} · 第 ${room.turn} 回合${me?.ended && room.stage === "recruit" ? " · 等待其他玩家" : me?.continued && room.stage === "combat" ? " · 等待下一回合" : ""}`}
       <span>{room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式"}</span>
+      <span>{room.aiModel ? ` · ${room.aiModel.label}` : ""}{room.aiStatus === "fallback" ? " · 本轮使用脚本人机，模型恢复后重试" : ""}</span>
       <Countdown
         deadline={room.deadline}
         serverNow={room.serverNow}
@@ -380,6 +409,7 @@ export default function OnlineApp() {
                   {room.kind === "ai" ? "人机对局" : "好友酒馆"}
                   {room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式 · 招募 90 秒"}
                   {room.heroSelection === "draft" ? " · 随机四选一" : " · 自选英雄"}
+                  {room.aiModel ? ` · ${room.aiModel.label}` : ""}
                 </div>
                 <h1>
                   {room.stage === "waiting"
@@ -601,12 +631,25 @@ export default function OnlineApp() {
               </label>
               <p>用于下方的人机匹配和新建好友房；加入好友房时沿用房主的选择。</p>
             </fieldset>
+            <fieldset className="recruit-mode-picker ai-model-picker" disabled={pending}>
+              <legend>人机对手模型</legend>
+              {models.map(model => <label key={model.id}>
+                <input type="radio" name="ai-model" value={model.id} checked={modelId === model.id}
+                  disabled={!model.available} onChange={() => setModelId(model.id)} />
+                <span><strong>{model.label}</strong><small>
+                  {model.episodes === undefined ? "基础策略" : `${model.episodes} 局训练`}
+                  {!model.available ? " · 暂不可用" : ""}
+                </small></span>
+              </label>)}
+              {!models.length && <p>{modelsError || "正在获取可用模型…"}</p>}
+              {!!models.length && <p>{modelsError || "同桌人机使用所选模型，好友房空位也适用。层数不代表难度。"}</p>}
+            </fieldset>
             <div className="match-modes">
               <button
                 className="match-tile"
-                disabled={pending || !resources.ready}
+                disabled={pending || !resources.ready || !selectedModel?.available || !!modelsError}
                 onClick={async () => {
-                  if (await command("/create", { kind: "ai", hero, mode, heroSelection }))
+                  if (await command("/create", { kind: "ai", hero, mode, heroSelection, modelId }))
                     changeView(heroSelection === "draft" ? "hall" : "game");
                 }}
               >
@@ -627,9 +670,9 @@ export default function OnlineApp() {
               </button>
               <button
                 className="match-tile friends"
-                disabled={pending || !resources.ready}
+                disabled={pending || !resources.ready || !selectedModel?.available || !!modelsError}
                 onClick={() =>
-                  void command("/create", { kind: "friends", hero, mode, heroSelection })
+                  void command("/create", { kind: "friends", hero, mode, heroSelection, modelId })
                 }
               >
                 <span className="match-icon">

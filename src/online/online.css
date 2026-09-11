@@ -748,3 +748,7 @@
   .hero-draft-choose strong { font-size: 13px; }
   .hero-draft-choose p { font-size: 11px; }
 }
+
+.ai-model-picker { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ai-model-picker label:has(:disabled) { opacity: .55; cursor: not-allowed; }
+@media (max-width: 600px) { .ai-model-picker { grid-template-columns: 1fr; } }

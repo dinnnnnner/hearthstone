@@ -53,12 +53,14 @@ test("HTTP authentication, action validation and a graceful server restart prese
     });
   try {
     await start();
+    assert.deepEqual((await (await call("/models", undefined, "")).json()).models, [{ id: "script", label: "脚本人机", available: true }]);
     assert.equal((await call("/state", undefined, "invalid")).status, 401);
     const guest = (await (
       await call("/guest", { name: "重连验证" })
     ).json()) as { token: string };
     token = guest.token;
     assert.equal((await call("/create", { kind: "ai", mode: "invalid" })).status, 400);
+    assert.equal((await call("/create", { kind: "ai", modelId: "missing" })).status, 400);
     const created = (await (
       await call("/create", { kind: "friends", hero: "s14_lich", mode: "training" })
     ).json()) as { room: { code: string; mode: string } };
