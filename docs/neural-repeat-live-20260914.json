@@ -1,0 +1,1569 @@
+{
+  "kind": "early_repeated_imitation_deployment_and_selfplay",
+  "stop": {
+    "stage": "stopped_early_by_user",
+    "utc": "2026-09-14T08:22:16.512344+00:00",
+    "original_deadline": "2026-09-14T09:28:35.116355+00:00",
+    "workers": [
+      16561,
+      16562,
+      16563
+    ],
+    "controller": 16552,
+    "note": "User requested deployment of current saved results and immediate self-play; automatic rollback/resume controller stopped first."
+  },
+  "training": [
+    {
+      "kind": "repeated_human_imitation",
+      "deadline_utc": "2026-09-14T09:28:35.116355+00:00",
+      "parentArtifactSha256": "27bc33a955b33fbb918fb0b7383fa0cc24e55cf811e7081a72fb9841eab546aa",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "trainingChunks": 114,
+      "recordedSteps": 1555,
+      "dataset": [
+        {
+          "file": "06cd2177-3a0b-4156-9ffe-b7b8d9b9cda3.jsonl.gz",
+          "sha256": "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+          "gameId": "48967daf-9ebe-45dd-a1f4-80aad034c5d0",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 359,
+            "retainedSteps": 359,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 31,
+                "steps": 32
+              },
+              {
+                "firstStep": 32,
+                "lastStep": 46,
+                "steps": 15
+              },
+              {
+                "firstStep": 47,
+                "lastStep": 105,
+                "steps": 59
+              },
+              {
+                "firstStep": 106,
+                "lastStep": 126,
+                "steps": 21
+              },
+              {
+                "firstStep": 127,
+                "lastStep": 139,
+                "steps": 13
+              },
+              {
+                "firstStep": 140,
+                "lastStep": 358,
+                "steps": 219
+              }
+            ]
+          }
+        },
+        {
+          "file": "105d3a1e-66eb-4844-99cf-5c4672d993a5.jsonl.gz",
+          "sha256": "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+          "gameId": "3f08ef63-48b4-494f-aa35-a421eef64c6e",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 386,
+            "retainedSteps": 386,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 32,
+                "steps": 33
+              },
+              {
+                "firstStep": 33,
+                "lastStep": 56,
+                "steps": 24
+              },
+              {
+                "firstStep": 57,
+                "lastStep": 106,
+                "steps": 50
+              },
+              {
+                "firstStep": 107,
+                "lastStep": 109,
+                "steps": 3
+              },
+              {
+                "firstStep": 110,
+                "lastStep": 130,
+                "steps": 21
+              },
+              {
+                "firstStep": 131,
+                "lastStep": 143,
+                "steps": 13
+              },
+              {
+                "firstStep": 144,
+                "lastStep": 202,
+                "steps": 59
+              },
+              {
+                "firstStep": 203,
+                "lastStep": 247,
+                "steps": 45
+              },
+              {
+                "firstStep": 248,
+                "lastStep": 283,
+                "steps": 36
+              },
+              {
+                "firstStep": 284,
+                "lastStep": 385,
+                "steps": 102
+              }
+            ]
+          }
+        },
+        {
+          "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+          "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+          "gameId": "86f373d7-d60c-4ca5-b94a-83e1177979f1",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 274,
+            "retainedSteps": 274,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 93,
+                "steps": 94
+              },
+              {
+                "firstStep": 94,
+                "lastStep": 116,
+                "steps": 23
+              },
+              {
+                "firstStep": 117,
+                "lastStep": 216,
+                "steps": 100
+              },
+              {
+                "firstStep": 217,
+                "lastStep": 217,
+                "steps": 1
+              },
+              {
+                "firstStep": 218,
+                "lastStep": 273,
+                "steps": 56
+              }
+            ]
+          }
+        },
+        {
+          "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+          "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+          "gameId": "a6e5fbf4-8336-4878-992e-1f7bc8dbabee",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 288,
+            "retainedSteps": 288,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 43,
+                "steps": 44
+              },
+              {
+                "firstStep": 44,
+                "lastStep": 89,
+                "steps": 46
+              },
+              {
+                "firstStep": 90,
+                "lastStep": 121,
+                "steps": 32
+              },
+              {
+                "firstStep": 122,
+                "lastStep": 159,
+                "steps": 38
+              },
+              {
+                "firstStep": 160,
+                "lastStep": 193,
+                "steps": 34
+              },
+              {
+                "firstStep": 194,
+                "lastStep": 287,
+                "steps": 94
+              }
+            ]
+          }
+        },
+        {
+          "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+          "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0",
+          "gameId": "3bb9769c-2e98-4438-bbae-4632b3b78b4f",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 248,
+            "retainedSteps": 248,
+            "originalReasons": [
+              "partial_start",
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": true,
+            "firstRecordedTurn": 5,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 19,
+                "steps": 20
+              },
+              {
+                "firstStep": 20,
+                "lastStep": 48,
+                "steps": 29
+              },
+              {
+                "firstStep": 49,
+                "lastStep": 100,
+                "steps": 52
+              },
+              {
+                "firstStep": 101,
+                "lastStep": 150,
+                "steps": 50
+              },
+              {
+                "firstStep": 151,
+                "lastStep": 222,
+                "steps": 72
+              },
+              {
+                "firstStep": 223,
+                "lastStep": 244,
+                "steps": 22
+              },
+              {
+                "firstStep": 245,
+                "lastStep": 247,
+                "steps": 3
+              }
+            ]
+          }
+        }
+      ],
+      "validation": null,
+      "note": "All selected games are training data; agreement is not independent playing-strength evidence.",
+      "before": {
+        "all": {
+          "samples": 1555,
+          "negative_log_likelihood": 3.47509239836569,
+          "top1_agreement": 0.09903536977491961
+        },
+        "buy": {
+          "samples": 174,
+          "negative_log_likelihood": 3.8720625066894225,
+          "top1_agreement": 0.09195402298850575
+        },
+        "play": {
+          "samples": 324,
+          "negative_log_likelihood": 3.654003745485327,
+          "top1_agreement": 0.08333333333333333
+        },
+        "power": {
+          "samples": 7,
+          "negative_log_likelihood": 3.2532202090535844,
+          "top1_agreement": 0.14285714285714285
+        },
+        "end": {
+          "samples": 54,
+          "negative_log_likelihood": 3.185424243962323,
+          "top1_agreement": 0.018518518518518517
+        },
+        "buySpell": {
+          "samples": 54,
+          "negative_log_likelihood": 2.9784977943808943,
+          "top1_agreement": 0.0
+        },
+        "cast": {
+          "samples": 226,
+          "negative_log_likelihood": 3.6273597225678706,
+          "top1_agreement": 0.08849557522123894
+        },
+        "upgrade": {
+          "samples": 23,
+          "negative_log_likelihood": 2.5229405683019888,
+          "top1_agreement": 0.043478260869565216
+        },
+        "discover": {
+          "samples": 87,
+          "negative_log_likelihood": 1.127939130040421,
+          "top1_agreement": 0.3793103448275862
+        },
+        "refresh": {
+          "samples": 257,
+          "negative_log_likelihood": 2.3329490075315484,
+          "top1_agreement": 0.17120622568093385
+        },
+        "darkGift": {
+          "samples": 6,
+          "negative_log_likelihood": 1.0776412685712178,
+          "top1_agreement": 1.0
+        },
+        "move": {
+          "samples": 28,
+          "negative_log_likelihood": 6.554827877453396,
+          "top1_agreement": 0.0
+        },
+        "buyTrinket": {
+          "samples": 11,
+          "negative_log_likelihood": 3.0115399712866004,
+          "top1_agreement": 0.18181818181818182
+        },
+        "sell": {
+          "samples": 273,
+          "negative_log_likelihood": 4.8065336021311555,
+          "top1_agreement": 0.0
+        },
+        "choosePower": {
+          "samples": 2,
+          "negative_log_likelihood": 1.0498556196689606,
+          "top1_agreement": 0.5
+        },
+        "reward": {
+          "samples": 12,
+          "negative_log_likelihood": 2.3004469176133475,
+          "top1_agreement": 0.16666666666666666
+        },
+        "activate": {
+          "samples": 9,
+          "negative_log_likelihood": 3.29567907916175,
+          "top1_agreement": 0.0
+        },
+        "freeze": {
+          "samples": 8,
+          "negative_log_likelihood": 2.5401126742362976,
+          "top1_agreement": 0.0
+        }
+      },
+      "stage": "checkpoint",
+      "updates": 2529,
+      "uniqueSupervisedSteps": 1555,
+      "supervisedStepVisits": 34512,
+      "fullPasses": 22,
+      "actionVisits": {
+        "sell": 6066,
+        "play": 7199,
+        "cast": 5002,
+        "upgrade": 508,
+        "end": 1195,
+        "refresh": 5700,
+        "buy": 3866,
+        "discover": 1935,
+        "buySpell": 1197,
+        "freeze": 177,
+        "move": 622,
+        "reward": 267,
+        "activate": 200,
+        "darkGift": 134,
+        "buyTrinket": 244,
+        "power": 156,
+        "choosePower": 44
+      },
+      "timestamp_utc": "2026-09-14T08:19:19.148707+00:00",
+      "installedArtifactSha256": "63f47990f0b52200c2238d462d69cc26d4ad7847e697ff7d90b14b8c1794bdfd",
+      "depth": 64,
+      "episodes": 1512,
+      "iteration": 96,
+      "candidateSavedUtc": "2026-09-14T08:19:19.474948+00:00",
+      "preservedPpoState": true,
+      "unchangedValueHead": true,
+      "optimizerRestored": true,
+      "after": null
+    },
+    {
+      "kind": "repeated_human_imitation",
+      "deadline_utc": "2026-09-14T09:28:35.116355+00:00",
+      "parentArtifactSha256": "a578cfd55fadd182dc152646c4d573aecce19a65325deba7fd27484cb741dce1",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "trainingChunks": 114,
+      "recordedSteps": 1555,
+      "dataset": [
+        {
+          "file": "06cd2177-3a0b-4156-9ffe-b7b8d9b9cda3.jsonl.gz",
+          "sha256": "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+          "gameId": "48967daf-9ebe-45dd-a1f4-80aad034c5d0",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 359,
+            "retainedSteps": 359,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 31,
+                "steps": 32
+              },
+              {
+                "firstStep": 32,
+                "lastStep": 46,
+                "steps": 15
+              },
+              {
+                "firstStep": 47,
+                "lastStep": 105,
+                "steps": 59
+              },
+              {
+                "firstStep": 106,
+                "lastStep": 126,
+                "steps": 21
+              },
+              {
+                "firstStep": 127,
+                "lastStep": 139,
+                "steps": 13
+              },
+              {
+                "firstStep": 140,
+                "lastStep": 358,
+                "steps": 219
+              }
+            ]
+          }
+        },
+        {
+          "file": "105d3a1e-66eb-4844-99cf-5c4672d993a5.jsonl.gz",
+          "sha256": "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+          "gameId": "3f08ef63-48b4-494f-aa35-a421eef64c6e",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 386,
+            "retainedSteps": 386,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 32,
+                "steps": 33
+              },
+              {
+                "firstStep": 33,
+                "lastStep": 56,
+                "steps": 24
+              },
+              {
+                "firstStep": 57,
+                "lastStep": 106,
+                "steps": 50
+              },
+              {
+                "firstStep": 107,
+                "lastStep": 109,
+                "steps": 3
+              },
+              {
+                "firstStep": 110,
+                "lastStep": 130,
+                "steps": 21
+              },
+              {
+                "firstStep": 131,
+                "lastStep": 143,
+                "steps": 13
+              },
+              {
+                "firstStep": 144,
+                "lastStep": 202,
+                "steps": 59
+              },
+              {
+                "firstStep": 203,
+                "lastStep": 247,
+                "steps": 45
+              },
+              {
+                "firstStep": 248,
+                "lastStep": 283,
+                "steps": 36
+              },
+              {
+                "firstStep": 284,
+                "lastStep": 385,
+                "steps": 102
+              }
+            ]
+          }
+        },
+        {
+          "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+          "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+          "gameId": "86f373d7-d60c-4ca5-b94a-83e1177979f1",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 274,
+            "retainedSteps": 274,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 93,
+                "steps": 94
+              },
+              {
+                "firstStep": 94,
+                "lastStep": 116,
+                "steps": 23
+              },
+              {
+                "firstStep": 117,
+                "lastStep": 216,
+                "steps": 100
+              },
+              {
+                "firstStep": 217,
+                "lastStep": 217,
+                "steps": 1
+              },
+              {
+                "firstStep": 218,
+                "lastStep": 273,
+                "steps": 56
+              }
+            ]
+          }
+        },
+        {
+          "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+          "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+          "gameId": "a6e5fbf4-8336-4878-992e-1f7bc8dbabee",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 288,
+            "retainedSteps": 288,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 43,
+                "steps": 44
+              },
+              {
+                "firstStep": 44,
+                "lastStep": 89,
+                "steps": 46
+              },
+              {
+                "firstStep": 90,
+                "lastStep": 121,
+                "steps": 32
+              },
+              {
+                "firstStep": 122,
+                "lastStep": 159,
+                "steps": 38
+              },
+              {
+                "firstStep": 160,
+                "lastStep": 193,
+                "steps": 34
+              },
+              {
+                "firstStep": 194,
+                "lastStep": 287,
+                "steps": 94
+              }
+            ]
+          }
+        },
+        {
+          "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+          "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0",
+          "gameId": "3bb9769c-2e98-4438-bbae-4632b3b78b4f",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 248,
+            "retainedSteps": 248,
+            "originalReasons": [
+              "partial_start",
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": true,
+            "firstRecordedTurn": 5,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 19,
+                "steps": 20
+              },
+              {
+                "firstStep": 20,
+                "lastStep": 48,
+                "steps": 29
+              },
+              {
+                "firstStep": 49,
+                "lastStep": 100,
+                "steps": 52
+              },
+              {
+                "firstStep": 101,
+                "lastStep": 150,
+                "steps": 50
+              },
+              {
+                "firstStep": 151,
+                "lastStep": 222,
+                "steps": 72
+              },
+              {
+                "firstStep": 223,
+                "lastStep": 244,
+                "steps": 22
+              },
+              {
+                "firstStep": 245,
+                "lastStep": 247,
+                "steps": 3
+              }
+            ]
+          }
+        }
+      ],
+      "validation": null,
+      "note": "All selected games are training data; agreement is not independent playing-strength evidence.",
+      "before": {
+        "all": {
+          "samples": 1555,
+          "negative_log_likelihood": 3.6201027151856007,
+          "top1_agreement": 0.10803858520900321
+        },
+        "buy": {
+          "samples": 174,
+          "negative_log_likelihood": 3.154822586767975,
+          "top1_agreement": 0.09195402298850575
+        },
+        "play": {
+          "samples": 324,
+          "negative_log_likelihood": 3.307701075265621,
+          "top1_agreement": 0.11728395061728394
+        },
+        "power": {
+          "samples": 7,
+          "negative_log_likelihood": 3.6373408436775208,
+          "top1_agreement": 0.14285714285714285
+        },
+        "end": {
+          "samples": 54,
+          "negative_log_likelihood": 2.743521030302401,
+          "top1_agreement": 0.0
+        },
+        "buySpell": {
+          "samples": 54,
+          "negative_log_likelihood": 2.7757289078500538,
+          "top1_agreement": 0.0
+        },
+        "cast": {
+          "samples": 226,
+          "negative_log_likelihood": 3.170247186865427,
+          "top1_agreement": 0.15486725663716813
+        },
+        "upgrade": {
+          "samples": 23,
+          "negative_log_likelihood": 2.803762399631998,
+          "top1_agreement": 0.0
+        },
+        "discover": {
+          "samples": 87,
+          "negative_log_likelihood": 1.1629324157176346,
+          "top1_agreement": 0.3793103448275862
+        },
+        "refresh": {
+          "samples": 257,
+          "negative_log_likelihood": 2.147419434809035,
+          "top1_agreement": 0.14785992217898833
+        },
+        "darkGift": {
+          "samples": 6,
+          "negative_log_likelihood": 1.0538968741893768,
+          "top1_agreement": 1.0
+        },
+        "move": {
+          "samples": 28,
+          "negative_log_likelihood": 6.449890460286822,
+          "top1_agreement": 0.0
+        },
+        "buyTrinket": {
+          "samples": 11,
+          "negative_log_likelihood": 2.5577142130244863,
+          "top1_agreement": 0.0
+        },
+        "sell": {
+          "samples": 273,
+          "negative_log_likelihood": 7.10212761753208,
+          "top1_agreement": 0.0
+        },
+        "choosePower": {
+          "samples": 2,
+          "negative_log_likelihood": 0.9062972068786621,
+          "top1_agreement": 0.5
+        },
+        "reward": {
+          "samples": 12,
+          "negative_log_likelihood": 2.96535117427508,
+          "top1_agreement": 0.0
+        },
+        "activate": {
+          "samples": 9,
+          "negative_log_likelihood": 3.923248370488485,
+          "top1_agreement": 0.0
+        },
+        "freeze": {
+          "samples": 8,
+          "negative_log_likelihood": 3.057274103164673,
+          "top1_agreement": 0.0
+        }
+      },
+      "stage": "checkpoint",
+      "updates": 1291,
+      "uniqueSupervisedSteps": 1555,
+      "supervisedStepVisits": 17600,
+      "fullPasses": 11,
+      "actionVisits": {
+        "sell": 3097,
+        "play": 3677,
+        "cast": 2550,
+        "upgrade": 256,
+        "end": 605,
+        "refresh": 2909,
+        "buy": 1966,
+        "discover": 982,
+        "buySpell": 608,
+        "freeze": 89,
+        "move": 322,
+        "reward": 139,
+        "activate": 106,
+        "darkGift": 69,
+        "buyTrinket": 123,
+        "power": 80,
+        "choosePower": 22
+      },
+      "timestamp_utc": "2026-09-14T08:19:49.387618+00:00",
+      "installedArtifactSha256": "362b821cea59db7de997e087e2cbeaf83eb5b92cd22422d4c7b1518ec7f5d5d8",
+      "depth": 256,
+      "episodes": 1196,
+      "iteration": 77,
+      "candidateSavedUtc": "2026-09-14T08:19:49.769532+00:00",
+      "preservedPpoState": true,
+      "unchangedValueHead": true,
+      "optimizerRestored": true,
+      "after": null
+    },
+    {
+      "kind": "repeated_human_imitation",
+      "deadline_utc": "2026-09-14T09:28:35.116355+00:00",
+      "parentArtifactSha256": "a1d2a0f44cd7a54783ae4d92d417fb2631b947b8d98fd62bbbad92ab973a9dca",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "trainingChunks": 114,
+      "recordedSteps": 1555,
+      "dataset": [
+        {
+          "file": "06cd2177-3a0b-4156-9ffe-b7b8d9b9cda3.jsonl.gz",
+          "sha256": "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+          "gameId": "48967daf-9ebe-45dd-a1f4-80aad034c5d0",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 359,
+            "retainedSteps": 359,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 31,
+                "steps": 32
+              },
+              {
+                "firstStep": 32,
+                "lastStep": 46,
+                "steps": 15
+              },
+              {
+                "firstStep": 47,
+                "lastStep": 105,
+                "steps": 59
+              },
+              {
+                "firstStep": 106,
+                "lastStep": 126,
+                "steps": 21
+              },
+              {
+                "firstStep": 127,
+                "lastStep": 139,
+                "steps": 13
+              },
+              {
+                "firstStep": 140,
+                "lastStep": 358,
+                "steps": 219
+              }
+            ]
+          }
+        },
+        {
+          "file": "105d3a1e-66eb-4844-99cf-5c4672d993a5.jsonl.gz",
+          "sha256": "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+          "gameId": "3f08ef63-48b4-494f-aa35-a421eef64c6e",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 386,
+            "retainedSteps": 386,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 32,
+                "steps": 33
+              },
+              {
+                "firstStep": 33,
+                "lastStep": 56,
+                "steps": 24
+              },
+              {
+                "firstStep": 57,
+                "lastStep": 106,
+                "steps": 50
+              },
+              {
+                "firstStep": 107,
+                "lastStep": 109,
+                "steps": 3
+              },
+              {
+                "firstStep": 110,
+                "lastStep": 130,
+                "steps": 21
+              },
+              {
+                "firstStep": 131,
+                "lastStep": 143,
+                "steps": 13
+              },
+              {
+                "firstStep": 144,
+                "lastStep": 202,
+                "steps": 59
+              },
+              {
+                "firstStep": 203,
+                "lastStep": 247,
+                "steps": 45
+              },
+              {
+                "firstStep": 248,
+                "lastStep": 283,
+                "steps": 36
+              },
+              {
+                "firstStep": 284,
+                "lastStep": 385,
+                "steps": 102
+              }
+            ]
+          }
+        },
+        {
+          "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+          "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+          "gameId": "86f373d7-d60c-4ca5-b94a-83e1177979f1",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 274,
+            "retainedSteps": 274,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 93,
+                "steps": 94
+              },
+              {
+                "firstStep": 94,
+                "lastStep": 116,
+                "steps": 23
+              },
+              {
+                "firstStep": 117,
+                "lastStep": 216,
+                "steps": 100
+              },
+              {
+                "firstStep": 217,
+                "lastStep": 217,
+                "steps": 1
+              },
+              {
+                "firstStep": 218,
+                "lastStep": 273,
+                "steps": 56
+              }
+            ]
+          }
+        },
+        {
+          "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+          "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+          "gameId": "a6e5fbf4-8336-4878-992e-1f7bc8dbabee",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 288,
+            "retainedSteps": 288,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 43,
+                "steps": 44
+              },
+              {
+                "firstStep": 44,
+                "lastStep": 89,
+                "steps": 46
+              },
+              {
+                "firstStep": 90,
+                "lastStep": 121,
+                "steps": 32
+              },
+              {
+                "firstStep": 122,
+                "lastStep": 159,
+                "steps": 38
+              },
+              {
+                "firstStep": 160,
+                "lastStep": 193,
+                "steps": 34
+              },
+              {
+                "firstStep": 194,
+                "lastStep": 287,
+                "steps": 94
+              }
+            ]
+          }
+        },
+        {
+          "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+          "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0",
+          "gameId": "3bb9769c-2e98-4438-bbae-4632b3b78b4f",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 248,
+            "retainedSteps": 248,
+            "originalReasons": [
+              "partial_start",
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": true,
+            "firstRecordedTurn": 5,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 19,
+                "steps": 20
+              },
+              {
+                "firstStep": 20,
+                "lastStep": 48,
+                "steps": 29
+              },
+              {
+                "firstStep": 49,
+                "lastStep": 100,
+                "steps": 52
+              },
+              {
+                "firstStep": 101,
+                "lastStep": 150,
+                "steps": 50
+              },
+              {
+                "firstStep": 151,
+                "lastStep": 222,
+                "steps": 72
+              },
+              {
+                "firstStep": 223,
+                "lastStep": 244,
+                "steps": 22
+              },
+              {
+                "firstStep": 245,
+                "lastStep": 247,
+                "steps": 3
+              }
+            ]
+          }
+        }
+      ],
+      "validation": null,
+      "note": "All selected games are training data; agreement is not independent playing-strength evidence.",
+      "before": {
+        "all": {
+          "samples": 1555,
+          "negative_log_likelihood": 3.1296840085189825,
+          "top1_agreement": 0.12218649517684887
+        },
+        "buy": {
+          "samples": 174,
+          "negative_log_likelihood": 3.3594880864537995,
+          "top1_agreement": 0.07471264367816093
+        },
+        "play": {
+          "samples": 324,
+          "negative_log_likelihood": 3.3060190467922776,
+          "top1_agreement": 0.2037037037037037
+        },
+        "power": {
+          "samples": 7,
+          "negative_log_likelihood": 3.8634356600897655,
+          "top1_agreement": 0.14285714285714285
+        },
+        "end": {
+          "samples": 54,
+          "negative_log_likelihood": 2.059093192771629,
+          "top1_agreement": 0.0
+        },
+        "buySpell": {
+          "samples": 54,
+          "negative_log_likelihood": 2.151345511277517,
+          "top1_agreement": 0.2037037037037037
+        },
+        "cast": {
+          "samples": 226,
+          "negative_log_likelihood": 3.424223498433037,
+          "top1_agreement": 0.09734513274336283
+        },
+        "upgrade": {
+          "samples": 23,
+          "negative_log_likelihood": 2.292018061098845,
+          "top1_agreement": 0.0
+        },
+        "discover": {
+          "samples": 87,
+          "negative_log_likelihood": 1.0915895071865498,
+          "top1_agreement": 0.4482758620689655
+        },
+        "refresh": {
+          "samples": 257,
+          "negative_log_likelihood": 2.1939203150077553,
+          "top1_agreement": 0.09727626459143969
+        },
+        "darkGift": {
+          "samples": 6,
+          "negative_log_likelihood": 1.8513089418411255,
+          "top1_agreement": 1.0
+        },
+        "move": {
+          "samples": 28,
+          "negative_log_likelihood": 5.963420101574489,
+          "top1_agreement": 0.0
+        },
+        "buyTrinket": {
+          "samples": 11,
+          "negative_log_likelihood": 1.4650470126758923,
+          "top1_agreement": 0.18181818181818182
+        },
+        "sell": {
+          "samples": 273,
+          "negative_log_likelihood": 4.403075144841121,
+          "top1_agreement": 0.0
+        },
+        "choosePower": {
+          "samples": 2,
+          "negative_log_likelihood": 1.4271567463874817,
+          "top1_agreement": 0.5
+        },
+        "reward": {
+          "samples": 12,
+          "negative_log_likelihood": 2.149215966463089,
+          "top1_agreement": 0.3333333333333333
+        },
+        "activate": {
+          "samples": 9,
+          "negative_log_likelihood": 3.4558432896931968,
+          "top1_agreement": 0.0
+        },
+        "freeze": {
+          "samples": 8,
+          "negative_log_likelihood": 1.895864799618721,
+          "top1_agreement": 0.0
+        }
+      },
+      "stage": "checkpoint",
+      "updates": 419,
+      "uniqueSupervisedSteps": 1555,
+      "supervisedStepVisits": 5708,
+      "fullPasses": 3,
+      "actionVisits": {
+        "sell": 1001,
+        "play": 1196,
+        "cast": 826,
+        "upgrade": 82,
+        "end": 195,
+        "refresh": 949,
+        "buy": 636,
+        "discover": 316,
+        "buySpell": 196,
+        "freeze": 32,
+        "move": 104,
+        "reward": 44,
+        "activate": 32,
+        "darkGift": 22,
+        "buyTrinket": 42,
+        "power": 27,
+        "choosePower": 8
+      },
+      "timestamp_utc": "2026-09-14T08:21:58.523668+00:00",
+      "installedArtifactSha256": "e5d90d8a0b1e63abd3f4b35bdbeb5cb20e2129bb0329388a16fa865d9d58f865",
+      "depth": 1024,
+      "episodes": 628,
+      "iteration": 40,
+      "candidateSavedUtc": "2026-09-14T08:21:59.670999+00:00",
+      "preservedPpoState": true,
+      "unchangedValueHead": true,
+      "optimizerRestored": true,
+      "after": null
+    }
+  ],
+  "models": [
+    {
+      "id": "deep64-1480",
+      "label": "64 层模型",
+      "episodes": 1512,
+      "checkpointSha256": "63f47990f0b52200c2238d462d69cc26d4ad7847e697ff7d90b14b8c1794bdfd",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18891"
+    },
+    {
+      "id": "deep256-1164",
+      "label": "256 层模型",
+      "episodes": 1196,
+      "checkpointSha256": "362b821cea59db7de997e087e2cbeaf83eb5b92cd22422d4c7b1518ec7f5d5d8",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18893"
+    },
+    {
+      "id": "deep1024-612",
+      "label": "1024 层模型",
+      "episodes": 628,
+      "checkpointSha256": "e5d90d8a0b1e63abd3f4b35bdbeb5cb20e2129bb0329388a16fa865d9d58f865",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18895"
+    }
+  ],
+  "preflight": [
+    {
+      "depth": 64,
+      "checkpointSha256": "63f47990f0b52200c2238d462d69cc26d4ad7847e697ff7d90b14b8c1794bdfd",
+      "steps": 16,
+      "meanMs": 7.900692318798974,
+      "ok": true
+    },
+    {
+      "depth": 256,
+      "checkpointSha256": "362b821cea59db7de997e087e2cbeaf83eb5b92cd22422d4c7b1518ec7f5d5d8",
+      "steps": 16,
+      "meanMs": 13.660294629517011,
+      "ok": true
+    },
+    {
+      "depth": 1024,
+      "checkpointSha256": "e5d90d8a0b1e63abd3f4b35bdbeb5cb20e2129bb0329388a16fa865d9d58f865",
+      "steps": 16,
+      "meanMs": 35.05293487251038,
+      "ok": true
+    }
+  ],
+  "cleanup": {
+    "archiveVerified": true,
+    "removedSourceBackups": 3,
+    "archive": {
+      "archiveVerified": true,
+      "verified_utc": "2026-09-14T08:36:18.116478+00:00",
+      "files": [
+        {
+          "source": "/root/autodl-tmp/tavern-human-repeat-20260914/before-0.pt",
+          "archive": "/home/zich/.local/share/tavern-training-archives/20260914-repeat-before/before-0.pt",
+          "sha256": "27bc33a955b33fbb918fb0b7383fa0cc24e55cf811e7081a72fb9841eab546aa",
+          "bytes": 531202311
+        },
+        {
+          "source": "/root/autodl-tmp/tavern-human-repeat-20260914/before-1.pt",
+          "archive": "/home/zich/.local/share/tavern-training-archives/20260914-repeat-before/before-1.pt",
+          "sha256": "a578cfd55fadd182dc152646c4d573aecce19a65325deba7fd27484cb741dce1",
+          "bytes": 767893959
+        },
+        {
+          "source": "/root/autodl-tmp/tavern-human-repeat-20260914/before-2.pt",
+          "archive": "/home/zich/.local/share/tavern-training-archives/20260914-repeat-before/before-2.pt",
+          "sha256": "a1d2a0f44cd7a54783ae4d92d417fb2631b947b8d98fd62bbbad92ab973a9dca",
+          "bytes": 1714707010
+        }
+      ]
+    },
+    "before": {
+      "/root": 5794508800,
+      "/root/autodl-tmp": 3780669440
+    },
+    "after": {
+      "/root": 5794508800,
+      "/root/autodl-tmp": 6794477568
+    },
+    "utc": "2026-09-14T08:37:07.286223+00:00",
+    "conda_tarball_cache_removed_bytes": 111844230,
+    "duplicate_scan_groups": 0,
+    "unique_checkpoint_bytes_lost": 0
+  },
+  "bonus_patch": {
+    "first_place_bonus": 1.0,
+    "files": [
+      {
+        "path": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/python/tavern_rl/train.py",
+        "backup": "/root/tavern-repeat-live-20260914/bonus-backup/train.py",
+        "before_sha256": "4554a601a6ca3dfe0377456e118f8886d70b7c1c4b147f6a0ef44a05907bfc09",
+        "after_sha256": "558d7afa1729cebfb73742ffc23faa3ce07a43a9dddb200a0b97fdb4d8e07f3d"
+      },
+      {
+        "path": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/python/tavern_rl/rollout.py",
+        "backup": "/root/tavern-repeat-live-20260914/bonus-backup/rollout.py",
+        "before_sha256": "5a2defa9d2d365da7b4c670ba0990dba3f3dedbb57323347be70f0b23196ef5b",
+        "after_sha256": "9e01a4aa103827406e125c6d9a30cd2a99376bb4f1655e139e59b2b8f7fb8a31"
+      },
+      {
+        "path": "/root/tavern-human-current-06cd2177/population_resume.py",
+        "backup": "/root/tavern-repeat-live-20260914/bonus-backup/population_resume.py",
+        "before_sha256": "9905500702137974edfcc068dfe5c1bb7503475a64a782f4a916cbe61f2d3c71",
+        "after_sha256": "2589226045b373e79bd8f4197cd7c5ca93b987aeedf444b4e5aabaa87399ee17"
+      }
+    ]
+  },
+  "resume": {
+    "pid": 18443,
+    "started_utc": "2026-09-14T08:37:44.790633+00:00",
+    "deadline_utc": "2026-09-14T10:45:56.567559+00:00",
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-human-current-06cd2177/population_resume.py",
+      "--resumes",
+      "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-four-hour-20260914/population",
+      "--deadline-utc",
+      "2026-09-14T10:45:56.567559+00:00",
+      "--workers",
+      "8",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "16",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--device",
+      "cuda"
+    ],
+    "first_place_bonus": 1.0,
+    "unused_gold_penalty": 0.01,
+    "rewards": [
+      2.0,
+      0.7142857142857143,
+      0.42857142857142855,
+      0.14285714285714285,
+      -0.14285714285714285,
+      -0.42857142857142855,
+      -0.7142857142857143,
+      -1.0
+    ]
+  },
+  "deployment": {
+    "public_release": "/opt/bobs-tavern/releases/20260914-models-repeat",
+    "previous_public_release": "/opt/bobs-tavern/releases/20260914-models-1c52af64",
+    "backend_sha256": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+    "compute_host": "100.97.24.15",
+    "compute_release": "releases/20260914-repeat",
+    "previous_compute_release": "releases/20260914-1c52af64"
+  },
+  "public_health": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "recording": {
+      "enabled": true,
+      "episodes": 0,
+      "decisions": 0,
+      "completed": 0,
+      "rejected": 0,
+      "errors": 0,
+      "bytes": 5101498
+    },
+    "ai": {
+      "mode": "neural",
+      "decisions": 103,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 103,
+        "rawRequestBytes": 537717,
+        "requestBytes": 211226,
+        "responseBytes": 141170,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1480",
+          "decisions": 29,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "decisions": 34,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "decisions": 40,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "tests": {
+    "browser": {
+      "test": "tests/ai-models.spec.ts",
+      "passed": 1,
+      "duration_seconds": 39.4
+    },
+    "first_place_bonus": {
+      "passed": 2
+    }
+  },
+  "resume_verification": {
+    "captured_utc": "2026-09-14T08:40:46.112899+00:00",
+    "launch": {
+      "pid": 18443,
+      "started_utc": "2026-09-14T08:37:44.790633+00:00",
+      "deadline_utc": "2026-09-14T10:45:56.567559+00:00",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "-u",
+        "/root/tavern-human-current-06cd2177/population_resume.py",
+        "--resumes",
+        "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+        "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+        "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+        "--output",
+        "/root/tavern-four-hour-20260914/population",
+        "--deadline-utc",
+        "2026-09-14T10:45:56.567559+00:00",
+        "--workers",
+        "8",
+        "--iterations-per-exchange",
+        "2",
+        "--games-per-iteration",
+        "16",
+        "--max-per-lineage",
+        "2",
+        "--external-fraction",
+        "0.4",
+        "--device",
+        "cuda"
+      ],
+      "first_place_bonus": 1.0,
+      "unused_gold_penalty": 0.01,
+      "rewards": [
+        2.0,
+        0.7142857142857143,
+        0.42857142857142855,
+        0.14285714285714285,
+        -0.14285714285714285,
+        -0.42857142857142855,
+        -0.7142857142857143,
+        -1.0
+      ]
+    },
+    "members": [
+      {
+        "depth": 64,
+        "pid": 18483,
+        "episodes": 1512,
+        "iteration": 96,
+        "first_place_bonus": 1.0,
+        "unused_gold_penalty": 0.01,
+        "imitationUpdates": 2613,
+        "latestProgress": {
+          "stage": "collect",
+          "completed_games": 0,
+          "total_games": 16,
+          "environment_actions": 6040,
+          "seconds": 120.5,
+          "actions_per_second": 50.129345121135074,
+          "mean_inference_batch": 1.6880939072107322,
+          "inference_seconds": 99.3048756797798,
+          "simulator_wait_seconds": 17.793608549516648
+        }
+      },
+      {
+        "depth": 256,
+        "pid": 18485,
+        "episodes": 1196,
+        "iteration": 77,
+        "first_place_bonus": 1.0,
+        "unused_gold_penalty": 0.01,
+        "imitationUpdates": 1375,
+        "latestProgress": {
+          "stage": "collect",
+          "completed_games": 0,
+          "total_games": 16,
+          "environment_actions": 5224,
+          "seconds": 120.4,
+          "actions_per_second": 43.4000908370144,
+          "mean_inference_batch": 1.8176757132915797,
+          "inference_seconds": 106.6741151236929,
+          "simulator_wait_seconds": 10.621553229633719
+        }
+      },
+      {
+        "depth": 1024,
+        "pid": 18603,
+        "episodes": 628,
+        "iteration": 40,
+        "first_place_bonus": 1.0,
+        "unused_gold_penalty": 0.01,
+        "imitationUpdates": 503,
+        "latestProgress": {
+          "stage": "collect",
+          "completed_games": 0,
+          "total_games": 16,
+          "environment_actions": 2144,
+          "seconds": 90.4,
+          "actions_per_second": 23.706871855689826,
+          "mean_inference_batch": 1.7926421404682273,
+          "inference_seconds": 85.9325358227361,
+          "simulator_wait_seconds": 3.174601199105382
+        }
+      }
+    ],
+    "system_free_bytes": 5794177024,
+    "data_free_bytes": 6794477568
+  }
+}

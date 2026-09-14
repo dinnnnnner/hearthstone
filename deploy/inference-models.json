@@ -2,24 +2,24 @@
   {
     "id": "deep64-1480",
     "label": "64 层模型",
-    "episodes": 1480,
-    "checkpointSha256": "649428b6eb50099e11739b65a69cf72fa6232b53ea49b40556ef1e2bfbee6134",
+    "episodes": 1512,
+    "checkpointSha256": "63f47990f0b52200c2238d462d69cc26d4ad7847e697ff7d90b14b8c1794bdfd",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18891"
   },
   {
     "id": "deep256-1164",
     "label": "256 层模型",
-    "episodes": 1164,
-    "checkpointSha256": "dc1c4e64e35118147fb970bf9ad962ebd5fb85ac8989a0a7d1f302b23ac783c2",
+    "episodes": 1196,
+    "checkpointSha256": "362b821cea59db7de997e087e2cbeaf83eb5b92cd22422d4c7b1518ec7f5d5d8",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18893"
   },
   {
     "id": "deep1024-612",
     "label": "1024 层模型",
-    "episodes": 612,
-    "checkpointSha256": "7b6b1a33d00157a797ecaadcfd7713fc47ccbfdd5be1526761530af07e4f83df",
+    "episodes": 628,
+    "checkpointSha256": "e5d90d8a0b1e63abd3f4b35bdbeb5cb20e2129bb0329388a16fa865d9d58f865",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18895"
   }
