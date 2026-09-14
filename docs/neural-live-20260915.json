@@ -1,0 +1,350 @@
+{
+  "stage": "verified",
+  "release": "20260915-models-live",
+  "models": [
+    {
+      "id": "deep64-1480",
+      "label": "64 层模型",
+      "episodes": 2568,
+      "checkpointSha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18891"
+    },
+    {
+      "id": "deep256-1164",
+      "label": "256 层模型",
+      "episodes": 2140,
+      "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18893"
+    },
+    {
+      "id": "deep1024-612",
+      "label": "1024 层模型",
+      "episodes": 1284,
+      "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18895"
+    }
+  ],
+  "training": {
+    "status": {
+      "stage": "time_limit",
+      "pid": 3721,
+      "opponent_mode": "mixed_self_play",
+      "deadline_utc": "2026-09-14T22:29:10.037612+00:00",
+      "workers_per_learner": 16,
+      "iterations_per_exchange": 2,
+      "games_per_iteration": 16,
+      "unused_gold_penalty": 0.01,
+      "external_fraction": 0.4,
+      "max_per_lineage": 2,
+      "members": [
+        {
+          "index": 0,
+          "root": "/root/tavern-four-hour-20260914/population/member-0",
+          "source": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+          "round": 37,
+          "stage": "stopped",
+          "pid": null,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt"
+        },
+        {
+          "index": 1,
+          "root": "/root/tavern-four-hour-20260914/population/member-1",
+          "source": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+          "round": 33,
+          "stage": "stopped",
+          "pid": null,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt"
+        },
+        {
+          "index": 2,
+          "root": "/root/tavern-four-hour-20260914/population/member-2",
+          "source": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+          "round": 24,
+          "stage": "stopped",
+          "pid": null,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt"
+        }
+      ]
+    },
+    "models": [
+      {
+        "id": "deep64-1480",
+        "episodes": 2568,
+        "iteration": 162,
+        "checkpointSha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+        "firstPlaceBonus": 1.0,
+        "unusedGoldPenalty": 0.01,
+        "imitationUpdates": 2769,
+        "demonstrationGames": 7,
+        "hashes": {
+          "model.pt": "ae3febd69fc7bccc83ebdb67fbcc94201079bb27715eb3b315a573d06cb72479",
+          "metadata.json": "8c76658f5c3e6e8a17ca5328d5e59cab9fac78475fdb0bdce32fae7c7374929a"
+        }
+      },
+      {
+        "id": "deep256-1164",
+        "episodes": 2140,
+        "iteration": 136,
+        "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+        "firstPlaceBonus": 1.0,
+        "unusedGoldPenalty": 0.01,
+        "imitationUpdates": 1531,
+        "demonstrationGames": 7,
+        "hashes": {
+          "model.pt": "b6c37f74d34578d19b69eb3d82aead4c4d343b7062fb07df8f1c20308f43283c",
+          "metadata.json": "40e91c8d19fef332d5d143bd716d40eddf3eb7ea96ffeb6a3c4f2ba8da67a643"
+        }
+      },
+      {
+        "id": "deep1024-612",
+        "episodes": 1284,
+        "iteration": 81,
+        "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+        "firstPlaceBonus": 1.0,
+        "unusedGoldPenalty": 0.01,
+        "imitationUpdates": 659,
+        "demonstrationGames": 7,
+        "hashes": {
+          "model.pt": "da65b818b721fddfef38869f671c46b46097c0bb784d2befcde7e175373399c0",
+          "metadata.json": "50928011e8f83f7dea06a4d8378b14af14d09f89816faf3a1fa569f4dfd9c59e"
+        }
+      }
+    ]
+  },
+  "preflight": [
+    {
+      "depth": 64,
+      "checkpointSha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+      "steps": 16,
+      "meanMs": 8.047363815421704,
+      "ok": true
+    },
+    {
+      "depth": 256,
+      "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+      "steps": 16,
+      "meanMs": 13.250383497506846,
+      "ok": true
+    },
+    {
+      "depth": 1024,
+      "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+      "steps": 16,
+      "meanMs": 34.9496844355599,
+      "ok": true
+    }
+  ],
+  "activation": {
+    "compute": {
+      "ok": true,
+      "models": [
+        "deep64-1480",
+        "deep256-1164",
+        "deep1024-612"
+      ]
+    },
+    "public": {
+      "ok": true,
+      "models": [
+        {
+          "id": "deep64-1480",
+          "label": "64 层模型",
+          "episodes": 2568,
+          "checkpointSha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "label": "256 层模型",
+          "episodes": 2140,
+          "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "label": "1024 层模型",
+          "episodes": 1284,
+          "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+          "available": true
+        }
+      ]
+    }
+  },
+  "resume": {
+    "pid": 26886,
+    "startedUtc": "2026-09-14T23:42:58.209563+00:00",
+    "deadlineUtc": "2026-09-15T01:42:58.209563+00:00",
+    "hours": 2,
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-human-current-06cd2177/population_resume.py",
+      "--resumes",
+      "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-four-hour-20260914/population",
+      "--deadline-utc",
+      "2026-09-15T01:42:58.209563+00:00",
+      "--workers",
+      "16",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "16",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--unused-gold-penalty",
+      "0.01",
+      "--device",
+      "cuda"
+    ]
+  },
+  "previousCompletion": {
+    "status": {
+      "stage": "complete",
+      "pid": 3192,
+      "requestedSelfPlayHours": 8,
+      "imitationPasses": 3,
+      "workersPerLearner": 16,
+      "startedUtc": "2026-09-14T14:09:33.118000+00:00",
+      "imitationPids": [],
+      "imitationCompletedUtc": "2026-09-14T14:29:10.037287+00:00",
+      "backupArchive": "/home/zich/.local/share/tavern-training-archives/20260914-pre-two-games",
+      "selfPlayPid": null,
+      "selfPlayStartedUtc": "2026-09-14T14:29:10.037612+00:00",
+      "deadlineUtc": "2026-09-14T22:29:10.037612+00:00",
+      "completedUtc": "2026-09-14T22:29:10.706640+00:00"
+    },
+    "imitation": [
+      {
+        "depth": 64,
+        "updates": 156,
+        "fullPasses": 3,
+        "steps": 683
+      },
+      {
+        "depth": 256,
+        "updates": 156,
+        "fullPasses": 3,
+        "steps": 683
+      },
+      {
+        "depth": 1024,
+        "updates": 156,
+        "fullPasses": 3,
+        "steps": 683
+      }
+    ]
+  },
+  "verifiedUtc": "2026-09-14T23:44:24.361074+00:00",
+  "publicHealth": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "recording": {
+      "enabled": true,
+      "episodes": 0,
+      "decisions": 0,
+      "completed": 0,
+      "rejected": 0,
+      "errors": 0,
+      "bytes": 7962996
+    },
+    "ai": {
+      "mode": "neural",
+      "decisions": 104,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 104,
+        "rawRequestBytes": 544939,
+        "requestBytes": 214500,
+        "responseBytes": 142475,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1480",
+          "decisions": 44,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "decisions": 29,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "decisions": 31,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "resumeVerification": {
+    "capturedUtc": "2026-09-14T23:44:04.147404+00:00",
+    "status": {
+      "stage": "running",
+      "pid": 26886,
+      "opponent_mode": "mixed_self_play",
+      "deadline_utc": "2026-09-15T01:42:58.209563+00:00",
+      "workers_per_learner": 16,
+      "iterations_per_exchange": 2,
+      "games_per_iteration": 16,
+      "unused_gold_penalty": 0.01,
+      "external_fraction": 0.4,
+      "max_per_lineage": 2,
+      "members": [
+        {
+          "index": 0,
+          "root": "/root/tavern-four-hour-20260914/population/member-0",
+          "source": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+          "round": 38,
+          "stage": "training",
+          "pid": 26926,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt"
+        },
+        {
+          "index": 1,
+          "root": "/root/tavern-four-hour-20260914/population/member-1",
+          "source": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+          "round": 34,
+          "stage": "training",
+          "pid": 26959,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt"
+        },
+        {
+          "index": 2,
+          "root": "/root/tavern-four-hour-20260914/population/member-2",
+          "source": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+          "round": 25,
+          "stage": "training",
+          "pid": 27144,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt"
+        }
+      ]
+    },
+    "allThreeTraining": true
+  },
+  "browserTest": {
+    "test": "tests/ai-models.spec.ts",
+    "passed": 1,
+    "durationSeconds": 38.9
+  }
+}
