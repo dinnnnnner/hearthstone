@@ -1,0 +1,673 @@
+{
+  "episode": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2",
+  "hero": "s14_marin",
+  "place": 1,
+  "turn": 12,
+  "recordedSteps": 274,
+  "segments": 5,
+  "training": [
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+      "trainingCheckpoint": true,
+      "partialStartAllowed": false,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 274,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 315,
+      "losses": [
+        3.536677360534668,
+        4.984708309173584,
+        3.5954525470733643,
+        2.9596142768859863,
+        3.840912103652954,
+        4.803971767425537,
+        2.230626344680786,
+        3.816438674926758,
+        2.5426721572875977,
+        4.987478256225586,
+        4.371748924255371,
+        4.2840471267700195,
+        3.8020546436309814,
+        1.9550319910049438,
+        4.269323348999023,
+        3.1939146518707275,
+        3.013671875,
+        3.3301610946655273,
+        3.4986491203308105,
+        2.357379674911499
+      ],
+      "before": {
+        "training": {
+          "samples": 274,
+          "negative_log_likelihood": 3.7203200498500664,
+          "top1_agreement": 0.10583941605839416
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 274,
+          "negative_log_likelihood": 3.4447119384868086,
+          "top1_agreement": 0.11678832116788321
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "86f373d7-d60c-4ca5-b94a-83e1177979f1"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+          "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+          "source": "human",
+          "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 274,
+            "retainedSteps": 274,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 93,
+                "steps": 94
+              },
+              {
+                "firstStep": 94,
+                "lastStep": 116,
+                "steps": 23
+              },
+              {
+                "firstStep": 117,
+                "lastStep": 216,
+                "steps": 100
+              },
+              {
+                "firstStep": 217,
+                "lastStep": 217,
+                "steps": 1
+              },
+              {
+                "firstStep": 218,
+                "lastStep": 273,
+                "steps": 56
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 64,
+        "episodes": 1480,
+        "iteration": 94,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+        "updatedArtifactSha256": "649428b6eb50099e11739b65a69cf72fa6232b53ea49b40556ef1e2bfbee6134",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    },
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+      "trainingCheckpoint": true,
+      "partialStartAllowed": false,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 274,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 1083,
+      "losses": [
+        3.680215835571289,
+        4.3690080642700195,
+        4.153354167938232,
+        3.7014360427856445,
+        3.2098474502563477,
+        4.879426956176758,
+        2.3940000534057617,
+        4.058297157287598,
+        2.229334831237793,
+        5.875072479248047,
+        4.334258079528809,
+        4.1795220375061035,
+        3.751673460006714,
+        1.8458316326141357,
+        4.97320032119751,
+        2.7484161853790283,
+        2.6162984371185303,
+        4.266985893249512,
+        3.191011428833008,
+        2.167125940322876
+      ],
+      "before": {
+        "training": {
+          "samples": 274,
+          "negative_log_likelihood": 3.7305402834593813,
+          "top1_agreement": 0.12408759124087591
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 274,
+          "negative_log_likelihood": 3.5834474195420305,
+          "top1_agreement": 0.12408759124087591
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "86f373d7-d60c-4ca5-b94a-83e1177979f1"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+          "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+          "source": "human",
+          "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 274,
+            "retainedSteps": 274,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 93,
+                "steps": 94
+              },
+              {
+                "firstStep": 94,
+                "lastStep": 116,
+                "steps": 23
+              },
+              {
+                "firstStep": 117,
+                "lastStep": 216,
+                "steps": 100
+              },
+              {
+                "firstStep": 217,
+                "lastStep": 217,
+                "steps": 1
+              },
+              {
+                "firstStep": 218,
+                "lastStep": 273,
+                "steps": 56
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 256,
+        "episodes": 1164,
+        "iteration": 75,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+        "updatedArtifactSha256": "dc1c4e64e35118147fb970bf9ad962ebd5fb85ac8989a0a7d1f302b23ac783c2",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    },
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+      "trainingCheckpoint": true,
+      "partialStartAllowed": false,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 274,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 4155,
+      "losses": [
+        3.3663153648376465,
+        3.999315023422241,
+        3.602919816970825,
+        3.781033992767334,
+        3.2425711154937744,
+        4.443886756896973,
+        2.418759822845459,
+        3.7615256309509277,
+        2.278693675994873,
+        4.624756813049316,
+        4.198550224304199,
+        4.054378986358643,
+        3.182133913040161,
+        1.8509658575057983,
+        3.9496936798095703,
+        2.5459585189819336,
+        3.589244842529297,
+        3.7719297409057617,
+        3.551997423171997,
+        2.3059940338134766
+      ],
+      "before": {
+        "training": {
+          "samples": 274,
+          "negative_log_likelihood": 3.46423972088055,
+          "top1_agreement": 0.12043795620437957
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 274,
+          "negative_log_likelihood": 3.2360095927750105,
+          "top1_agreement": 0.12408759124087591
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "86f373d7-d60c-4ca5-b94a-83e1177979f1"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+          "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+          "source": "human",
+          "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 274,
+            "retainedSteps": 274,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 93,
+                "steps": 94
+              },
+              {
+                "firstStep": 94,
+                "lastStep": 116,
+                "steps": 23
+              },
+              {
+                "firstStep": 117,
+                "lastStep": 216,
+                "steps": 100
+              },
+              {
+                "firstStep": 217,
+                "lastStep": 217,
+                "steps": 1
+              },
+              {
+                "firstStep": 218,
+                "lastStep": 273,
+                "steps": 56
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 1024,
+        "episodes": 612,
+        "iteration": 39,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+        "updatedArtifactSha256": "7b6b1a33d00157a797ecaadcfd7713fc47ccbfdd5be1526761530af07e4f83df",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    }
+  ],
+  "public": {
+    "health": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "recording": {
+        "enabled": true,
+        "episodes": 0,
+        "decisions": 0,
+        "completed": 0,
+        "rejected": 0,
+        "errors": 0,
+        "bytes": 3610518
+      },
+      "ai": {
+        "mode": "neural",
+        "decisions": 140,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 140,
+          "rawRequestBytes": 748052,
+          "requestBytes": 299793,
+          "responseBytes": 191574,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1480",
+            "decisions": 46,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-1164",
+            "decisions": 50,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-612",
+            "decisions": 44,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    },
+    "models": {
+      "models": [
+        {
+          "id": "deep64-1480",
+          "label": "64 层模型",
+          "episodes": 1480,
+          "checkpointSha256": "649428b6eb50099e11739b65a69cf72fa6232b53ea49b40556ef1e2bfbee6134",
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "label": "256 层模型",
+          "episodes": 1164,
+          "checkpointSha256": "dc1c4e64e35118147fb970bf9ad962ebd5fb85ac8989a0a7d1f302b23ac783c2",
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "label": "1024 层模型",
+          "episodes": 612,
+          "checkpointSha256": "7b6b1a33d00157a797ecaadcfd7713fc47ccbfdd5be1526761530af07e4f83df",
+          "available": true
+        }
+      ],
+      "recordingAvailable": true
+    },
+    "release": "/opt/bobs-tavern/releases/20260914-models-1c52af64",
+    "rollback": {
+      "previousRelease": "/opt/bobs-tavern/releases/20260914-human-models",
+      "backendSha256": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966"
+    }
+  },
+  "compute": {
+    "deep64-1480": {
+      "release": "/home/zich/.local/share/tavern-models/deep64-1480/releases/20260914-1c52af64",
+      "preflight": {
+        "depth": 64,
+        "checkpointSha256": "649428b6eb50099e11739b65a69cf72fa6232b53ea49b40556ef1e2bfbee6134",
+        "steps": 16,
+        "meanMs": 7.91538888370269,
+        "ok": true
+      },
+      "hashes": {
+        "model.pt": "f0566dbfdcf2afae07e18ca1fffdc646295a70325b4bcc6903ee82387fa5488f",
+        "metadata.json": "77fcc9ae1b93e21508b1e0f7c6f2d8e850f6e6dd4d066a3c49fbf439c2146fd0"
+      }
+    },
+    "deep256-1164": {
+      "release": "/home/zich/.local/share/tavern-models/deep256-1164/releases/20260914-1c52af64",
+      "preflight": {
+        "depth": 256,
+        "checkpointSha256": "dc1c4e64e35118147fb970bf9ad962ebd5fb85ac8989a0a7d1f302b23ac783c2",
+        "steps": 16,
+        "meanMs": 13.1964753200009,
+        "ok": true
+      },
+      "hashes": {
+        "model.pt": "ba77d93549d5a593c2696fcc4ce2c10daf7c203a7971b81eb4d47112bc2ea435",
+        "metadata.json": "2dde215001b261ccc661659ed3a809c3ffff0c054a8aa2d495cc8602d0f35653"
+      }
+    },
+    "deep1024-612": {
+      "release": "/home/zich/.local/share/tavern-models/deep1024-612/releases/20260914-1c52af64",
+      "preflight": {
+        "depth": 1024,
+        "checkpointSha256": "7b6b1a33d00157a797ecaadcfd7713fc47ccbfdd5be1526761530af07e4f83df",
+        "steps": 16,
+        "meanMs": 34.96347700274782,
+        "ok": true
+      },
+      "hashes": {
+        "model.pt": "8a5dd81fd97cf2a276c51af71da6aaff10177d6f8be717fb8f3c1682201dcd2c",
+        "metadata.json": "425828f41224b003159cc63aac0169db2010036b0e2a604d2cf0a0bda7e89587"
+      }
+    }
+  },
+  "models": [
+    {
+      "episodes": 1480,
+      "architecture": "entity-gru-resnet",
+      "checkpointSha256": "649428b6eb50099e11739b65a69cf72fa6232b53ea49b40556ef1e2bfbee6134",
+      "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+      "adaptedDefinitions": 0,
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "hidden": 128,
+      "actionCount": 4316,
+      "policyDepth": 64,
+      "valueDepth": 64,
+      "observationVersion": 4,
+      "entityVersion": 3,
+      "iteration": 94,
+      "unusedGoldPenalty": 0.01,
+      "humanImitation": [
+        {
+          "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+          "weightSha256": "0f21d1fc111b01961b1372466a7017d6899c3156c6a131b34e725473c86b3496",
+          "datasets": [
+            "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+          ],
+          "updates": 20,
+          "supervisedSteps": 288,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "ce5aa4eeb530d3fa537a1b850dc40bf327e9b604033c7fd88250c618518b5edd",
+          "weightSha256": "8fb0dd5976e97c742ce49f2506d658ce0876404e36a307466eebaf7fde96dfda",
+          "datasets": [
+            "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+          ],
+          "updates": 20,
+          "supervisedSteps": 248,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+          "weightSha256": "8ee68aab3bf79469bc7239132fc56d0b05cc51d9b34953e5dd5f2799deafb02f",
+          "datasets": [
+            "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+          ],
+          "updates": 20,
+          "supervisedSteps": 274,
+          "incompleteSegments": true
+        }
+      ],
+      "imitationUpdates": 60,
+      "demonstrationGames": 3
+    },
+    {
+      "episodes": 1164,
+      "architecture": "entity-gru-resnet",
+      "checkpointSha256": "dc1c4e64e35118147fb970bf9ad962ebd5fb85ac8989a0a7d1f302b23ac783c2",
+      "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+      "adaptedDefinitions": 0,
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "hidden": 128,
+      "actionCount": 4316,
+      "policyDepth": 256,
+      "valueDepth": 256,
+      "observationVersion": 4,
+      "entityVersion": 3,
+      "iteration": 75,
+      "unusedGoldPenalty": 0.01,
+      "humanImitation": [
+        {
+          "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+          "weightSha256": "2a75391e990dedbf185a743f3b24d9654fc97c61b60e91f36dc50530dcc86fc0",
+          "datasets": [
+            "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+          ],
+          "updates": 20,
+          "supervisedSteps": 288,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+          "weightSha256": "4c9d8de6b5fff43cd4511a73837a049b63b1b2367aa75c2e737160726690520f",
+          "datasets": [
+            "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+          ],
+          "updates": 20,
+          "supervisedSteps": 248,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+          "weightSha256": "0aad5c140640532ca0c30f8df7237132dd6e1507adbc4a954a7d5bee25db9202",
+          "datasets": [
+            "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+          ],
+          "updates": 20,
+          "supervisedSteps": 274,
+          "incompleteSegments": true
+        }
+      ],
+      "imitationUpdates": 60,
+      "demonstrationGames": 3
+    },
+    {
+      "episodes": 612,
+      "architecture": "entity-gru-resnet",
+      "checkpointSha256": "7b6b1a33d00157a797ecaadcfd7713fc47ccbfdd5be1526761530af07e4f83df",
+      "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+      "adaptedDefinitions": 0,
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "hidden": 128,
+      "actionCount": 4316,
+      "policyDepth": 1024,
+      "valueDepth": 1024,
+      "observationVersion": 4,
+      "entityVersion": 3,
+      "iteration": 39,
+      "unusedGoldPenalty": 0.01,
+      "humanImitation": [
+        {
+          "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+          "weightSha256": "901acab2125a42c7f06ed2563db0612a11edf87b7dc9b6f13d99b7383912a6d3",
+          "datasets": [
+            "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+          ],
+          "updates": 20,
+          "supervisedSteps": 288,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+          "weightSha256": "5336173221d6fb0fafe9e4564c82a01c7724d78294bf34f009ee0fd114e67980",
+          "datasets": [
+            "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+          ],
+          "updates": 20,
+          "supervisedSteps": 248,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+          "weightSha256": "25e29036dd8067fc295e75e4e92d28d35d465fe3afb523ac9d3bcff7016b5214",
+          "datasets": [
+            "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+          ],
+          "updates": 20,
+          "supervisedSteps": 274,
+          "incompleteSegments": true
+        }
+      ],
+      "imitationUpdates": 60,
+      "demonstrationGames": 3
+    }
+  ],
+  "tests": {
+    "browser": "tests/ai-models.spec.ts",
+    "passed": true,
+    "seconds": 40.8
+  },
+  "site": "https://8.153.150.101/tavern/",
+  "trainingDirectory": "/root/autodl-tmp/tavern-human-current-1c52af64",
+  "computeHost": "100.97.24.15",
+  "operatorScripts": {
+    "train_current.py": "f1c89b74a40029dd0ed779bf56103416f5239402ae2575eff451b8d8a565e9d0",
+    "export_when_ready.py": "a5b1198f3a46ecd264093f1b6241196ea404f0cd0a872c0fb289e9a135060a25",
+    "activate_compute.py": "1df4ce08a43ee1463bf8804397a2f1be367bbe361f5cbff16157f40a12e26cbe",
+    "activate_public.py": "6722025770e08db5864a0f5677e7534f369c6eb5b5a7f9c222e0d04881a9476f"
+  },
+  "note": "Learned recorded segments, preserved complete PPO state, and deployed all three updated models. Fit and serving tests are not independent playing-strength evaluation."
+}
