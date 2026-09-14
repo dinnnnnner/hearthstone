@@ -1,0 +1,667 @@
+{
+  "kind": "latest_two_human_games_then_eight_hour_self_play",
+  "launch": {
+    "pid": 3192,
+    "workers": [
+      3203,
+      3204,
+      3205
+    ],
+    "backups": [
+      {
+        "source": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-two-games-8h-20260914/before-0.pt",
+        "sha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+        "bytes": 531205255
+      },
+      {
+        "source": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-two-games-8h-20260914/before-1.pt",
+        "sha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+        "bytes": 767896135
+      },
+      {
+        "source": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-two-games-8h-20260914/before-2.pt",
+        "sha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+        "bytes": 1714708482
+      }
+    ],
+    "dataset": {
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "games": [
+        {
+          "file": "3748ec6d-1661-4b6d-aee0-5a4a8e9cca46.jsonl.gz",
+          "sha256": "081a14e422cb0830239d2f15de62c35ba346f2712992a435bc47f45f6377833a",
+          "start": {
+            "type": "start",
+            "format": 1,
+            "episode": "3748ec6d-1661-4b6d-aee0-5a4a8e9cca46",
+            "gameId": "44d2e895-8a7f-4b9c-9913-167fb9d1b6bf",
+            "source": "human",
+            "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+            "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+            "hero": "s14_gallywix",
+            "mode": "timed",
+            "model": {
+              "id": "deep1024-612",
+              "label": "1024 层模型",
+              "episodes": 740,
+              "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5"
+            },
+            "completeStart": true
+          },
+          "end": {
+            "type": "end",
+            "episode": "3748ec6d-1661-4b6d-aee0-5a4a8e9cca46",
+            "steps": 183,
+            "place": 1,
+            "turn": 13,
+            "complete": false,
+            "reasons": [
+              "capture_gap",
+              "automatic_end"
+            ]
+          },
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 183,
+            "retainedSteps": 183,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 9,
+                "steps": 10
+              },
+              {
+                "firstStep": 10,
+                "lastStep": 45,
+                "steps": 36
+              },
+              {
+                "firstStep": 46,
+                "lastStep": 63,
+                "steps": 18
+              },
+              {
+                "firstStep": 64,
+                "lastStep": 78,
+                "steps": 15
+              },
+              {
+                "firstStep": 79,
+                "lastStep": 82,
+                "steps": 4
+              },
+              {
+                "firstStep": 83,
+                "lastStep": 94,
+                "steps": 12
+              },
+              {
+                "firstStep": 95,
+                "lastStep": 126,
+                "steps": 32
+              },
+              {
+                "firstStep": 127,
+                "lastStep": 161,
+                "steps": 35
+              },
+              {
+                "firstStep": 162,
+                "lastStep": 182,
+                "steps": 21
+              }
+            ]
+          }
+        },
+        {
+          "file": "bc6f66de-4c23-4623-8098-ead0f82baa95.jsonl.gz",
+          "sha256": "cfed63a0268c504fe7aff4b87a321dd707dfc93657e51b6f6babc6ecde9a6edf",
+          "start": {
+            "type": "start",
+            "format": 1,
+            "episode": "bc6f66de-4c23-4623-8098-ead0f82baa95",
+            "gameId": "abf1b6dd-6c78-4085-81ac-cbe66b40b50f",
+            "source": "human",
+            "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+            "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+            "hero": "s14_marin",
+            "mode": "timed",
+            "model": {
+              "id": "deep256-1164",
+              "label": "256 层模型",
+              "episodes": 1404,
+              "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c"
+            },
+            "completeStart": true
+          },
+          "end": {
+            "type": "end",
+            "episode": "bc6f66de-4c23-4623-8098-ead0f82baa95",
+            "steps": 500,
+            "place": 1,
+            "turn": 16,
+            "complete": false,
+            "reasons": [
+              "automatic_end",
+              "capture_gap"
+            ]
+          },
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 500,
+            "retainedSteps": 500,
+            "originalReasons": [
+              "automatic_end",
+              "capture_gap"
+            ],
+            "partialStart": false,
+            "firstRecordedTurn": 1,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 120,
+                "steps": 121
+              },
+              {
+                "firstStep": 121,
+                "lastStep": 130,
+                "steps": 10
+              },
+              {
+                "firstStep": 131,
+                "lastStep": 242,
+                "steps": 112
+              },
+              {
+                "firstStep": 243,
+                "lastStep": 307,
+                "steps": 65
+              },
+              {
+                "firstStep": 308,
+                "lastStep": 365,
+                "steps": 58
+              },
+              {
+                "firstStep": 366,
+                "lastStep": 430,
+                "steps": 65
+              },
+              {
+                "firstStep": 431,
+                "lastStep": 498,
+                "steps": 68
+              },
+              {
+                "firstStep": 499,
+                "lastStep": 499,
+                "steps": 1
+              }
+            ]
+          }
+        }
+      ],
+      "steps": 683,
+      "chunks": 52,
+      "passes": 3,
+      "updates": 156
+    },
+    "envRuntime": "/root/autodl-tmp/tavern-two-games-8h-20260914/python"
+  },
+  "verification": {
+    "capturedUtc": "2026-09-14T14:16:41.420687+00:00",
+    "state": {
+      "stage": "imitation",
+      "pid": 3192,
+      "requestedSelfPlayHours": 8,
+      "imitationPasses": 3,
+      "workersPerLearner": 16,
+      "startedUtc": "2026-09-14T14:09:33.118000+00:00",
+      "imitationPids": [
+        3203,
+        3204,
+        3205
+      ]
+    },
+    "members": [
+      {
+        "index": 0,
+        "pid": 3203,
+        "stage": "complete",
+        "updates": 156,
+        "passes": 3,
+        "uniqueSupervisedSteps": 683,
+        "before": {
+          "all": {
+            "samples": 683,
+            "negative_log_likelihood": 3.2232321064979232,
+            "top1_agreement": 0.14055636896046853
+          },
+          "buy": {
+            "samples": 63,
+            "negative_log_likelihood": 3.154539361359581,
+            "top1_agreement": 0.06349206349206349
+          },
+          "play": {
+            "samples": 164,
+            "negative_log_likelihood": 3.00622977493558,
+            "top1_agreement": 0.25609756097560976
+          },
+          "end": {
+            "samples": 23,
+            "negative_log_likelihood": 2.7870365018429966,
+            "top1_agreement": 0.21739130434782608
+          },
+          "upgrade": {
+            "samples": 9,
+            "negative_log_likelihood": 2.306259618865119,
+            "top1_agreement": 0.1111111111111111
+          },
+          "sell": {
+            "samples": 135,
+            "negative_log_likelihood": 4.450258310635885,
+            "top1_agreement": 0.014814814814814815
+          },
+          "discover": {
+            "samples": 49,
+            "negative_log_likelihood": 1.110510263211873,
+            "top1_agreement": 0.46938775510204084
+          },
+          "buySpell": {
+            "samples": 29,
+            "negative_log_likelihood": 2.899858310304839,
+            "top1_agreement": 0.0
+          },
+          "cast": {
+            "samples": 75,
+            "negative_log_likelihood": 4.65260445912679,
+            "top1_agreement": 0.04
+          },
+          "refresh": {
+            "samples": 115,
+            "negative_log_likelihood": 2.3601389636164125,
+            "top1_agreement": 0.08695652173913043
+          },
+          "buyTrinket": {
+            "samples": 5,
+            "negative_log_likelihood": 3.2134801387786864,
+            "top1_agreement": 0.0
+          },
+          "reward": {
+            "samples": 8,
+            "negative_log_likelihood": 1.6568950712680817,
+            "top1_agreement": 0.625
+          },
+          "move": {
+            "samples": 6,
+            "negative_log_likelihood": 5.243175268173218,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 2,
+            "negative_log_likelihood": 2.20649790763855,
+            "top1_agreement": 0.5
+          }
+        },
+        "after": {
+          "all": {
+            "samples": 683,
+            "negative_log_likelihood": 2.3111223549217987,
+            "top1_agreement": 0.30307467057101023
+          },
+          "buy": {
+            "samples": 63,
+            "negative_log_likelihood": 3.1632321429631065,
+            "top1_agreement": 0.031746031746031744
+          },
+          "play": {
+            "samples": 164,
+            "negative_log_likelihood": 2.3006372090156484,
+            "top1_agreement": 0.32926829268292684
+          },
+          "end": {
+            "samples": 23,
+            "negative_log_likelihood": 2.1409971506699272,
+            "top1_agreement": 0.30434782608695654
+          },
+          "upgrade": {
+            "samples": 9,
+            "negative_log_likelihood": 2.072344938913981,
+            "top1_agreement": 0.3333333333333333
+          },
+          "sell": {
+            "samples": 135,
+            "negative_log_likelihood": 2.107564631435606,
+            "top1_agreement": 0.5185185185185185
+          },
+          "discover": {
+            "samples": 49,
+            "negative_log_likelihood": 0.9859771442656614,
+            "top1_agreement": 0.5306122448979592
+          },
+          "buySpell": {
+            "samples": 29,
+            "negative_log_likelihood": 2.633137711163225,
+            "top1_agreement": 0.0
+          },
+          "cast": {
+            "samples": 75,
+            "negative_log_likelihood": 3.4077844285964964,
+            "top1_agreement": 0.05333333333333334
+          },
+          "refresh": {
+            "samples": 115,
+            "negative_log_likelihood": 1.7850089161292366,
+            "top1_agreement": 0.3130434782608696
+          },
+          "buyTrinket": {
+            "samples": 5,
+            "negative_log_likelihood": 2.3849942207336428,
+            "top1_agreement": 0.2
+          },
+          "reward": {
+            "samples": 8,
+            "negative_log_likelihood": 1.6329577043652534,
+            "top1_agreement": 0.5
+          },
+          "move": {
+            "samples": 6,
+            "negative_log_likelihood": 5.64305579662323,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 2,
+            "negative_log_likelihood": 2.556239128112793,
+            "top1_agreement": 0.0
+          }
+        }
+      },
+      {
+        "index": 1,
+        "pid": 3204,
+        "stage": "complete",
+        "updates": 156,
+        "passes": 3,
+        "uniqueSupervisedSteps": 683,
+        "before": {
+          "all": {
+            "samples": 683,
+            "negative_log_likelihood": 3.1229215585578936,
+            "top1_agreement": 0.14348462664714495
+          },
+          "buy": {
+            "samples": 63,
+            "negative_log_likelihood": 3.3790101494107927,
+            "top1_agreement": 0.015873015873015872
+          },
+          "play": {
+            "samples": 164,
+            "negative_log_likelihood": 2.6358607533592275,
+            "top1_agreement": 0.25
+          },
+          "end": {
+            "samples": 23,
+            "negative_log_likelihood": 2.7145692654277966,
+            "top1_agreement": 0.0
+          },
+          "upgrade": {
+            "samples": 9,
+            "negative_log_likelihood": 2.395304560661316,
+            "top1_agreement": 0.0
+          },
+          "sell": {
+            "samples": 135,
+            "negative_log_likelihood": 4.853421513239542,
+            "top1_agreement": 0.02962962962962963
+          },
+          "discover": {
+            "samples": 49,
+            "negative_log_likelihood": 1.0751777881262254,
+            "top1_agreement": 0.5306122448979592
+          },
+          "buySpell": {
+            "samples": 29,
+            "negative_log_likelihood": 2.8137510809405097,
+            "top1_agreement": 0.0
+          },
+          "cast": {
+            "samples": 75,
+            "negative_log_likelihood": 4.083779665629069,
+            "top1_agreement": 0.013333333333333334
+          },
+          "refresh": {
+            "samples": 115,
+            "negative_log_likelihood": 2.1171217192774234,
+            "top1_agreement": 0.19130434782608696
+          },
+          "buyTrinket": {
+            "samples": 5,
+            "negative_log_likelihood": 2.3846234321594237,
+            "top1_agreement": 0.0
+          },
+          "reward": {
+            "samples": 8,
+            "negative_log_likelihood": 2.1604912653565407,
+            "top1_agreement": 0.25
+          },
+          "move": {
+            "samples": 6,
+            "negative_log_likelihood": 5.200634241104126,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 2,
+            "negative_log_likelihood": 2.0730323791503906,
+            "top1_agreement": 0.5
+          }
+        },
+        "after": {
+          "all": {
+            "samples": 683,
+            "negative_log_likelihood": 2.3109115706334,
+            "top1_agreement": 0.3557833089311859
+          },
+          "buy": {
+            "samples": 63,
+            "negative_log_likelihood": 3.2162607075676086,
+            "top1_agreement": 0.031746031746031744
+          },
+          "play": {
+            "samples": 164,
+            "negative_log_likelihood": 2.153046479448676,
+            "top1_agreement": 0.4451219512195122
+          },
+          "end": {
+            "samples": 23,
+            "negative_log_likelihood": 2.214403536008752,
+            "top1_agreement": 0.21739130434782608
+          },
+          "upgrade": {
+            "samples": 9,
+            "negative_log_likelihood": 2.068655424647861,
+            "top1_agreement": 0.0
+          },
+          "sell": {
+            "samples": 135,
+            "negative_log_likelihood": 2.070006968356945,
+            "top1_agreement": 0.6222222222222222
+          },
+          "discover": {
+            "samples": 49,
+            "negative_log_likelihood": 0.9518577261846892,
+            "top1_agreement": 0.5306122448979592
+          },
+          "buySpell": {
+            "samples": 29,
+            "negative_log_likelihood": 2.5554840318087875,
+            "top1_agreement": 0.0
+          },
+          "cast": {
+            "samples": 75,
+            "negative_log_likelihood": 3.652311703364054,
+            "top1_agreement": 0.05333333333333334
+          },
+          "refresh": {
+            "samples": 115,
+            "negative_log_likelihood": 1.8802918097247248,
+            "top1_agreement": 0.3652173913043478
+          },
+          "buyTrinket": {
+            "samples": 5,
+            "negative_log_likelihood": 1.6593586206436157,
+            "top1_agreement": 0.4
+          },
+          "reward": {
+            "samples": 8,
+            "negative_log_likelihood": 1.771672010421753,
+            "top1_agreement": 0.625
+          },
+          "move": {
+            "samples": 6,
+            "negative_log_likelihood": 6.007185618082683,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 2,
+            "negative_log_likelihood": 2.1040751934051514,
+            "top1_agreement": 0.0
+          }
+        }
+      },
+      {
+        "index": 2,
+        "pid": 3205,
+        "stage": "training",
+        "updates": 51,
+        "passes": 0,
+        "uniqueSupervisedSteps": 667,
+        "before": {
+          "all": {
+            "samples": 683,
+            "negative_log_likelihood": 2.9219149949348164,
+            "top1_agreement": 0.1493411420204978
+          },
+          "buy": {
+            "samples": 63,
+            "negative_log_likelihood": 3.221894247191293,
+            "top1_agreement": 0.031746031746031744
+          },
+          "play": {
+            "samples": 164,
+            "negative_log_likelihood": 2.5560999307327155,
+            "top1_agreement": 0.3719512195121951
+          },
+          "end": {
+            "samples": 23,
+            "negative_log_likelihood": 2.208850658458212,
+            "top1_agreement": 0.0
+          },
+          "upgrade": {
+            "samples": 9,
+            "negative_log_likelihood": 2.273217055532667,
+            "top1_agreement": 0.0
+          },
+          "sell": {
+            "samples": 135,
+            "negative_log_likelihood": 4.024521742926703,
+            "top1_agreement": 0.0
+          },
+          "discover": {
+            "samples": 49,
+            "negative_log_likelihood": 1.0455540759222848,
+            "top1_agreement": 0.5102040816326531
+          },
+          "buySpell": {
+            "samples": 29,
+            "negative_log_likelihood": 2.420070237126844,
+            "top1_agreement": 0.0
+          },
+          "cast": {
+            "samples": 75,
+            "negative_log_likelihood": 4.176567767461141,
+            "top1_agreement": 0.013333333333333334
+          },
+          "refresh": {
+            "samples": 115,
+            "negative_log_likelihood": 2.24451018312703,
+            "top1_agreement": 0.08695652173913043
+          },
+          "buyTrinket": {
+            "samples": 5,
+            "negative_log_likelihood": 2.187229347229004,
+            "top1_agreement": 0.0
+          },
+          "reward": {
+            "samples": 8,
+            "negative_log_likelihood": 1.9555904269218445,
+            "top1_agreement": 0.25
+          },
+          "move": {
+            "samples": 6,
+            "negative_log_likelihood": 6.097498496373494,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 2,
+            "negative_log_likelihood": 1.4869800209999084,
+            "top1_agreement": 0.5
+          }
+        },
+        "after": null
+      }
+    ],
+    "archiveVerified": true,
+    "systemFreeBytes": 5591326720,
+    "dataFreeBytes": 3360296960,
+    "scripts": {
+      "control.py": "5ea1704e45dc5f1ed523fcb5e78fc1376680761d06bee4a54fada83a828f004a",
+      "bc_worker.py": "f85adf13af9b3897008202c5233e96cbee857a54d2ce1a84eff349e047c99231",
+      "install.py": "59125b4e463579d9c5331923e8d4c3640b37512dceca5ae37c0e51fc14c30642"
+    }
+  },
+  "archive": {
+    "directory": "/home/zich/.local/share/tavern-training-archives/20260914-pre-two-games",
+    "files": [
+      {
+        "file": "before-0.pt",
+        "sha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+        "bytes": 531205255
+      },
+      {
+        "file": "before-1.pt",
+        "sha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+        "bytes": 767896135
+      },
+      {
+        "file": "before-2.pt",
+        "sha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+        "bytes": 1714708482
+      }
+    ],
+    "verifiedUtc": "2026-09-14T14:16:02.352214+00:00"
+  },
+  "selfPlay": {
+    "hours": 8,
+    "start": "after all three imitation workers complete and checkpoint installation passes",
+    "deadline": "computed at self-play launch",
+    "workersPerLearner": 16,
+    "gamesPerIteration": 16,
+    "iterationsPerExchange": 2,
+    "externalFraction": 0.4,
+    "maxPerLineage": 2,
+    "firstPlaceBonus": 1,
+    "unusedGoldPenalty": 0.01
+  },
+  "work": "/root/autodl-tmp/tavern-two-games-8h-20260914"
+}
