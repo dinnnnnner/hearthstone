@@ -1,0 +1,485 @@
+{
+  "experiment": {
+    "purpose": "Compare simulator concurrency under three simultaneous frozen learners",
+    "workers": [
+      8,
+      12,
+      16,
+      8
+    ],
+    "gamesPerModel": 16,
+    "maxSteps": 256,
+    "seeds": [
+      820000,
+      820001,
+      820002,
+      820003,
+      820004,
+      820005,
+      820006,
+      820007,
+      820008,
+      820009,
+      820010,
+      820011,
+      820012,
+      820013,
+      820014,
+      820015
+    ],
+    "trainingRoot": "/root/tavern-four-hour-20260914/population",
+    "runtimeRoot": "/root/autodl-tmp/tavern-mixed-popular-20260914",
+    "checkpointWrites": false,
+    "ppoUpdates": false,
+    "productionModelChanges": false,
+    "notes": "Truncated samples are discarded; measured throughput covers sampling, not full PPO or model strength."
+  },
+  "nextTraining": {
+    "createdAt": "2026-09-14T13:55:39.662381+00:00",
+    "workersPerLearner": 16,
+    "gamesPerIteration": 16,
+    "iterationsPerExchange": 2,
+    "externalFraction": 0.4,
+    "maxPerLineage": 2,
+    "firstPlaceBonus": 1.0,
+    "unusedGoldPenalty": 0.01,
+    "packedHostTransfer": false,
+    "trainingStarted": false,
+    "comparisons": [
+      {
+        "depth": 64,
+        "baselineActionsPerSecond": 57.25637818281804,
+        "candidateActionsPerSecond": 70.9508914943414,
+        "improvementPercent": 23.917882594314932,
+        "actionsEqual": true
+      },
+      {
+        "depth": 256,
+        "baselineActionsPerSecond": 48.669230847015214,
+        "candidateActionsPerSecond": 62.01933287775036,
+        "improvementPercent": 27.430271237898296,
+        "actionsEqual": true
+      },
+      {
+        "depth": 1024,
+        "baselineActionsPerSecond": 25.009114154053602,
+        "candidateActionsPerSecond": 34.49784761253057,
+        "improvementPercent": 37.94110179204002,
+        "actionsEqual": true
+      }
+    ],
+    "coordinator": "/root/tavern-human-current-06cd2177/population_resume.py",
+    "backup": "/root/tavern-concurrency-20260914/population_resume.before.py",
+    "beforeSha256": "2589226045b373e79bd8f4197cd7c5ca93b987aeedf444b4e5aabaa87399ee17",
+    "afterSha256": "c450b71ffce0b6de5154266bf461374588870ff267786b37be76599f16741bd6",
+    "note": "Default applies when --workers is omitted. Explicit --workers overrides it. Keep --workers 16 in the next launch command. Benchmark covers 256-step sampling; no PPO updates were run."
+  },
+  "results": [
+    {
+      "workers": 8,
+      "rows": [
+        {
+          "member": 0,
+          "depth": 64,
+          "workers": 8,
+          "steps": 256,
+          "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+          "seconds": 70.97906757704914,
+          "environment_actions": 4096,
+          "actions_per_second": 57.70715423323522,
+          "inference_seconds": 62.948566203936934,
+          "simulator_wait_seconds": 6.134451467078179,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.8500000000000004,
+          "unused_gold_penalized_ends": 48,
+          "inference_batches": 2268,
+          "mean_inference_batch": 1.8059964726631392,
+          "cudaPeakMiB": 496.66162109375,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 1,
+          "depth": 256,
+          "workers": 8,
+          "steps": 256,
+          "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+          "seconds": 84.9556872760877,
+          "environment_actions": 4096,
+          "actions_per_second": 48.21337018543422,
+          "inference_seconds": 77.52278128452599,
+          "simulator_wait_seconds": 5.492419499671087,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.5800000000000002,
+          "unused_gold_penalized_ends": 31,
+          "inference_batches": 2142,
+          "mean_inference_batch": 1.912231559290383,
+          "cudaPeakMiB": 668.580078125,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 2,
+          "depth": 1024,
+          "workers": 8,
+          "steps": 256,
+          "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+          "seconds": 164.3810099810362,
+          "environment_actions": 4096,
+          "actions_per_second": 24.917720121518506,
+          "inference_seconds": 157.42661911970936,
+          "simulator_wait_seconds": 5.149169387994334,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 1.7300000000000013,
+          "unused_gold_penalized_ends": 88,
+          "inference_batches": 2212,
+          "mean_inference_batch": 1.8517179023508137,
+          "cudaPeakMiB": 1356.36865234375,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        }
+      ],
+      "resource": [
+        {
+          "seconds": 0.10294632706791162,
+          "gpu": "0, 1"
+        },
+        {
+          "seconds": 30.165111107053235,
+          "gpu": "0, 3460"
+        },
+        {
+          "seconds": 60.2560963339638,
+          "gpu": "84, 3498"
+        },
+        {
+          "seconds": 90.3358836621046,
+          "gpu": "97, 3498"
+        },
+        {
+          "seconds": 120.41619362612255,
+          "gpu": "16, 2677"
+        },
+        {
+          "seconds": 150.50968491402455,
+          "gpu": "17, 1684"
+        },
+        {
+          "seconds": 180.60692594200373,
+          "gpu": "16, 1684"
+        }
+      ]
+    },
+    {
+      "workers": 12,
+      "rows": [
+        {
+          "member": 0,
+          "depth": 64,
+          "workers": 12,
+          "steps": 256,
+          "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+          "seconds": 68.67667167610489,
+          "environment_actions": 4096,
+          "actions_per_second": 59.64179538748887,
+          "inference_seconds": 60.05690441443585,
+          "simulator_wait_seconds": 6.34184254007414,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.8500000000000004,
+          "unused_gold_penalized_ends": 48,
+          "inference_batches": 2115,
+          "mean_inference_batch": 1.936643026004728,
+          "cudaPeakMiB": 505.41748046875,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 1,
+          "depth": 256,
+          "workers": 12,
+          "steps": 256,
+          "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+          "seconds": 84.38080147700384,
+          "environment_actions": 4096,
+          "actions_per_second": 48.54184753289261,
+          "inference_seconds": 76.95107452687807,
+          "simulator_wait_seconds": 5.49434161442332,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.5800000000000003,
+          "unused_gold_penalized_ends": 31,
+          "inference_batches": 2046,
+          "mean_inference_batch": 2.0019550342130987,
+          "cudaPeakMiB": 677.3671875,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 2,
+          "depth": 1024,
+          "workers": 12,
+          "steps": 256,
+          "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+          "seconds": 161.87645216099918,
+          "environment_actions": 4096,
+          "actions_per_second": 25.303247911105675,
+          "inference_seconds": 154.33213123865426,
+          "simulator_wait_seconds": 5.040596506558359,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 1.730000000000001,
+          "unused_gold_penalized_ends": 88,
+          "inference_batches": 2136,
+          "mean_inference_batch": 1.9176029962546817,
+          "cudaPeakMiB": 1365.0966796875,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        }
+      ],
+      "resource": [
+        {
+          "seconds": 0.05604660511016846,
+          "gpu": "0, 1"
+        },
+        {
+          "seconds": 30.15569323510863,
+          "gpu": "0, 3504"
+        },
+        {
+          "seconds": 60.2560435871128,
+          "gpu": "98, 3560"
+        },
+        {
+          "seconds": 90.3133130420465,
+          "gpu": "90, 3560"
+        },
+        {
+          "seconds": 120.4116541550029,
+          "gpu": "13, 1706"
+        },
+        {
+          "seconds": 150.50759982294403,
+          "gpu": "15, 1706"
+        },
+        {
+          "seconds": 180.58002903405577,
+          "gpu": "16, 1706"
+        }
+      ]
+    },
+    {
+      "workers": 16,
+      "rows": [
+        {
+          "member": 0,
+          "depth": 64,
+          "workers": 16,
+          "steps": 256,
+          "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+          "seconds": 57.730070950929075,
+          "environment_actions": 4096,
+          "actions_per_second": 70.9508914943414,
+          "inference_seconds": 52.375169231556356,
+          "simulator_wait_seconds": 3.3036175437737256,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.8500000000000005,
+          "unused_gold_penalized_ends": 48,
+          "inference_batches": 1659,
+          "mean_inference_batch": 2.4689572031344182,
+          "cudaPeakMiB": 514.4814453125,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 1,
+          "depth": 256,
+          "workers": 16,
+          "steps": 256,
+          "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+          "seconds": 66.04392227297649,
+          "environment_actions": 4096,
+          "actions_per_second": 62.01933287775036,
+          "inference_seconds": 61.26466645277105,
+          "simulator_wait_seconds": 2.8507893986534327,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.5800000000000002,
+          "unused_gold_penalized_ends": 31,
+          "inference_batches": 1600,
+          "mean_inference_batch": 2.56,
+          "cudaPeakMiB": 686.384765625,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 2,
+          "depth": 1024,
+          "workers": 16,
+          "steps": 256,
+          "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+          "seconds": 118.73204514104873,
+          "environment_actions": 4096,
+          "actions_per_second": 34.49784761253057,
+          "inference_seconds": 113.90816151048057,
+          "simulator_wait_seconds": 2.8274057949893177,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 1.730000000000001,
+          "unused_gold_penalized_ends": 88,
+          "inference_batches": 1713,
+          "mean_inference_batch": 2.39112667834209,
+          "cudaPeakMiB": 1374.1455078125,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        }
+      ],
+      "resource": [
+        {
+          "seconds": 0.09788034809753299,
+          "gpu": "0, 1"
+        },
+        {
+          "seconds": 30.202087792102247,
+          "gpu": "0, 3510"
+        },
+        {
+          "seconds": 60.308732294943184,
+          "gpu": "78, 3572"
+        },
+        {
+          "seconds": 90.40063435700722,
+          "gpu": "96, 3572"
+        },
+        {
+          "seconds": 120.4515033790376,
+          "gpu": "16, 1710"
+        },
+        {
+          "seconds": 150.52157692308538,
+          "gpu": "15, 1710"
+        }
+      ]
+    },
+    {
+      "workers": 8,
+      "rows": [
+        {
+          "member": 0,
+          "depth": 64,
+          "workers": 8,
+          "steps": 256,
+          "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+          "seconds": 72.10556435002945,
+          "environment_actions": 4096,
+          "actions_per_second": 56.80560213240085,
+          "inference_seconds": 64.17631448386237,
+          "simulator_wait_seconds": 6.143817787524313,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.8500000000000004,
+          "unused_gold_penalized_ends": 48,
+          "inference_batches": 2268,
+          "mean_inference_batch": 1.8059964726631392,
+          "cudaPeakMiB": 496.66162109375,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 1,
+          "depth": 256,
+          "workers": 8,
+          "steps": 256,
+          "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+          "seconds": 83.3789795441553,
+          "environment_actions": 4096,
+          "actions_per_second": 49.1250915085962,
+          "inference_seconds": 76.19778109434992,
+          "simulator_wait_seconds": 5.290400228463113,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 0.5800000000000002,
+          "unused_gold_penalized_ends": 31,
+          "inference_batches": 2142,
+          "mean_inference_batch": 1.912231559290383,
+          "cudaPeakMiB": 668.580078125,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        },
+        {
+          "member": 2,
+          "depth": 1024,
+          "workers": 8,
+          "steps": 256,
+          "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+          "seconds": 163.18394709588028,
+          "environment_actions": 4096,
+          "actions_per_second": 25.100508186588698,
+          "inference_seconds": 156.2410878923256,
+          "simulator_wait_seconds": 5.163579295156524,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 1.7300000000000013,
+          "unused_gold_penalized_ends": 88,
+          "inference_batches": 2212,
+          "mean_inference_batch": 1.8517179023508137,
+          "cudaPeakMiB": 1356.36865234375,
+          "completed": 0,
+          "truncated": 16,
+          "replayActionsEqualToBaseline": true
+        }
+      ],
+      "resource": [
+        {
+          "seconds": 0.07331403996795416,
+          "gpu": "0, 1"
+        },
+        {
+          "seconds": 30.18090757681057,
+          "gpu": "0, 3460"
+        },
+        {
+          "seconds": 60.280352802947164,
+          "gpu": "95, 3498"
+        },
+        {
+          "seconds": 90.37775132688694,
+          "gpu": "94, 3498"
+        },
+        {
+          "seconds": 120.4502105389256,
+          "gpu": "18, 1684"
+        },
+        {
+          "seconds": 150.5260943439789,
+          "gpu": "15, 1684"
+        },
+        {
+          "seconds": 180.61710767401382,
+          "gpu": "16, 1684"
+        }
+      ]
+    }
+  ],
+  "remoteArtifacts": "/root/tavern-concurrency-20260914",
+  "scriptSha256": {
+    "worker.py": "286ac59557b966b8089efbc4cf4e31955280eaa33e5e3a7c98a6cfda42f4d4ff",
+    "run.py": "12780422d476f06f000fc435a61911fe013d2366bf2e0498906b4a67fddbab60",
+    "apply_default.py": "dca74dede87d65c5a3f612f3ada6717a6f148ff6d11d25068a8edf3d57d1e6f9"
+  }
+}
