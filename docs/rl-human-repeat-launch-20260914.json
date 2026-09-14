@@ -1,0 +1,711 @@
+{
+  "kind": "two_hour_repeated_imitation_launch",
+  "launch": {
+    "pid": 16552,
+    "started_utc": "2026-09-14T07:28:35.116355+00:00",
+    "deadline_utc": "2026-09-14T09:28:35.116355+00:00",
+    "duration_hours": 2,
+    "backups": [
+      {
+        "index": 0,
+        "source": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-human-repeat-20260914/before-0.pt",
+        "sha256": "27bc33a955b33fbb918fb0b7383fa0cc24e55cf811e7081a72fb9841eab546aa",
+        "bytes": 531202311
+      },
+      {
+        "index": 1,
+        "source": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-human-repeat-20260914/before-1.pt",
+        "sha256": "a578cfd55fadd182dc152646c4d573aecce19a65325deba7fd27484cb741dce1",
+        "bytes": 767893959
+      },
+      {
+        "index": 2,
+        "source": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-human-repeat-20260914/before-2.pt",
+        "sha256": "a1d2a0f44cd7a54783ae4d92d417fb2631b947b8d98fd62bbbad92ab973a9dca",
+        "bytes": 1714707010
+      }
+    ],
+    "workers": [
+      16561,
+      16562,
+      16563
+    ],
+    "original_ppo_deadline_utc": "2026-09-14T10:45:56.567559+00:00",
+    "after_imitation": "Validate and install all three full PPO checkpoints, then resume mixed self-play to original deadline.",
+    "web_deployment": "No serving-model replacement in this job."
+  },
+  "dataset": {
+    "games": 5,
+    "steps": 1555,
+    "chunks": 114,
+    "dataset": [
+      {
+        "file": "06cd2177-3a0b-4156-9ffe-b7b8d9b9cda3.jsonl.gz",
+        "sha256": "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+        "hero": "s14_lich",
+        "selection": {
+          "mode": "continuous_segments",
+          "recordedSteps": 359,
+          "retainedSteps": 359,
+          "originalReasons": [
+            "capture_gap",
+            "automatic_end"
+          ],
+          "partialStart": false,
+          "firstRecordedTurn": 1,
+          "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+          "segments": [
+            {
+              "firstStep": 0,
+              "lastStep": 31,
+              "steps": 32
+            },
+            {
+              "firstStep": 32,
+              "lastStep": 46,
+              "steps": 15
+            },
+            {
+              "firstStep": 47,
+              "lastStep": 105,
+              "steps": 59
+            },
+            {
+              "firstStep": 106,
+              "lastStep": 126,
+              "steps": 21
+            },
+            {
+              "firstStep": 127,
+              "lastStep": 139,
+              "steps": 13
+            },
+            {
+              "firstStep": 140,
+              "lastStep": 358,
+              "steps": 219
+            }
+          ]
+        }
+      },
+      {
+        "file": "105d3a1e-66eb-4844-99cf-5c4672d993a5.jsonl.gz",
+        "sha256": "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+        "hero": "s14_brann",
+        "selection": {
+          "mode": "continuous_segments",
+          "recordedSteps": 386,
+          "retainedSteps": 386,
+          "originalReasons": [
+            "capture_gap",
+            "automatic_end"
+          ],
+          "partialStart": false,
+          "firstRecordedTurn": 1,
+          "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+          "segments": [
+            {
+              "firstStep": 0,
+              "lastStep": 32,
+              "steps": 33
+            },
+            {
+              "firstStep": 33,
+              "lastStep": 56,
+              "steps": 24
+            },
+            {
+              "firstStep": 57,
+              "lastStep": 106,
+              "steps": 50
+            },
+            {
+              "firstStep": 107,
+              "lastStep": 109,
+              "steps": 3
+            },
+            {
+              "firstStep": 110,
+              "lastStep": 130,
+              "steps": 21
+            },
+            {
+              "firstStep": 131,
+              "lastStep": 143,
+              "steps": 13
+            },
+            {
+              "firstStep": 144,
+              "lastStep": 202,
+              "steps": 59
+            },
+            {
+              "firstStep": 203,
+              "lastStep": 247,
+              "steps": 45
+            },
+            {
+              "firstStep": 248,
+              "lastStep": 283,
+              "steps": 36
+            },
+            {
+              "firstStep": 284,
+              "lastStep": 385,
+              "steps": 102
+            }
+          ]
+        }
+      },
+      {
+        "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+        "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+        "hero": "s14_marin",
+        "selection": {
+          "mode": "continuous_segments",
+          "recordedSteps": 274,
+          "retainedSteps": 274,
+          "originalReasons": [
+            "capture_gap",
+            "automatic_end"
+          ],
+          "partialStart": false,
+          "firstRecordedTurn": 1,
+          "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+          "segments": [
+            {
+              "firstStep": 0,
+              "lastStep": 93,
+              "steps": 94
+            },
+            {
+              "firstStep": 94,
+              "lastStep": 116,
+              "steps": 23
+            },
+            {
+              "firstStep": 117,
+              "lastStep": 216,
+              "steps": 100
+            },
+            {
+              "firstStep": 217,
+              "lastStep": 217,
+              "steps": 1
+            },
+            {
+              "firstStep": 218,
+              "lastStep": 273,
+              "steps": 56
+            }
+          ]
+        }
+      },
+      {
+        "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+        "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+        "hero": "s14_chenvaala",
+        "selection": {
+          "mode": "continuous_segments",
+          "recordedSteps": 288,
+          "retainedSteps": 288,
+          "originalReasons": [
+            "capture_gap",
+            "automatic_end"
+          ],
+          "partialStart": false,
+          "firstRecordedTurn": 1,
+          "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+          "segments": [
+            {
+              "firstStep": 0,
+              "lastStep": 43,
+              "steps": 44
+            },
+            {
+              "firstStep": 44,
+              "lastStep": 89,
+              "steps": 46
+            },
+            {
+              "firstStep": 90,
+              "lastStep": 121,
+              "steps": 32
+            },
+            {
+              "firstStep": 122,
+              "lastStep": 159,
+              "steps": 38
+            },
+            {
+              "firstStep": 160,
+              "lastStep": 193,
+              "steps": 34
+            },
+            {
+              "firstStep": 194,
+              "lastStep": 287,
+              "steps": 94
+            }
+          ]
+        }
+      },
+      {
+        "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+        "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0",
+        "hero": "s14_chenvaala",
+        "selection": {
+          "mode": "continuous_segments",
+          "recordedSteps": 248,
+          "retainedSteps": 248,
+          "originalReasons": [
+            "partial_start",
+            "capture_gap",
+            "automatic_end"
+          ],
+          "partialStart": true,
+          "firstRecordedTurn": 5,
+          "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+          "segments": [
+            {
+              "firstStep": 0,
+              "lastStep": 19,
+              "steps": 20
+            },
+            {
+              "firstStep": 20,
+              "lastStep": 48,
+              "steps": 29
+            },
+            {
+              "firstStep": 49,
+              "lastStep": 100,
+              "steps": 52
+            },
+            {
+              "firstStep": 101,
+              "lastStep": 150,
+              "steps": 50
+            },
+            {
+              "firstStep": 151,
+              "lastStep": 222,
+              "steps": 72
+            },
+            {
+              "firstStep": 223,
+              "lastStep": 244,
+              "steps": 22
+            },
+            {
+              "firstStep": 245,
+              "lastStep": 247,
+              "steps": 3
+            }
+          ]
+        }
+      }
+    ],
+    "actions": {
+      "buy": 174,
+      "play": 324,
+      "power": 7,
+      "end": 54,
+      "buySpell": 54,
+      "cast": 226,
+      "upgrade": 23,
+      "discover": 87,
+      "refresh": 257,
+      "darkGift": 6,
+      "move": 28,
+      "buyTrinket": 11,
+      "sell": 273,
+      "choosePower": 2,
+      "reward": 12,
+      "activate": 9,
+      "freeze": 8
+    }
+  },
+  "verification": {
+    "captured_utc": "2026-09-14T07:31:41.434311+00:00",
+    "members": [
+      {
+        "index": 0,
+        "pid": 16561,
+        "updates": 105,
+        "fullPasses": 0,
+        "uniqueSupervisedSteps": 1433,
+        "actionVisits": {
+          "sell": 247,
+          "play": 293,
+          "cast": 211,
+          "upgrade": 20,
+          "end": 47,
+          "refresh": 244,
+          "buy": 157,
+          "discover": 85,
+          "buySpell": 51,
+          "freeze": 8,
+          "move": 28,
+          "reward": 12,
+          "activate": 9,
+          "darkGift": 5,
+          "buyTrinket": 9,
+          "power": 5,
+          "choosePower": 2
+        },
+        "before": {
+          "all": {
+            "samples": 1555,
+            "negative_log_likelihood": 3.47509239836569,
+            "top1_agreement": 0.09903536977491961
+          },
+          "buy": {
+            "samples": 174,
+            "negative_log_likelihood": 3.8720625066894225,
+            "top1_agreement": 0.09195402298850575
+          },
+          "play": {
+            "samples": 324,
+            "negative_log_likelihood": 3.654003745485327,
+            "top1_agreement": 0.08333333333333333
+          },
+          "power": {
+            "samples": 7,
+            "negative_log_likelihood": 3.2532202090535844,
+            "top1_agreement": 0.14285714285714285
+          },
+          "end": {
+            "samples": 54,
+            "negative_log_likelihood": 3.185424243962323,
+            "top1_agreement": 0.018518518518518517
+          },
+          "buySpell": {
+            "samples": 54,
+            "negative_log_likelihood": 2.9784977943808943,
+            "top1_agreement": 0.0
+          },
+          "cast": {
+            "samples": 226,
+            "negative_log_likelihood": 3.6273597225678706,
+            "top1_agreement": 0.08849557522123894
+          },
+          "upgrade": {
+            "samples": 23,
+            "negative_log_likelihood": 2.5229405683019888,
+            "top1_agreement": 0.043478260869565216
+          },
+          "discover": {
+            "samples": 87,
+            "negative_log_likelihood": 1.127939130040421,
+            "top1_agreement": 0.3793103448275862
+          },
+          "refresh": {
+            "samples": 257,
+            "negative_log_likelihood": 2.3329490075315484,
+            "top1_agreement": 0.17120622568093385
+          },
+          "darkGift": {
+            "samples": 6,
+            "negative_log_likelihood": 1.0776412685712178,
+            "top1_agreement": 1.0
+          },
+          "move": {
+            "samples": 28,
+            "negative_log_likelihood": 6.554827877453396,
+            "top1_agreement": 0.0
+          },
+          "buyTrinket": {
+            "samples": 11,
+            "negative_log_likelihood": 3.0115399712866004,
+            "top1_agreement": 0.18181818181818182
+          },
+          "sell": {
+            "samples": 273,
+            "negative_log_likelihood": 4.8065336021311555,
+            "top1_agreement": 0.0
+          },
+          "choosePower": {
+            "samples": 2,
+            "negative_log_likelihood": 1.0498556196689606,
+            "top1_agreement": 0.5
+          },
+          "reward": {
+            "samples": 12,
+            "negative_log_likelihood": 2.3004469176133475,
+            "top1_agreement": 0.16666666666666666
+          },
+          "activate": {
+            "samples": 9,
+            "negative_log_likelihood": 3.29567907916175,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 8,
+            "negative_log_likelihood": 2.5401126742362976,
+            "top1_agreement": 0.0
+          }
+        }
+      },
+      {
+        "index": 1,
+        "pid": 16562,
+        "updates": 54,
+        "fullPasses": 0,
+        "uniqueSupervisedSteps": 721,
+        "actionVisits": {
+          "sell": 130,
+          "play": 141,
+          "cast": 100,
+          "upgrade": 11,
+          "end": 23,
+          "refresh": 129,
+          "buy": 83,
+          "discover": 50,
+          "buySpell": 20,
+          "freeze": 4,
+          "move": 12,
+          "reward": 7,
+          "activate": 3,
+          "darkGift": 3,
+          "buyTrinket": 5
+        },
+        "before": {
+          "all": {
+            "samples": 1555,
+            "negative_log_likelihood": 3.6201027151856007,
+            "top1_agreement": 0.10803858520900321
+          },
+          "buy": {
+            "samples": 174,
+            "negative_log_likelihood": 3.154822586767975,
+            "top1_agreement": 0.09195402298850575
+          },
+          "play": {
+            "samples": 324,
+            "negative_log_likelihood": 3.307701075265621,
+            "top1_agreement": 0.11728395061728394
+          },
+          "power": {
+            "samples": 7,
+            "negative_log_likelihood": 3.6373408436775208,
+            "top1_agreement": 0.14285714285714285
+          },
+          "end": {
+            "samples": 54,
+            "negative_log_likelihood": 2.743521030302401,
+            "top1_agreement": 0.0
+          },
+          "buySpell": {
+            "samples": 54,
+            "negative_log_likelihood": 2.7757289078500538,
+            "top1_agreement": 0.0
+          },
+          "cast": {
+            "samples": 226,
+            "negative_log_likelihood": 3.170247186865427,
+            "top1_agreement": 0.15486725663716813
+          },
+          "upgrade": {
+            "samples": 23,
+            "negative_log_likelihood": 2.803762399631998,
+            "top1_agreement": 0.0
+          },
+          "discover": {
+            "samples": 87,
+            "negative_log_likelihood": 1.1629324157176346,
+            "top1_agreement": 0.3793103448275862
+          },
+          "refresh": {
+            "samples": 257,
+            "negative_log_likelihood": 2.147419434809035,
+            "top1_agreement": 0.14785992217898833
+          },
+          "darkGift": {
+            "samples": 6,
+            "negative_log_likelihood": 1.0538968741893768,
+            "top1_agreement": 1.0
+          },
+          "move": {
+            "samples": 28,
+            "negative_log_likelihood": 6.449890460286822,
+            "top1_agreement": 0.0
+          },
+          "buyTrinket": {
+            "samples": 11,
+            "negative_log_likelihood": 2.5577142130244863,
+            "top1_agreement": 0.0
+          },
+          "sell": {
+            "samples": 273,
+            "negative_log_likelihood": 7.10212761753208,
+            "top1_agreement": 0.0
+          },
+          "choosePower": {
+            "samples": 2,
+            "negative_log_likelihood": 0.9062972068786621,
+            "top1_agreement": 0.5
+          },
+          "reward": {
+            "samples": 12,
+            "negative_log_likelihood": 2.96535117427508,
+            "top1_agreement": 0.0
+          },
+          "activate": {
+            "samples": 9,
+            "negative_log_likelihood": 3.923248370488485,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 8,
+            "negative_log_likelihood": 3.057274103164673,
+            "top1_agreement": 0.0
+          }
+        }
+      },
+      {
+        "index": 2,
+        "pid": 16563,
+        "updates": 5,
+        "fullPasses": 0,
+        "uniqueSupervisedSteps": 80,
+        "actionVisits": {
+          "sell": 15,
+          "play": 16,
+          "cast": 14,
+          "upgrade": 2,
+          "end": 4,
+          "refresh": 14,
+          "buy": 11,
+          "discover": 2,
+          "buySpell": 1,
+          "freeze": 1
+        },
+        "before": {
+          "all": {
+            "samples": 1555,
+            "negative_log_likelihood": 3.1296840085189825,
+            "top1_agreement": 0.12218649517684887
+          },
+          "buy": {
+            "samples": 174,
+            "negative_log_likelihood": 3.3594880864537995,
+            "top1_agreement": 0.07471264367816093
+          },
+          "play": {
+            "samples": 324,
+            "negative_log_likelihood": 3.3060190467922776,
+            "top1_agreement": 0.2037037037037037
+          },
+          "power": {
+            "samples": 7,
+            "negative_log_likelihood": 3.8634356600897655,
+            "top1_agreement": 0.14285714285714285
+          },
+          "end": {
+            "samples": 54,
+            "negative_log_likelihood": 2.059093192771629,
+            "top1_agreement": 0.0
+          },
+          "buySpell": {
+            "samples": 54,
+            "negative_log_likelihood": 2.151345511277517,
+            "top1_agreement": 0.2037037037037037
+          },
+          "cast": {
+            "samples": 226,
+            "negative_log_likelihood": 3.424223498433037,
+            "top1_agreement": 0.09734513274336283
+          },
+          "upgrade": {
+            "samples": 23,
+            "negative_log_likelihood": 2.292018061098845,
+            "top1_agreement": 0.0
+          },
+          "discover": {
+            "samples": 87,
+            "negative_log_likelihood": 1.0915895071865498,
+            "top1_agreement": 0.4482758620689655
+          },
+          "refresh": {
+            "samples": 257,
+            "negative_log_likelihood": 2.1939203150077553,
+            "top1_agreement": 0.09727626459143969
+          },
+          "darkGift": {
+            "samples": 6,
+            "negative_log_likelihood": 1.8513089418411255,
+            "top1_agreement": 1.0
+          },
+          "move": {
+            "samples": 28,
+            "negative_log_likelihood": 5.963420101574489,
+            "top1_agreement": 0.0
+          },
+          "buyTrinket": {
+            "samples": 11,
+            "negative_log_likelihood": 1.4650470126758923,
+            "top1_agreement": 0.18181818181818182
+          },
+          "sell": {
+            "samples": 273,
+            "negative_log_likelihood": 4.403075144841121,
+            "top1_agreement": 0.0
+          },
+          "choosePower": {
+            "samples": 2,
+            "negative_log_likelihood": 1.4271567463874817,
+            "top1_agreement": 0.5
+          },
+          "reward": {
+            "samples": 12,
+            "negative_log_likelihood": 2.149215966463089,
+            "top1_agreement": 0.3333333333333333
+          },
+          "activate": {
+            "samples": 9,
+            "negative_log_likelihood": 3.4558432896931968,
+            "top1_agreement": 0.0
+          },
+          "freeze": {
+            "samples": 8,
+            "negative_log_likelihood": 1.895864799618721,
+            "top1_agreement": 0.0
+          }
+        }
+      }
+    ],
+    "ppoPaused": true,
+    "allThreeWorkersUpdating": true,
+    "system_free_bytes": 5996666880,
+    "data_free_bytes": 3780792320
+  },
+  "tests": {
+    "command": "PYTHONPATH=rl/python .venv/bin/python -m unittest discover -s rl/tests -p test_imitation_repeated.py",
+    "passed": 2
+  },
+  "source_hashes": {
+    "worker": "40c5f892899335fe1a04063a027c8e26f241c41420f84226897cabad494c7084",
+    "controller": "9fca9330892cff1b22a5fb32ee4ce324ba7c3f12893bf5767d95a86a5ac8e22c"
+  },
+  "sources": [
+    {
+      "depth": 64,
+      "episodes": 1512,
+      "iteration": 96
+    },
+    {
+      "depth": 256,
+      "episodes": 1196,
+      "iteration": 77
+    },
+    {
+      "depth": 1024,
+      "episodes": 628,
+      "iteration": 40
+    }
+  ]
+}
