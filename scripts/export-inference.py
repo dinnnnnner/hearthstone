@@ -33,6 +33,10 @@ metadata = dict(episodes=saved['episodes'], architecture=spec['architecture'],
 metadata.update(policyDepth=spec.get('policy_depth'), valueDepth=spec.get('value_depth'),
                 observationVersion=saved['meta']['observationVersion'], entityVersion=old['version'],
                 iteration=saved['iteration'], unusedGoldPenalty=saved['config'].get('unused_gold_penalty', 0.0))
+history = saved['config'].get('humanImitation', [])
+if history:
+    metadata.update(humanImitation=history, imitationUpdates=sum(entry['updates'] for entry in history),
+                    demonstrationGames=len({digest for entry in history for digest in entry['datasets']}))
 a.output.parent.mkdir(parents=True, exist_ok=True)
 torch.save(dict(model=saved['model'], model_spec=spec, metadata=metadata), a.output)
 print(json.dumps(metadata, indent=2))

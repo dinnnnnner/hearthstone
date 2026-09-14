@@ -1,7 +1,7 @@
 [Unit]
 Description=Expose Battlegrounds inference from the compute host to the public server
-Wants=tavern-model@deep64-1112.service tavern-model@deep256-908.service tavern-model@deep1024-436.service
-After=tavern-model@deep64-1112.service tavern-model@deep256-908.service tavern-model@deep1024-436.service
+Wants=tavern-model@deep64-1480.service tavern-model@deep256-1164.service tavern-model@deep1024-612.service
+After=tavern-model@deep64-1480.service tavern-model@deep256-1164.service tavern-model@deep1024-612.service
 
 [Service]
 Type=simple

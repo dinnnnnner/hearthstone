@@ -1,0 +1,302 @@
+{
+  "site": "https://8.153.150.101/tavern/",
+  "public": {
+    "health": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "recording": {
+        "enabled": true,
+        "episodes": 0,
+        "decisions": 0,
+        "completed": 0,
+        "rejected": 0,
+        "errors": 0,
+        "bytes": 3021200
+      },
+      "ai": {
+        "mode": "neural",
+        "decisions": 115,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 115,
+          "rawRequestBytes": 607009,
+          "requestBytes": 240218,
+          "responseBytes": 157454,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1480",
+            "decisions": 35,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-1164",
+            "decisions": 44,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-612",
+            "decisions": 36,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    },
+    "models": {
+      "models": [
+        {
+          "id": "deep64-1480",
+          "label": "64 层模型",
+          "episodes": 1480,
+          "checkpointSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "label": "256 层模型",
+          "episodes": 1164,
+          "checkpointSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "label": "1024 层模型",
+          "episodes": 612,
+          "checkpointSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+          "available": true
+        }
+      ],
+      "recordingAvailable": true
+    },
+    "release": "/opt/bobs-tavern/releases/20260914-human-models",
+    "rollback": {
+      "previousRelease": "/opt/bobs-tavern/releases/20260914T053630Z",
+      "backendSha256": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966"
+    }
+  },
+  "computeHost": "100.97.24.15",
+  "compute": {
+    "deep64-1480": {
+      "release": "/home/zich/.local/share/tavern-models/deep64-1480/releases/20260914-human",
+      "preflight": {
+        "depth": 64,
+        "checkpointSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+        "steps": 16,
+        "meanMs": 8.849459252814995,
+        "ok": true
+      },
+      "hashes": {
+        "model.pt": "5ed94140e742c86184202df2c4d92d25c61432e0c3c948a81faea3ecddfbe217",
+        "metadata.json": "b9b1d0c486ad5685f89f7e20bed9f299ba34ca2859081fc6be8865fcace7db3f"
+      }
+    },
+    "deep256-1164": {
+      "release": "/home/zich/.local/share/tavern-models/deep256-1164/releases/20260914-human",
+      "preflight": {
+        "depth": 256,
+        "checkpointSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+        "steps": 16,
+        "meanMs": 14.195039442711277,
+        "ok": true
+      },
+      "hashes": {
+        "model.pt": "b78d7b1f66d2b9a444a2c6605abad37d1d42fb6cbf8eb5bbddc9a87a81b4fa80",
+        "metadata.json": "226c5f43ca6510c9495bc8962b4647a4ab025305123620aad0862b7a5f930d0e"
+      }
+    },
+    "deep1024-612": {
+      "release": "/home/zich/.local/share/tavern-models/deep1024-612/releases/20260914-human",
+      "preflight": {
+        "depth": 1024,
+        "checkpointSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+        "steps": 16,
+        "meanMs": 36.13568988657789,
+        "ok": true
+      },
+      "hashes": {
+        "model.pt": "81cdd01ef48af63f762df1bdf1264f55ab7322aebf32a881c165f7af8818ae9c",
+        "metadata.json": "cccd5754f222c3ad1fabe3d2c4f90865b160963fc403d01afd1002db1f35a066"
+      }
+    }
+  },
+  "models": [
+    {
+      "config": {
+        "id": "deep64-1480",
+        "label": "64 层模型",
+        "episodes": 1480,
+        "checkpointSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18891"
+      },
+      "metadata": {
+        "episodes": 1480,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 64,
+        "valueDepth": 64,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 94,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+            "weightSha256": "0f21d1fc111b01961b1372466a7017d6899c3156c6a131b34e725473c86b3496",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "ce5aa4eeb530d3fa537a1b850dc40bf327e9b604033c7fd88250c618518b5edd",
+            "weightSha256": "8fb0dd5976e97c742ce49f2506d658ce0876404e36a307466eebaf7fde96dfda",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          }
+        ],
+        "imitationUpdates": 40,
+        "demonstrationGames": 2
+      }
+    },
+    {
+      "config": {
+        "id": "deep256-1164",
+        "label": "256 层模型",
+        "episodes": 1164,
+        "checkpointSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18893"
+      },
+      "metadata": {
+        "episodes": 1164,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 75,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+            "weightSha256": "2a75391e990dedbf185a743f3b24d9654fc97c61b60e91f36dc50530dcc86fc0",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+            "weightSha256": "4c9d8de6b5fff43cd4511a73837a049b63b1b2367aa75c2e737160726690520f",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          }
+        ],
+        "imitationUpdates": 40,
+        "demonstrationGames": 2
+      }
+    },
+    {
+      "config": {
+        "id": "deep1024-612",
+        "label": "1024 层模型",
+        "episodes": 612,
+        "checkpointSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18895"
+      },
+      "metadata": {
+        "episodes": 612,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 39,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+            "weightSha256": "901acab2125a42c7f06ed2563db0612a11edf87b7dc9b6f13d99b7383912a6d3",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+            "weightSha256": "5336173221d6fb0fafe9e4564c82a01c7724d78294bf34f009ee0fd114e67980",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          }
+        ],
+        "imitationUpdates": 40,
+        "demonstrationGames": 2
+      }
+    }
+  ],
+  "checks": {
+    "browserTest": "tests/ai-models.spec.ts",
+    "browserPassed": true,
+    "browserSeconds": 38.8,
+    "serviceAutostartEnabled": true,
+    "tunnelHealthy": true
+  },
+  "rollback": {
+    "previousModels": [
+      "deep64-1112",
+      "deep256-908",
+      "deep1024-436"
+    ],
+    "tunnelUnitBackup": "~/.local/share/tavern-models/incoming-20260914-human/tunnel-before.service"
+  },
+  "note": "Inference weights include the two human demonstrations applied to the current PPO learners; deployment tests do not establish improved playing strength."
+}
