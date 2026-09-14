@@ -27,6 +27,35 @@ class TinyPolicy(torch.nn.Module):
 
 
 class ImitationSegmentTests(unittest.TestCase):
+    def test_full_checkpoint_preserves_ppo_state_and_records_imitation_in_config(self):
+        policy=TinyPolicy()
+        schema={'actions':[{'type':'buy'},{'type':'end'}],'entity_schema':{}}
+        step={'step':0,'action':0,'legal':[0,1],'previous':2,'entities':[]}
+        episode={'start':{'gameId':'one','source':'human','buildId':'test'},'file':'one.gz','sha256':'data',
+                 'selection':{},'steps':[step],'segments':[[step]]}
+        saved={'model_spec':dict(schema,architecture='entity-gru'),'model':copy.deepcopy(policy.state_dict()),
+               'meta':{'observationVersion':4},'optimizer':{'state':{'moment':torch.tensor([.3])}},
+               'config':{'learning_rate':3e-5,'unused_gold_penalty':.01},'iteration':19,'episodes':304,
+               'league':[{'generation':18,'model':{'weight':torch.tensor(.1)}}],
+               'torch_rng':torch.get_rng_state(),'numpy_rng':('unchanged',),'python_rng':('unchanged',),'cuda_rng':None}
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);torch.save(saved,root/'base.pt')
+            with patch('tavern_rl.imitate.load_dataset',return_value=({'schema':json.dumps(schema),'contract':'test'},[episode],[])), \
+                 patch('tavern_rl.imitate.make_model',return_value=policy), \
+                 patch('tavern_rl.imitate.prepare_entities',side_effect=lambda x:x):
+                report=train_trial(root/'base.pt',root,root/'trial',updates=1,single_game=True,training_checkpoint=True)
+            result=torch.load(root/'trial/latest.pt',weights_only=False)
+            self.assertTrue(report['trainingCheckpoint'])
+            self.assertFalse((root/'trial/candidate.pt').exists())
+            self.assertFalse(torch.equal(result['model']['weight'],saved['model']['weight']))
+            self.assertTrue(torch.equal(result['optimizer']['state']['moment'],saved['optimizer']['state']['moment']))
+            self.assertTrue(torch.equal(result['torch_rng'],saved['torch_rng']))
+            self.assertTrue(torch.equal(result['league'][0]['model']['weight'],saved['league'][0]['model']['weight']))
+            for key in ('meta','iteration','episodes','numpy_rng','python_rng','cuda_rng'):
+                self.assertEqual(result[key],saved[key])
+            for key,value in saved['config'].items():self.assertEqual(result['config'][key],value)
+            self.assertEqual(result['config']['humanImitation'][0]['datasets'],['data'])
+
     def test_training_and_evaluation_reset_each_segment_and_cover_all_labels(self):
         actions = [{'type': 'buy'}, {'type': 'end'}]
         schema = {'actions': actions, 'entity_schema': {}}

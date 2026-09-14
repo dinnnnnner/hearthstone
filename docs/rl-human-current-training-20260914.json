@@ -1,0 +1,549 @@
+{
+  "kind": "human_imitation_on_current_ppo_training",
+  "episode": "5718343c-2346-4813-b677-94c9af57bcba",
+  "hero": "s14_chenvaala",
+  "recordedSteps": 288,
+  "segments": 6,
+  "place": 1,
+  "turn": 14,
+  "trainingReports": [
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+      "trainingCheckpoint": true,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 288,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 315,
+      "losses": [
+        3.657630443572998,
+        4.355291366577148,
+        3.9760258197784424,
+        3.261889934539795,
+        4.97475528717041,
+        3.496467113494873,
+        4.618588447570801,
+        3.796597480773926,
+        3.9642462730407715,
+        4.003284931182861,
+        4.649914741516113,
+        5.130114555358887,
+        3.24588680267334,
+        2.4831769466400146,
+        4.497028350830078,
+        4.274270057678223,
+        3.640531539916992,
+        4.909579277038574,
+        3.2403767108917236,
+        2.8307242393493652
+      ],
+      "before": {
+        "training": {
+          "samples": 288,
+          "negative_log_likelihood": 4.218783090201517,
+          "top1_agreement": 0.07291666666666667
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 288,
+          "negative_log_likelihood": 3.7116695891082703,
+          "top1_agreement": 0.08680555555555555
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "a6e5fbf4-8336-4878-992e-1f7bc8dbabee"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+          "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+          "source": "human",
+          "buildId": "c47922445b47a85c9ab3ce652fc6fe136e0a7074d7f6d633f1370288b1161c85",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 288,
+            "retainedSteps": 288,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 43,
+                "steps": 44
+              },
+              {
+                "firstStep": 44,
+                "lastStep": 89,
+                "steps": 46
+              },
+              {
+                "firstStep": 90,
+                "lastStep": 121,
+                "steps": 32
+              },
+              {
+                "firstStep": 122,
+                "lastStep": 159,
+                "steps": 38
+              },
+              {
+                "firstStep": 160,
+                "lastStep": 193,
+                "steps": 34
+              },
+              {
+                "firstStep": 194,
+                "lastStep": 287,
+                "steps": 94
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 64,
+        "episodes": 1448,
+        "iteration": 92,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+        "updatedArtifactSha256": "20ae8d01af1ec03a06c58f46dad8473f43bc816d24bdabbe4774cc0286c309c1",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    },
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+      "trainingCheckpoint": true,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 288,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 1083,
+      "losses": [
+        3.705928325653076,
+        4.356521129608154,
+        4.134288311004639,
+        2.776275157928467,
+        5.628335952758789,
+        3.292970895767212,
+        4.650393009185791,
+        4.328468322753906,
+        3.3433990478515625,
+        3.885362386703491,
+        4.991533279418945,
+        5.575719356536865,
+        3.433844566345215,
+        2.0567679405212402,
+        5.1697893142700195,
+        3.6514265537261963,
+        3.923412799835205,
+        5.716819763183594,
+        3.3502609729766846,
+        3.016355037689209
+      ],
+      "before": {
+        "training": {
+          "samples": 288,
+          "negative_log_likelihood": 4.185853562059088,
+          "top1_agreement": 0.0798611111111111
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 288,
+          "negative_log_likelihood": 3.9130680081693248,
+          "top1_agreement": 0.09027777777777778
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "a6e5fbf4-8336-4878-992e-1f7bc8dbabee"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+          "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+          "source": "human",
+          "buildId": "c47922445b47a85c9ab3ce652fc6fe136e0a7074d7f6d633f1370288b1161c85",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 288,
+            "retainedSteps": 288,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 43,
+                "steps": 44
+              },
+              {
+                "firstStep": 44,
+                "lastStep": 89,
+                "steps": 46
+              },
+              {
+                "firstStep": 90,
+                "lastStep": 121,
+                "steps": 32
+              },
+              {
+                "firstStep": 122,
+                "lastStep": 159,
+                "steps": 38
+              },
+              {
+                "firstStep": 160,
+                "lastStep": 193,
+                "steps": 34
+              },
+              {
+                "firstStep": 194,
+                "lastStep": 287,
+                "steps": 94
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 256,
+        "episodes": 1148,
+        "iteration": 74,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+        "updatedArtifactSha256": "a8d2b310f1fbe22e82ccde3976ba92042b03ef35c0db04b405bc792ea3a1eba7",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    },
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+      "trainingCheckpoint": true,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 288,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 4155,
+      "losses": [
+        3.8779516220092773,
+        3.950913667678833,
+        4.807562828063965,
+        2.728355646133423,
+        4.848011016845703,
+        3.43902325630188,
+        3.6311187744140625,
+        3.839630603790283,
+        3.2399258613586426,
+        3.38846755027771,
+        3.6279191970825195,
+        4.8345947265625,
+        2.790127754211426,
+        2.1190292835235596,
+        4.559382438659668,
+        3.633340358734131,
+        3.455472230911255,
+        4.185947418212891,
+        2.9704346656799316,
+        2.5895910263061523
+      ],
+      "before": {
+        "training": {
+          "samples": 288,
+          "negative_log_likelihood": 3.9792488232358463,
+          "top1_agreement": 0.0798611111111111
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 288,
+          "negative_log_likelihood": 3.257474351156917,
+          "top1_agreement": 0.11805555555555555
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "a6e5fbf4-8336-4878-992e-1f7bc8dbabee"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+          "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+          "source": "human",
+          "buildId": "c47922445b47a85c9ab3ce652fc6fe136e0a7074d7f6d633f1370288b1161c85",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 288,
+            "retainedSteps": 288,
+            "originalReasons": [
+              "capture_gap",
+              "automatic_end"
+            ],
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 43,
+                "steps": 44
+              },
+              {
+                "firstStep": 44,
+                "lastStep": 89,
+                "steps": 46
+              },
+              {
+                "firstStep": 90,
+                "lastStep": 121,
+                "steps": 32
+              },
+              {
+                "firstStep": 122,
+                "lastStep": 159,
+                "steps": 38
+              },
+              {
+                "firstStep": 160,
+                "lastStep": 193,
+                "steps": 34
+              },
+              {
+                "firstStep": 194,
+                "lastStep": 287,
+                "steps": 94
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 1024,
+        "episodes": 596,
+        "iteration": 38,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+        "updatedArtifactSha256": "905ad12959a0a6e19c7376be776a2191ef90ebb25e37b3e8fd0dc67bc16e06a3",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    }
+  ],
+  "extension": {
+    "captured_utc": "2026-09-14T05:38:21.490544+00:00",
+    "launch": {
+      "pid": 12591,
+      "command": [
+        "/root/miniconda3/bin/python",
+        "-u",
+        "-m",
+        "tavern_rl.population",
+        "--resumes",
+        "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-0/training/latest.pt",
+        "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-1/training/latest.pt",
+        "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-2/training/latest.pt",
+        "--output",
+        "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended",
+        "--deadline-utc",
+        "2026-09-14T05:59:33.374655+00:00",
+        "--workers",
+        "8",
+        "--iterations-per-exchange",
+        "2",
+        "--games-per-iteration",
+        "16",
+        "--max-per-lineage",
+        "2",
+        "--external-fraction",
+        "0.4",
+        "--device",
+        "cuda"
+      ],
+      "output": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended",
+      "deadline_utc": "2026-09-14T05:59:33.374655+00:00",
+      "extended_minutes": 30,
+      "previous_deadline_utc": "2026-09-14T05:29:33.374655+00:00",
+      "resumes": [
+        "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-0/training/latest.pt",
+        "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-1/training/latest.pt",
+        "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-2/training/latest.pt"
+      ]
+    },
+    "status": {
+      "stage": "running",
+      "pid": 12591,
+      "opponent_mode": "mixed_self_play",
+      "deadline_utc": "2026-09-14T05:59:33.374655+00:00",
+      "workers_per_learner": 8,
+      "iterations_per_exchange": 2,
+      "games_per_iteration": 16,
+      "unused_gold_penalty": null,
+      "external_fraction": 0.4,
+      "max_per_lineage": 2,
+      "members": [
+        {
+          "index": 0,
+          "root": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0",
+          "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-0/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 12635,
+          "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0/initial.pt"
+        },
+        {
+          "index": 1,
+          "root": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1",
+          "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-1/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 12637,
+          "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1/initial.pt"
+        },
+        {
+          "index": 2,
+          "root": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2",
+          "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-2/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 12758,
+          "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2/initial.pt"
+        }
+      ]
+    },
+    "members": [
+      {
+        "depth": 64,
+        "episodes": 1448,
+        "iteration": 92,
+        "pid": 12635,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+            "weightSha256": "0f21d1fc111b01961b1372466a7017d6899c3156c6a131b34e725473c86b3496",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          }
+        ],
+        "workers": 8,
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0/training/latest.pt"
+      },
+      {
+        "depth": 256,
+        "episodes": 1148,
+        "iteration": 74,
+        "pid": 12637,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+            "weightSha256": "2a75391e990dedbf185a743f3b24d9654fc97c61b60e91f36dc50530dcc86fc0",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          }
+        ],
+        "workers": 8,
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1/training/latest.pt"
+      },
+      {
+        "depth": 1024,
+        "episodes": 596,
+        "iteration": 38,
+        "pid": 12758,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+            "weightSha256": "901acab2125a42c7f06ed2563db0612a11edf87b7dc9b6f13d99b7383912a6d3",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          }
+        ],
+        "workers": 8,
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2/training/latest.pt"
+      }
+    ],
+    "allLearnersResumedWithHumanUpdates": true
+  },
+  "checks": {
+    "datasetTests": 11,
+    "imitationIntegrationTests": 2,
+    "gpuTrainingPassed": [
+      64,
+      256,
+      1024
+    ]
+  },
+  "execution": {
+    "host": "connect.nmb2.seetacloud.com",
+    "port": 34884,
+    "directory": "/root/autodl-tmp/tavern-human-current-20260914"
+  },
+  "operatorScripts": {
+    "train_current.py": "77245a335376546d2eb5bbf44cd9c27e637d6fb83286baa6152254e2f1065b3f",
+    "extend_training.py": "f5c44d7af8c88061eb03067d6733c6df6c2fca2317d021b8188d61ef45e170b4",
+    "verify_extension.py": "1dd624da60177a8bdbc1a7b8c2ab9ea75d286821d5470b25a551c3397c75c2f6"
+  },
+  "webModelsChanged": false,
+  "note": "All three current PPO checkpoints learned this game. Loss measures fit to the demonstrations, not independent playing strength."
+}

@@ -11,7 +11,7 @@ from .model import make_model
 
 
 def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, learning_rate=1e-5, device='cpu', allow_synthetic=False,
-                single_game=False, allow_incomplete_prefix=False, allow_incomplete_segments=False):
+                single_game=False, allow_incomplete_prefix=False, allow_incomplete_segments=False, training_checkpoint=False):
     if updates < 1 or sequence_length < 1 or not 0 < learning_rate < 1:
         raise ValueError('Invalid training limits')
     output = Path(output)
@@ -25,11 +25,17 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
         training, validation = episodes, []
     else:
         training, validation = split_games(episodes)
-    saved = torch.load(checkpoint, map_location='cpu', weights_only=True)
+    # Full PPO checkpoints contain trusted optimizer and Python/NumPy RNG state.
+    saved = torch.load(checkpoint, map_location='cpu', weights_only=not training_checkpoint)
     spec = saved['model_spec']; schema = json.loads(manifest['schema'])
     if spec.get('architecture') not in ('entity-gru', 'entity-gru-resnet') or spec['actions'] != schema['actions'] or spec['entity_schema'] != schema['entity_schema']:
         raise ValueError('Model and dataset input/action definitions differ')
-    if saved.get('metadata', {}).get('contract') != manifest['contract']:
+    if training_checkpoint:
+        for key in ('optimizer','config','iteration','episodes','league','torch_rng','numpy_rng','python_rng'):
+            if key not in saved: raise ValueError('Missing training state: '+key)
+        if saved.get('meta',{}).get('observationVersion') != 4:
+            raise ValueError('Training checkpoint observation version differs')
+    elif saved.get('metadata', {}).get('contract') != manifest['contract']:
         raise ValueError('Use a compatible exported inference artifact')
     model = make_model(spec).to(device)
     model.load_state_dict(saved['model'], strict=True)
@@ -45,7 +51,10 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
         mask = torch.zeros((1, model.action_size), dtype=torch.bool, device=device)
         mask[0, step['legal']] = True
         previous = torch.tensor([step['previous']], device=device)
-        distribution, _, memory = model.act([step['prepared']], mask, memory, previous, with_value=False)
+        # Native GRU supports backward in eval mode; cuDNN's eval RNN does not.
+        # Keep dropout disabled consistently during demonstration replay.
+        with torch.backends.cudnn.flags(enabled=False):
+            distribution, _, memory = model.act([step['prepared']], mask, memory, previous, with_value=False)
         loss = -distribution.log_prob(torch.tensor([step['action']], device=device)).mean()
         return loss, memory, int(distribution.probs.argmax(-1).item() == step['action'])
     def evaluate(items):
@@ -91,9 +100,8 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
     digest=hashlib.sha256()
     for k,v in sorted(weights.items()): digest.update(k.encode());digest.update(v.contiguous().numpy().tobytes())
     identity=digest.hexdigest()
-    metadata=dict(saved['metadata'], checkpointSha256=identity, parentCheckpointSha256=saved['metadata']['checkpointSha256'],
-                  imitationUpdates=updates, imitationTotalUpdates=saved['metadata'].get('imitationTotalUpdates',saved['metadata'].get('imitationUpdates',0))+updates)
     report={'kind':'behavior_cloning_trial','contract':manifest['contract'],'parentArtifactSha256':hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
+            'trainingCheckpoint':training_checkpoint,
             'syntheticAllowed':allow_synthetic,'singleGame':single_game,'incompletePrefixAllowed':allow_incomplete_prefix,
             'incompleteSegmentsAllowed':allow_incomplete_segments,'trainingChunks':len(chunks),'uniqueSupervisedSteps':len(supervised),
             'updates':updates,'learningRate':learning_rate,'sequenceLength':sequence_length,
@@ -104,14 +112,24 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
                         'selection':e['selection']} for e in episodes],
             'deployed':False,'note':'Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.'}
     output.mkdir(parents=True)
-    torch.save(dict(saved,model=weights,metadata=metadata),output/'candidate.pt')
+    if training_checkpoint:
+        history=list(saved['config'].get('humanImitation',[]))
+        history.append(dict(parentArtifactSha256=report['parentArtifactSha256'],weightSha256=identity,
+                            datasets=[e['sha256'] for e in episodes],updates=updates,supervisedSteps=len(supervised),
+                            incompleteSegments=allow_incomplete_segments))
+        # Keep PPO moments, counters, RNG, reward settings and frozen opponents intact.
+        torch.save(dict(saved,model=weights,config=dict(saved['config'],humanImitation=history)),output/'latest.pt')
+    else:
+        metadata=dict(saved['metadata'], checkpointSha256=identity, parentCheckpointSha256=saved['metadata']['checkpointSha256'],
+                      imitationUpdates=updates, imitationTotalUpdates=saved['metadata'].get('imitationTotalUpdates',saved['metadata'].get('imitationUpdates',0))+updates)
+        torch.save(dict(saved,model=weights,metadata=metadata),output/'candidate.pt')
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     return report
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--checkpoint',required=True,type=Path,help='Exported inference artifact, not a full PPO checkpoint')
+    parser.add_argument('--checkpoint',required=True,type=Path,help='Inference artifact, or trusted full PPO state with --training-checkpoint')
     parser.add_argument('--dataset',required=True,type=Path,help='Contract directory containing schema.json and episodes')
     parser.add_argument('--output',required=True,type=Path)
     parser.add_argument('--updates',type=int,default=8)
@@ -122,10 +140,11 @@ def main():
     parser.add_argument('--single-game',action='store_true',help='Train one explicitly selected episode; no independent validation')
     parser.add_argument('--allow-incomplete-prefix',action='store_true',help='Only use the verified prefix before the first gap; requires --single-game')
     parser.add_argument('--allow-incomplete-segments',action='store_true',help='Use observed segments, resetting memory and previous-action token at gaps; requires --single-game')
+    parser.add_argument('--training-checkpoint',action='store_true',help='Read a trusted full PPO checkpoint and preserve its training state in latest.pt')
     args=parser.parse_args();torch.set_num_threads(1);torch.manual_seed(42)
     print(json.dumps(train_trial(args.checkpoint,args.dataset,args.output,updates=args.updates,sequence_length=args.sequence_length,
                                 learning_rate=args.learning_rate,device=args.device,allow_synthetic=args.allow_synthetic,
                                 single_game=args.single_game,allow_incomplete_prefix=args.allow_incomplete_prefix,
-                                allow_incomplete_segments=args.allow_incomplete_segments)))
+                                allow_incomplete_segments=args.allow_incomplete_segments,training_checkpoint=args.training_checkpoint)))
 
 if __name__=='__main__': main()
