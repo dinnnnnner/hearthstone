@@ -1,0 +1,526 @@
+{
+  "kind": "latest_partial_start_imitation_on_current_ppo",
+  "episode": "a929b2a6-d643-454c-aa21-057e806e9e5f",
+  "hero": "s14_chenvaala",
+  "place": 1,
+  "firstRecordedTurn": 5,
+  "finalTurn": 15,
+  "recordedSteps": 248,
+  "segments": 7,
+  "reports": [
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "ce5aa4eeb530d3fa537a1b850dc40bf327e9b604033c7fd88250c618518b5edd",
+      "trainingCheckpoint": true,
+      "partialStartAllowed": true,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 248,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 315,
+      "losses": [
+        4.492489814758301,
+        3.7276878356933594,
+        3.882831573486328,
+        3.419588088989258,
+        4.31791353225708,
+        5.0159149169921875,
+        4.617352485656738,
+        3.6917853355407715,
+        3.3100030422210693,
+        6.203367233276367,
+        3.1599314212799072,
+        4.3507585525512695,
+        4.153147220611572,
+        3.8910293579101562,
+        4.748093128204346,
+        3.2942094802856445,
+        3.513761520385742,
+        2.3536670207977295,
+        4.294116973876953,
+        3.28895902633667
+      ],
+      "before": {
+        "training": {
+          "samples": 248,
+          "negative_log_likelihood": 4.566065318401782,
+          "top1_agreement": 0.03225806451612903
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 248,
+          "negative_log_likelihood": 3.822706490755081,
+          "top1_agreement": 0.03225806451612903
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "3bb9769c-2e98-4438-bbae-4632b3b78b4f"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+          "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0",
+          "source": "human",
+          "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 248,
+            "retainedSteps": 248,
+            "originalReasons": [
+              "partial_start",
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": true,
+            "firstRecordedTurn": 5,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 19,
+                "steps": 20
+              },
+              {
+                "firstStep": 20,
+                "lastStep": 48,
+                "steps": 29
+              },
+              {
+                "firstStep": 49,
+                "lastStep": 100,
+                "steps": 52
+              },
+              {
+                "firstStep": 101,
+                "lastStep": 150,
+                "steps": 50
+              },
+              {
+                "firstStep": 151,
+                "lastStep": 222,
+                "steps": 72
+              },
+              {
+                "firstStep": 223,
+                "lastStep": 244,
+                "steps": 22
+              },
+              {
+                "firstStep": 245,
+                "lastStep": 247,
+                "steps": 3
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 64,
+        "episodes": 1480,
+        "iteration": 94,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "ce5aa4eeb530d3fa537a1b850dc40bf327e9b604033c7fd88250c618518b5edd",
+        "updatedArtifactSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    },
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+      "trainingCheckpoint": true,
+      "partialStartAllowed": true,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 248,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 1083,
+      "losses": [
+        4.313424110412598,
+        4.27775239944458,
+        4.506072998046875,
+        2.626143455505371,
+        4.309439659118652,
+        4.567739963531494,
+        4.558591842651367,
+        3.172062873840332,
+        3.602545738220215,
+        6.318881511688232,
+        2.3820629119873047,
+        4.278721332550049,
+        4.2337799072265625,
+        3.642030715942383,
+        4.109187126159668,
+        3.877854347229004,
+        3.4327847957611084,
+        2.1017813682556152,
+        4.234148025512695,
+        3.8779423236846924
+      ],
+      "before": {
+        "training": {
+          "samples": 248,
+          "negative_log_likelihood": 4.404202608091216,
+          "top1_agreement": 0.056451612903225805
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 248,
+          "negative_log_likelihood": 3.9157996027460023,
+          "top1_agreement": 0.06451612903225806
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "3bb9769c-2e98-4438-bbae-4632b3b78b4f"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+          "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0",
+          "source": "human",
+          "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 248,
+            "retainedSteps": 248,
+            "originalReasons": [
+              "partial_start",
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": true,
+            "firstRecordedTurn": 5,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 19,
+                "steps": 20
+              },
+              {
+                "firstStep": 20,
+                "lastStep": 48,
+                "steps": 29
+              },
+              {
+                "firstStep": 49,
+                "lastStep": 100,
+                "steps": 52
+              },
+              {
+                "firstStep": 101,
+                "lastStep": 150,
+                "steps": 50
+              },
+              {
+                "firstStep": 151,
+                "lastStep": 222,
+                "steps": 72
+              },
+              {
+                "firstStep": 223,
+                "lastStep": 244,
+                "steps": 22
+              },
+              {
+                "firstStep": 245,
+                "lastStep": 247,
+                "steps": 3
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 256,
+        "episodes": 1164,
+        "iteration": 75,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+        "updatedArtifactSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    },
+    {
+      "kind": "behavior_cloning_trial",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+      "trainingCheckpoint": true,
+      "partialStartAllowed": true,
+      "syntheticAllowed": false,
+      "singleGame": true,
+      "incompletePrefixAllowed": false,
+      "incompleteSegmentsAllowed": true,
+      "trainingChunks": 20,
+      "uniqueSupervisedSteps": 248,
+      "updates": 20,
+      "learningRate": 1e-05,
+      "sequenceLength": 16,
+      "changedTensors": 4155,
+      "losses": [
+        3.469477891921997,
+        3.5890352725982666,
+        3.6885199546813965,
+        2.5722930431365967,
+        3.751136302947998,
+        3.528421401977539,
+        3.832505226135254,
+        2.7351670265197754,
+        2.763715982437134,
+        4.295772552490234,
+        2.307450294494629,
+        3.4150679111480713,
+        3.2369720935821533,
+        3.060586929321289,
+        3.262528657913208,
+        2.6053051948547363,
+        2.7861557006835938,
+        2.0014283657073975,
+        3.333502769470215,
+        2.818349838256836
+      ],
+      "before": {
+        "training": {
+          "samples": 248,
+          "negative_log_likelihood": 3.626161795590193,
+          "top1_agreement": 0.06451612903225806
+        },
+        "validation": null
+      },
+      "after": {
+        "training": {
+          "samples": 248,
+          "negative_log_likelihood": 3.047813855111599,
+          "top1_agreement": 0.10483870967741936
+        },
+        "validation": null
+      },
+      "rejected": [],
+      "trainingGames": [
+        "3bb9769c-2e98-4438-bbae-4632b3b78b4f"
+      ],
+      "validationGames": [],
+      "dataset": [
+        {
+          "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+          "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0",
+          "source": "human",
+          "buildId": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+          "selection": {
+            "mode": "continuous_segments",
+            "recordedSteps": 248,
+            "retainedSteps": 248,
+            "originalReasons": [
+              "partial_start",
+              "capture_gap",
+              "automatic_end"
+            ],
+            "partialStart": true,
+            "firstRecordedTurn": 5,
+            "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+            "segments": [
+              {
+                "firstStep": 0,
+                "lastStep": 19,
+                "steps": 20
+              },
+              {
+                "firstStep": 20,
+                "lastStep": 48,
+                "steps": 29
+              },
+              {
+                "firstStep": 49,
+                "lastStep": 100,
+                "steps": 52
+              },
+              {
+                "firstStep": 101,
+                "lastStep": 150,
+                "steps": 50
+              },
+              {
+                "firstStep": 151,
+                "lastStep": 222,
+                "steps": 72
+              },
+              {
+                "firstStep": 223,
+                "lastStep": 244,
+                "steps": 22
+              },
+              {
+                "firstStep": 245,
+                "lastStep": 247,
+                "steps": 3
+              }
+            ]
+          }
+        }
+      ],
+      "deployed": false,
+      "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+      "verification": {
+        "depth": 1024,
+        "episodes": 612,
+        "iteration": 39,
+        "preservedPpoState": true,
+        "optimizerRestored": true,
+        "simulatorCompatible": true,
+        "unchangedValueHead": true,
+        "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+        "updatedArtifactSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+        "installedForResume": true,
+        "trainingStoppedByDeadline": true
+      }
+    }
+  ],
+  "verification": {
+    "captured_utc": "2026-09-14T06:05:22.919344+00:00",
+    "members": [
+      {
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0/training/latest.pt",
+        "depth": 64,
+        "episodes": 1480,
+        "sha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+            "weightSha256": "0f21d1fc111b01961b1372466a7017d6899c3156c6a131b34e725473c86b3496",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "ce5aa4eeb530d3fa537a1b850dc40bf327e9b604033c7fd88250c618518b5edd",
+            "weightSha256": "8fb0dd5976e97c742ce49f2506d658ce0876404e36a307466eebaf7fde96dfda",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          }
+        ],
+        "rollback": "/root/autodl-tmp/tavern-human-current-a929b2a6/member-0/before.pt"
+      },
+      {
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1/training/latest.pt",
+        "depth": 256,
+        "episodes": 1164,
+        "sha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+            "weightSha256": "2a75391e990dedbf185a743f3b24d9654fc97c61b60e91f36dc50530dcc86fc0",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+            "weightSha256": "4c9d8de6b5fff43cd4511a73837a049b63b1b2367aa75c2e737160726690520f",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          }
+        ],
+        "rollback": "/root/autodl-tmp/tavern-human-current-a929b2a6/member-1/before.pt"
+      },
+      {
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2/training/latest.pt",
+        "depth": 1024,
+        "episodes": 612,
+        "sha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+            "weightSha256": "901acab2125a42c7f06ed2563db0612a11edf87b7dc9b6f13d99b7383912a6d3",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+            "weightSha256": "5336173221d6fb0fafe9e4564c82a01c7724d78294bf34f009ee0fd114e67980",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          }
+        ],
+        "rollback": "/root/autodl-tmp/tavern-human-current-a929b2a6/member-2/before.pt"
+      }
+    ],
+    "trainingStatus": "time_limit",
+    "trainingDeadline": "2026-09-14T05:59:33.374655+00:00",
+    "allLatestCheckpointsVerified": true
+  },
+  "checks": {
+    "datasetTests": 12,
+    "imitationIntegrationTests": 2,
+    "gpuTrainingPassed": [
+      64,
+      256,
+      1024
+    ]
+  },
+  "execution": {
+    "host": "connect.nmb2.seetacloud.com",
+    "port": 34884,
+    "directory": "/root/autodl-tmp/tavern-human-current-a929b2a6"
+  },
+  "operatorScripts": {
+    "train_current.py": "9f61de6295bd12271e32be358cc3d58d783a4e9dde7704612ce674b1462d4c09",
+    "verify_latest.py": "d835cd71ef94d54cc3594097aa4b482f5cf75bd218051eb5fd8bf7993ba54dc7"
+  },
+  "webModelsChanged": false,
+  "note": "Retained recorded decisions after turn 5 with explicit segment resets. No missing actions reconstructed; fit is not independent playing strength."
+}

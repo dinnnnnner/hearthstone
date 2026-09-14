@@ -35,7 +35,7 @@ class ImitationSegmentTests(unittest.TestCase):
                  'selection':{},'steps':[step],'segments':[[step]]}
         saved={'model_spec':dict(schema,architecture='entity-gru'),'model':copy.deepcopy(policy.state_dict()),
                'meta':{'observationVersion':4},'optimizer':{'state':{'moment':torch.tensor([.3])}},
-               'config':{'learning_rate':3e-5,'unused_gold_penalty':.01},'iteration':19,'episodes':304,
+               'config':{'learning_rate':3e-5,'unused_gold_penalty':.01,'humanImitation':[{'datasets':['older'],'updates':20}]},'iteration':19,'episodes':304,
                'league':[{'generation':18,'model':{'weight':torch.tensor(.1)}}],
                'torch_rng':torch.get_rng_state(),'numpy_rng':('unchanged',),'python_rng':('unchanged',),'cuda_rng':None}
         with tempfile.TemporaryDirectory() as directory:
@@ -53,8 +53,10 @@ class ImitationSegmentTests(unittest.TestCase):
             self.assertTrue(torch.equal(result['league'][0]['model']['weight'],saved['league'][0]['model']['weight']))
             for key in ('meta','iteration','episodes','numpy_rng','python_rng','cuda_rng'):
                 self.assertEqual(result[key],saved[key])
-            for key,value in saved['config'].items():self.assertEqual(result['config'][key],value)
-            self.assertEqual(result['config']['humanImitation'][0]['datasets'],['data'])
+            for key,value in saved['config'].items():
+                if key != 'humanImitation':self.assertEqual(result['config'][key],value)
+            self.assertEqual(result['config']['humanImitation'][:-1],saved['config']['humanImitation'])
+            self.assertEqual(result['config']['humanImitation'][-1]['datasets'],['data'])
 
     def test_training_and_evaluation_reset_each_segment_and_cover_all_labels(self):
         actions = [{'type': 'buy'}, {'type': 'end'}]

@@ -11,14 +11,14 @@ from .model import make_model
 
 
 def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, learning_rate=1e-5, device='cpu', allow_synthetic=False,
-                single_game=False, allow_incomplete_prefix=False, allow_incomplete_segments=False, training_checkpoint=False):
+                single_game=False, allow_incomplete_prefix=False, allow_incomplete_segments=False, training_checkpoint=False, allow_partial_start=False):
     if updates < 1 or sequence_length < 1 or not 0 < learning_rate < 1:
         raise ValueError('Invalid training limits')
     output = Path(output)
     if output.exists(): raise ValueError('Output must be a new directory; never overwrite a serving model')
     if (allow_incomplete_prefix or allow_incomplete_segments) and not single_game:
         raise ValueError('Incomplete data requires an explicit single-game trial')
-    manifest, episodes, rejected = load_dataset(dataset, allow_synthetic, allow_incomplete_prefix, allow_incomplete_segments)
+    manifest, episodes, rejected = load_dataset(dataset, allow_synthetic, allow_incomplete_prefix, allow_incomplete_segments, allow_partial_start)
     if single_game:
         if len(episodes) != 1 or rejected:
             raise ValueError('Single-game trial requires exactly one accepted episode and no rejected files')
@@ -102,6 +102,7 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
     identity=digest.hexdigest()
     report={'kind':'behavior_cloning_trial','contract':manifest['contract'],'parentArtifactSha256':hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
             'trainingCheckpoint':training_checkpoint,
+            'partialStartAllowed':allow_partial_start,
             'syntheticAllowed':allow_synthetic,'singleGame':single_game,'incompletePrefixAllowed':allow_incomplete_prefix,
             'incompleteSegmentsAllowed':allow_incomplete_segments,'trainingChunks':len(chunks),'uniqueSupervisedSteps':len(supervised),
             'updates':updates,'learningRate':learning_rate,'sequenceLength':sequence_length,
@@ -141,10 +142,12 @@ def main():
     parser.add_argument('--allow-incomplete-prefix',action='store_true',help='Only use the verified prefix before the first gap; requires --single-game')
     parser.add_argument('--allow-incomplete-segments',action='store_true',help='Use observed segments, resetting memory and previous-action token at gaps; requires --single-game')
     parser.add_argument('--training-checkpoint',action='store_true',help='Read a trusted full PPO checkpoint and preserve its training state in latest.pt')
+    parser.add_argument('--allow-partial-start',action='store_true',help='Explicitly reset missing initial history; requires segment mode and a final result')
     args=parser.parse_args();torch.set_num_threads(1);torch.manual_seed(42)
     print(json.dumps(train_trial(args.checkpoint,args.dataset,args.output,updates=args.updates,sequence_length=args.sequence_length,
                                 learning_rate=args.learning_rate,device=args.device,allow_synthetic=args.allow_synthetic,
                                 single_game=args.single_game,allow_incomplete_prefix=args.allow_incomplete_prefix,
-                                allow_incomplete_segments=args.allow_incomplete_segments,training_checkpoint=args.training_checkpoint)))
+                                allow_incomplete_segments=args.allow_incomplete_segments,training_checkpoint=args.training_checkpoint,
+                                allow_partial_start=args.allow_partial_start)))
 
 if __name__=='__main__': main()

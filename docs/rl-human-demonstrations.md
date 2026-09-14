@@ -35,6 +35,8 @@ PYTHONPATH=rl/python .venv/bin/python -m tavern_rl.imitate \
 
 分段模式报告每段原始步号范围、训练块数 `trainingChunks` 和实际参与梯度更新的不同操作数 `uniqueSupervisedSteps`。更新次数至少达到训练块数时，全部片段都会被训练一次；默认 8 次更新不保证覆盖长对局。可从已有候选继续训练，元数据分别记录本次更新数与累计模仿更新数。
 
+若记录从对局中途开始，但已记录最终名次，可额外使用 `--allow-partial-start`。此选项必须与分段模式一起启用，首段也从零记忆开始，报告保留 `partialStart` 和 `firstRecordedTurn`。默认分段模式仍拒绝中途开始的记录；缺少最终名次、因服务重启而截断等情况不会因此放行。不会拼接不同录制序列或补造开局操作。
+
 计算机 `100.97.24.15` 已安装试训工具，路径为 `~/.local/share/tavern-imitation/releases/20260914`。在该目录运行时设置 `PYTHONPATH=python`，解释器使用 `~/.local/share/tavern-models/venv/bin/python`。公网采集的数据需由管理员经 SSH 复制到计算机，当前不会自动下载或触发训练。
 
 报告给出训练与验证集的动作一致率、负对数似然、更新次数和实际改变的张量数。验证集与人类操作更一致不等于棋力提高；上线前仍需单独对战评估，当前流程不自动替换公网模型。
@@ -72,3 +74,7 @@ TEST_BASE_URL=https://8.153.150.101 TAVERN_TEST_PATH=/tavern/ npx playwright tes
 2026-09-14 最新齐恩瓦拉对局的 288 条记录分成 6 段，分别用于服务器当时的 64 层 1448 局、256 层 1148 局和 1024 层 596 局训练检查点。各更新 20 次，覆盖全部记录。拟合损失分别为 4.2188 → 3.7117、4.1859 → 3.9131、3.9792 → 3.2575，没有独立验证集。这次使用完整 PPO 权重，与前面基于网页导出权重的试训分开记录。
 
 原训练在 05:29:33 UTC 按期限结束，随后应用模仿更新。根据用户追加的 30 分钟，续训任务截止时间设为 05:59:33 UTC，即北京时间 13:59:33。更新前文件保留在训练服务器 `/root/autodl-tmp/tavern-human-current-20260914/member-{0,1,2}/before.pt`；续训目录为 `/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended`。详细记录见 [当前训练线接入与延期记录](rl-human-current-training-20260914.json)。
+
+随后指定的最新对局 `a929b2a6` 从第 5 回合才开始录制，第 15 回合取得第 1 名。显式启用中途起点模式后，248 条操作分为 7 段。等待延期任务按时退出，分别在 64 层 1480 局、256 层 1164 局、1024 层 612 局的最终检查点上更新 20 次。拟合损失依次为 4.5661 → 3.8227、4.4042 → 3.9158、3.6262 → 3.0478。
+
+更新已写回 `population-human-extended/member-{0,1,2}/training/latest.pt`，保留 PPO 状态及上一局的模仿记录。备份位于 `/root/autodl-tmp/tavern-human-current-a929b2a6/member-{0,1,2}/before.pt`。本次未再次延长自我对战；三份最新检查点的文件哈希、训练状态和记录均已核对，见 [中途录制对局接入记录](rl-human-current-a929b2a6-20260914.json)。

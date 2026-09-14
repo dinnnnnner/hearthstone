@@ -90,6 +90,27 @@ class DemonstrationTests(unittest.TestCase):
         del steps[3]['entities'][0]['details']['decisions']
         with self.assertRaises(ValueError):continuous_segments(steps,[{'type':'buy'},{'type':'end'}])
 
+    def test_partial_start_requires_explicit_flag_and_final_result(self):
+        rows=copy.deepcopy(self.rows)
+        rows[0]['completeStart']=False
+        rows[1]['turn']=5
+        rows[1]['entities'][0]['details'].update(turn=5,decisions=7)
+        rows[-1].update(complete=False,reasons=['partial_start','capture_gap'])
+        self.write(rows)
+        self.assertEqual(load_dataset(self.root)[1],[])
+        self.assertEqual(load_dataset(self.root,allow_incomplete_segments=True)[1],[])
+        with self.assertRaises(ValueError):load_dataset(self.root,allow_partial_start=True)
+        _,episodes,rejected=load_dataset(self.root,allow_incomplete_segments=True,allow_partial_start=True)
+        self.assertEqual(rejected,[])
+        self.assertEqual(episodes[0]['start'],rows[0])
+        self.assertEqual(episodes[0]['end'],rows[-1])
+        self.assertEqual(episodes[0]['selection']['firstRecordedTurn'],5)
+        self.assertTrue(episodes[0]['selection']['partialStart'])
+        self.assertEqual(episodes[0]['segments'][0][0]['previous'],2)
+        for change in [{'place':None},{'reasons':['partial_start','server_restart']},{'reasons':['capture_gap']}]:
+            broken=copy.deepcopy(rows);broken[-1].update(change);self.write(broken)
+            self.assertEqual(load_dataset(self.root,allow_incomplete_segments=True,allow_partial_start=True)[1],[])
+
     def test_partial_loading_requires_flag_and_preserves_original_result(self):
         manifest=json.loads((self.root/'schema.json').read_text())
         schema=json.loads(manifest['schema']);schema['actions']=[{'type':'buy'},{'type':'end'}]

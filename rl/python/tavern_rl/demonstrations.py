@@ -30,7 +30,7 @@ def continuous_prefix(steps, actions):
     return kept
 
 
-def continuous_segments(steps, actions):
+def continuous_segments(steps, actions, allow_partial_start=False):
     """Retain observed labels; reset recurrent context wherever history is unknown."""
     segments = []
     last = None
@@ -40,7 +40,7 @@ def continuous_segments(steps, actions):
         if type(counter) is not int or counter < 0 or details.get('turn') != row['turn']:
             raise ValueError('Invalid decision counter for segment continuity')
         if last is None:
-            if row['turn'] != 1 or counter != 0:
+            if not allow_partial_start and (row['turn'] != 1 or counter != 0):
                 raise ValueError('Missing initial context')
             connected = False
         elif row['turn'] == last['turn']:
@@ -54,9 +54,11 @@ def continuous_segments(steps, actions):
     return segments
 
 
-def load_dataset(directory, allow_synthetic=False, allow_incomplete_prefix=False, allow_incomplete_segments=False):
+def load_dataset(directory, allow_synthetic=False, allow_incomplete_prefix=False, allow_incomplete_segments=False, allow_partial_start=False):
     if allow_incomplete_prefix and allow_incomplete_segments:
         raise ValueError('Choose prefix or segment mode, not both')
+    if allow_partial_start and not allow_incomplete_segments:
+        raise ValueError('Partial starts require explicit segment mode')
     root = Path(directory)
     manifest = json.loads((root / 'schema.json').read_text())
     if manifest['format'] != 1 or hashlib.sha256(manifest['schema'].encode()).hexdigest() != manifest['contract']:
@@ -76,7 +78,10 @@ def load_dataset(directory, allow_synthetic=False, allow_incomplete_prefix=False
                     rows.append(json.loads(line, parse_constant=lambda value: (_ for _ in ()).throw(ValueError('Non-finite JSON'))))
             if len(rows) < 3: raise ValueError('Missing trajectory or terminal result')
             start, *steps, end = rows
-            if start.get('type') != 'start' or start.get('format') != 1 or not start.get('completeStart'):
+            if start.get('type') != 'start' or start.get('format') != 1 or type(start.get('completeStart')) is not bool:
+                raise ValueError('Invalid start')
+            partial_start = not start['completeStart']
+            if partial_start and not allow_partial_start:
                 raise ValueError('Partial start')
             if start.get('contract') != manifest['contract']: raise ValueError('Contract mismatch')
             if start.get('source') != 'human' and not (allow_synthetic and start.get('source') == 'synthetic'):
@@ -88,9 +93,12 @@ def load_dataset(directory, allow_synthetic=False, allow_incomplete_prefix=False
             if type(end.get('place')) is not int or not 1 <= end['place'] <= 8 or end.get('steps') != len(steps):
                 raise ValueError('Invalid result/step count')
             selection = {'mode': 'complete_game', 'recordedSteps': len(steps)}
+            if partial_start and (end.get('complete') is not False or 'partial_start' not in end.get('reasons', [])):
+                raise ValueError('Partial-start terminal marker missing')
             if partial:
-                if not end.get('reasons') or not set(end['reasons']) <= {'capture_gap', 'automatic_end'}:
-                    raise ValueError('Prefix mode only accepts known capture/automatic-end gaps with a final result')
+                allowed_reasons = {'capture_gap', 'automatic_end'} | ({'partial_start'} if partial_start and allow_partial_start else set())
+                if not end.get('reasons') or not set(end['reasons']) <= allowed_reasons:
+                    raise ValueError('Only explicitly allowed gaps with a final result are accepted')
                 if allow_incomplete_prefix:
                     steps = continuous_prefix(steps, schema['actions'])
                     if not steps: raise ValueError('No verified continuous prefix')
@@ -118,9 +126,10 @@ def load_dataset(directory, allow_synthetic=False, allow_incomplete_prefix=False
                         raise ValueError('Invalid entity slot')
                 previous, turn = row['action'], row['turn']
             if end.get('episode') != start.get('episode'): raise ValueError('Terminal identity mismatch')
-            segments = continuous_segments(steps, schema['actions']) if allow_incomplete_segments else [steps]
+            segments = continuous_segments(steps, schema['actions'], partial_start and allow_partial_start) if allow_incomplete_segments else [steps]
             if allow_incomplete_segments:
                 selection.update(mode='continuous_segments', retainedSteps=len(steps), originalReasons=end['reasons'],
+                                 partialStart=partial_start, firstRecordedTurn=steps[0]['turn'],
                                  context='Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed',
                                  segments=[{'firstStep':s[0]['step'], 'lastStep':s[-1]['step'], 'steps':len(s)} for s in segments])
             episodes.append(dict(start=start, steps=steps, segments=segments, end=end, selection=selection, file=path.name,
