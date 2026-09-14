@@ -5,7 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from tavern_rl.demonstrations import load_dataset, split_games
+from tavern_rl.demonstrations import continuous_prefix, load_dataset, split_games
 
 
 class DemonstrationTests(unittest.TestCase):
@@ -49,5 +49,50 @@ class DemonstrationTests(unittest.TestCase):
         self.write(self.rows)
         p=self.root/'episode.jsonl.gz';p.write_bytes(p.read_bytes()[:-8])
         self.assertEqual(load_dataset(self.root)[1],[])
+
+    def prefix_steps(self):
+        steps=[]
+        for i,(turn,counter,action) in enumerate([(1,0,0),(1,1,1),(2,0,0),(2,1,0)]):
+            row=copy.deepcopy(self.rows[1])
+            row.update(step=i,turn=turn,action=action,previous=2 if i==0 else steps[-1]['action'])
+            row['entities'][0]['details'].update(turn=turn,decisions=counter)
+            steps.append(row)
+        return steps
+
+    def test_prefix_stops_at_missing_action_with_consecutive_recorded_steps(self):
+        steps=self.prefix_steps()
+        steps[3]['entities'][0]['details']['decisions']=2
+        self.assertEqual(continuous_prefix(steps,[{'type':'buy'},{'type':'end'}]),steps[:3])
+
+    def test_prefix_accepts_manual_turn_transition_but_stops_at_automatic_end(self):
+        steps=self.prefix_steps();actions=[{'type':'buy'},{'type':'end'}]
+        self.assertEqual(continuous_prefix(steps,actions),steps)
+        steps[1]['action']=0;steps[2]['previous']=0
+        self.assertEqual(continuous_prefix(steps,actions),steps[:2])
+
+    def test_prefix_rejects_missing_beginning_and_malformed_details(self):
+        for details in [None,{'turn':1,'decisions':1}, {'turn':1}]:
+            steps=self.prefix_steps();steps[0]['entities'][0]['details']=details
+            self.assertEqual(continuous_prefix(steps,[{'type':'buy'},{'type':'end'}]),[])
+
+    def test_partial_loading_requires_flag_and_preserves_original_result(self):
+        manifest=json.loads((self.root/'schema.json').read_text())
+        schema=json.loads(manifest['schema']);schema['actions']=[{'type':'buy'},{'type':'end'}]
+        manifest['schema']=json.dumps(schema)
+        manifest['contract']=hashlib.sha256(manifest['schema'].encode()).hexdigest()
+        (self.root/'schema.json').write_text(json.dumps(manifest))
+        start=copy.deepcopy(self.rows[0]);start['contract']=manifest['contract']
+        steps=self.prefix_steps();steps[3]['entities'][0]['details']['decisions']=2
+        end=dict(self.rows[-1],complete=False,reasons=['capture_gap','automatic_end'],steps=4)
+        self.write([start,*steps,end])
+        self.assertEqual(load_dataset(self.root)[1],[])
+        _,episodes,rejected=load_dataset(self.root,allow_incomplete_prefix=True)
+        self.assertEqual(rejected,[]);self.assertEqual(len(episodes),1)
+        self.assertEqual(episodes[0]['steps'],steps[:3])
+        self.assertEqual(episodes[0]['end'],end)
+        self.assertEqual(episodes[0]['selection']['recordedSteps'],4)
+        self.assertEqual(episodes[0]['selection']['retainedSteps'],3)
+        end['reasons']=['restart'];self.write([start,*steps,end])
+        self.assertEqual(load_dataset(self.root,allow_incomplete_prefix=True)[1],[])
 
 if __name__=='__main__':unittest.main()

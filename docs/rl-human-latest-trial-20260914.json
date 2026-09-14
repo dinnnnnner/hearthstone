@@ -1,0 +1,99 @@
+{
+  "kind": "behavior_cloning_trial",
+  "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+  "parentArtifactSha256": "732ab70e33b088ce6818e2fc03382bf4fced6a61e08205873784cf35cbb56aea",
+  "syntheticAllowed": false,
+  "singleGame": true,
+  "incompletePrefixAllowed": true,
+  "updates": 8,
+  "learningRate": 1e-05,
+  "sequenceLength": 16,
+  "changedTensors": 1083,
+  "losses": [
+    5.3319926261901855,
+    7.814815521240234,
+    2.5659286975860596,
+    7.524454593658447,
+    2.5411643981933594,
+    5.130401611328125,
+    5.095895290374756,
+    7.034635543823242
+  ],
+  "before": {
+    "training": {
+      "samples": 33,
+      "negative_log_likelihood": 4.073054737665436,
+      "top1_agreement": 0.12121212121212122
+    },
+    "validation": null
+  },
+  "after": {
+    "training": {
+      "samples": 33,
+      "negative_log_likelihood": 3.85134366515911,
+      "top1_agreement": 0.12121212121212122
+    },
+    "validation": null
+  },
+  "rejected": [],
+  "trainingGames": [
+    "3f08ef63-48b4-494f-aa35-a421eef64c6e"
+  ],
+  "validationGames": [],
+  "dataset": [
+    {
+      "file": "105d3a1e-66eb-4844-99cf-5c4672d993a5.jsonl.gz",
+      "sha256": "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+      "source": "human",
+      "buildId": "c47922445b47a85c9ab3ce652fc6fe136e0a7074d7f6d633f1370288b1161c85",
+      "selection": {
+        "mode": "continuous_prefix",
+        "recordedSteps": 386,
+        "retainedSteps": 33,
+        "originalReasons": [
+          "capture_gap",
+          "automatic_end"
+        ]
+      }
+    }
+  ],
+  "deployed": false,
+  "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+  "verification": {
+    "modelId": "deep256-908",
+    "depth": 256,
+    "legalInferenceSteps": 33,
+    "memorySize": 128,
+    "baseArtifactUnchanged": true,
+    "baseArtifactSha256": "732ab70e33b088ce6818e2fc03382bf4fced6a61e08205873784cf35cbb56aea",
+    "candidateArtifactSha256": "efaa39479d1cad92ddfd94e56e0e88b8269fdd169c6e73cd23ed43c0962b35a3",
+    "candidateCheckpointSha256": "513a9e724ef68a0e19de5a87d84ea68de6d709d60575cef3ed44c97020fa8656",
+    "parentCheckpointSha256": "4078283c8680ec7433505dfce01b4eecce0b50ea31ed9c95e82706e2ead692c2"
+  },
+  "execution": {
+    "host": "100.97.24.15",
+    "directory": "~/.local/share/tavern-imitation/releases/20260914-human-latest",
+    "candidate": "trial-256/candidate.pt",
+    "device": "cpu",
+    "threads": 1
+  },
+  "originalGame": {
+    "hero": "s14_brann",
+    "place": 1,
+    "turn": 15,
+    "complete": false,
+    "reasons": [
+      "capture_gap",
+      "automatic_end"
+    ]
+  },
+  "checks": {
+    "datasetTests": 9,
+    "publicInferenceHealthy": [
+      64,
+      256,
+      1024
+    ],
+    "servingCheckpointsUnchanged": true
+  }
+}

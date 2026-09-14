@@ -10,13 +10,21 @@ from .features import prepare_entities
 from .model import make_model
 
 
-def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, learning_rate=1e-5, device='cpu', allow_synthetic=False):
+def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, learning_rate=1e-5, device='cpu', allow_synthetic=False,
+                single_game=False, allow_incomplete_prefix=False):
     if updates < 1 or sequence_length < 1 or not 0 < learning_rate < 1:
         raise ValueError('Invalid training limits')
     output = Path(output)
     if output.exists(): raise ValueError('Output must be a new directory; never overwrite a serving model')
-    manifest, episodes, rejected = load_dataset(dataset, allow_synthetic)
-    training, validation = split_games(episodes)
+    if allow_incomplete_prefix and not single_game:
+        raise ValueError('Incomplete prefixes require an explicit single-game trial')
+    manifest, episodes, rejected = load_dataset(dataset, allow_synthetic, allow_incomplete_prefix)
+    if single_game:
+        if len(episodes) != 1 or rejected:
+            raise ValueError('Single-game trial requires exactly one accepted episode and no rejected files')
+        training, validation = episodes, []
+    else:
+        training, validation = split_games(episodes)
     saved = torch.load(checkpoint, map_location='cpu', weights_only=True)
     spec = saved['model_spec']; schema = json.loads(manifest['schema'])
     if spec.get('architecture') not in ('entity-gru', 'entity-gru-resnet') or spec['actions'] != schema['actions'] or spec['entity_schema'] != schema['entity_schema']:
@@ -40,6 +48,7 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
         loss = -distribution.log_prob(torch.tensor([step['action']], device=device)).mean()
         return loss, memory, int(distribution.probs.argmax(-1).item() == step['action'])
     def evaluate(items):
+        if not items: return None
         model.eval(); losses=[]; matches=0
         with torch.no_grad():
             for episode in items:
@@ -80,11 +89,13 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
     identity=digest.hexdigest()
     metadata=dict(saved['metadata'], checkpointSha256=identity, parentCheckpointSha256=saved['metadata']['checkpointSha256'], imitationUpdates=updates)
     report={'kind':'behavior_cloning_trial','contract':manifest['contract'],'parentArtifactSha256':hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
-            'syntheticAllowed':allow_synthetic,'updates':updates,'learningRate':learning_rate,'sequenceLength':sequence_length,
+            'syntheticAllowed':allow_synthetic,'singleGame':single_game,'incompletePrefixAllowed':allow_incomplete_prefix,
+            'updates':updates,'learningRate':learning_rate,'sequenceLength':sequence_length,
             'changedTensors':changed,'losses':losses,'before':before,'after':after,'rejected':rejected,
             'trainingGames':sorted({e['start']['gameId'] for e in training}),
             'validationGames':sorted({e['start']['gameId'] for e in validation}),
-            'dataset':[{'file':e['file'],'sha256':e['sha256'],'source':e['start']['source'],'buildId':e['start']['buildId']} for e in episodes],
+            'dataset':[{'file':e['file'],'sha256':e['sha256'],'source':e['start']['source'],'buildId':e['start']['buildId'],
+                        'selection':e['selection']} for e in episodes],
             'deployed':False,'note':'Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.'}
     output.mkdir(parents=True)
     torch.save(dict(saved,model=weights,metadata=metadata),output/'candidate.pt')
@@ -102,8 +113,11 @@ def main():
     parser.add_argument('--learning-rate',type=float,default=1e-5)
     parser.add_argument('--device',default='cpu')
     parser.add_argument('--allow-synthetic',action='store_true',help='Explicit pipeline verification only')
+    parser.add_argument('--single-game',action='store_true',help='Train one explicitly selected episode; no independent validation')
+    parser.add_argument('--allow-incomplete-prefix',action='store_true',help='Only use the verified prefix before the first gap; requires --single-game')
     args=parser.parse_args();torch.set_num_threads(1);torch.manual_seed(42)
     print(json.dumps(train_trial(args.checkpoint,args.dataset,args.output,updates=args.updates,sequence_length=args.sequence_length,
-                                learning_rate=args.learning_rate,device=args.device,allow_synthetic=args.allow_synthetic)))
+                                learning_rate=args.learning_rate,device=args.device,allow_synthetic=args.allow_synthetic,
+                                single_game=args.single_game,allow_incomplete_prefix=args.allow_incomplete_prefix)))
 
 if __name__=='__main__': main()

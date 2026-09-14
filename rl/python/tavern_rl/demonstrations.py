@@ -7,7 +7,30 @@ import math
 from pathlib import Path
 
 
-def load_dataset(directory, allow_synthetic=False):
+def continuous_prefix(steps, actions):
+    """Stop before the first unrecorded action/automatic turn transition; never bridge a gap."""
+    kept = []
+    previous = len(actions)
+    turn, counter = 1, 0
+    for row in steps:
+        if row.get('type') != 'decision' or row.get('step') != len(kept): break
+        current = row.get('turn')
+        if current != turn:
+            if not kept or current != turn + 1 or actions[kept[-1]['action']]['type'] != 'end': break
+            turn, counter = current, 0
+        elif kept and actions[kept[-1]['action']]['type'] == 'end': break
+        entities = row.get('entities')
+        if not isinstance(entities, list) or not entities or not isinstance(entities[0], dict): break
+        details = entities[0].get('details', {})
+        if not isinstance(details, dict): break
+        if type(details.get('decisions')) is not int or details['decisions'] != counter or details.get('turn') != turn: break
+        if row.get('previous') != previous: break
+        if type(row.get('action')) is not int or not 0 <= row['action'] < len(actions): break
+        kept.append(row); previous = row['action']; counter += 1
+    return kept
+
+
+def load_dataset(directory, allow_synthetic=False, allow_incomplete_prefix=False):
     root = Path(directory)
     manifest = json.loads((root / 'schema.json').read_text())
     if manifest['format'] != 1 or hashlib.sha256(manifest['schema'].encode()).hexdigest() != manifest['contract']:
@@ -33,10 +56,18 @@ def load_dataset(directory, allow_synthetic=False):
             if start.get('source') != 'human' and not (allow_synthetic and start.get('source') == 'synthetic'):
                 raise ValueError('Synthetic data excluded')
             if not isinstance(start.get('gameId'), str) or not start['gameId']: raise ValueError('Missing game identity')
-            if end.get('type') != 'end' or end.get('complete') is not True or end.get('reasons'):
+            partial = end.get('complete') is not True or bool(end.get('reasons'))
+            if end.get('type') != 'end' or partial and not allow_incomplete_prefix:
                 raise ValueError('Incomplete or interrupted episode')
             if type(end.get('place')) is not int or not 1 <= end['place'] <= 8 or end.get('steps') != len(steps):
                 raise ValueError('Invalid result/step count')
+            selection = {'mode': 'complete_game', 'recordedSteps': len(steps)}
+            if partial:
+                if not end.get('reasons') or not set(end['reasons']) <= {'capture_gap', 'automatic_end'}:
+                    raise ValueError('Prefix mode only accepts known capture/automatic-end gaps with a final result')
+                steps = continuous_prefix(steps, schema['actions'])
+                if not steps: raise ValueError('No verified continuous prefix')
+                selection.update(mode='continuous_prefix', retainedSteps=len(steps), originalReasons=end['reasons'])
             previous, turn = count, 1
             for i, row in enumerate(steps):
                 if row.get('type') != 'decision' or row.get('step') != i or row.get('episode') != start.get('episode'):
@@ -60,7 +91,7 @@ def load_dataset(directory, allow_synthetic=False):
                         raise ValueError('Invalid entity slot')
                 previous, turn = row['action'], row['turn']
             if end.get('episode') != start.get('episode'): raise ValueError('Terminal identity mismatch')
-            episodes.append(dict(start=start, steps=steps, end=end, file=path.name,
+            episodes.append(dict(start=start, steps=steps, end=end, selection=selection, file=path.name,
                                  sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
         except (ValueError, KeyError, TypeError, OSError, EOFError) as error:
             rejected.append(dict(file=path.name, reason=str(error)))
