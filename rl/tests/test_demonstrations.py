@@ -5,7 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from tavern_rl.demonstrations import continuous_prefix, load_dataset, split_games
+from tavern_rl.demonstrations import continuous_prefix, continuous_segments, load_dataset, split_games
 
 
 class DemonstrationTests(unittest.TestCase):
@@ -75,6 +75,21 @@ class DemonstrationTests(unittest.TestCase):
             steps=self.prefix_steps();steps[0]['entities'][0]['details']=details
             self.assertEqual(continuous_prefix(steps,[{'type':'buy'},{'type':'end'}]),[])
 
+    def test_segments_keep_later_labels_and_reset_unknown_previous_without_mutation(self):
+        steps=self.prefix_steps();steps[3]['entities'][0]['details']['decisions']=2
+        original=copy.deepcopy(steps)
+        segments=continuous_segments(steps,[{'type':'buy'},{'type':'end'}])
+        self.assertEqual([len(s) for s in segments],[3,1])
+        self.assertEqual(segments[1][0]['previous'],2)
+        self.assertEqual([r['action'] for s in segments for r in s],[r['action'] for r in steps])
+        self.assertEqual(steps,original)
+
+    def test_segments_reset_after_automatic_end_and_reject_unknown_counters(self):
+        steps=self.prefix_steps();steps[1]['action']=0;steps[2]['previous']=0
+        self.assertEqual([len(s) for s in continuous_segments(steps,[{'type':'buy'},{'type':'end'}])],[2,2])
+        del steps[3]['entities'][0]['details']['decisions']
+        with self.assertRaises(ValueError):continuous_segments(steps,[{'type':'buy'},{'type':'end'}])
+
     def test_partial_loading_requires_flag_and_preserves_original_result(self):
         manifest=json.loads((self.root/'schema.json').read_text())
         schema=json.loads(manifest['schema']);schema['actions']=[{'type':'buy'},{'type':'end'}]
@@ -92,7 +107,19 @@ class DemonstrationTests(unittest.TestCase):
         self.assertEqual(episodes[0]['end'],end)
         self.assertEqual(episodes[0]['selection']['recordedSteps'],4)
         self.assertEqual(episodes[0]['selection']['retainedSteps'],3)
+        _,episodes,rejected=load_dataset(self.root,allow_incomplete_segments=True)
+        self.assertEqual(rejected,[])
+        self.assertEqual(episodes[0]['steps'],steps)
+        self.assertEqual(episodes[0]['end'],end)
+        self.assertEqual([len(s) for s in episodes[0]['segments']],[3,1])
+        self.assertEqual(episodes[0]['selection']['retainedSteps'],4)
+        # A gap is allowed; an illegal label after that gap is still rejected.
+        broken=copy.deepcopy(steps);broken[-1]['legal']=[1]
+        self.write([start,*broken,end])
+        self.assertEqual(load_dataset(self.root,allow_incomplete_segments=True)[1],[])
+        with self.assertRaises(ValueError):load_dataset(self.root,allow_incomplete_prefix=True,allow_incomplete_segments=True)
         end['reasons']=['restart'];self.write([start,*steps,end])
         self.assertEqual(load_dataset(self.root,allow_incomplete_prefix=True)[1],[])
+        self.assertEqual(load_dataset(self.root,allow_incomplete_segments=True)[1],[])
 
 if __name__=='__main__':unittest.main()

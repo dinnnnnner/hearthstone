@@ -1,0 +1,177 @@
+{
+  "kind": "behavior_cloning_trial",
+  "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+  "parentArtifactSha256": "efaa39479d1cad92ddfd94e56e0e88b8269fdd169c6e73cd23ed43c0962b35a3",
+  "syntheticAllowed": false,
+  "singleGame": true,
+  "incompletePrefixAllowed": false,
+  "incompleteSegmentsAllowed": true,
+  "trainingChunks": 30,
+  "uniqueSupervisedSteps": 386,
+  "updates": 30,
+  "learningRate": 1e-05,
+  "sequenceLength": 16,
+  "changedTensors": 1083,
+  "losses": [
+    2.8316617012023926,
+    5.103582382202148,
+    3.55072021484375,
+    3.604975700378418,
+    3.726386070251465,
+    4.620128631591797,
+    4.323426246643066,
+    5.252708911895752,
+    4.946625709533691,
+    5.160854339599609,
+    6.525279521942139,
+    3.717650890350342,
+    4.647992134094238,
+    3.8347551822662354,
+    3.3563389778137207,
+    4.162344455718994,
+    5.2906599044799805,
+    4.472451686859131,
+    4.964395523071289,
+    4.39492654800415,
+    3.7212414741516113,
+    4.273636341094971,
+    4.9320573806762695,
+    5.040536880493164,
+    2.94358229637146,
+    4.695362091064453,
+    4.950190544128418,
+    4.200134754180908,
+    2.474846124649048,
+    4.4535980224609375
+  ],
+  "before": {
+    "training": {
+      "samples": 386,
+      "negative_log_likelihood": 4.458284317134575,
+      "top1_agreement": 0.04922279792746114
+    },
+    "validation": null
+  },
+  "after": {
+    "training": {
+      "samples": 386,
+      "negative_log_likelihood": 4.016744904721957,
+      "top1_agreement": 0.06735751295336788
+    },
+    "validation": null
+  },
+  "rejected": [],
+  "trainingGames": [
+    "3f08ef63-48b4-494f-aa35-a421eef64c6e"
+  ],
+  "validationGames": [],
+  "dataset": [
+    {
+      "file": "105d3a1e-66eb-4844-99cf-5c4672d993a5.jsonl.gz",
+      "sha256": "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+      "source": "human",
+      "buildId": "c47922445b47a85c9ab3ce652fc6fe136e0a7074d7f6d633f1370288b1161c85",
+      "selection": {
+        "mode": "continuous_segments",
+        "recordedSteps": 386,
+        "retainedSteps": 386,
+        "originalReasons": [
+          "capture_gap",
+          "automatic_end"
+        ],
+        "context": "Zero GRU memory and initial-action token at each segment start; missing history is not reconstructed",
+        "segments": [
+          {
+            "firstStep": 0,
+            "lastStep": 32,
+            "steps": 33
+          },
+          {
+            "firstStep": 33,
+            "lastStep": 56,
+            "steps": 24
+          },
+          {
+            "firstStep": 57,
+            "lastStep": 106,
+            "steps": 50
+          },
+          {
+            "firstStep": 107,
+            "lastStep": 109,
+            "steps": 3
+          },
+          {
+            "firstStep": 110,
+            "lastStep": 130,
+            "steps": 21
+          },
+          {
+            "firstStep": 131,
+            "lastStep": 143,
+            "steps": 13
+          },
+          {
+            "firstStep": 144,
+            "lastStep": 202,
+            "steps": 59
+          },
+          {
+            "firstStep": 203,
+            "lastStep": 247,
+            "steps": 45
+          },
+          {
+            "firstStep": 248,
+            "lastStep": 283,
+            "steps": 36
+          },
+          {
+            "firstStep": 284,
+            "lastStep": 385,
+            "steps": 102
+          }
+        ]
+      }
+    }
+  ],
+  "deployed": false,
+  "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+  "verification": {
+    "modelId": "deep256-908",
+    "depth": 256,
+    "legalInferenceSteps": 386,
+    "segments": 10,
+    "memorySize": 128,
+    "baseArtifactUnchanged": true,
+    "baseArtifactSha256": "732ab70e33b088ce6818e2fc03382bf4fced6a61e08205873784cf35cbb56aea",
+    "candidateArtifactSha256": "5919210d33345e33b928d81d430b56c587eb1598fda604a0946ae80a34533c27",
+    "candidateCheckpointSha256": "4b60e8aedf7a62676888427e42657aa756d637c933a150b4697fe62a8b17e60d",
+    "parentCheckpointSha256": "513a9e724ef68a0e19de5a87d84ea68de6d709d60575cef3ed44c97020fa8656",
+    "imitationTotalUpdates": 38
+  },
+  "execution": {
+    "host": "100.97.24.15",
+    "directory": "~/.local/share/tavern-imitation/releases/20260914-human-segments",
+    "candidate": "trial-256/candidate.pt",
+    "device": "cpu",
+    "threads": 1
+  },
+  "continuation": {
+    "previousTrial": "rl-human-latest-trial-20260914.json",
+    "previouslyLearnedSteps": 33,
+    "additionalObservedSteps": 353,
+    "all386ObservedStepsSupervised": true,
+    "missingActionsReconstructed": false
+  },
+  "checks": {
+    "datasetTests": 11,
+    "recurrentTrainingIntegrationTests": 1,
+    "publicInferenceHealthy": [
+      64,
+      256,
+      1024
+    ],
+    "servingCheckpointsUnchanged": true
+  }
+}

@@ -11,14 +11,14 @@ from .model import make_model
 
 
 def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, learning_rate=1e-5, device='cpu', allow_synthetic=False,
-                single_game=False, allow_incomplete_prefix=False):
+                single_game=False, allow_incomplete_prefix=False, allow_incomplete_segments=False):
     if updates < 1 or sequence_length < 1 or not 0 < learning_rate < 1:
         raise ValueError('Invalid training limits')
     output = Path(output)
     if output.exists(): raise ValueError('Output must be a new directory; never overwrite a serving model')
-    if allow_incomplete_prefix and not single_game:
-        raise ValueError('Incomplete prefixes require an explicit single-game trial')
-    manifest, episodes, rejected = load_dataset(dataset, allow_synthetic, allow_incomplete_prefix)
+    if (allow_incomplete_prefix or allow_incomplete_segments) and not single_game:
+        raise ValueError('Incomplete data requires an explicit single-game trial')
+    manifest, episodes, rejected = load_dataset(dataset, allow_synthetic, allow_incomplete_prefix, allow_incomplete_segments)
     if single_game:
         if len(episodes) != 1 or rejected:
             raise ValueError('Single-game trial requires exactly one accepted episode and no rejected files')
@@ -39,7 +39,8 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
         if name.startswith(('value_tower.', 'critic.')): parameter.requires_grad_(False)
     optimizer = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=learning_rate)
     for episode in episodes:
-        for step in episode['steps']: step['prepared'] = prepare_entities(step['entities'])
+        for segment in episode['segments']:
+            for step in segment: step['prepared'] = prepare_entities(step['entities'])
     def predict(step, memory):
         mask = torch.zeros((1, model.action_size), dtype=torch.bool, device=device)
         mask[0, step['legal']] = True
@@ -52,28 +53,31 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
         model.eval(); losses=[]; matches=0
         with torch.no_grad():
             for episode in items:
-                memory = torch.zeros((1, model.hidden), device=device)
-                for step in episode['steps']:
-                    loss, memory, match = predict(step, memory)
-                    losses.append(float(loss)); matches += match
+                for segment in episode['segments']:
+                    memory = torch.zeros((1, model.hidden), device=device)
+                    for step in segment:
+                        loss, memory, match = predict(step, memory)
+                        losses.append(float(loss)); matches += match
         return {'samples':len(losses), 'negative_log_likelihood':sum(losses)/len(losses), 'top1_agreement':matches/len(losses)}
     before = {'training':evaluate(training), 'validation':evaluate(validation)}
-    chunks = [(episode, start) for episode in training for start in range(0,len(episode['steps']),sequence_length)]
+    chunks = [(episode, segment, start) for episode in training for segment in episode['segments'] for start in range(0,len(segment),sequence_length)]
     generator = torch.Generator().manual_seed(42)
     losses=[]
     order=[]
+    supervised=set()
     for _ in range(updates):
         if not order: order=torch.randperm(len(chunks),generator=generator).tolist()
-        episode,start=chunks[order.pop()]
+        episode,segment,start=chunks[order.pop()]
         model.eval()  # No inference/training dropout mismatch during human-sequence replay.
         memory=torch.zeros((1,model.hidden),device=device)
-        # Recompute this model's memory from the beginning with its latest weights.
+        # Recompute memory from this segment's beginning with the latest weights.
         # Never borrow a different depth's state or cross a game boundary.
         with torch.no_grad():
-            for step in episode['steps'][:start]: _,memory,_=predict(step,memory)
+            for step in segment[:start]: _,memory,_=predict(step,memory)
         terms=[]
-        for step in episode['steps'][start:start+sequence_length]:
+        for step in segment[start:start+sequence_length]:
             loss,memory,_=predict(step,memory);terms.append(loss)
+            supervised.add((episode['file'],step['step']))
         loss=torch.stack(terms).mean()
         if not torch.isfinite(loss): raise ValueError('Non-finite imitation loss')
         optimizer.zero_grad(set_to_none=True);loss.backward()
@@ -87,9 +91,11 @@ def train_trial(checkpoint, dataset, output, *, updates=8, sequence_length=16, l
     digest=hashlib.sha256()
     for k,v in sorted(weights.items()): digest.update(k.encode());digest.update(v.contiguous().numpy().tobytes())
     identity=digest.hexdigest()
-    metadata=dict(saved['metadata'], checkpointSha256=identity, parentCheckpointSha256=saved['metadata']['checkpointSha256'], imitationUpdates=updates)
+    metadata=dict(saved['metadata'], checkpointSha256=identity, parentCheckpointSha256=saved['metadata']['checkpointSha256'],
+                  imitationUpdates=updates, imitationTotalUpdates=saved['metadata'].get('imitationTotalUpdates',saved['metadata'].get('imitationUpdates',0))+updates)
     report={'kind':'behavior_cloning_trial','contract':manifest['contract'],'parentArtifactSha256':hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
             'syntheticAllowed':allow_synthetic,'singleGame':single_game,'incompletePrefixAllowed':allow_incomplete_prefix,
+            'incompleteSegmentsAllowed':allow_incomplete_segments,'trainingChunks':len(chunks),'uniqueSupervisedSteps':len(supervised),
             'updates':updates,'learningRate':learning_rate,'sequenceLength':sequence_length,
             'changedTensors':changed,'losses':losses,'before':before,'after':after,'rejected':rejected,
             'trainingGames':sorted({e['start']['gameId'] for e in training}),
@@ -115,9 +121,11 @@ def main():
     parser.add_argument('--allow-synthetic',action='store_true',help='Explicit pipeline verification only')
     parser.add_argument('--single-game',action='store_true',help='Train one explicitly selected episode; no independent validation')
     parser.add_argument('--allow-incomplete-prefix',action='store_true',help='Only use the verified prefix before the first gap; requires --single-game')
+    parser.add_argument('--allow-incomplete-segments',action='store_true',help='Use observed segments, resetting memory and previous-action token at gaps; requires --single-game')
     args=parser.parse_args();torch.set_num_threads(1);torch.manual_seed(42)
     print(json.dumps(train_trial(args.checkpoint,args.dataset,args.output,updates=args.updates,sequence_length=args.sequence_length,
                                 learning_rate=args.learning_rate,device=args.device,allow_synthetic=args.allow_synthetic,
-                                single_game=args.single_game,allow_incomplete_prefix=args.allow_incomplete_prefix)))
+                                single_game=args.single_game,allow_incomplete_prefix=args.allow_incomplete_prefix,
+                                allow_incomplete_segments=args.allow_incomplete_segments)))
 
 if __name__=='__main__': main()
