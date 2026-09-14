@@ -1,0 +1,272 @@
+{
+  "stage": "verified",
+  "models": [
+    {
+      "id": "deep64-1480",
+      "label": "64 层模型",
+      "episodes": 1768,
+      "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18891"
+    },
+    {
+      "id": "deep256-1164",
+      "label": "256 层模型",
+      "episodes": 1404,
+      "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18893"
+    },
+    {
+      "id": "deep1024-612",
+      "label": "1024 层模型",
+      "episodes": 740,
+      "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18895"
+    }
+  ],
+  "training": {
+    "status": {
+      "stage": "time_limit",
+      "pid": 18443,
+      "opponent_mode": "mixed_self_play",
+      "deadline_utc": "2026-09-14T10:45:56.567559+00:00",
+      "workers_per_learner": 8,
+      "iterations_per_exchange": 2,
+      "games_per_iteration": 16,
+      "unused_gold_penalty": null,
+      "external_fraction": 0.4,
+      "max_per_lineage": 2,
+      "members": [
+        {
+          "index": 0,
+          "root": "/root/tavern-four-hour-20260914/population/member-0",
+          "source": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+          "round": 11,
+          "stage": "stopped",
+          "pid": null,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt"
+        },
+        {
+          "index": 1,
+          "root": "/root/tavern-four-hour-20260914/population/member-1",
+          "source": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+          "round": 9,
+          "stage": "stopped",
+          "pid": null,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt"
+        },
+        {
+          "index": 2,
+          "root": "/root/tavern-four-hour-20260914/population/member-2",
+          "source": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+          "round": 6,
+          "stage": "stopped",
+          "pid": null,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt"
+        }
+      ]
+    },
+    "models": [
+      {
+        "id": "deep64-1480",
+        "episodes": 1768,
+        "iteration": 112,
+        "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+        "firstPlaceBonus": 1.0,
+        "unusedGoldPenalty": 0.01,
+        "imitationUpdates": 2613,
+        "demonstrationGames": 5,
+        "hashes": {
+          "model.pt": "90d76a99fac995ccee2f2dfd4abd5eefeb3d0a3bef95b3e3ee2932c5983032db",
+          "metadata.json": "2766b2465ee6e339bd39d6fbe3384252c1ad8c3e8e495e98d6eed4ebcde552ff"
+        }
+      },
+      {
+        "id": "deep256-1164",
+        "episodes": 1404,
+        "iteration": 90,
+        "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+        "firstPlaceBonus": 1.0,
+        "unusedGoldPenalty": 0.01,
+        "imitationUpdates": 1375,
+        "demonstrationGames": 5,
+        "hashes": {
+          "model.pt": "f8d4c440ded7c0ca8e6c602c799ff4655fc9fa4f1cf47d65b6800580a142d2ab",
+          "metadata.json": "004b051c934ae9a233a4d1a6bd60b6d096a450770387c27e1620c03c136a29a3"
+        }
+      },
+      {
+        "id": "deep1024-612",
+        "episodes": 740,
+        "iteration": 47,
+        "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+        "firstPlaceBonus": 1.0,
+        "unusedGoldPenalty": 0.01,
+        "imitationUpdates": 503,
+        "demonstrationGames": 5,
+        "hashes": {
+          "model.pt": "301307881fac6789acf0a971757b96071815fedf445061cae6f155cede214764",
+          "metadata.json": "72467bdb7b04b407eb2cbce4bea307672dadbd95f064c3c07568915ca0d095c6"
+        }
+      }
+    ]
+  },
+  "lastTrainingMetrics": [
+    {
+      "episodes": 1768,
+      "iteration": 112,
+      "completed_games": 16,
+      "first_place_bonus": 1.0,
+      "unused_gold_penalty_coefficient": 0.01,
+      "policy_loss": 0.06469852712308598,
+      "value_loss": 0.035982548670713294,
+      "approx_kl": 0.0043761683954943575
+    },
+    {
+      "episodes": 1404,
+      "iteration": 90,
+      "completed_games": 16,
+      "first_place_bonus": 1.0,
+      "unused_gold_penalty_coefficient": 0.01,
+      "policy_loss": -0.004752531273063654,
+      "value_loss": 0.03616876848853934,
+      "approx_kl": 0.005988230119556614
+    },
+    {
+      "episodes": 740,
+      "iteration": 47,
+      "completed_games": 16,
+      "first_place_bonus": 1.0,
+      "unused_gold_penalty_coefficient": 0.01,
+      "policy_loss": -0.004176676977516674,
+      "value_loss": 0.035117305167837114,
+      "approx_kl": 0.0025759828120765346
+    }
+  ],
+  "release": "20260914-models-trained",
+  "computeRelease": "20260914-trained",
+  "previousRelease": "20260914-models-repeat",
+  "preflight": [
+    {
+      "depth": 64,
+      "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+      "steps": 16,
+      "meanMs": 7.799141312716529,
+      "ok": true
+    },
+    {
+      "depth": 256,
+      "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+      "steps": 16,
+      "meanMs": 13.619799192383653,
+      "ok": true
+    },
+    {
+      "depth": 1024,
+      "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+      "steps": 16,
+      "meanMs": 34.730798681266606,
+      "ok": true
+    }
+  ],
+  "activation": {
+    "compute": {
+      "ok": true,
+      "models": [
+        "deep64-1480",
+        "deep256-1164",
+        "deep1024-612"
+      ]
+    },
+    "public": {
+      "ok": true,
+      "models": [
+        {
+          "id": "deep64-1480",
+          "label": "64 层模型",
+          "episodes": 1768,
+          "checkpointSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "label": "256 层模型",
+          "episodes": 1404,
+          "checkpointSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "label": "1024 层模型",
+          "episodes": 740,
+          "checkpointSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+          "available": true
+        }
+      ]
+    }
+  },
+  "backendSha256": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+  "verifiedAt": "2026-09-14T12:26:43.331170+00:00",
+  "public_health": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "recording": {
+      "enabled": true,
+      "episodes": 0,
+      "decisions": 0,
+      "completed": 0,
+      "rejected": 0,
+      "errors": 0,
+      "bytes": 5739159
+    },
+    "ai": {
+      "mode": "neural",
+      "decisions": 109,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 109,
+        "rawRequestBytes": 571654,
+        "requestBytes": 225591,
+        "responseBytes": 149371,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1480",
+          "decisions": 26,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "decisions": 44,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "decisions": 39,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "tests": {
+    "browser": {
+      "test": "tests/ai-models.spec.ts",
+      "passed": 1,
+      "duration_seconds": 39.2
+    }
+  }
+}
