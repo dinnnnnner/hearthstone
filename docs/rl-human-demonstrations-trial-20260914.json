@@ -1,0 +1,195 @@
+{
+  "kind": "behavior_cloning_trial",
+  "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+  "parentArtifactSha256": "e45bf14784a5dcdbde9f20df8672a31c8cb758416c3cf6a9dc4c36abcd39cfd7",
+  "syntheticAllowed": true,
+  "updates": 4,
+  "learningRate": 1e-05,
+  "sequenceLength": 8,
+  "changedTensors": 313,
+  "losses": [
+    3.606677293777466,
+    3.5360498428344727,
+    3.5241565704345703,
+    3.5450475215911865
+  ],
+  "before": {
+    "training": {
+      "samples": 16,
+      "negative_log_likelihood": 3.5766051514074206,
+      "top1_agreement": 0.0625
+    },
+    "validation": {
+      "samples": 16,
+      "negative_log_likelihood": 3.605335555039346,
+      "top1_agreement": 0.0625
+    }
+  },
+  "after": {
+    "training": {
+      "samples": 16,
+      "negative_log_likelihood": 3.5111761051230133,
+      "top1_agreement": 0.0625
+    },
+    "validation": {
+      "samples": 16,
+      "negative_log_likelihood": 3.550587022677064,
+      "top1_agreement": 0.0625
+    }
+  },
+  "rejected": [],
+  "trainingGames": [
+    "5f467f8e-71ad-4ceb-8be8-253994bd81d3"
+  ],
+  "validationGames": [
+    "452980bb-2620-4ccb-a57e-014e90d1ee15"
+  ],
+  "dataset": [
+    {
+      "file": "87afb537-964a-47d9-9f96-5537299ea59b.jsonl.gz",
+      "sha256": "5a4bdb78e85b34e130c22d43d0f0b6c0c2cdd46093945c00721c5a8d03bf833f",
+      "source": "synthetic",
+      "buildId": "test-build"
+    },
+    {
+      "file": "f33c82f6-38e2-41de-a58c-4c16af59f784.jsonl.gz",
+      "sha256": "ac9085737f1d317a969edf0e6985132fe461c93be67b30317d6d95fa6840f7a1",
+      "source": "synthetic",
+      "buildId": "test-build"
+    }
+  ],
+  "deployed": false,
+  "note": "Agreement on demonstrations is not playing strength; run independent arena evaluation before deployment.",
+  "computeHost": "100.97.24.15",
+  "output": "~/.local/share/tavern-imitation/releases/20260914/trial-64",
+  "deployment": {
+    "release": "20260914T020856Z",
+    "previousBackend": "/opt/bobs-tavern/releases/20260914T014602Z",
+    "previousSite": "/var/www/playroom/releases/20260914T014602Z",
+    "backend": "/opt/bobs-tavern/releases/20260914T020856Z",
+    "site": "/var/www/playroom/releases/20260914T020856Z",
+    "sectorPid": 119165,
+    "serverSha256": "7c3dc00ed60f880ce94968d5b5733d1878787bdc61a11ddf4ec522afad2aa214",
+    "health": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "recording": {
+        "enabled": true,
+        "episodes": 0,
+        "decisions": 0,
+        "completed": 0,
+        "rejected": 0,
+        "errors": 0,
+        "bytes": 0
+      },
+      "ai": {
+        "mode": "neural",
+        "decisions": 0,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 0,
+          "rawRequestBytes": 0,
+          "requestBytes": 0,
+          "responseBytes": 0,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1112",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-908",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-436",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    }
+  },
+  "checks": {
+    "serverRegressionTests": 49,
+    "recorderTests": 4,
+    "datasetTests": 5,
+    "localBrowserPassed": true,
+    "publicModelAndRecordingBrowserPassed": true,
+    "finalPublicRecordingBrowserPassed": true,
+    "finalPublicRecordingBrowserSeconds": 33.3
+  },
+  "capturedUtc": "2026-09-14T02:14:24.328962+00:00",
+  "finalBackend": {
+    "backend": "/opt/bobs-tavern/releases/20260914T021227Z",
+    "previousBackend": "/opt/bobs-tavern/releases/20260914T020856Z",
+    "serverSha256": "c47922445b47a85c9ab3ce652fc6fe136e0a7074d7f6d633f1370288b1161c85"
+  },
+  "finalHealth": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "recording": {
+      "enabled": true,
+      "episodes": 1,
+      "decisions": 1,
+      "completed": 0,
+      "rejected": 1,
+      "errors": 0,
+      "bytes": 745934
+    },
+    "ai": {
+      "mode": "neural",
+      "decisions": 62,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 62,
+        "rawRequestBytes": 339871,
+        "requestBytes": 136422,
+        "responseBytes": 84861,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1112",
+          "decisions": 62,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-908",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-436",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  }
+}

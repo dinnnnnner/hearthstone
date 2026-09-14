@@ -9,6 +9,8 @@ import { Rooms } from "./rooms";
 import { NeuralRooms, httpInference } from "./neural";
 import { multiModelRooms } from "./model-registry";
 import { SnapshotWriter } from "./persistence";
+import { Demonstrations } from "./demonstrations";
+import { createHash } from "node:crypto";
 import type { Action } from "../src/engine";
 const store = process.env.TAVERN_INFERENCE_MODELS
     ? multiModelRooms(process.env.TAVERN_INFERENCE_MODELS, Number(process.env.TAVERN_INFERENCE_MAX_KBPS || 512))
@@ -21,6 +23,10 @@ const store = process.env.TAVERN_INFERENCE_MODELS
   saveFile = process.env.TAVERN_STATE || "/tmp/tavern-online-state.json";
 if (existsSync(saveFile)) store.restore(readFileSync(saveFile, "utf8"));
 const writer = new SnapshotWriter(store, saveFile);
+const demonstrations = process.env.TAVERN_DEMONSTRATIONS
+  ? new Demonstrations(process.env.TAVERN_DEMONSTRATIONS, createHash('sha256').update(readFileSync(process.argv[1])).digest('hex'))
+  : undefined;
+demonstrations?.observe(store, false);
 let closing = false;
 const limits = new Map<string, { at: number; count: number }>();
 function rate(key: string, max: number) {
@@ -134,13 +140,14 @@ const server = createServer(async (req, res) => {
         res,
         200,
         { ok: true, service: "tavern", rooms: store.rooms.size,
+          recording: demonstrations?.stats ?? { enabled: false },
           ...(store instanceof NeuralRooms ? { ai: { ...store.ai, models: store.modelStats() } } : {}) },
         req,
       );
       return;
     }
     if (path === "/models" && req.method === "GET") {
-      reply(res, 200, { models: store.modelOptions() }, req);
+      reply(res, 200, { models: store.modelOptions(), recordingAvailable: !!demonstrations }, req);
       return;
     }
     const ip = String(
@@ -189,10 +196,15 @@ const server = createServer(async (req, res) => {
       return;
     }
     const data = await body(req);
+    // Finalize an elimination before leave/rematch mutates its seat or room.
+    demonstrations?.observe(store);
     switch (path) {
       case "/create":
         if (!["friends", "ai"].includes(data.kind)) throw Error("无效房间类型");
+        if (data.recordTraining !== undefined && typeof data.recordTraining !== 'boolean') throw Error('无效录制设置');
+        if (data.recordTraining && (!demonstrations || data.kind !== 'ai')) throw Error('实战录制仅适用于已开启录制服务的人机对局');
         store.create(guest, data.kind, String(data.hero || "s14_lich"), data.mode, data.heroSelection, data.modelId);
+        if (data.recordTraining) { const { r } = store.member(guest); r.recordTraining = true; store.touch(r); }
         break;
       case "/join":
         if (typeof data.code !== "string" || !/^[A-Z2-9]{6}$/i.test(data.code))
@@ -225,12 +237,14 @@ const server = createServer(async (req, res) => {
           !Number.isInteger(data.turn)
         )
           throw Error("无效请求");
-        store.action(guest, action(data.action), data.requestId, data.turn);
+        if (demonstrations) demonstrations.action(store, guest, action(data.action), data.requestId, data.turn);
+        else store.action(guest, action(data.action), data.requestId, data.turn);
         break;
       default:
         reply(res, 404, { error: "未找到接口" });
         return;
     }
+    demonstrations?.observe(store);
     reply(
       res,
       200,
@@ -252,6 +266,7 @@ server.keepAliveTimeout = 5000;
 const ticker = setInterval(() => {
   try {
     store.tick();
+    demonstrations?.observe(store);
     void writer
       .flush()
       .catch((e) => console.error("Room save failed", e.message));
@@ -268,7 +283,7 @@ for (const signal of ["SIGTERM", "SIGINT"])
     clearInterval(ticker);
     if (store instanceof NeuralRooms) store.stop();
     server.close(() => {
-      void writer.flush().then(
+      void Promise.all([writer.flush(), demonstrations?.close()]).then(
         () => process.exit(0),
         (e) => {
           console.error("Final room save failed", e.message);

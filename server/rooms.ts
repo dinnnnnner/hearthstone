@@ -50,6 +50,7 @@ export type Seat = {
   battleId?: string;
 };
 export type Room = {
+  recordTraining?: boolean;
   code: string;
   host: string;
   kind: "friends" | "ai";
@@ -903,6 +904,7 @@ export class Rooms {
         heroSelection: r.heroSelection,
         aiModel: r.aiModel,
         aiStatus: r.aiStatus,
+        recordTraining: !!r.recordTraining,
         heroOffers: r.stage === "waiting" ? p.heroOffers : undefined,
         stage: r.stage,
         turn: r.turn,

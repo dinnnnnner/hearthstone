@@ -14,7 +14,7 @@
     "build:rl": "node scripts/build-rl.mjs",
     "test:rl": "tsc -p rl/tsconfig.json && tsx --test rl/environment.test.ts",
     "package:rl": "npm run build:rl && python3 scripts/package-rl.py",
-    "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts server/persistence.test.ts server/pairing.test.ts server/neural.test.ts"
+    "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts server/persistence.test.ts server/pairing.test.ts server/neural.test.ts server/demonstrations.test.ts"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

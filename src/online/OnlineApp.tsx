@@ -61,6 +61,10 @@ export default function OnlineApp() {
     }),
     [models, setModels] = useState<AIModelOption[]>([]),
     [modelsError, setModelsError] = useState(""),
+    [recordingAvailable, setRecordingAvailable] = useState(false),
+    [recordTraining, setRecordTraining] = useState(() => {
+      try { return localStorage.getItem('bobs-tavern-record-training') === 'yes'; } catch { return false; }
+    }),
     [modelId, setModelId] = useState(() => {
       try { return localStorage.getItem("bobs-tavern-ai-model") || ""; } catch { return ""; }
     }),
@@ -104,9 +108,10 @@ export default function OnlineApp() {
       try {
         const response = await fetch("/tavern-api/models", { signal: AbortSignal.timeout(5000) });
         if (!response.ok) throw Error("暂时无法获取人机模型，正在重试…");
-        const result = await response.json() as { models: AIModelOption[] };
+        const result = await response.json() as { models: AIModelOption[]; recordingAvailable?: boolean };
         if (stopped) return;
         setModels(result.models); setModelsError("");
+        setRecordingAvailable(!!result.recordingAvailable);
         setModelId(previous => result.models.some(m => m.id === previous) ? previous :
           (result.models.find(m => m.available)?.id ?? result.models[0]?.id ?? ""));
       } catch {
@@ -118,6 +123,9 @@ export default function OnlineApp() {
     return () => { stopped = true; clearInterval(timer); };
   }, []);
   const selectedModel = models.find(m => m.id === modelId);
+  useEffect(() => {
+    try { localStorage.setItem('bobs-tavern-record-training', recordTraining ? 'yes' : 'no'); } catch {}
+  }, [recordTraining]);
   const busy = useRef(false),
     last = useRef<OnlineState | null>(null);
   const room = state?.room,
@@ -279,6 +287,7 @@ export default function OnlineApp() {
     <>
       {`${room.kind === "ai" ? "人机对局" : `好友房 ${room.code}`} · 第 ${room.turn} 回合${me?.ended && room.stage === "recruit" ? " · 等待其他玩家" : me?.continued && room.stage === "combat" ? " · 等待下一回合" : ""}`}
       <span>{room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式"}</span>
+      {room.recordTraining && <span> · 本局操作录制已开启</span>}
       <span>{room.aiModel ? ` · ${room.aiModel.label}` : ""}{room.aiStatus === "fallback" ? " · 本轮使用脚本人机，模型恢复后重试" : ""}</span>
       <Countdown
         deadline={room.deadline}
@@ -644,12 +653,18 @@ export default function OnlineApp() {
               {!models.length && <p>{modelsError || "正在获取可用模型…"}</p>}
               {!!models.length && <p>{modelsError || "同桌人机使用所选模型，好友房空位也适用。层数不代表难度。"}</p>}
             </fieldset>
+            <fieldset className="recruit-mode-picker" disabled={pending || !recordingAvailable}>
+              <legend>实战样本</legend>
+              <label><input type="checkbox" checked={recordTraining} onChange={e => setRecordTraining(e.target.checked)} />
+                <span><strong>记录我的操作，用于模型训练</strong><small>仅用于新建人机对局。保存可见局面、操作和结果，完整对局用于后续训练。</small></span>
+              </label>
+            </fieldset>
             <div className="match-modes">
               <button
                 className="match-tile"
                 disabled={pending || !resources.ready || !selectedModel?.available || !!modelsError}
                 onClick={async () => {
-                  if (await command("/create", { kind: "ai", hero, mode, heroSelection, modelId }))
+                  if (await command("/create", { kind: "ai", hero, mode, heroSelection, modelId, recordTraining: recordTraining && recordingAvailable }))
                     changeView(heroSelection === "draft" ? "hall" : "game");
                 }}
               >

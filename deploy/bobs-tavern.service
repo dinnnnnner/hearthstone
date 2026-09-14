@@ -12,6 +12,7 @@ Environment=NODE_ENV=production
 Environment=TAVERN_HOST=127.0.0.1
 Environment=TAVERN_PORT=8787
 Environment=TAVERN_STATE=/var/lib/bobs-tavern/state.json
+Environment=TAVERN_DEMONSTRATIONS=/var/lib/bobs-tavern/demonstrations
 StateDirectory=bobs-tavern
 StateDirectoryMode=0700
 Restart=on-failure
