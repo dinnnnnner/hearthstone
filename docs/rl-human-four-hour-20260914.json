@@ -1,0 +1,429 @@
+{
+  "pid": 14831,
+  "started_utc": "2026-09-14T06:45:56.567559+00:00",
+  "deadline_utc": "2026-09-14T10:45:56.567559+00:00",
+  "duration_hours": 4,
+  "output": "/root/tavern-four-hour-20260914/population",
+  "command": [
+    "/root/miniconda3/bin/python",
+    "-u",
+    "-m",
+    "tavern_rl.population",
+    "--resumes",
+    "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0/training/latest.pt",
+    "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1/training/latest.pt",
+    "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2/training/latest.pt",
+    "--output",
+    "/root/tavern-four-hour-20260914/population",
+    "--deadline-utc",
+    "2026-09-14T10:45:56.567559+00:00",
+    "--workers",
+    "8",
+    "--iterations-per-exchange",
+    "2",
+    "--games-per-iteration",
+    "16",
+    "--max-per-lineage",
+    "2",
+    "--external-fraction",
+    "0.4",
+    "--device",
+    "cuda"
+  ],
+  "cwd": "/root/autodl-tmp/tavern-mixed-popular-20260914",
+  "members": [
+    {
+      "index": 0,
+      "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0/training/latest.pt",
+      "sha256": "649428b6eb50099e11739b65a69cf72fa6232b53ea49b40556ef1e2bfbee6134",
+      "bytes": 531156454,
+      "episodes": 1480,
+      "iteration": 94,
+      "model_spec": {
+        "architecture": "entity-gru-resnet",
+        "hidden": 128,
+        "policy_depth": 64,
+        "value_depth": 64
+      },
+      "humanImitation": [
+        {
+          "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+          "weightSha256": "0f21d1fc111b01961b1372466a7017d6899c3156c6a131b34e725473c86b3496",
+          "datasets": [
+            "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+          ],
+          "updates": 20,
+          "supervisedSteps": 288,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "ce5aa4eeb530d3fa537a1b850dc40bf327e9b604033c7fd88250c618518b5edd",
+          "weightSha256": "8fb0dd5976e97c742ce49f2506d658ce0876404e36a307466eebaf7fde96dfda",
+          "datasets": [
+            "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+          ],
+          "updates": 20,
+          "supervisedSteps": 248,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+          "weightSha256": "8ee68aab3bf79469bc7239132fc56d0b05cc51d9b34953e5dd5f2799deafb02f",
+          "datasets": [
+            "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+          ],
+          "updates": 20,
+          "supervisedSteps": 274,
+          "incompleteSegments": true
+        }
+      ],
+      "checkpoint_keys": [
+        "config",
+        "cuda_rng",
+        "episodes",
+        "format",
+        "iteration",
+        "league",
+        "league_imports",
+        "meta",
+        "model",
+        "model_spec",
+        "numpy_rng",
+        "optimizer",
+        "python_rng",
+        "torch_rng",
+        "trainerHash"
+      ],
+      "preserved_config": {
+        "learning_rate": 3e-05,
+        "learner_seats": 4,
+        "league_size": 12,
+        "unused_gold_penalty": 0.01,
+        "opponent_mode": "mixed_self_play",
+        "external_opponent_fraction": 0.4,
+        "packed_host_transfer": false
+      },
+      "hero_pool_ids": [
+        "s14_genn",
+        "s14_marin",
+        "s14_buttons",
+        "s14_clockwork",
+        "s14_brann",
+        "s14_afk",
+        "s14_sylvanas",
+        "s14_chenvaala",
+        "s14_shudderwock",
+        "s14_lich",
+        "s14_teron",
+        "s14_yogg",
+        "s14_patchwerk",
+        "s14_millificent",
+        "s14_vanndar"
+      ]
+    },
+    {
+      "index": 1,
+      "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1/training/latest.pt",
+      "sha256": "dc1c4e64e35118147fb970bf9ad962ebd5fb85ac8989a0a7d1f302b23ac783c2",
+      "bytes": 767798374,
+      "episodes": 1164,
+      "iteration": 75,
+      "model_spec": {
+        "architecture": "entity-gru-resnet",
+        "hidden": 128,
+        "policy_depth": 256,
+        "value_depth": 256
+      },
+      "humanImitation": [
+        {
+          "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+          "weightSha256": "2a75391e990dedbf185a743f3b24d9654fc97c61b60e91f36dc50530dcc86fc0",
+          "datasets": [
+            "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+          ],
+          "updates": 20,
+          "supervisedSteps": 288,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+          "weightSha256": "4c9d8de6b5fff43cd4511a73837a049b63b1b2367aa75c2e737160726690520f",
+          "datasets": [
+            "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+          ],
+          "updates": 20,
+          "supervisedSteps": 248,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+          "weightSha256": "0aad5c140640532ca0c30f8df7237132dd6e1507adbc4a954a7d5bee25db9202",
+          "datasets": [
+            "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+          ],
+          "updates": 20,
+          "supervisedSteps": 274,
+          "incompleteSegments": true
+        }
+      ],
+      "checkpoint_keys": [
+        "config",
+        "cuda_rng",
+        "episodes",
+        "format",
+        "iteration",
+        "league",
+        "league_imports",
+        "meta",
+        "model",
+        "model_spec",
+        "numpy_rng",
+        "optimizer",
+        "python_rng",
+        "torch_rng",
+        "trainerHash"
+      ],
+      "preserved_config": {
+        "learning_rate": 3e-05,
+        "learner_seats": 4,
+        "league_size": 12,
+        "unused_gold_penalty": 0.01,
+        "opponent_mode": "mixed_self_play",
+        "external_opponent_fraction": 0.4,
+        "packed_host_transfer": false
+      },
+      "hero_pool_ids": [
+        "s14_genn",
+        "s14_marin",
+        "s14_buttons",
+        "s14_clockwork",
+        "s14_brann",
+        "s14_afk",
+        "s14_sylvanas",
+        "s14_chenvaala",
+        "s14_shudderwock",
+        "s14_lich",
+        "s14_teron",
+        "s14_yogg",
+        "s14_patchwerk",
+        "s14_millificent",
+        "s14_vanndar"
+      ]
+    },
+    {
+      "index": 2,
+      "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2/training/latest.pt",
+      "sha256": "7b6b1a33d00157a797ecaadcfd7713fc47ccbfdd5be1526761530af07e4f83df",
+      "bytes": 1714414817,
+      "episodes": 612,
+      "iteration": 39,
+      "model_spec": {
+        "architecture": "entity-gru-resnet",
+        "hidden": 128,
+        "policy_depth": 1024,
+        "value_depth": 1024
+      },
+      "humanImitation": [
+        {
+          "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+          "weightSha256": "901acab2125a42c7f06ed2563db0612a11edf87b7dc9b6f13d99b7383912a6d3",
+          "datasets": [
+            "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+          ],
+          "updates": 20,
+          "supervisedSteps": 288,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+          "weightSha256": "5336173221d6fb0fafe9e4564c82a01c7724d78294bf34f009ee0fd114e67980",
+          "datasets": [
+            "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+          ],
+          "updates": 20,
+          "supervisedSteps": 248,
+          "incompleteSegments": true
+        },
+        {
+          "parentArtifactSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+          "weightSha256": "25e29036dd8067fc295e75e4e92d28d35d465fe3afb523ac9d3bcff7016b5214",
+          "datasets": [
+            "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+          ],
+          "updates": 20,
+          "supervisedSteps": 274,
+          "incompleteSegments": true
+        }
+      ],
+      "checkpoint_keys": [
+        "config",
+        "cuda_rng",
+        "episodes",
+        "format",
+        "iteration",
+        "league",
+        "league_imports",
+        "meta",
+        "model",
+        "model_spec",
+        "numpy_rng",
+        "optimizer",
+        "python_rng",
+        "torch_rng",
+        "trainerHash"
+      ],
+      "preserved_config": {
+        "learning_rate": 1e-05,
+        "learner_seats": 4,
+        "league_size": 12,
+        "unused_gold_penalty": 0.01,
+        "opponent_mode": "mixed_self_play",
+        "external_opponent_fraction": 0.4,
+        "packed_host_transfer": false
+      },
+      "hero_pool_ids": [
+        "s14_genn",
+        "s14_marin",
+        "s14_buttons",
+        "s14_clockwork",
+        "s14_brann",
+        "s14_afk",
+        "s14_sylvanas",
+        "s14_chenvaala",
+        "s14_shudderwock",
+        "s14_lich",
+        "s14_teron",
+        "s14_yogg",
+        "s14_patchwerk",
+        "s14_millificent",
+        "s14_vanndar"
+      ]
+    }
+  ],
+  "initial_disk_free_bytes": 18057977856,
+  "storage_reason": "Data disk has only 4 GiB free; use system disk.",
+  "deadline_behavior": "Stop all learner process groups; retain last completed iteration checkpoint.",
+  "web_deployment": "Existing deployed models continue serving; this launch does not replace them.",
+  "verification": {
+    "verified_utc": "2026-09-14T06:47:33.938253+00:00",
+    "status": {
+      "stage": "running",
+      "pid": 14831,
+      "opponent_mode": "mixed_self_play",
+      "deadline_utc": "2026-09-14T10:45:56.567559+00:00",
+      "workers_per_learner": 8,
+      "iterations_per_exchange": 2,
+      "games_per_iteration": 16,
+      "unused_gold_penalty": null,
+      "external_fraction": 0.4,
+      "max_per_lineage": 2,
+      "members": [
+        {
+          "index": 0,
+          "root": "/root/tavern-four-hour-20260914/population/member-0",
+          "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 14874,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-0/initial.pt"
+        },
+        {
+          "index": 1,
+          "root": "/root/tavern-four-hour-20260914/population/member-1",
+          "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 14875,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-1/initial.pt"
+        },
+        {
+          "index": 2,
+          "root": "/root/tavern-four-hour-20260914/population/member-2",
+          "source": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 14878,
+          "checkpoint": "/root/tavern-four-hour-20260914/population/member-2/initial.pt"
+        }
+      ]
+    },
+    "members": [
+      {
+        "index": 0,
+        "depth": 64,
+        "pid": 14874,
+        "stage": "training",
+        "initial_episodes": 1480,
+        "checkpoint_episodes": 1480,
+        "imitation_games": 3,
+        "imitation_updates": 60,
+        "last_progress": {
+          "stage": "collect",
+          "completed_games": 0,
+          "total_games": 16,
+          "environment_actions": 2048,
+          "seconds": 30.1,
+          "actions_per_second": 68.06227094129956,
+          "mean_inference_batch": 2.064516129032258,
+          "inference_seconds": 25.80959054082632,
+          "simulator_wait_seconds": 2.946860120166093
+        }
+      },
+      {
+        "index": 1,
+        "depth": 256,
+        "pid": 14875,
+        "stage": "training",
+        "initial_episodes": 1164,
+        "checkpoint_episodes": 1164,
+        "imitation_games": 3,
+        "imitation_updates": 60,
+        "last_progress": {
+          "stage": "collect",
+          "completed_games": 0,
+          "total_games": 16,
+          "environment_actions": 1504,
+          "seconds": 30.0,
+          "actions_per_second": 50.13275803639219,
+          "mean_inference_batch": 1.9062103929024081,
+          "inference_seconds": 27.298401239793748,
+          "simulator_wait_seconds": 1.7983313407748938
+        }
+      },
+      {
+        "index": 2,
+        "depth": 1024,
+        "pid": 14878,
+        "stage": "training",
+        "initial_episodes": 612,
+        "checkpoint_episodes": 612,
+        "imitation_games": 3,
+        "imitation_updates": 60,
+        "last_progress": {
+          "stage": "game_start",
+          "seed": 661,
+          "heroes": [
+            "s14_clockwork",
+            "s14_patchwerk",
+            "s14_chenvaala",
+            "s14_marin",
+            "s14_teron",
+            "s14_vanndar",
+            "s14_afk",
+            "s14_millificent"
+          ]
+        }
+      }
+    ],
+    "disk_free_bytes": 9012486144,
+    "gpu": "3856 MiB, 12288 MiB, 86 %"
+  },
+  "public_health": {
+    "ok": true,
+    "neural_decisions": 678,
+    "errors": 0,
+    "fallback_rounds": 0,
+    "all_three_models_available": true,
+    "check": "During startup verification; independent of training processes."
+  }
+}
