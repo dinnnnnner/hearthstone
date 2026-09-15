@@ -1,0 +1,446 @@
+{
+  "kind": "fresh_human_imitation_launch",
+  "launch": {
+    "kind": "fresh_human_imitation",
+    "startedUtc": "2026-09-15T08:42:43.891534+00:00",
+    "deadlineUtc": "2026-09-15T11:57:55.136701+00:00",
+    "backups": [
+      {
+        "depth": 64,
+        "source": "/root/autodl-tmp/tavern-gold-planning-12-20260915/population/member-0/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-fresh-imitation-20260915/before-64.pt",
+        "sha256": "7777f05071f3382adb621d8a7e9077455b625b08427baa02b6cb6ae1729152d9"
+      },
+      {
+        "depth": 256,
+        "source": "/root/autodl-tmp/tavern-gold-planning-12-20260915/population/member-1/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-fresh-imitation-20260915/before-256.pt",
+        "sha256": "5ef4c45a9872985643ca15d99d9fc81c95042fff836c75b4636006e13cfe596b"
+      },
+      {
+        "depth": 1024,
+        "source": "/root/autodl-tmp/tavern-gold-planning-12-20260915/population/member-2/training/latest.pt",
+        "backup": "/root/autodl-tmp/tavern-fresh-imitation-20260915/before-1024.pt",
+        "sha256": "eee4e60fa35872a838a2e47290720c98e10290d3a71048b07c4efda0e032d333"
+      }
+    ],
+    "members": [
+      {
+        "depth": 64,
+        "pid": 88975,
+        "startTicks": "1450428472",
+        "output": "/root/autodl-tmp/tavern-fresh-imitation-20260915/deep64",
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.imitate_fresh",
+          "--dataset",
+          "/root/autodl-tmp/tavern-fresh-imitation-20260915/dataset",
+          "--output",
+          "/root/autodl-tmp/tavern-fresh-imitation-20260915/deep64",
+          "--depth",
+          "64",
+          "--device",
+          "cuda",
+          "--deadline-utc",
+          "2026-09-15T11:57:55.136701+00:00"
+        ]
+      },
+      {
+        "depth": 256,
+        "pid": 88976,
+        "startTicks": "1450428472",
+        "output": "/root/autodl-tmp/tavern-fresh-imitation-20260915/deep256",
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.imitate_fresh",
+          "--dataset",
+          "/root/autodl-tmp/tavern-fresh-imitation-20260915/dataset",
+          "--output",
+          "/root/autodl-tmp/tavern-fresh-imitation-20260915/deep256",
+          "--depth",
+          "256",
+          "--device",
+          "cuda",
+          "--deadline-utc",
+          "2026-09-15T11:57:55.136701+00:00"
+        ]
+      },
+      {
+        "depth": 1024,
+        "pid": 88977,
+        "startTicks": "1450428472",
+        "output": "/root/autodl-tmp/tavern-fresh-imitation-20260915/deep1024",
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.imitate_fresh",
+          "--dataset",
+          "/root/autodl-tmp/tavern-fresh-imitation-20260915/dataset",
+          "--output",
+          "/root/autodl-tmp/tavern-fresh-imitation-20260915/deep1024",
+          "--depth",
+          "1024",
+          "--device",
+          "cuda",
+          "--deadline-utc",
+          "2026-09-15T11:57:55.136701+00:00"
+        ]
+      }
+    ],
+    "watchPid": 88978
+  },
+  "dataset": {
+    "accepted": 13,
+    "steps": 4302,
+    "trainGames": 10,
+    "validationGames": 3,
+    "rejected": [
+      {
+        "file": "30b23bad-1a44-4ebc-9db6-777369041e49.jsonl.gz",
+        "reason": "Only explicitly allowed gaps with a final result are accepted"
+      },
+      {
+        "file": "3a86f883-4f1c-48b5-a543-18d0dd69c308.jsonl.gz",
+        "reason": "Missing trajectory or terminal result"
+      },
+      {
+        "file": "3f4fd1f1-6e43-4770-a222-ff7002650abc.jsonl.gz",
+        "reason": "Only explicitly allowed gaps with a final result are accepted"
+      },
+      {
+        "file": "47ad6da4-b3b8-496a-a815-bedbb72ef51d.jsonl.gz",
+        "reason": "Only explicitly allowed gaps with a final result are accepted"
+      },
+      {
+        "file": "5980f6ae-2e33-4518-852f-c5f915f12bee.jsonl.gz",
+        "reason": "Only explicitly allowed gaps with a final result are accepted"
+      },
+      {
+        "file": "77d611ce-311b-48e8-bc14-700c390be022.jsonl.gz",
+        "reason": "Missing trajectory or terminal result"
+      },
+      {
+        "file": "8123715d-98a8-44f7-a627-18986ac5fe69.jsonl.gz",
+        "reason": "Only explicitly allowed gaps with a final result are accepted"
+      },
+      {
+        "file": "c2b1dbdb-1e68-4faf-80b5-2526c6df6c55.jsonl.gz",
+        "reason": "Only explicitly allowed gaps with a final result are accepted"
+      },
+      {
+        "file": "c37a4e97-2e5e-42f0-88b4-d321ef088681.jsonl.gz",
+        "reason": "Missing trajectory or terminal result"
+      },
+      {
+        "file": "c4ff3217-b65e-4895-933b-caaf0a26ecb9.jsonl.gz",
+        "reason": "Missing trajectory or terminal result"
+      },
+      {
+        "file": "c6b0a9c2-35de-497b-ba65-d47989327e76.jsonl.gz",
+        "reason": "Only explicitly allowed gaps with a final result are accepted"
+      },
+      {
+        "file": "cbbfd093-5a5f-4776-859f-be2ecde2ff25.jsonl.gz",
+        "reason": "Invalid result/step count"
+      },
+      {
+        "file": "fde7b9f9-4851-4c69-b0d1-fbdefa82e3cf.jsonl.gz",
+        "reason": "Invalid result/step count"
+      }
+    ],
+    "actions": {
+      "buy": 411,
+      "play": 929,
+      "power": 18,
+      "end": 164,
+      "buySpell": 163,
+      "cast": 600,
+      "upgrade": 62,
+      "discover": 246,
+      "refresh": 740,
+      "darkGift": 15,
+      "move": 64,
+      "buyTrinket": 28,
+      "sell": 784,
+      "choosePower": 5,
+      "reward": 36,
+      "activate": 18,
+      "freeze": 19
+    },
+    "games": [
+      {
+        "file": "06cd2177-3a0b-4156-9ffe-b7b8d9b9cda3.jsonl.gz",
+        "game": "48967daf-9ebe-45dd-a1f4-80aad034c5d0",
+        "steps": 359,
+        "place": 1,
+        "segments": 6,
+        "split": "validation",
+        "sha256": "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500"
+      },
+      {
+        "file": "105d3a1e-66eb-4844-99cf-5c4672d993a5.jsonl.gz",
+        "game": "3f08ef63-48b4-494f-aa35-a421eef64c6e",
+        "steps": 386,
+        "place": 1,
+        "segments": 10,
+        "split": "training",
+        "sha256": "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1"
+      },
+      {
+        "file": "15b5e7f1-1a39-4fc8-99f1-91c5eef0847e.jsonl.gz",
+        "game": "f9ed5746-28ce-474e-ba7a-fc0a56dd1a36",
+        "steps": 507,
+        "place": 1,
+        "segments": 2,
+        "split": "training",
+        "sha256": "3d622aa6fc6375b3fa3acef34c0dfca424219a4fb4ed655159b0086309cc540d"
+      },
+      {
+        "file": "1c52af64-a7a5-48e3-a92c-31bd97d1b9b2.jsonl.gz",
+        "game": "86f373d7-d60c-4ca5-b94a-83e1177979f1",
+        "steps": 274,
+        "place": 1,
+        "segments": 5,
+        "split": "training",
+        "sha256": "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+      },
+      {
+        "file": "32df137c-c854-414f-beb2-31fa4f73964f.jsonl.gz",
+        "game": "66903558-c6e3-433c-89ca-6f7e15c6fda3",
+        "steps": 297,
+        "place": 1,
+        "segments": 5,
+        "split": "validation",
+        "sha256": "ddb2a2f472581c272adae3dbfe4f7404b60ae928e61475783a99279f6726971f"
+      },
+      {
+        "file": "3748ec6d-1661-4b6d-aee0-5a4a8e9cca46.jsonl.gz",
+        "game": "44d2e895-8a7f-4b9c-9913-167fb9d1b6bf",
+        "steps": 183,
+        "place": 1,
+        "segments": 9,
+        "split": "training",
+        "sha256": "081a14e422cb0830239d2f15de62c35ba346f2712992a435bc47f45f6377833a"
+      },
+      {
+        "file": "5718343c-2346-4813-b677-94c9af57bcba.jsonl.gz",
+        "game": "a6e5fbf4-8336-4878-992e-1f7bc8dbabee",
+        "steps": 288,
+        "place": 1,
+        "segments": 6,
+        "split": "training",
+        "sha256": "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+      },
+      {
+        "file": "7bd0810e-8d91-44f4-9022-bc715a75492d.jsonl.gz",
+        "game": "0dfb75e7-0ab5-4ed7-ac06-80c3153ce4d2",
+        "steps": 301,
+        "place": 1,
+        "segments": 4,
+        "split": "validation",
+        "sha256": "1626e6393df12679359f32cc24d39f2923db060902408b4f7b9e9c1ca8deb434"
+      },
+      {
+        "file": "916fa941-6114-46b1-a100-3790887420e9.jsonl.gz",
+        "game": "98ab3d39-50e0-47b8-bf54-99b139c0746f",
+        "steps": 350,
+        "place": 1,
+        "segments": 4,
+        "split": "training",
+        "sha256": "c111a6fd9bd23ab04114ae631cc86a71c5b41e260557c66a70fe73a5725a0388"
+      },
+      {
+        "file": "a929b2a6-d643-454c-aa21-057e806e9e5f.jsonl.gz",
+        "game": "3bb9769c-2e98-4438-bbae-4632b3b78b4f",
+        "steps": 248,
+        "place": 1,
+        "segments": 7,
+        "split": "training",
+        "sha256": "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+      },
+      {
+        "file": "a94fcb29-d5d2-4570-92ad-fe85fd016ba3.jsonl.gz",
+        "game": "1c4d7d74-f3e0-4851-8f25-8742ccb43516",
+        "steps": 318,
+        "place": 1,
+        "segments": 4,
+        "split": "training",
+        "sha256": "c13b3f20d2c41caac738919b9f84f7e5674c3273a0445414b59add59fc044323"
+      },
+      {
+        "file": "b164f780-e57e-46ba-9def-003e1576253c.jsonl.gz",
+        "game": "815fc1ce-3a7a-4ef1-8a55-6dd4739a4a12",
+        "steps": 291,
+        "place": 1,
+        "segments": 3,
+        "split": "training",
+        "sha256": "2a042ffa5b49bfe643531b747ae23c72e03f0dcd4108cefae839102c5bed7c49"
+      },
+      {
+        "file": "bc6f66de-4c23-4623-8098-ead0f82baa95.jsonl.gz",
+        "game": "abf1b6dd-6c78-4085-81ac-cbe66b40b50f",
+        "steps": 500,
+        "place": 1,
+        "segments": 8,
+        "split": "training",
+        "sha256": "cfed63a0268c504fe7aff4b87a321dd707dfc93657e51b6f6babc6ecde9a6edf"
+      }
+    ]
+  },
+  "checkpoints": [
+    {
+      "depth": 64,
+      "initialWeightSha256": "dd7ac0460af0a442f8b84881ed09ab073cb4bbd4372ef01449429fda2bfd29fa",
+      "savedUpdates": 62,
+      "supervisedStepVisits": 3345,
+      "randomInitializationVerified": true,
+      "valueParametersUnchanged": true,
+      "trainGames": 10,
+      "validationGames": 3,
+      "selfPlayEpisodes": 0
+    },
+    {
+      "depth": 256,
+      "initialWeightSha256": "2eee8526a56a24c4c4a6bfb0e40b0bb878596817057769a647f60fd0af4e5667",
+      "savedUpdates": 1,
+      "supervisedStepVisits": 216,
+      "randomInitializationVerified": true,
+      "valueParametersUnchanged": true,
+      "trainGames": 10,
+      "validationGames": 3,
+      "selfPlayEpisodes": 0
+    },
+    {
+      "depth": 1024,
+      "initialWeightSha256": "ce40b10483864ad7ae1d52b6294c279a6af4dbca9083d84c8d8f9cf023821730",
+      "savedUpdates": 1,
+      "supervisedStepVisits": 216,
+      "randomInitializationVerified": true,
+      "valueParametersUnchanged": true,
+      "trainGames": 10,
+      "validationGames": 3,
+      "selfPlayEpisodes": 0
+    }
+  ],
+  "status": {
+    "utc": "2026-09-15T08:44:05.600287+00:00",
+    "deadline": "2026-09-15T11:57:55.136701+00:00",
+    "members": [
+      {
+        "depth": 64,
+        "pid": 88975,
+        "alive": true,
+        "stage": "training",
+        "epoch": 2,
+        "updates": 86,
+        "visits": 5462,
+        "bestEpoch": 1,
+        "bestNll": 2.751049049673534,
+        "before": {
+          "samples": 957,
+          "negative_log_likelihood": 3.441504174895982,
+          "top1_agreement": 0.07210031347962383,
+          "type_agreement": 0.12016718913270637
+        },
+        "checkpoint": true,
+        "logTail": [
+          "{\"epoch\": 1, \"updates\": 62, \"validationNll\": 2.751049049673534, \"bestEpoch\": 1}"
+        ]
+      },
+      {
+        "depth": 256,
+        "pid": 88976,
+        "alive": true,
+        "stage": "training",
+        "epoch": 1,
+        "updates": 54,
+        "visits": 2923,
+        "bestEpoch": 0,
+        "bestNll": 3.477938510921308,
+        "before": {
+          "samples": 957,
+          "negative_log_likelihood": 3.477938510921308,
+          "top1_agreement": 0.09822361546499478,
+          "type_agreement": 0.15256008359456635
+        },
+        "checkpoint": true,
+        "logTail": []
+      },
+      {
+        "depth": 1024,
+        "pid": 88977,
+        "alive": true,
+        "stage": "training",
+        "epoch": 1,
+        "updates": 11,
+        "visits": 749,
+        "bestEpoch": 0,
+        "bestNll": 3.515562231949255,
+        "before": {
+          "samples": 957,
+          "negative_log_likelihood": 3.515562231949255,
+          "top1_agreement": 0.09508881922675026,
+          "type_agreement": 0.148380355276907
+        },
+        "checkpoint": true,
+        "logTail": []
+      }
+    ],
+    "health": {
+      "utc": "2026-09-15T08:42:43.944937+00:00",
+      "members": [
+        {
+          "depth": 64,
+          "pid": 88975,
+          "processValid": true,
+          "stage": "starting",
+          "updates": 0,
+          "epoch": 0,
+          "bestEpoch": null,
+          "bestValidationNll": null,
+          "activityAgeSeconds": 0.1
+        },
+        {
+          "depth": 256,
+          "pid": 88976,
+          "processValid": true,
+          "stage": "starting",
+          "updates": 0,
+          "epoch": 0,
+          "bestEpoch": null,
+          "bestValidationNll": null,
+          "activityAgeSeconds": 0.1
+        },
+        {
+          "depth": 1024,
+          "pid": 88977,
+          "processValid": true,
+          "stage": "starting",
+          "updates": 0,
+          "epoch": 0,
+          "bestEpoch": null,
+          "bestValidationNll": null,
+          "activityAgeSeconds": 0.1
+        }
+      ],
+      "issues": [],
+      "healthy": true,
+      "complete": false,
+      "gpu": "0, 63",
+      "intervalSeconds": 300,
+      "nextCheckUtc": "2026-09-15T08:47:43.944937+00:00"
+    }
+  },
+  "validation": {
+    "localImitationTests": 8,
+    "localCudaSkipped": 1,
+    "localDatasetTests": 12,
+    "serverFreshTests": 4,
+    "serverCudaPassed": true
+  }
+}

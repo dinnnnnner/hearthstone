@@ -26,7 +26,7 @@ for name in ["rl-deep64-diversity-20260911.json", "rl-diversity-gpu-validation-2
     record = ROOT / "docs" / name
     if record.exists(): files.append(record)
 files += sorted((ROOT / "rl/tests").rglob("*.py"))
-files += [ROOT / "scripts/enable-sampling-graphs.py"]
+files += [ROOT / "scripts/enable-sampling-graphs.py", ROOT / "scripts/watch-fresh-imitation.py"]
 validation = ROOT / "docs/rl-validation.json"
 if validation.exists(): files.append(validation)
 server_validation = ROOT / "docs/rl-server-validation.json"
@@ -43,7 +43,7 @@ if deep1024_validation.exists(): files.append(deep1024_validation)
 # already selected above; the full deployment archive stays in the source repo.
 files += [ROOT / "docs" / name for name in [
     "rl-gold-planning.md", "rl-gold-planning-validation-20260915.json", "rl-gold-planning-12-validation-20260915.json", "ai-freeze-close-deployment-20260915.md", "ai-freeze-close-deployment-20260915.json", "ai-action-limits.md", "ai-action-limits-validation-20260915.json", "ai-action-limits-deployment-20260915.md", "ai-action-limits-deployment-20260915.json", "rl-network.md", "rl-training.md", "rl-first-place-bonus.md", "rl-unused-gold-penalty.md",
-    "rl-blackwell-20260915.md", "tavern-operations.md", "rl-human-demonstrations.md",
+    "rl-blackwell-20260915.md", "tavern-operations.md", "rl-human-demonstrations.md", "rl-fresh-imitation-20260915.json",
     "neural-serving.md",
 ]]
 files = sorted(set(files))
