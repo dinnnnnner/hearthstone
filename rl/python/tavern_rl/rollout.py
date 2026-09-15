@@ -7,6 +7,7 @@ import time
 import numpy as np
 import torch
 from .bridge import Simulator
+from .sampling_graphs import accelerate_sampling
 from .features import prepare_entities
 
 class SimulationPool:
@@ -27,6 +28,7 @@ class SimulationPool:
         for simulator in self.simulators:
             simulator.close()
 
+    @accelerate_sampling
     def collect(self, current, opponents, seeds, options, device, learner_seats=4, collect=True, replay_dir=None, error_dir=None, opponent_weights=None, schedule=None, progress=None, seat_offset=0):
         """Batched model inference, parallel local simulators, per-seat on-policy records."""
         seeds = list(seeds)
