@@ -1,0 +1,422 @@
+{
+  "updatedUtc": "2026-09-15T08:34:00.700191+00:00",
+  "trials": 12,
+  "initialCheckpoints": [
+    {
+      "depth": 64,
+      "source": "/root/autodl-tmp/tavern-gold-planning-20260915/population/member-0/training/latest.pt",
+      "target": "/root/autodl-tmp/tavern-gold-planning-12-20260915/population/member-0/training/latest.pt",
+      "sha256": "658f17467af2c8b5a72fddfad4b1020399b991fb39d156794d7a6ff5a3fa8c80",
+      "episodes": 4232,
+      "iteration": 194
+    },
+    {
+      "depth": 256,
+      "source": "/root/autodl-tmp/tavern-gold-planning-20260915/population/member-1/training/latest.pt",
+      "target": "/root/autodl-tmp/tavern-gold-planning-12-20260915/population/member-1/training/latest.pt",
+      "sha256": "6eda52b33ab9899d9350644fdebdb40c76b2c6aaf69049b5efee04cf1860fab7",
+      "episodes": 3740,
+      "iteration": 167
+    },
+    {
+      "depth": 1024,
+      "source": "/root/autodl-tmp/tavern-gold-planning-20260915/population/member-2/training/latest.pt",
+      "target": "/root/autodl-tmp/tavern-gold-planning-12-20260915/population/member-2/training/latest.pt",
+      "sha256": "0f30c61ad14c8cdfcd3a60998d3889abe77b1363e1ebd80ce23c2c4b52af4fa8",
+      "episodes": 2916,
+      "iteration": 111
+    }
+  ],
+  "smoke": {
+    "utc": "2026-09-15T08:33:22.961773+00:00",
+    "smoke": {
+      "episodes": 4234,
+      "iteration": 195,
+      "planning": {
+        "states": 8,
+        "trials": 12,
+        "depth": 32,
+        "temperature": 0.15,
+        "strength": 0.5,
+        "epochs": 2,
+        "min_gap": 0.02
+      },
+      "updates": 10,
+      "metrics": {
+        "iteration": 195,
+        "iteration_seconds": 92.59855567850173,
+        "end_to_end_actions_per_second": 27.980997986575975,
+        "cuda_peak_allocated_mib": 3021.50634765625,
+        "episodes": 4234,
+        "seconds": 64.50344554334879,
+        "environment_actions": 2591,
+        "actions_per_second": 40.16839686895096,
+        "inference_batches": 2591,
+        "mean_inference_batch": 1.0,
+        "sampling_processes": 2,
+        "sampling_workers": 2,
+        "parallel_inference_seconds_sum": 39.010171856731176,
+        "parallel_simulator_wait_seconds_sum": 69.36578986607492,
+        "sampling_graphs": true,
+        "sampling_graph_capture_seconds": 0.4932682327926159,
+        "first_place_bonus": 1.0,
+        "action_counts": {
+          "buy": 202,
+          "end": 268,
+          "freeze": 107,
+          "play": 182,
+          "power": 46,
+          "refresh": 232,
+          "buySpell": 102,
+          "move": 802,
+          "cast": 210,
+          "activate": 122,
+          "darkGift": 47,
+          "discover": 121,
+          "upgrade": 65,
+          "reward": 5,
+          "buyTrinket": 35,
+          "sell": 45
+        },
+        "learner_action_counts": {
+          "buy": 102,
+          "play": 86,
+          "end": 145,
+          "power": 45,
+          "freeze": 56,
+          "buySpell": 53,
+          "move": 435,
+          "cast": 102,
+          "activate": 65,
+          "refresh": 118,
+          "darkGift": 23,
+          "discover": 68,
+          "upgrade": 32,
+          "reward": 3,
+          "buyTrinket": 18,
+          "sell": 21
+        },
+        "policy_loss": -0.007541129365563393,
+        "value_loss": 0.04694676150878271,
+        "entropy": 2.4187089999516806,
+        "approx_kl": 0.0005510621271265966,
+        "gradient_norm": 1.744331161181132,
+        "samples": 1372,
+        "optimizer_steps": 6,
+        "kl_early_stop": false,
+        "sequence_chunks": 89,
+        "training_graphs": true,
+        "training_graph_count": 2,
+        "training_graph_replays": 8,
+        "training_graph_capture_seconds": 0.1428530551493168,
+        "optimization_seconds": 2.7326340936124325,
+        "gold_planning": {
+          "positions": 8,
+          "trials": 12,
+          "evaluations": 2519,
+          "simulated_steps": 2519,
+          "completed_routes": 396,
+          "labels": 6,
+          "seconds": 25.03677381388843,
+          "root_candidates": {
+            "end": 8,
+            "upgrade": 5,
+            "buy": 8,
+            "buySpell": 4,
+            "refresh": 8
+          },
+          "preferred": {
+            "buy": 1,
+            "upgrade": 2,
+            "refresh": 2,
+            "end": 1
+          },
+          "cuda_graphs": true,
+          "graph_replays": 272,
+          "teaching": {
+            "updates": 2,
+            "states": 6,
+            "loss": 1.5086775422096252,
+            "training_graphs": true,
+            "training_graph_count": 1,
+            "training_graph_replays": 2,
+            "training_graph_capture_seconds": 0.08511986769735813
+          }
+        },
+        "completed_games": 2,
+        "league_generations": [
+          0,
+          "external:3c73773b70068f05",
+          "external:ec2e9c5614abe5a3",
+          "external:9840b22391095759",
+          "external:85794e994c7bb9ac",
+          1,
+          2,
+          69,
+          192,
+          193,
+          194,
+          195
+        ],
+        "opponent_sampling": [
+          {
+            "generation": 0,
+            "external": false,
+            "depth": 64,
+            "probability": 0.03855541110348209,
+            "seats": 0
+          },
+          {
+            "generation": "external:3c73773b70068f05",
+            "external": true,
+            "depth": 256,
+            "probability": 0.10663716814159292,
+            "seats": 1
+          },
+          {
+            "generation": "external:ec2e9c5614abe5a3",
+            "external": true,
+            "depth": 1024,
+            "probability": 0.07396442780248069,
+            "seats": 0
+          },
+          {
+            "generation": "external:9840b22391095759",
+            "external": true,
+            "depth": 256,
+            "probability": 0.09336283185840709,
+            "seats": 2
+          },
+          {
+            "generation": "external:85794e994c7bb9ac",
+            "external": true,
+            "depth": 1024,
+            "probability": 0.12603557219751932,
+            "seats": 2
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "depth": 64,
+            "probability": 0.03849210917621762,
+            "seats": 0
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "depth": 64,
+            "probability": 0.038308491105652764,
+            "seats": 0
+          },
+          {
+            "generation": 69,
+            "external": false,
+            "depth": 64,
+            "probability": 0.08423332470060428,
+            "seats": 1
+          },
+          {
+            "generation": 191,
+            "external": false,
+            "depth": 64,
+            "probability": 0.08552599869251126,
+            "seats": 1
+          },
+          {
+            "generation": 192,
+            "external": false,
+            "depth": 64,
+            "probability": 0.12053895423045702,
+            "seats": 0
+          },
+          {
+            "generation": 193,
+            "external": false,
+            "depth": 64,
+            "probability": 0.09275869906162099,
+            "seats": 1
+          },
+          {
+            "generation": 194,
+            "external": false,
+            "depth": 64,
+            "probability": 0.10158701192945394,
+            "seats": 0
+          }
+        ],
+        "hero_counts": {
+          "s14_sylvanas": 2,
+          "s14_buttons": 2,
+          "s14_yogg": 1,
+          "s14_teron": 1,
+          "s14_clockwork": 1,
+          "s14_afk": 2,
+          "s14_marin": 2,
+          "s14_millificent": 2,
+          "s14_brann": 1,
+          "s14_lich": 1,
+          "s14_vanndar": 1
+        }
+      }
+    }
+  },
+  "active": {
+    "utc": "2026-09-15T08:34:00.700191+00:00",
+    "state": "running",
+    "deadline": "2026-09-15T11:57:55.136701+00:00",
+    "members": [
+      {
+        "depth": 64,
+        "pid": 86761,
+        "episodes": 4232,
+        "iteration": 194,
+        "trialsOverride": 12,
+        "stage": "training",
+        "logTail": []
+      },
+      {
+        "depth": 256,
+        "pid": 86762,
+        "episodes": 3740,
+        "iteration": 167,
+        "trialsOverride": 12,
+        "stage": "training",
+        "logTail": []
+      },
+      {
+        "depth": 1024,
+        "pid": 86795,
+        "episodes": 2916,
+        "iteration": 111,
+        "trialsOverride": 12,
+        "stage": "training",
+        "logTail": []
+      }
+    ],
+    "receipt": {
+      "pid": 86723,
+      "startedUtc": "2026-09-15T08:33:23.186466+00:00",
+      "deadlineUtc": "2026-09-15T11:57:55.136701+00:00",
+      "hours": 3.408875065277778,
+      "command": [
+        "/root/miniconda3/bin/python",
+        "-u",
+        "/root/tavern-human-current-06cd2177/population_resume.py",
+        "--resumes",
+        "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+        "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+        "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+        "--output",
+        "/root/tavern-four-hour-20260914/population",
+        "--deadline-utc",
+        "2026-09-15T11:57:55.136701+00:00",
+        "--workers",
+        "64",
+        "--iterations-per-exchange",
+        "2",
+        "--games-per-iteration",
+        "64",
+        "--max-per-lineage",
+        "2",
+        "--external-fraction",
+        "0.4",
+        "--device",
+        "cuda",
+        "--sequence-batch-size",
+        "32",
+        "--fused-adam",
+        "--sampling-processes",
+        "8",
+        "--training-graphs"
+      ],
+      "mps": true,
+      "recoveryOf": "/root/tavern-ops/20260915-gold-planning",
+      "goldPlanning": {
+        "states": 32,
+        "trials": 12,
+        "depth": 32,
+        "epochs": 2
+      },
+      "switch": {
+        "oldPopulation": "/root/autodl-tmp/tavern-gold-planning-20260915/population",
+        "population": "/root/autodl-tmp/tavern-gold-planning-12-20260915/population",
+        "oldRuntime": "/root/autodl-tmp/tavern-gold-planning-20260915",
+        "runtime": "/root/autodl-tmp/tavern-gold-planning-12-20260915",
+        "deadlineUtc": "2026-09-15T11:57:55.136701+00:00"
+      },
+      "watchPid": 86753
+    },
+    "health": {
+      "utc": "2026-09-15T08:33:31.366694+00:00",
+      "stage": "running",
+      "coordinator_valid": true,
+      "members": [
+        {
+          "index": 0,
+          "stage": "mixing",
+          "pid": 86724,
+          "process_valid": true,
+          "start_ticks": 1450372920,
+          "cpu_seconds": 2.87,
+          "episodes": 4232,
+          "iteration": 194,
+          "activity_age_seconds": 3.0,
+          "sampler_reports": 0,
+          "sampled_actions": 0,
+          "completed_sampling_games": 0,
+          "log_error": false
+        },
+        {
+          "index": 1,
+          "stage": "mixing",
+          "pid": 86725,
+          "process_valid": true,
+          "start_ticks": 1450372920,
+          "cpu_seconds": 2.84,
+          "episodes": 3740,
+          "iteration": 167,
+          "activity_age_seconds": 3.0,
+          "sampler_reports": 0,
+          "sampled_actions": 0,
+          "completed_sampling_games": 0,
+          "log_error": false
+        },
+        {
+          "index": 2,
+          "stage": "mixing",
+          "pid": 86726,
+          "process_valid": true,
+          "start_ticks": 1450372920,
+          "cpu_seconds": 2.85,
+          "episodes": 2916,
+          "iteration": 111,
+          "activity_age_seconds": 3.0,
+          "sampler_reports": 0,
+          "sampled_actions": 0,
+          "completed_sampling_games": 0,
+          "log_error": false
+        }
+      ],
+      "memory_gib": 31.68509292602539,
+      "memory_fraction": 0.2640424410502116,
+      "oom_kill": 0,
+      "cpu_usage_usec": 298857373727,
+      "cpu_quota_cores": 25.0,
+      "disk_free_gib": 21.8258056640625,
+      "gpu": "0, 63, 36.45",
+      "issues": [],
+      "healthy": true,
+      "watch_pid": 86753,
+      "job_pid": 86723,
+      "interval_seconds": 300,
+      "next_check_utc": "2026-09-15T08:38:31.366694+00:00",
+      "watch_complete": false
+    }
+  },
+  "validation": {
+    "localGoldTests": 8,
+    "gpuGoldTests": 8,
+    "localSearchTests": 10
+  },
+  "scope": "Training only; online weights unchanged; formal 12-trial checkpoint update not yet observed at this check"
+}

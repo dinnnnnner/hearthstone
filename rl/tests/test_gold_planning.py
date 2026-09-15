@@ -10,7 +10,7 @@ from tavern_rl.gold_planning import PlanningConfig, GoldPlanner, capture, root_a
 
 class GoldPlanningTests(unittest.TestCase):
     def test_scores_average_random_outcomes_and_never_label_incomplete_branches(self):
-        config=PlanningConfig()
+        config=PlanningConfig(trials=3)
         result=targets_from_scores({0:[0,0,0],1:[1,1,1],2:[-2,-2,3],3:[10]},[.1,.1,.7,.1],config)
         self.assertEqual(result['best'],1)
         self.assertNotIn(3,result['actions'])
@@ -41,13 +41,36 @@ class GoldPlanningTests(unittest.TestCase):
         with patch.dict('os.environ',{},clear=True):configure(config,args)
         self.assertNotIn('gold_planning',config)
         with patch.dict('os.environ',{'TAVERN_GOLD_PLANNING':'1'}):configure(config,args)
-        self.assertEqual(config['gold_planning']['trials'],3)
+        self.assertEqual(config['gold_planning']['trials'],12)
         with patch.dict('os.environ',{},clear=True):configure(config,args)
         self.assertEqual(config['gold_planning']['states'],32)
         with self.assertRaises(ValueError):PlanningConfig(trials=1)
         with self.assertRaises(ValueError):PlanningConfig(strength=float('nan'))
 
+    def test_trial_override_migrates_saved_config_and_cli_takes_precedence(self):
+        args=SimpleNamespace(gold_planning=None,planning_states=None,planning_trials=None)
+        config={'gold_planning':{'trials':3}}
+        with patch.dict('os.environ',{},clear=True):configure(config,args)
+        self.assertEqual(config['gold_planning']['trials'],3)
+        with patch.dict('os.environ',{'TAVERN_PLANNING_TRIALS':'12'},clear=True):configure(config,args)
+        self.assertEqual(config['gold_planning']['trials'],12)
+        with patch.dict('os.environ',{},clear=True):configure(config,args)
+        self.assertEqual(config['gold_planning']['trials'],12)
+        args.planning_trials=6
+        with patch.dict('os.environ',{'TAVERN_PLANNING_TRIALS':'12'},clear=True):configure(config,args)
+        self.assertEqual(config['gold_planning']['trials'],6)
+        args.planning_trials=None
+        for invalid in ['1','13','1.5','invalid']:
+            with patch.dict('os.environ',{'TAVERN_PLANNING_TRIALS':invalid},clear=True):
+                with self.assertRaises(ValueError):configure(config,args)
+
     def test_multistep_upgrade_buy_play_beats_lucky_refresh_and_preserves_memory(self):
+        self.assert_multistep_plan(3)
+
+    def test_twelve_outcomes_keep_paired_seeds_and_multistep_comparison(self):
+        self.assert_multistep_plan(12)
+
+    def assert_multistep_plan(self,trials):
         types=['end','buy','play','upgrade','refresh']
         def view(gold=10,legal=None,value=0,ended=False,stage='root'):
             return dict(gold=gold,legal=legal if legal is not None else [0,1,3,4],ended=ended,
@@ -68,7 +91,7 @@ class GoldPlanningTests(unittest.TestCase):
                     else:new=view(9,[0],[-2,-2,3][i%3],stage='refreshed')
                     self.rows[i]=new;output.append(copy.deepcopy(new))
                 return output
-        planner=GoldPlanner.__new__(GoldPlanner);planner.types=types;planner.config=PlanningConfig(states=1)
+        planner=GoldPlanner.__new__(GoldPlanner);planner.types=types;planner.config=PlanningConfig(states=1,trials=trials)
         planner.model=SimpleNamespace(eval=lambda:None);planner.simulator=Batch()
         memories=[]
         def evaluate(views,memory,previous):
@@ -79,9 +102,15 @@ class GoldPlanningTests(unittest.TestCase):
         original=copy.deepcopy(row);labels,metrics,traces=planner.plan([row])
         self.assertEqual(row,original);self.assertEqual(labels[0]['best'],3)
         self.assertEqual(metrics['root_candidates']['upgrade'],1)
-        self.assertTrue(any(t['actions']==['upgrade','buy','play','end'] and t['coins'][:3]==[10,5,2] for t in traces))
+        if trials==3:
+            self.assertTrue(any(t['actions']==['upgrade','buy','play','end'] and t['coins'][:3]==[10,5,2] for t in traces))
         seeds={a:[r['seed'] for r,route in zip(planner.simulator.requests,planner.simulator.routes) if route[0]==a] for a in [0,1,3,4]}
         self.assertTrue(all(s==seeds[0] for s in seeds.values()))
+        self.assertEqual(len(set(seeds[0])),trials)
+        self.assertEqual(metrics['completed_routes'],4*trials)
+        self.assertEqual(labels[0]['trials'],trials)
+        self.assertEqual(metrics['trials'],trials)
+        self.assertLessEqual(len(planner.simulator.requests),96)
         self.assertEqual(float(memories[0][0]),7.)
         self.assertGreater(max(float(m[0]) for m in memories),8.)
 

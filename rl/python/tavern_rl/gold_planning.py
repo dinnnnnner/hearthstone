@@ -24,7 +24,7 @@ SPENDING = {'buy', 'buySpell', 'upgrade', 'refresh'}
 @dataclass(frozen=True)
 class PlanningConfig:
     states: int = 32
-    trials: int = 3
+    trials: int = 12
     depth: int = 32
     temperature: float = .15
     strength: float = .5
@@ -32,7 +32,7 @@ class PlanningConfig:
     min_gap: float = .02
 
     def __post_init__(self):
-        for key, low, high in [('states',1,256),('trials',2,8),('depth',2,64),('epochs',1,4)]:
+        for key, low, high in [('states',1,256),('trials',2,12),('depth',2,64),('epochs',1,4)]:
             v=getattr(self,key)
             if type(v) is not int or not low <= v <= high: raise ValueError(f'Invalid planning {key}')
         if not math.isfinite(self.temperature) or self.temperature <= 0: raise ValueError('Invalid planning temperature')
@@ -49,12 +49,17 @@ def configure(config, args):
     if enabled is True or config.get('gold_planning'):
         options = dict(config.get('gold_planning',{}))
         if args.planning_states is not None: options['states'] = args.planning_states
+        trials = getattr(args,'planning_trials',None)
+        if trials is None and 'TAVERN_PLANNING_TRIALS' in os.environ:
+            trials = int(os.environ['TAVERN_PLANNING_TRIALS'])
+        if trials is not None: options['trials'] = trials
         config['gold_planning'] = asdict(PlanningConfig(**options))
 
 
 def add_arguments(parser):
     parser.add_argument('--gold-planning',action=argparse.BooleanOptionalAction,default=None)
     parser.add_argument('--planning-states',type=int,help='Public learner positions planned per PPO iteration')
+    parser.add_argument('--planning-trials',type=int,help='Random outcomes per first action (2–12); overrides saved setting')
 
 
 def capture(pool, game, seat, action_types, limit):
@@ -153,8 +158,8 @@ class GoldPlanner:
 
     def _plan(self, examples):
         started=time.monotonic();self.model.eval();labels=[]
-        metrics=Counter(positions=len(examples));kinds=Counter();traces=[]
-        # Up to 3 roots × 7 first actions × 3 outcomes. Bounded Node state and GPU batches.
+        metrics=Counter(positions=len(examples),trials=self.config.trials);kinds=Counter();traces=[]
+        # At most 96 branches, including all outcomes of up to 7 first actions per root.
         roots_per_batch=max(1,96//(7*self.config.trials))
         try:
             for offset in range(0,len(examples),roots_per_batch):
