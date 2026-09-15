@@ -138,6 +138,8 @@ def parser():
     p.add_argument("--replays", action="store_true", help="Save action tapes for deterministic offline replay")
     from .training_performance import add_arguments
     add_arguments(p)
+    from .gold_planning import add_arguments as planning_arguments
+    planning_arguments(p)
     return p
 
 
@@ -186,6 +188,7 @@ def main():
     code_hash = trainer_hash()
     from .training_performance import make_pool
     pool = make_pool(args, output)
+    planner = None
     try:
         state = pool.simulators[0].reset(args.seed & 0xffffffff)
         config = {"gamma": 1.0, "gae_lambda": .95, "clip": .2, "value_coef": .5, "entropy_coef": .01,
@@ -228,6 +231,10 @@ def main():
             options_for_seed(config['options'], config['hero_pool'], config['seed'])
         from .training_performance import apply_overrides, make_optimizer
         apply_overrides(config, args)
+        from .gold_planning import configure, PlanningConfig, GoldPlanner, teach
+        configure(config, args)
+        if config.get('gold_planning'):
+            planner = GoldPlanner(model, pool.meta, PlanningConfig(**config['gold_planning']), args.device)
         optimizer = make_optimizer(model, config, saved["optimizer"] if saved else None)
         def inference_model():
             if rollout_device == args.device: return model
@@ -268,17 +275,30 @@ def main():
             tracks, games, performance = pool.collect(actor, opponents, seeds, config["options"], rollout_device,
                 learner_seats=8 if iteration == 0 and len(league) == 1 else config["learner_seats"],
                 first_place_bonus=config['first_place_bonus'],
+                planning_states=config.get('gold_planning',{}).get('states',0),
                 hero_pool=config.get('hero_pool'),
                 packed_host_transfer=config['packed_host_transfer'],
                 opponent_weights=probabilities, seat_offset=episodes, progress=lambda row: print(json.dumps(row),flush=True),
                 replay_dir=output / "replays" if args.replays else None, error_dir=output / "debug")
             if any(game["truncated"] for game in games):
                 raise RuntimeError("A self-play game was truncated. Inspect replay/debug files and increase maxSteps; no PPO update was applied")
+            planning_labels=[];planning_metrics={};planning_traces=[]
+            if planner:
+                print(json.dumps(dict(stage='gold_planning',positions=len(pool.planning_examples))),flush=True)
+                planning_labels,planning_metrics,planning_traces=planner.plan(pool.planning_examples)
             optimization_started = time.monotonic()
             from .training_performance import optimized_update
             metrics = optimized_update(ppo_update, model, optimizer, tracks, config, args.device)
             if args.device == "cuda": torch.cuda.synchronize()
             metrics["optimization_seconds"] = time.monotonic()-optimization_started
+            if planner:
+                teaching=optimized_update(teach,model,optimizer,planning_labels,config,args.device)
+                config['gold_planning_updates']=config.get('gold_planning_updates',0)+teaching['updates']
+                metrics['gold_planning']=dict(planning_metrics,teaching=teaching)
+                audit=dict(iteration=iteration+1,metrics=metrics['gold_planning'],routes=planning_traces,
+                    comparisons=[dict(turn=x['row']['turn'],gold=x['row']['entities'][0]['details']['gold'],
+                        actions=[planner.types[a] for a in x['actions']],values=x['values'],target=x['target']) for x in planning_labels])
+                (output/f'gold-planning-{iteration+1:06d}.json').write_text(json.dumps(audit,indent=2)+'\n')
             counts = Counter(c for game in games for c in game['controllers'] if c >= 0)
             opponent_sampling = [dict(generation=e['generation'],external=e.get('external',False),
                 depth=e.get('model_spec',{}).get('policy_depth'),probability=float(probabilities[i]),seats=counts[i]) for i,e in enumerate(league)]
@@ -301,6 +321,7 @@ def main():
             print(json.dumps(row), flush=True)
         print(f"Checkpoint: {output / 'latest.pt'}", flush=True)
     finally:
+        if planner: planner.close()
         pool.close()
         lock.close()
 

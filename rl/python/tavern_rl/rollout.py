@@ -70,13 +70,16 @@ class SimulationPool:
             simulator.close()
 
     @accelerate_sampling
-    def collect(self, current, opponents, seeds, options, device, learner_seats=4, collect=True, replay_dir=None, error_dir=None, opponent_weights=None, schedule=None, progress=None, seat_offset=0, hero_pool=None, packed_host_transfer=False, first_place_bonus=0.):
+    def collect(self, current, opponents, seeds, options, device, learner_seats=4, collect=True, replay_dir=None, error_dir=None, opponent_weights=None, schedule=None, progress=None, seat_offset=0, hero_pool=None, packed_host_transfer=False, first_place_bonus=0., planning_states=0):
         """Batched model inference, parallel local simulators, per-seat on-policy records."""
         first_place_bonus = validate_bonus(first_place_bonus)
         seeds = list(seeds)
         if not seeds or not 1 <= learner_seats <= 8:
             raise ValueError("Need games and 1..8 learning seats")
         active, summaries, tracks = {}, [], []
+        self.planning_examples = []
+        if planning_states:
+            from .gold_planning import capture
         cursor = 0; start_time = time.monotonic(); action_count = 0; last_progress = start_time
         inference_seconds = 0.; simulator_wait_seconds = 0.; inference_batches = 0; inference_decisions = 0
         action_types = [a['type'] for a in self.meta['actions']]
@@ -100,6 +103,7 @@ class SimulationPool:
                 if len(controllers) != 8 or -1 not in controllers or any(c not in models for c in controllers):
                     raise ValueError("Invalid fixed seat schedule")
             active[worker] = {"state": state, "seed": seed, "heroes": game_options.get("heroes"), "controllers": controllers, "tracks": [[] for _ in range(8)],
+                "planning_seen": set(),
                 "memory": [np.zeros(models[c].hidden, dtype=np.float32) if getattr(models[c], 'recurrent', False) else None for c in controllers],
                 "previous": [self.meta['actionCount']] * 8,
                 "action_rng": [np.random.default_rng(np.random.SeedSequence([seed, seat, 0xa6710])) for seat in range(8)]}
@@ -145,6 +149,8 @@ class SimulationPool:
                     for i, (worker, seat, observation, mask) in enumerate(group):
                         action = int(actions[i]); game = active[worker]
                         if collect and controller == -1:
+                            if planning_states and model.recurrent:
+                                capture(self, game, seat, action_types, planning_states)
                             record = (observation, mask, action, float(logs[i]), float(values[i]))
                             if model.recurrent: record += (game['memory'][seat].copy(), game['previous'][seat])
                             game["tracks"][seat].append(record)

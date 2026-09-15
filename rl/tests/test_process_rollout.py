@@ -18,13 +18,14 @@ class ProcessRolloutTests(unittest.TestCase):
                 return processes.pop(0)
             def result(path,**kwargs):
                 index=int(path.stem)
-                return dict(tracks=[f'track-{index}'],games=[dict(seed=index)],performance=dict(
+                return dict(tracks=[f'track-{index}'],games=[dict(seed=index)],planning_examples=[dict(priority=str(1-index))],performance=dict(
                     environment_actions=1,inference_batches=1,mean_inference_batch=1,
                     inference_seconds=0.,simulator_wait_seconds=0.))
             with patch('tavern_rl.process_rollout.Simulator',return_value=simulator), \
                  patch('subprocess.Popen',side_effect=start),patch('torch.load',side_effect=result),patch('time.sleep'):
                 pool=ProcessSimulationPool(2,2,source)
-                tracks,games,_=pool.collect(None,[],[0,1],{},'cpu')
+                tracks,games,_=pool.collect(None,[],[0,1],{},'cpu',planning_states=1)
+                self.assertEqual(pool.planning_examples,[dict(priority='0')])
                 pool.close()
             self.assertEqual(tracks,['track-0','track-1'])
             self.assertEqual([g['seed'] for g in games],[0,1])

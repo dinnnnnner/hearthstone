@@ -56,6 +56,7 @@ class ProcessSimulationPool:
 
     def collect(self,current,opponents,seeds,options,device,**kwargs):
         seeds=list(seeds)
+        self.planning_examples=[]
         if kwargs.get('replay_dir'):
             kwargs['replay_dir']=str(kwargs['replay_dir'])
         if kwargs.get('error_dir'):
@@ -100,6 +101,9 @@ class ProcessSimulationPool:
             for index in sorted(results):
                 result=results[index]
                 tracks.extend(result['tracks']);games.extend(result['games']);metrics.append(result['performance'])
+                self.planning_examples.extend(result.get('planning_examples',[]))
+            self.planning_examples.sort(key=lambda r:r['priority'])
+            del self.planning_examples[kwargs.get('planning_states',0):]
             results.clear()
             if len(games)!=len(seeds) or sorted(g['seed'] for g in games)!=sorted(seeds):
                 raise RuntimeError('Parallel sampler lost or duplicated games')
@@ -155,7 +159,7 @@ def main():
         def progress(row):
             if 'environment_actions' in row:write_json(path,row)
         tracks,games,performance=pool.collect(model,opponents,job['seeds'][args.start:args.end],job['options'],job['device'],progress=progress,**kwargs)
-        torch.save(dict(tracks=tracks,games=games,performance=performance),args.job.parent/f'{args.index}.pt')
+        torch.save(dict(tracks=tracks,games=games,performance=performance,planning_examples=pool.planning_examples),args.job.parent/f'{args.index}.pt')
         write_json(path,dict(performance,completed_games=len(games)))
     finally:pool.close()
 

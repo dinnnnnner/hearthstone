@@ -118,3 +118,5 @@ npm run package:rl
 部分 Python 集成测试还依赖仓库中的 TypeScript、开发脚本或浏览器环境；它们需要在源码仓库运行。独立包可用本页的有限轮训练命令检查运行环境。
 
 真人数据需要主动录制，模仿学习通过单独阶段接入完整检查点，见 [真人示范](../docs/rl-human-demonstrations.md)。视频提取是可选联网工具，当前产物仍需行为克隆输入适配，见 [视频说明](../docs/rl-video-extraction.md)。
+
+金币规划辅助训练及启用参数见 [金币规划训练](../docs/rl-gold-planning.md)。普通 PPO 采样不被搜索动作替换。

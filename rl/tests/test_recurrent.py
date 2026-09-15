@@ -102,6 +102,7 @@ class RecurrentTests(unittest.TestCase):
             def state(self):
                 done=self.tick==16
                 return dict(actor=None if done else self.tick%8,observation=[self.tick%8],legalActions=[0,1],terminated=done,truncated=False,
+                            entities=[dict(details=dict(turn=self.tick//8+1,gold=3,decisions=self.tick))],
                             info=dict(placements=list(range(1,9)),rewards=list(range(8))))
             def step(self,action):self.tick+=1;return self.state()
         class CountingModel(torch.nn.Module):
@@ -112,7 +113,11 @@ class RecurrentTests(unittest.TestCase):
                 return torch.distributions.Categorical(logits=torch.zeros_like(masks,dtype=torch.float32)),memory[:,0],memory+1
         pool=SimulationPool.__new__(SimulationPool);pool.simulators=[FakeSimulator()];pool.meta=dict(actionCount=2, actions=[dict(type="end"), dict(type="buy")])
         pool.executor=ThreadPoolExecutor(max_workers=1)
-        try:tracks,games,_=pool.collect(CountingModel(),[],[1,2],{},'cpu',learner_seats=8)
+        try:
+            tracks,games,_=pool.collect(CountingModel(),[],[1,2],{},'cpu',learner_seats=8)
+            planned,_,_=pool.collect(CountingModel(),[],[1,2],{},'cpu',learner_seats=8,planning_states=4)
+            self.assertEqual(len(pool.planning_examples),4)
+            self.assertEqual([[r[2] for r in records] for records,_ in tracks],[[r[2] for r in records] for records,_ in planned])
         finally:pool.executor.shutdown()
         self.assertEqual(len(tracks),16)
         for records,_ in tracks:

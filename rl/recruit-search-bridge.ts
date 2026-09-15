@@ -1,7 +1,9 @@
 import { createInterface } from 'node:readline';
 import { inferenceProfile } from '../server/neural-profile';
 import { RecruitSearchEnv, SEARCH_VERSION, UnsupportedSearch } from './recruit-search';
+import { GoldPlanningBatch, GOLD_PLANNING_VERSION } from './gold-planning';
 let branch: RecruitSearchEnv | undefined;
+let planning: GoldPlanningBatch | undefined;
 const profile = inferenceProfile('scouting-v4');
 createInterface({ input: process.stdin, crlfDelay: Infinity }).on('line', line => {
   try {
@@ -15,7 +17,10 @@ createInterface({ input: process.stdin, crlfDelay: Infinity }).on('line', line =
         break;
       case 'reset': if (!branch) throw Error('No search root'); result = branch.reset(m.seed); break;
       case 'step': if (!branch) throw Error('No search root'); result = branch.step(m.action); break;
-      case 'release': branch = undefined; result = { released: true }; break;
+      case 'plan_open': planning = undefined; planning = new GoldPlanningBatch(m.roots, m.branches);
+        result = { version: GOLD_PLANNING_VERSION, views: planning.views() }; break;
+      case 'plan_step': if (!planning) throw Error('No planning batch'); result = planning.step(m.actions); break;
+      case 'release': planning = undefined; branch = undefined; result = { released: true }; break;
       case 'close': process.exit(0);
       default: throw Error('Unknown recruit-search command');
     }
