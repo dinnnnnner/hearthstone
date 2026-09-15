@@ -79,6 +79,8 @@ PyTorch 在图捕获时给出了 AccumulateGrad 流不匹配的性能提示，�
 
 任务 `20260915T035039-57399` 从北京时间 2026-09-15 11:50:39 开始，15:50:39 自动停止。
 
+后续状态：原任务因采样非法动作提前失败。14:27 已修复采样边界、迁移到新动作限制并恢复剩余时间，截止时间仍为 15:50:39。新任务回执为 `/root/tavern-ops/20260915-action-limits/resume.json`，详见 [切换与恢复记录](ai-action-limits-deployment-20260915.md)。下文保留原始启动和性能记录。
+
 ```bash
 python3 scripts/tavern-ops.py train --hours 4 --model all \
   --workers 64 --games 64 --sampling-processes 8 --mps \

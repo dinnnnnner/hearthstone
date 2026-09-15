@@ -2,7 +2,7 @@
 
 下面对应“把训练好的模型上线到客户端，再继续训练”的日常操作。入口是仓库中的 `scripts/tavern-ops.py`，在本机执行即可，不需要逐台手动复制模型。
 
-仓库新增的人机冻结与换位限制见 [动作限制](ai-action-limits.md)。本入口仍依赖服务器的冻结训练运行目录；代码更新不会自动修改正在运行或从原目录恢复的训练。采用新限制前需要单独迁移检查点和运行程序。
+人机冻结与换位限制已同步到公网、搜索服务及 Blackwell 训练端。2026-09-15 的迁移保留三份完整训练状态，现有运维路径通过符号链接指向新目录，命令无需修改。后续更新 Git 仍不会自动替换服务器冻结的运行程序，见 [部署与回滚记录](ai-action-limits-deployment-20260915.md)。
 
 ## 先记住三台机器
 
@@ -127,8 +127,8 @@ python3 scripts/tavern-ops.py stop
 在训练服务器查看最新结果和告警：
 
 ```bash
-cat /root/tavern-ops/20260915T035039-57399/health/latest.json
-tail /root/tavern-ops/20260915T035039-57399/health/alerts.jsonl
+cat /root/tavern-ops/20260915-action-limits/health/latest.json
+tail /root/tavern-ops/20260915-action-limits/health/alerts.jsonl
 ```
 
 `healthy: true` 表示本次未发现异常；`checks.jsonl` 保存全部检查，`alerts.jsonl` 仅在发现异常时创建。`next_check_utc` 是下一次检查时间，`watch_complete` 表示巡检已结束。后台结果写在服务器文件中，不会自动向聊天窗口推送消息。实现入口为 `scripts/watch-training.py`，启动新的训练任务时需绑定新的 `resume.json`。

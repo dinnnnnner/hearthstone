@@ -28,6 +28,8 @@
 
 [Blackwell 调优](rl-blackwell-20260915.md) 记录当前硬件上的采样与 PPO 性能。[奖励迁移](rl-unused-gold-penalty.md) 和 [第一名奖励](rl-first-place-bonus.md) 说明训练目标变化。
 
+[动作限制部署](ai-action-limits-deployment-20260915.md) 记录公网、搜索和训练端的同步切换、采样边界修复、检查点迁移及回滚位置。
+
 [v3 架构](rl-v3.md)、[64 层](rl-deep64.md)、[256 层](rl-deep256.md)、[1024 层](rl-deep1024.md) 文档保留早期验证条件。它们的硬件、启动时间和旧模型局数不代表当前部署。[公开战况](rl-public-scouting.md) 说明观察协议变更。
 
 `docs/checkpoints/` 保存游戏版本说明；`docs/*-YYYYMMDD.json` 保存训练与部署核验记录。历史记录中的旧奖励系数和运行目录不应直接套用到新任务。当前规则以源码及覆盖报告为准，当前训练参数以对应检查点的 `config` 为准。

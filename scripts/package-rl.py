@@ -41,7 +41,7 @@ if deep1024_validation.exists(): files.append(deep1024_validation)
 # Include documentation linked from the package entry point. Keep dated records
 # already selected above; the full deployment archive stays in the source repo.
 files += [ROOT / "docs" / name for name in [
-    "ai-action-limits.md", "ai-action-limits-validation-20260915.json", "rl-network.md", "rl-training.md", "rl-first-place-bonus.md", "rl-unused-gold-penalty.md",
+    "ai-action-limits.md", "ai-action-limits-validation-20260915.json", "ai-action-limits-deployment-20260915.md", "ai-action-limits-deployment-20260915.json", "rl-network.md", "rl-training.md", "rl-first-place-bonus.md", "rl-unused-gold-penalty.md",
     "rl-blackwell-20260915.md", "tavern-operations.md", "rl-human-demonstrations.md",
     "neural-serving.md",
 ]]
