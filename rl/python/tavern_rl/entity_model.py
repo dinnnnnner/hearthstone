@@ -50,6 +50,9 @@ class EntityActorCritic(nn.Module):
         super().__init__()
         if hidden % heads: raise ValueError('hidden must be divisible by heads')
         self.schema, self.actions = entity_schema, actions
+        # Schema definitions are immutable for this model. Cache parsing only,
+        # never parameter-dependent embeddings or dynamic board observations.
+        self._definition_groups = {}
         self.hidden, self.heads, self.layers = hidden, heads, layers
         self.action_size = len(actions)
         self.identity = nn.Embedding(len(entity_schema['ids']) + 1, hidden, padding_idx=0)
@@ -125,7 +128,7 @@ class EntityActorCritic(nn.Module):
         return torch.zeros(batch, self.hidden, device=device)
 
     def encode(self, observations, device):
-        pack = pack_entities(observations, self.schema, device)
+        pack = pack_entities(observations, self.schema, device, definition_cache=self._definition_groups)
         symbols = self.symbol(pack['strings'], device)
         groups = torch.zeros(len(pack['group_owners']), self.hidden, device=device)
         counts = torch.zeros(len(groups), 1, device=device)

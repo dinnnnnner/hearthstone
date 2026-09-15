@@ -57,7 +57,7 @@ def _numeric_nonzero(value, kind):
     return (math.copysign(math.log1p(abs(value)), value) / 10, math.tanh(value / 10), float(kind == 2), float(kind == 1))
 
 
-def pack_entities(observations, schema, device):
+def pack_entities(observations, schema, device, *, definition_cache=None, packed_transfer=True):
     """Variable effect counts are padded only within a batch; nothing is truncated."""
     count = schema['count']
     ids = [obs.ids if obs else (0,) * count for obs in observations]
@@ -78,15 +78,29 @@ def pack_entities(observations, schema, device):
         if obs:
             for slot, path, fields in obs.groups: add(batch * count + slot, path, fields)
     for identity in unique_ids:
-        definition = schema['definitions'].get(str(identity), {})
-        for path, fields in object_groups(json.dumps(definition, sort_keys=True, separators=(',', ':'), ensure_ascii=False)):
+        groups = definition_cache.get(identity) if definition_cache is not None else None
+        if groups is None:
+            definition = schema['definitions'].get(str(identity), {})
+            groups = object_groups(json.dumps(definition, sort_keys=True, separators=(',', ':'), ensure_ascii=False))
+            if definition_cache is not None: definition_cache[identity] = groups
+        for path, fields in groups:
             add(static_indices[identity], path, fields)
     # Prevent an unexpected runaway effect list from exhausting the host, never silently drop it.
     if len(field_groups) > 2000000: raise ValueError('Observation batch exceeds 2 million fields; reduce sequence batch size')
-    index = lambda values: torch.as_tensor(values, dtype=torch.long, device=device)
-    return {'ids': index(ids), 'strings': strings, 'group_owners': index(group_owners), 'group_paths': index(group_paths),
-            'field_groups': index(field_groups), 'field_keys': index(field_keys), 'field_values': index(field_values),
-            'field_numbers': torch.as_tensor(field_numbers, dtype=torch.float32, device=device).reshape(-1, 4),
-            'field_types': index(field_types), 'owner_count': len(observations) * count + len(unique_ids),
-            'static_ids': index(unique_ids), 'static_owners': index([static_indices[i] for i in unique_ids]),
-            'batch': len(observations)}
+    columns = dict(ids=ids, group_owners=group_owners, group_paths=group_paths,
+                   field_groups=field_groups, field_keys=field_keys, field_values=field_values,
+                   field_types=field_types, static_ids=unique_ids,
+                   static_owners=[static_indices[i] for i in unique_ids])
+    if packed_transfer:
+        # One int64 transfer replaces nine small transfers. FP32 numeric fields
+        # stay separate, preserving both integer indices and signed-zero bits.
+        arrays = {key: np.asarray(values, dtype=np.int64) for key, values in columns.items()}
+        flat = torch.from_numpy(np.concatenate([value.reshape(-1) for value in arrays.values()])).to(device)
+        indices = {}; offset = 0
+        for key, value in arrays.items():
+            indices[key] = flat[offset:offset+value.size].reshape(value.shape); offset += value.size
+    else:
+        indices = {key: torch.as_tensor(values, dtype=torch.long, device=device) for key, values in columns.items()}
+    return dict(indices, strings=strings,
+                field_numbers=torch.as_tensor(np.asarray(field_numbers, dtype=np.float32), device=device).reshape(-1, 4),
+                owner_count=len(observations) * count + len(unique_ids), batch=len(observations))
