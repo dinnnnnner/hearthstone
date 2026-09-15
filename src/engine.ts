@@ -70,6 +70,7 @@ export interface Battle {
   opponent: string;
 }
 export interface Game {
+  aiActionUsage?: import('./ai-action-limits').AIActionUsage;
   practiceGhost?: Opponent;
   seatIndex?: number;
   scouting?: ScoutRound[];

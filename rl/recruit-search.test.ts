@@ -1,4 +1,5 @@
 import { test } from 'node:test';
+import { enableAIActionLimits } from '../src/ai-action-limits';
 import assert from 'node:assert/strict';
 import { createSeason, actSeason, endEffects } from '../src/season/engine';
 import { makeMinion } from '../src/engine';
@@ -10,6 +11,7 @@ import { gameFromObservation, RecruitSearchEnv } from './recruit-search';
 const json = (v: unknown) => JSON.parse(JSON.stringify(v));
 function setup(decisions = 0) {
   const s = createSeason('s14_patchwerk', () => .3);
+  enableAIActionLimits(s);
   const entities = json(observeEntities(s, decisions, 64));
   return { s, entities, branch: new RecruitSearchEnv(entities, decisions) };
 }
@@ -58,9 +60,10 @@ test('search uses no real hidden pool, opposing board, old history or RNG, and n
 });
 
 test('there is no real 64/96-operation end mask in recruit search', () => {
-  const { branch } = setup(128); branch.reset(3);
+  const { s } = setup(128); s.season!.freeRefresh = 150;
+  const branch = new RecruitSearchEnv(json(observeEntities(s, 128, 64)), 128); branch.reset(3);
   for (let i = 0; i < 110; i++) {
-    const view = branch.step(actionId('freeze'));
+    const view = branch.step(actionId('refresh'));
     assert.equal(view.ended, false); assert.ok(view.legal.includes(actionId('buy', 0)));
   }
   assert.equal(branch.state.turn, 1);
@@ -84,4 +87,24 @@ test('unreconstructable future discoveries and private opposing powers are expli
   assert.throws(() => gameFromObservation(entities), /Pending discovery/);
   const scabbs = createSeason('s14_scabbs', () => .3);
   assert.throws(() => gameFromObservation(json(observeEntities(scabbs, 0, 64))), /unknown opposing warband/);
+});
+
+test('search restores remaining allowances and inverse moves, and each branch spends only its own quota', () => {
+  let { s } = setup();
+  s.board = ['s14_BG25_001', 's14_BG20_100', 's14_BG21_015'].map(id => makeMinion(id));
+  s = actSeason(s, { type: 'freeze' }).state;
+  s = actSeason(s, { type: 'move', uid: s.board[0].uid, to: 2 }).state;
+  const input = json(observeEntities(s, 2, 64)), before = structuredClone(input);
+  const branch = new RecruitSearchEnv(input, 2);
+  const root = branch.reset(10);
+  assert.deepEqual(json(root.entities), input);
+  assert.ok(!root.legal.includes(actionId('move', 2, 0, 0)));
+  const child = branch.step(actionId('freeze'));
+  assert.ok(!child.legal.includes(actionId('freeze')));
+  assert.deepEqual(child.entities[0]!.details.aiActionLimits, { version: 1, freezeRemaining: 0, moveRemaining: 5 });
+  assert.throws(() => branch.step(actionId('freeze')), /Illegal search action/);
+  assert.deepEqual(branch.reset(11), root);
+  assert.deepEqual(input, before);
+  input[0].details.aiActionLimits.freezeRemaining = 3;
+  assert.throws(() => new RecruitSearchEnv(input, 2), /Invalid AI action/);
 });

@@ -6,6 +6,7 @@ import { equippedPowers, powerProgress } from "../src/season/powers";
 import { assertActionBounds } from "./actions";
 import { publicScouting } from "./scouting";
 import { gameRankingHealth, opponentRankingHealth } from "../src/ranking";
+import { publicAIActionLimits } from '../src/ai-action-limits';
 
 // Extra trinkets can occur at turns 5 (Marin), 6, 8 (Buttons), and 9, at most once per turn.
 // Stable entity slots are shared by observations and the candidate-action scorer.
@@ -64,6 +65,7 @@ export function observeEntities(s: Game, decisions: number, budget: number): (En
   // Explicit allowlist: never serialize Game, pool, initialPool or opponents' boards.
   put(0, 0, identity(s.hero), {
     turn: s.turn, tier: s.tier, gold: s.gold, health: s.health, armor: st.armor,
+    aiActionLimits: publicAIActionLimits(s),
     seatIndex: s.seatIndex, spellArmor: st.spellArmor || 0, rankingHealth: gameRankingHealth(s),
     scouting: publicScouting(s, s.scouting),
     upgrade: s.upgrade, frozen: s.frozen, powerUsed: s.powerUsed, triples: s.triples, purchases: s.purchases,

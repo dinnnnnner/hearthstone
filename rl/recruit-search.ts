@@ -7,8 +7,9 @@ import { withSimulation } from '../src/simulation';
 import { ACTIONS, candidates } from './actions';
 import { ENTITY_SCHEMA, IDS, OFFSETS, SIZES, observeEntities, type Entity } from './entities';
 import type { ScoutRound } from '../src/scouting';
+import { AI_ACTION_LIMITS, enableAIActionLimits } from '../src/ai-action-limits';
 
-export const SEARCH_VERSION = 'own-recruit-puct-v1';
+export const SEARCH_VERSION = 'own-recruit-puct-limits-v2';
 type Details = Record<string, any>;
 const take = (source: Details, keys: string[]) => Object.fromEntries(keys.filter(k => source[k] !== undefined).map(k => [k, structuredClone(source[k])]));
 const cardFields = ['attack', 'health', 'golden', 'keywords', 'lockedUntil', 'lockedTier', 'bothChoices', 'magneticCount',
@@ -72,6 +73,20 @@ export function gameFromObservation(input: (Entity | null)[]): Game {
     pool: {}, opponents, nextOpponent: Math.max(0, zone(7).findIndex(e => e.details.next)), logs: [],
     battles: g.lastBattle ? [{ ...g.lastBattle, name: '' }] : [], scouting: scouts(g.scouting),
   } as unknown as Game;
+  const limits = g.aiActionLimits;
+  if (limits !== undefined) {
+    if (limits.version !== AI_ACTION_LIMITS.version ||
+      !Number.isInteger(limits.freezeRemaining) || limits.freezeRemaining < 0 || limits.freezeRemaining > AI_ACTION_LIMITS.freezes ||
+      !Number.isInteger(limits.moveRemaining) || limits.moveRemaining < 0 || limits.moveRemaining > AI_ACTION_LIMITS.moves)
+      throw Error('Invalid AI action allowances');
+    const undo = limits.undoOrder;
+    if (undo !== undefined && (!Array.isArray(undo) || undo.length !== s.board.length || new Set(undo).size !== undo.length ||
+      undo.some(i => !Number.isInteger(i) || i < 0 || i >= s.board.length))) throw Error('Invalid AI previous move order');
+    s.aiActionUsage = { turn: s.turn, freezes: AI_ACTION_LIMITS.freezes - limits.freezeRemaining,
+      moves: AI_ACTION_LIMITS.moves - limits.moveRemaining,
+      ...(undo ? { previousMoveOrder: undo.map((i: number) => s.board[i].uid) } : {}),
+    };
+  }
   // Explicit approximation: public tier copy counts minus visible own cards.
   // Other players' holdings, generated-card provenance and magnetic provenance are unknown.
   st.initialPool = Object.fromEntries(SEASON_CARDS.filter(d => !d.races?.length || d.races.includes('全部') ||
@@ -93,6 +108,7 @@ export class RecruitSearchEnv {
   private legal?: Map<number, Parameters<typeof actSeason>[1]>;
   constructor(entities: (Entity | null)[], readonly decisions: number, readonly featureBudget = 64) {
     this.root = gameFromObservation(entities);
+    enableAIActionLimits(this.root);
     if (!Number.isSafeInteger(decisions) || decisions < 0 || !Number.isFinite(featureBudget) || featureBudget < 1)
       throw Error('Invalid observation decision counter');
   }

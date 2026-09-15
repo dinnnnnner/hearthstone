@@ -1,7 +1,6 @@
 import { setImmediate as yieldLoop } from 'node:timers/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { gzipSync } from 'node:zlib';
-import { createHash } from 'node:crypto';
 import { Rooms, type Room, type Seat, type AIModel, type AIModelOption } from './rooms';
 import { ACTIONS, candidates } from '../rl/actions';
 import { inferenceProfile } from './neural-profile';
@@ -11,7 +10,7 @@ import type { Action } from '../src/engine';
 
 export const runtimeSchema = inferenceProfile().schema;
 export const contract = inferenceProfile().contract;
-type Memory = { memory: number[]; previous: number; turn: number; decisions: number; positions?: Set<string> };
+type Memory = { memory: number[]; previous: number; turn: number; decisions: number };
 type Prediction = { rows: { action: number; memory: number[] }[] };
 type Traffic = { requests: number; rawRequestBytes: number; requestBytes: number; responseBytes: number; maxKbps: number };
 export type Infer = { (body: unknown): Promise<Prediction>; traffic?: Traffic };
@@ -152,29 +151,16 @@ export class NeuralRooms extends Rooms {
       state = { memory: Array(128).fill(0), previous: ACTIONS.length, turn, decisions: 0 };
       this.memories.set(p, state);
     }
-    if (state.turn !== turn) { state.turn = turn; state.decisions = 0; state.positions = undefined; }
+    if (state.turn !== turn) { state.turn = turn; state.decisions = 0; }
     // The model gets the same public projection as training. Private enemy boards
     // are supplied only to the authoritative rule validator, never to inference.
     const s = { ...p.game!, pool: r.pool };
-    const position = (game: typeof s) => createHash('sha256').update(JSON.stringify(model.observation.observe(game, 0, 64))).digest('hex');
-    if (model.search) {
-      state.positions ??= new Set();
-      state.positions.add(position(s));
-      if (state.positions.size > 128) state.positions.delete(state.positions.values().next().value!);
-    }
     const pair = r.pairings?.find(pair => pair.includes(p.id));
     const enemy = r.seats.find(seat => seat.id === pair?.find(id => id !== p.id));
     const valid = new Map<number, Action>();
     let checked = 0;
     for (const [id, action] of candidates(s, !model.search && state.decisions >= 64)) {
       let uid = 0;
-      if (model.search && ['move', 'freeze'].includes(action.type)) {
-        const preview = withSimulation({ uid: () => `preview-${uid++}`, recordLogs: false, recordFrames: false },
-          () => actSeason(s, action, () => .5));
-        // Prune reversible cycles in the AI's choices, not productive operations
-        // or the rules' action count. Only public observations enter this cache.
-        if (!preview.error && state.positions!.has(position(preview.state))) continue;
-      }
       const error = ['end', 'move', 'freeze'].includes(action.type) ? undefined : withSimulation(
         { uid: () => `preview-${uid++}`, recordLogs: false, recordFrames: false },
         () => actSeason(s, action, () => 0.5, { opponentBoard: enemy?.game?.board || r.grave?.board || [] }).error,
@@ -198,7 +184,6 @@ export class NeuralRooms extends Rooms {
       const error = this.apply(r, p, action);
       // The shared pool can change while awaiting inference. Retry with a fresh mask.
       if (error) { state.decisions++; return; }
-      if (!['move', 'freeze'].includes(action.type)) state.positions?.clear();
     }
     state.memory = chosen.memory; state.previous = chosen.action; state.decisions++;
     this.ai.decisions++; this.ai.mode = 'neural';

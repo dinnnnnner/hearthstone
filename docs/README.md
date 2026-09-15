@@ -15,6 +15,7 @@
 | [日常运维](tavern-operations.md) | 当前三台机器、状态、上线、续训和巡检 |
 | [站点部署](../deploy/README.md) | 网页和房间服务部署 |
 | [在线推理](neural-serving.md) | 模型注册、观察契约、隧道与带宽 |
+| [人机动作限制](ai-action-limits.md) | 冻结与换位次数、持久化、搜索隔离和训练迁移 |
 | [招募回合搜索](rl-recruit-search.md) | 公开状态搜索、预算、回退和部署 |
 | [真人示范](rl-human-demonstrations.md) | 录制、分段模仿与训练线接入 |
 | [对手池](rl-opponent-diversity.md) | 历史快照、外部路线、抽样和兼容检查 |

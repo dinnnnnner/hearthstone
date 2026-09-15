@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
-    "test": "tsx --test src/engine.test.ts src/season/engine.test.ts src/season/ai-hero-pool.test.ts src/scouting.test.ts src/practice.test.ts src/ranking.test.ts src/table/presentation.test.ts",
+    "test": "tsx --test src/engine.test.ts src/ai-action-limits.test.ts src/season/engine.test.ts src/season/ai-hero-pool.test.ts src/scouting.test.ts src/practice.test.ts src/ranking.test.ts src/table/presentation.test.ts",
     "test:e2e": "playwright test",
     "build:site": "TAVERN_BASE=/tavern/ npm run build && python3 scripts/package-site.py",
     "build:server": "node scripts/build-server.mjs",

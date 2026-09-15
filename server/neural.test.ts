@@ -6,6 +6,8 @@ import { ACTIONS } from '../rl/actions';
 import { inferenceProfile } from './neural-profile';
 import { createServer } from 'node:http';
 import { gzipSync, gunzipSync } from 'node:zlib';
+import { makeMinion } from '../src/engine';
+import { publicAIActionLimits } from '../src/ai-action-limits';
 
 function setup(infer: Infer) {
   let seed = 42;
@@ -98,7 +100,44 @@ test('search bots cannot endlessly freeze and unfreeze an unchanged shop', async
     for (const p of room.seats) if (p.bot && p !== bot) p.ended = true;
     store.autoChoices(room, bot);
     await until(() => bot.ended);
-    assert.deepEqual(choices, [2, 0]); assert.equal(store.ai.errors, 0);
+    assert.deepEqual(choices, [2, 2, 0]); assert.equal(store.ai.errors, 0);
+  } finally { store.stop(); }
+});
+
+for (const search of [false, true]) test(`${search ? 'search' : 'ordinary'} bots share persistent freeze/move limits and keep other actions legal`, async () => {
+  const observed: { freezes: number; moves: number }[] = [];
+  const infer: Infer = async (body: any) => {
+    const row = body.rows[0], limits = row.entities[0].details.aiActionLimits;
+    assert.ok(limits); observed.push({ freezes: limits.freezeRemaining, moves: limits.moveRemaining });
+    const move = row.legal.find((id: number) => ACTIONS[id].type === 'move');
+    const action = row.legal.includes(2) ? 2 : move ?? 0;
+    return { rows: [{ action, memory: row.memory }] };
+  };
+  const store = new NeuralRooms(infer, Date.now, () => .3, 'scouting-v4', [
+    { id: 'limits', label: 'limits', profile: 'scouting-v4', search, infer },
+  ]);
+  try {
+    const guest = store.auth(store.guest('limits-test').token);
+    const room = store.create(guest, 'ai', 's14_patchwerk', 'training', 'free', 'limits');
+    const bot = room.seats.find(p => p.bot)!;
+    for (const p of room.seats) if (p.bot && p !== bot) p.ended = true;
+    store.autoChoices(room, bot);
+    bot.game!.board = ['s14_BG25_001', 's14_BG20_100', 's14_BG21_015'].map(id => makeMinion(id));
+    await until(() => bot.ended);
+    assert.equal(store.ai.errors, 0);
+    assert.equal(observed.length, 9); // Two toggles, six moves, then end.
+    assert.deepEqual(observed.at(-1), { freezes: 0, moves: 0 });
+    assert.equal(publicAIActionLimits(bot.game!)!.freezeRemaining, 0);
+    // Reconstruct the actual room save, without a neural-memory cache.
+    const restored = new NeuralRooms(endPolicy); restored.restore(store.dump());
+    try {
+      const loaded = restored.rooms.get(room.code)!.seats.find(p => p.id === bot.id)!;
+      assert.equal(publicAIActionLimits(loaded.game!)!.moveRemaining, 0);
+      assert.ok(restored.apply(restored.rooms.get(room.code)!, loaded, { type: 'freeze' }));
+    } finally { restored.stop(); }
+    const human = room.seats.find(p => !p.bot)!;
+    for (let i = 0; i < 3; i++) assert.equal(store.apply(room, human, { type: 'freeze' }), undefined);
+    assert.equal(human.game!.aiActionUsage, undefined);
   } finally { store.stop(); }
 });
 

@@ -7,6 +7,7 @@ import { ACTIONS, candidates } from "./actions";
 import { observe, CARD_IDS, HERO_IDS } from "./observation";
 import coverage from "../docs/rules-coverage.json";
 import { observeEntities, ENTITY_SCHEMA } from "./entities";
+import { AI_ACTION_LIMITS } from '../src/ai-action-limits';
 
 declare const RL_SOURCE_HASH: string;
 declare const RL_RULES_HASH: string;
@@ -20,6 +21,7 @@ export const META = {
   actionCount: ACTIONS.length, cardIds: CARD_IDS, heroIds: HERO_IDS,
   patch: coverage.patch, coverage: { minions: coverage.minions, heroes: coverage.heroes, spells: coverage.tavernSpells, trinkets: coverage.trinkets },
   opponents: "neural self-play only", reward: "(4.5 - placement) / 3.5", seats: 8,
+  aiActionLimits: AI_ACTION_LIMITS,
 };
 export class Random {
   constructor(public state: number) { this.state >>>= 0; }
@@ -32,6 +34,8 @@ export class Random {
   };
 }
 class SelfPlayRooms extends Rooms {
+  actionLimits = true;
+  protected override usesAIActionLimits() { return this.actionLimits; }
   override bots(r: Room) {
     if (r.seats.length !== 8 || r.seats.some(p => p.bot)) throw Error("Self-play requires eight policy-controlled seats");
   }
@@ -41,7 +45,7 @@ class SelfPlayRooms extends Rooms {
       throw Error(`Unresolved policy decision before combat, seat ${r.seats.indexOf(p)}`);
   }
 }
-export interface Options { maxActionsPerTurn: number; maxSteps: number; recordFrames: boolean; heroes?: string[] }
+export interface Options { maxActionsPerTurn: number; maxSteps: number; recordFrames: boolean; heroes?: string[]; aiActionLimits: boolean }
 export class SelfPlayEnv {
   options: Options;
   rng = new Random(0);
@@ -60,7 +64,8 @@ export class SelfPlayEnv {
   replays: unknown[] = [];
   private legalCache?: Map<number, Action>;
   constructor(options: Partial<Options> = {}) {
-    this.options = { maxActionsPerTurn: 64, maxSteps: 30000, recordFrames: false, ...options };
+    this.options = { maxActionsPerTurn: 64, maxSteps: 30000, recordFrames: false, aiActionLimits: true, ...options };
+    if (typeof this.options.aiActionLimits !== 'boolean') throw Error('Invalid AI action limits option');
     if (!Number.isInteger(this.options.maxActionsPerTurn) || this.options.maxActionsPerTurn < 1 || !Number.isInteger(this.options.maxSteps) || this.options.maxSteps < 1) throw Error("Invalid decision limits");
   }
   private scoped<T>(run: () => T, preview = false): T {
@@ -72,10 +77,12 @@ export class SelfPlayEnv {
     }
   }
   private createStore() {
-    return new SelfPlayRooms(() => this.now, this.rng.next, {
+    const store = new SelfPlayRooms(() => this.now, this.rng.next, {
       hex: bytes => (++this.identityCounter).toString(16).padStart(bytes * 2, "0"),
       int: max => this.identityCounter++ % max,
     });
+    store.actionLimits = this.options.aiActionLimits !== false;
+    return store;
   }
   reset(seed: number) {
     if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) throw Error("Seed must be uint32");

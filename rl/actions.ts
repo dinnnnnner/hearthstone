@@ -2,6 +2,7 @@ import { type Action, type Game, type Minion, heroPowerState } from "../src/engi
 import { getDef } from "../src/data";
 import { seasonTargets } from "../src/season/engine";
 import { equippedPowers } from "../src/season/powers";
+import { aiActionError } from '../src/ai-action-limits';
 
 // Chromie's full spell tavern contains SHOP_SIZE[tier] + 1 cards, up to seven.
 export const LIMITS = { board: 7, shop: 16, spellShop: 7, hand: 10, discovery: 4, powers: 2, choices: 4 } as const;
@@ -47,7 +48,9 @@ export function candidates(s: Game, endOnly = false): Map<number, Action> {
     if (i < 0) throw Error("Unencoded target zone");
     return i;
   };
-  const put = (a: Action, source = 0, target = 0, position = 0) => result.set(actionId(a.type, source, target, position), a);
+  const put = (a: Action, source = 0, target = 0, position = 0) => {
+    if (!aiActionError(s, a)) result.set(actionId(a.type, source, target, position), a);
+  };
   if (s.season!.powerChoice) {
     s.season!.powerChoice.offers.forEach((uid, i) => put({ type: "choosePower", uid }, i));
     return result;

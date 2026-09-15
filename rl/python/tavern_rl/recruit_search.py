@@ -10,7 +10,7 @@ import math
 import random
 import time
 
-VERSION = 'own-recruit-puct-v1'
+VERSION = 'own-recruit-puct-limits-v2'
 
 
 @dataclass(frozen=True)

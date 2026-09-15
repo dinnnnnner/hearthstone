@@ -1,0 +1,72 @@
+{
+  "date": "2026-09-15",
+  "scope": "Source and standalone training/search package; no live deployment or current training restart",
+  "limits": {
+    "freeze_toggles_per_turn": 2,
+    "moves_per_turn": 6,
+    "reject_immediate_inverse_move": true,
+    "human_actions_limited": false
+  },
+  "tests": {
+    "game": 140,
+    "server": 59,
+    "rl_environment": 14,
+    "typescript_search": 7,
+    "python": 134,
+    "python_cuda_skipped": 4,
+    "frontend_build": true
+  },
+  "search_models": [
+    {
+      "depth": 64,
+      "checkpoint_sha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+      "memory_isolation": true,
+      "legal_actions": true,
+      "deadline_fallback": true,
+      "fixture_turns": [
+        1,
+        4,
+        8
+      ]
+    },
+    {
+      "depth": 256,
+      "checkpoint_sha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+      "memory_isolation": true,
+      "legal_actions": true,
+      "deadline_fallback": true,
+      "fixture_turns": [
+        1,
+        4,
+        8
+      ]
+    },
+    {
+      "depth": 1024,
+      "checkpoint_sha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+      "memory_isolation": true,
+      "legal_actions": true,
+      "deadline_fallback": true,
+      "fixture_turns": [
+        1,
+        4,
+        8
+      ]
+    }
+  ],
+  "smoke": {
+    "episodes": 2,
+    "iterations": 1,
+    "parameters": 3421950,
+    "source_hash": "c7fce93ab131753b8ecf18706a3d6b2b755e3d96f2b7ba6b1d20a164a1aa7bf9",
+    "rules_hash": "0adb3881ea81239a3af909b2af96b77a519251e439f590cc6785303819452c2f",
+    "reward_mode": "placement_only",
+    "first_place_bonus": 1.0
+  },
+  "compatibility": {
+    "search_protocol": "own-recruit-puct-limits-v2",
+    "entity_schema_changed": false,
+    "training_source_hash_changed": true,
+    "frozen_training_runtime_updated": false
+  }
+}

@@ -11,7 +11,10 @@ class PublicObservationTests(unittest.TestCase):
             self.assertEqual(meta['observationVersion'], 4)
             self.assertEqual(meta['entitySchema']['version'], 3)
             self.assertIsNone(meta['legacyV2SourceHash'])
+            self.assertEqual(meta['aiActionLimits'], {'version': 1, 'freezes': 2, 'moves': 6})
             state = simulator.reset(42)
+            self.assertEqual(state['entities'][0]['details']['aiActionLimits'],
+                             {'version': 1, 'freezeRemaining': 2, 'moveRemaining': 6})
             while state['info']['turn'] == 1:
                 legal = state['legalActions']
                 action = next((i for i in legal if meta['actions'][i]['type'] == 'end'), legal[0])
@@ -26,6 +29,7 @@ class PublicObservationTests(unittest.TestCase):
                 self.assertIn('rankingHealth', details)
                 self.assertIn('spellArmor', details)
             observation = prepare_entities(state['entities'])
+            self.assertIn('root/aiActionLimits', [path for slot, path, fields in observation.groups if slot == 0])
             paths = [path for slot, path, fields in observation.groups if slot == offset]
             self.assertIn('root/scouting/0/warband', paths)
             self.assertIn('root/scouting/0/battle', paths)

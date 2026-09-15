@@ -1,4 +1,5 @@
 import { equippedPowers } from "../src/season/powers";
+import { enableAIActionLimits } from '../src/ai-action-limits';
 import { recordScoutRound, warbandLabel, previousScoutRounds } from "../src/scouting";
 import { gameRankingHealth, absorbArmor } from "../src/ranking";
 import { createPairingCycle, cyclePairings, type PairingCycle } from "./pairing";
@@ -84,6 +85,7 @@ const score = (m: Minion) =>
 export const tokenHash = (token: string) =>
   createHash("sha256").update(token).digest("hex");
 export class Rooms {
+  protected usesAIActionLimits(p: Seat) { return p.bot; }
   guests = new Map<string, Guest>();
   rooms = new Map<string, Room>();
   seq = 0;
@@ -300,6 +302,7 @@ export class Rooms {
         pool: Object.keys(r.pool).length ? r.pool : undefined,
       });
       p.game.seatIndex = seatIndex;
+      if (this.usesAIActionLimits(p)) enableAIActionLimits(p.game);
       r.pool = p.game.pool;
       r.initial = { ...p.game.season!.initialPool };
       p.rev++;
@@ -378,6 +381,7 @@ export class Rooms {
     }
   }
   apply(r: Room, p: Seat, a: Action) {
+    if (this.usesAIActionLimits(p)) enableAIActionLimits(p.game!);
     p.game!.pool = r.pool;
     const pair = r.pairings?.find((pair) => pair.includes(p.id));
     const opponentId = pair?.find((id) => id !== p.id);
@@ -962,6 +966,7 @@ export class Rooms {
       }
       for (const [seatIndex, p] of r.seats.entries()) {
         if (p.game) p.game.seatIndex = seatIndex;
+        if (p.game && this.usesAIActionLimits(p)) enableAIActionLimits(p.game);
         if (p.game && p.game.health <= 0 && !p.place) this.eliminate(r, p);
         if (p.game?.battle && !p.battleId)
           p.battleId = this.identity.hex(12);

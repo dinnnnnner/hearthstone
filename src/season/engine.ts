@@ -1,4 +1,5 @@
 import { recordsFrames, recordsLogs } from "../simulation";
+import { aiActionError, recordAIAction } from '../ai-action-limits';
 import { practiceBattles } from "../practice";
 import { absorbArmor } from "../ranking";
 import {
@@ -2551,6 +2552,8 @@ export function actSeason(
     if (oldFree) st.freeRefresh--;
   }
   const fail = (error: string) => ({ state, error });
+  const aiLimitError = aiActionError(state, action);
+  if (aiLimitError) return fail(aiLimitError);
   if (s.phase === "over") return fail("本局已结束，请开始新对局。");
   if (s.phase === "combat" && action.type !== "continue")
     return fail("请先完成当前战斗。");
@@ -2943,6 +2946,7 @@ export function actSeason(
   syncStats(s);
   if (s.phase === "recruit") nextDiscovery(s, rng);
   if (s.health <= 0 && s.phase === "recruit") s.phase = "over";
+  recordAIAction(state, s, action);
   return { state: s };
 }
 export function assertSeasonPool(s: Game) {
