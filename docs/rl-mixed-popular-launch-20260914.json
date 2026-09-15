@@ -1,0 +1,1082 @@
+{
+  "captured_utc": "2026-09-14T03:28:09.765807+00:00",
+  "launch": {
+    "pid": 6829,
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "-m",
+      "tavern_rl.population",
+      "--resumes",
+      "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent/member-0/training/latest.pt",
+      "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent/member-1/training/latest.pt",
+      "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent/member-2/training/latest.pt",
+      "--output",
+      "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population",
+      "--deadline-utc",
+      "2026-09-14T05:29:33.374655+00:00",
+      "--workers",
+      "8",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "16",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--device",
+      "cuda"
+    ],
+    "previous_output": "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent",
+    "previous_pid": 3816,
+    "launched_utc": "2026-09-14T03:25:33.044430+00:00",
+    "deadline_utc": "2026-09-14T05:29:33.374655+00:00",
+    "resumes": [
+      {
+        "depth": 64,
+        "episodes": 1272
+      },
+      {
+        "depth": 256,
+        "episodes": 1004
+      },
+      {
+        "depth": 1024,
+        "episodes": 500
+      }
+    ]
+  },
+  "status": {
+    "stage": "running",
+    "pid": 6829,
+    "opponent_mode": "mixed_self_play",
+    "deadline_utc": "2026-09-14T05:29:33.374655+00:00",
+    "workers_per_learner": 8,
+    "iterations_per_exchange": 2,
+    "games_per_iteration": 16,
+    "unused_gold_penalty": null,
+    "external_fraction": 0.4,
+    "max_per_lineage": 2,
+    "members": [
+      {
+        "index": 0,
+        "root": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-0",
+        "source": "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent/member-0/training/latest.pt",
+        "round": 1,
+        "stage": "training",
+        "pid": 6901,
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-0/initial.pt"
+      },
+      {
+        "index": 1,
+        "root": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-1",
+        "source": "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent/member-1/training/latest.pt",
+        "round": 1,
+        "stage": "training",
+        "pid": 6912,
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-1/initial.pt"
+      },
+      {
+        "index": 2,
+        "root": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-2",
+        "source": "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent/member-2/training/latest.pt",
+        "round": 1,
+        "stage": "training",
+        "pid": 7043,
+        "checkpoint": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-2/initial.pt"
+      }
+    ]
+  },
+  "validation": [
+    {
+      "index": 0,
+      "depth": 64,
+      "pid": 6901,
+      "episodes": 1272,
+      "opponent_probabilities": {
+        "own_history": 0.6,
+        "256": 0.2,
+        "1024": 0.2
+      },
+      "progress": {
+        "stage": "collect",
+        "completed_games": 0,
+        "total_games": 16,
+        "environment_actions": 6032,
+        "seconds": 90.1,
+        "actions_per_second": 66.91409710974038,
+        "mean_inference_batch": 1.9112801013941698,
+        "inference_seconds": 71.66571816732176,
+        "simulator_wait_seconds": 14.77367048827
+      },
+      "manifest": {
+        "format": 1,
+        "trainerHash": "6c085dd06e024da082a096e57727a0439657a58182f1fc31482a1e568c101b90",
+        "meta": {
+          "schema": "tavern-selfplay-v3",
+          "observationVersion": 4,
+          "actionVersion": 2,
+          "sourceHash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+          "rulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+          "legacyV2SourceHash": null,
+          "actionCount": 4316,
+          "patch": "36.4.2",
+          "coverage": {
+            "minions": {
+              "implemented": 234,
+              "total": 234
+            },
+            "heroes": {
+              "implemented": 89,
+              "total": 116
+            },
+            "spells": {
+              "implemented": 67,
+              "total": 67
+            },
+            "trinkets": {
+              "implemented": 23,
+              "officialPoolVerified": false
+            }
+          },
+          "opponents": "neural self-play only",
+          "reward": "(4.5 - placement) / 3.5",
+          "seats": 8
+        },
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 4,
+          "learning_rate": 3e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "mixed_self_play",
+          "hero_pool": {
+            "format": 1,
+            "name": "已实现热门英雄暂定名单",
+            "created_date": "2026-09-14",
+            "provisional": true,
+            "scope": "all_eight_seats",
+            "sampling": "uniform_without_replacement",
+            "source_date": "2026-04-18",
+            "source_patch": "35.2",
+            "sources": [
+              "https://www.hsbattlegrounds.help/en/meta-digest/2026-04-18-issue-1",
+              "https://www.hsbattlegrounds.help/en/tavern-pool/heroes/tier-list"
+            ],
+            "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练仍使用冻结的36.4.2规则；名单内等概率采样，不按历史选用率加权。",
+            "heroes": [
+              {
+                "id": "s14_genn",
+                "name": "吉恩，狼人国王",
+                "historical_pick_rate": 0.59
+              },
+              {
+                "id": "s14_marin",
+                "name": "经理马林",
+                "historical_pick_rate": 0.464
+              },
+              {
+                "id": "s14_buttons",
+                "name": "扣子",
+                "historical_pick_rate": 0.438
+              },
+              {
+                "id": "s14_clockwork",
+                "name": "钟表先生克劳沃斯",
+                "historical_pick_rate": 0.424
+              },
+              {
+                "id": "s14_brann",
+                "name": "恐龙大师布莱恩",
+                "historical_pick_rate": 0.406
+              },
+              {
+                "id": "s14_afk",
+                "name": "挂机的阿凯",
+                "historical_pick_rate": 0.379
+              },
+              {
+                "id": "s14_sylvanas",
+                "name": "希尔瓦娜斯·风行者",
+                "historical_pick_rate": 0.377
+              },
+              {
+                "id": "s14_chenvaala",
+                "name": "齐恩瓦拉",
+                "historical_pick_rate": 0.376
+              },
+              {
+                "id": "s14_shudderwock",
+                "name": "沙德沃克",
+                "historical_pick_rate": 0.367
+              },
+              {
+                "id": "s14_lich",
+                "name": "巫妖王",
+                "historical_pick_rate": 0.364
+              },
+              {
+                "id": "s14_teron",
+                "name": "塔隆·血魔",
+                "historical_pick_rate": 0.353
+              },
+              {
+                "id": "s14_yogg",
+                "name": "尤格-萨隆",
+                "historical_pick_rate": 0.269
+              },
+              {
+                "id": "s14_patchwerk",
+                "name": "帕奇维克",
+                "historical_pick_rate": 0.266
+              },
+              {
+                "id": "s14_millificent",
+                "name": "米尔菲丝·法力风暴",
+                "historical_pick_rate": 0.256
+              },
+              {
+                "id": "s14_vanndar",
+                "name": "范达尔·雷矛",
+                "historical_pick_rate": 0.253
+              }
+            ]
+          },
+          "packed_host_transfer": false,
+          "external_opponent_fraction": 0.4
+        },
+        "iteration": 81,
+        "episodes": 1272,
+        "model_spec": {
+          "architecture": "entity-gru-resnet",
+          "hidden": 128,
+          "heads": 4,
+          "layers": 2,
+          "policy_depth": 64,
+          "value_depth": 64
+        },
+        "league_generations": [
+          0,
+          "external:11f4ae3f1ac613c8",
+          "external:caa9d161632d0cf5",
+          1,
+          2,
+          68,
+          69,
+          77,
+          78,
+          79,
+          80,
+          81
+        ],
+        "torch": "2.12.1+cu130",
+        "numpy": "2.4.6",
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": "external:11f4ae3f1ac613c8",
+            "external": true,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 256, \"seed\": 42, \"value_depth\": 256}",
+            "source_episodes": 1004,
+            "source_sha256": "bda053d68e8e950d97ed24077aae713ace3c53effacf872ec9253c20b64b8d37"
+          },
+          {
+            "generation": "external:caa9d161632d0cf5",
+            "external": true,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 1024, \"seed\": 42, \"value_depth\": 1024}",
+            "source_episodes": 500,
+            "source_sha256": "5efae128bdbfe5499d575ea3f5b4631008fe3e087e0fe139534e829c2569bb24"
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 68,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 69,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 77,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 78,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 79,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 80,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 81,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "device": "cuda",
+        "rollout_device": "cuda",
+        "workers": 8,
+        "rollout_host_transfer": "separate",
+        "parameters": 3421950
+      }
+    },
+    {
+      "index": 1,
+      "depth": 256,
+      "pid": 6912,
+      "episodes": 1004,
+      "opponent_probabilities": {
+        "own_history": 0.6,
+        "64": 0.2,
+        "1024": 0.2
+      },
+      "progress": {
+        "stage": "collect",
+        "completed_games": 0,
+        "total_games": 16,
+        "environment_actions": 4424,
+        "seconds": 90.3,
+        "actions_per_second": 48.98129571687154,
+        "mean_inference_batch": 1.9218071242397914,
+        "inference_seconds": 80.91886832471937,
+        "simulator_wait_seconds": 6.624339584028348
+      },
+      "manifest": {
+        "format": 1,
+        "trainerHash": "6c085dd06e024da082a096e57727a0439657a58182f1fc31482a1e568c101b90",
+        "meta": {
+          "schema": "tavern-selfplay-v3",
+          "observationVersion": 4,
+          "actionVersion": 2,
+          "sourceHash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+          "rulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+          "legacyV2SourceHash": null,
+          "actionCount": 4316,
+          "patch": "36.4.2",
+          "coverage": {
+            "minions": {
+              "implemented": 234,
+              "total": 234
+            },
+            "heroes": {
+              "implemented": 89,
+              "total": 116
+            },
+            "spells": {
+              "implemented": 67,
+              "total": 67
+            },
+            "trinkets": {
+              "implemented": 23,
+              "officialPoolVerified": false
+            }
+          },
+          "opponents": "neural self-play only",
+          "reward": "(4.5 - placement) / 3.5",
+          "seats": 8
+        },
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 16,
+          "learning_rate": 3e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "mixed_self_play",
+          "hero_pool": {
+            "format": 1,
+            "name": "已实现热门英雄暂定名单",
+            "created_date": "2026-09-14",
+            "provisional": true,
+            "scope": "all_eight_seats",
+            "sampling": "uniform_without_replacement",
+            "source_date": "2026-04-18",
+            "source_patch": "35.2",
+            "sources": [
+              "https://www.hsbattlegrounds.help/en/meta-digest/2026-04-18-issue-1",
+              "https://www.hsbattlegrounds.help/en/tavern-pool/heroes/tier-list"
+            ],
+            "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练仍使用冻结的36.4.2规则；名单内等概率采样，不按历史选用率加权。",
+            "heroes": [
+              {
+                "id": "s14_genn",
+                "name": "吉恩，狼人国王",
+                "historical_pick_rate": 0.59
+              },
+              {
+                "id": "s14_marin",
+                "name": "经理马林",
+                "historical_pick_rate": 0.464
+              },
+              {
+                "id": "s14_buttons",
+                "name": "扣子",
+                "historical_pick_rate": 0.438
+              },
+              {
+                "id": "s14_clockwork",
+                "name": "钟表先生克劳沃斯",
+                "historical_pick_rate": 0.424
+              },
+              {
+                "id": "s14_brann",
+                "name": "恐龙大师布莱恩",
+                "historical_pick_rate": 0.406
+              },
+              {
+                "id": "s14_afk",
+                "name": "挂机的阿凯",
+                "historical_pick_rate": 0.379
+              },
+              {
+                "id": "s14_sylvanas",
+                "name": "希尔瓦娜斯·风行者",
+                "historical_pick_rate": 0.377
+              },
+              {
+                "id": "s14_chenvaala",
+                "name": "齐恩瓦拉",
+                "historical_pick_rate": 0.376
+              },
+              {
+                "id": "s14_shudderwock",
+                "name": "沙德沃克",
+                "historical_pick_rate": 0.367
+              },
+              {
+                "id": "s14_lich",
+                "name": "巫妖王",
+                "historical_pick_rate": 0.364
+              },
+              {
+                "id": "s14_teron",
+                "name": "塔隆·血魔",
+                "historical_pick_rate": 0.353
+              },
+              {
+                "id": "s14_yogg",
+                "name": "尤格-萨隆",
+                "historical_pick_rate": 0.269
+              },
+              {
+                "id": "s14_patchwerk",
+                "name": "帕奇维克",
+                "historical_pick_rate": 0.266
+              },
+              {
+                "id": "s14_millificent",
+                "name": "米尔菲丝·法力风暴",
+                "historical_pick_rate": 0.256
+              },
+              {
+                "id": "s14_vanndar",
+                "name": "范达尔·雷矛",
+                "historical_pick_rate": 0.253
+              }
+            ]
+          },
+          "packed_host_transfer": false,
+          "external_opponent_fraction": 0.4
+        },
+        "iteration": 65,
+        "episodes": 1004,
+        "model_spec": {
+          "architecture": "entity-gru-resnet",
+          "hidden": 128,
+          "heads": 4,
+          "layers": 2,
+          "policy_depth": 256,
+          "value_depth": 256
+        },
+        "league_generations": [
+          0,
+          "external:d343ce8c4717dead",
+          "external:caa9d161632d0cf5",
+          1,
+          2,
+          56,
+          57,
+          61,
+          62,
+          63,
+          64,
+          65
+        ],
+        "torch": "2.12.1+cu130",
+        "numpy": "2.4.6",
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": "external:d343ce8c4717dead",
+            "external": true,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 64, \"seed\": 42, \"value_depth\": 64}",
+            "source_episodes": 1272,
+            "source_sha256": "e1dcd1f944f09a9b4985235e45c0a62c89542b4bbac69263729ce072ca0e7ce3"
+          },
+          {
+            "generation": "external:caa9d161632d0cf5",
+            "external": true,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 1024, \"seed\": 42, \"value_depth\": 1024}",
+            "source_episodes": 500,
+            "source_sha256": "5efae128bdbfe5499d575ea3f5b4631008fe3e087e0fe139534e829c2569bb24"
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 56,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 57,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 61,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 62,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 63,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 64,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 65,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "device": "cuda",
+        "rollout_device": "cuda",
+        "workers": 8,
+        "rollout_host_transfer": "separate",
+        "parameters": 9860862
+      }
+    },
+    {
+      "index": 2,
+      "depth": 1024,
+      "pid": 7043,
+      "episodes": 500,
+      "opponent_probabilities": {
+        "own_history": 0.6,
+        "64": 0.2,
+        "256": 0.2
+      },
+      "progress": {
+        "stage": "collect",
+        "completed_games": 0,
+        "total_games": 16,
+        "environment_actions": 728,
+        "seconds": 30.2,
+        "actions_per_second": 24.06834858328948,
+        "mean_inference_batch": 1.9413333333333334,
+        "inference_seconds": 28.66860990365967,
+        "simulator_wait_seconds": 0.8200044604018331
+      },
+      "manifest": {
+        "format": 1,
+        "trainerHash": "6c085dd06e024da082a096e57727a0439657a58182f1fc31482a1e568c101b90",
+        "meta": {
+          "schema": "tavern-selfplay-v3",
+          "observationVersion": 4,
+          "actionVersion": 2,
+          "sourceHash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+          "rulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+          "legacyV2SourceHash": null,
+          "actionCount": 4316,
+          "patch": "36.4.2",
+          "coverage": {
+            "minions": {
+              "implemented": 234,
+              "total": 234
+            },
+            "heroes": {
+              "implemented": 89,
+              "total": 116
+            },
+            "spells": {
+              "implemented": 67,
+              "total": 67
+            },
+            "trinkets": {
+              "implemented": 23,
+              "officialPoolVerified": false
+            }
+          },
+          "opponents": "neural self-play only",
+          "reward": "(4.5 - placement) / 3.5",
+          "seats": 8
+        },
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 16,
+          "learning_rate": 1e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "mixed_self_play",
+          "hero_pool": {
+            "format": 1,
+            "name": "已实现热门英雄暂定名单",
+            "created_date": "2026-09-14",
+            "provisional": true,
+            "scope": "all_eight_seats",
+            "sampling": "uniform_without_replacement",
+            "source_date": "2026-04-18",
+            "source_patch": "35.2",
+            "sources": [
+              "https://www.hsbattlegrounds.help/en/meta-digest/2026-04-18-issue-1",
+              "https://www.hsbattlegrounds.help/en/tavern-pool/heroes/tier-list"
+            ],
+            "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练仍使用冻结的36.4.2规则；名单内等概率采样，不按历史选用率加权。",
+            "heroes": [
+              {
+                "id": "s14_genn",
+                "name": "吉恩，狼人国王",
+                "historical_pick_rate": 0.59
+              },
+              {
+                "id": "s14_marin",
+                "name": "经理马林",
+                "historical_pick_rate": 0.464
+              },
+              {
+                "id": "s14_buttons",
+                "name": "扣子",
+                "historical_pick_rate": 0.438
+              },
+              {
+                "id": "s14_clockwork",
+                "name": "钟表先生克劳沃斯",
+                "historical_pick_rate": 0.424
+              },
+              {
+                "id": "s14_brann",
+                "name": "恐龙大师布莱恩",
+                "historical_pick_rate": 0.406
+              },
+              {
+                "id": "s14_afk",
+                "name": "挂机的阿凯",
+                "historical_pick_rate": 0.379
+              },
+              {
+                "id": "s14_sylvanas",
+                "name": "希尔瓦娜斯·风行者",
+                "historical_pick_rate": 0.377
+              },
+              {
+                "id": "s14_chenvaala",
+                "name": "齐恩瓦拉",
+                "historical_pick_rate": 0.376
+              },
+              {
+                "id": "s14_shudderwock",
+                "name": "沙德沃克",
+                "historical_pick_rate": 0.367
+              },
+              {
+                "id": "s14_lich",
+                "name": "巫妖王",
+                "historical_pick_rate": 0.364
+              },
+              {
+                "id": "s14_teron",
+                "name": "塔隆·血魔",
+                "historical_pick_rate": 0.353
+              },
+              {
+                "id": "s14_yogg",
+                "name": "尤格-萨隆",
+                "historical_pick_rate": 0.269
+              },
+              {
+                "id": "s14_patchwerk",
+                "name": "帕奇维克",
+                "historical_pick_rate": 0.266
+              },
+              {
+                "id": "s14_millificent",
+                "name": "米尔菲丝·法力风暴",
+                "historical_pick_rate": 0.256
+              },
+              {
+                "id": "s14_vanndar",
+                "name": "范达尔·雷矛",
+                "historical_pick_rate": 0.253
+              }
+            ]
+          },
+          "packed_host_transfer": false,
+          "external_opponent_fraction": 0.4
+        },
+        "iteration": 32,
+        "episodes": 500,
+        "model_spec": {
+          "architecture": "entity-gru-resnet",
+          "hidden": 128,
+          "heads": 4,
+          "layers": 2,
+          "policy_depth": 1024,
+          "value_depth": 1024
+        },
+        "league_generations": [
+          0,
+          "external:d343ce8c4717dead",
+          "external:11f4ae3f1ac613c8",
+          1,
+          2,
+          25,
+          26,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "torch": "2.12.1+cu130",
+        "numpy": "2.4.6",
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": "external:d343ce8c4717dead",
+            "external": true,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 64, \"seed\": 42, \"value_depth\": 64}",
+            "source_episodes": 1272,
+            "source_sha256": "e1dcd1f944f09a9b4985235e45c0a62c89542b4bbac69263729ce072ca0e7ce3"
+          },
+          {
+            "generation": "external:11f4ae3f1ac613c8",
+            "external": true,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 256, \"seed\": 42, \"value_depth\": 256}",
+            "source_episodes": 1004,
+            "source_sha256": "bda053d68e8e950d97ed24077aae713ace3c53effacf872ec9253c20b64b8d37"
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 25,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 26,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 28,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 29,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 30,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 31,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 32,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "device": "cuda",
+        "rollout_device": "cuda",
+        "workers": 8,
+        "rollout_host_transfer": "separate",
+        "parameters": 35616510
+      }
+    }
+  ],
+  "hero_pool_sha256": "5d543022eee3a4e7a3091dff3b9d4b1a03922992ccc644cc5142001029af374d",
+  "tests": {
+    "local": 9,
+    "remote": 9,
+    "passed": true
+  },
+  "resources": [
+    {
+      "utc": "2026-09-14T03:27:36Z",
+      "gpu": "87, 3858, 12288, 53, 145.34",
+      "memory.current": "26199470080",
+      "memory.max": "32212254720",
+      "memory.events": "low 0\nhigh 17915\nmax 0\noom 0\noom_kill 0",
+      "memory_anon_bytes": 9906106368,
+      "memory_file_bytes": 16126078976
+    },
+    {
+      "utc": "2026-09-14T03:27:51Z",
+      "gpu": "69, 3858, 12288, 53, 144.99",
+      "memory.current": "26405888000",
+      "memory.max": "32212254720",
+      "memory.events": "low 0\nhigh 17915\nmax 0\noom 0\noom_kill 0",
+      "memory_anon_bytes": 10108239872,
+      "memory_file_bytes": 16126078976
+    },
+    {
+      "utc": "2026-09-14T03:28:07Z",
+      "gpu": "88, 3858, 12288, 53, 141.30",
+      "memory.current": "26594168832",
+      "memory.max": "32212254720",
+      "memory.events": "low 0\nhigh 17915\nmax 0\noom 0\noom_kill 0",
+      "memory_anon_bytes": 10292658176,
+      "memory_file_bytes": 16126083072
+    }
+  ]
+}

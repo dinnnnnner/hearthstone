@@ -15,7 +15,7 @@ import {
   refreshCost,
   TRINKETS,
 } from "../src/season/engine";
-import { SEASON_HEROES, ALL_TRIBES, HERO_TRIBES } from "../src/season/catalog";
+import { SEASON_HEROES, AI_SEASON_HEROES, ALL_TRIBES, HERO_TRIBES } from "../src/season/catalog";
 import { getDef, type Tribe } from "../src/data";
 import {
   heroOf,
@@ -268,7 +268,7 @@ export class Rooms {
       ).length >= 6
     )
       throw Error("当前对局较多，请稍后开局");
-    const unused = SEASON_HEROES.filter(
+    const unused = AI_SEASON_HEROES.filter(
       (h) => !r.seats.some((s) => s.hero === h.id),
     );
     for (const p of r.seats) p.heroOffers = undefined;

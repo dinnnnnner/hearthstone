@@ -1,0 +1,113 @@
+{
+  "installed_utc": "2026-09-14T07:12:54.895414+00:00",
+  "config": "/root/tavern-maintenance/supervisord.conf",
+  "interval_seconds": 60,
+  "protected": "Unique checkpoints and all data/log paths are retained; live or locked group runs are skipped",
+  "tests_passed": 6,
+  "verified_utc": "2026-09-14T07:17:50.412911+00:00",
+  "explicit_runs": [
+    "/root/tavern-four-hour-20260914/population"
+  ],
+  "supervisor_status": "checkpoint-maintenance           RUNNING   pid 16257, uptime 0:00:22",
+  "supervisor_config": "[unix_http_server]\nfile=/root/tavern-maintenance/supervisor.sock\nchmod=0700\n[supervisord]\nlogfile=/root/tavern-maintenance/supervisord.log\nlogfile_maxbytes=2MB\nlogfile_backups=2\npidfile=/root/tavern-maintenance/supervisord.pid\nchildlogdir=/root/tavern-maintenance\n[rpcinterface:supervisor]\nsupervisor.rpcinterface_factory=supervisor.rpcinterface:make_main_rpcinterface\n[supervisorctl]\nserverurl=unix:///root/tavern-maintenance/supervisor.sock\n[program:checkpoint-maintenance]\ncommand=/usr/bin/nice -n 10 /root/miniconda3/bin/python -m tavern_rl.maintenance --base /root --base /root/autodl-tmp --run /root/tavern-four-hour-20260914/population --report-dir /root/tavern-maintenance/reports --watch --interval 60 --apply\ndirectory=/root/tavern-maintenance\nenvironment=PYTHONPATH=\"/root/tavern-maintenance/rl/python\"\nautostart=true\nautorestart=true\nstartsecs=5\nstopasgroup=true\nkillasgroup=true\nstdout_logfile=/root/tavern-maintenance/worker.log\nstdout_logfile_maxbytes=2MB\nstdout_logfile_backups=2\nredirect_stderr=true\n",
+  "restart_after_instance_boot": "/root/tavern-maintenance/start.sh",
+  "first_cleanup": {
+    "utc": "2026-09-14T07:12:55.947679+00:00",
+    "apply": true,
+    "memory_before": {
+      "anon": 9562361856,
+      "file": 18786656256
+    },
+    "eligible": [
+      "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population",
+      "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended",
+      "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210",
+      "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514",
+      "/root/tavern-independent-20260914/rl/runs/independent-four-hour",
+      "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent",
+      "/root/tavern-rollout-optimized-20260914/rl/runs/optimized-independent"
+    ],
+    "skipped": [
+      {
+        "root": "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754",
+        "reason": "Unsupported run schema; no member list"
+      },
+      {
+        "root": "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754",
+        "reason": "Unsupported run schema; no member list"
+      },
+      {
+        "root": "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034",
+        "reason": "Unsupported run schema; no member list"
+      },
+      {
+        "root": "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318",
+        "reason": "Unsupported run schema; no member list"
+      },
+      {
+        "root": "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918",
+        "reason": "Unsupported run schema; no member list"
+      },
+      {
+        "root": "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001",
+        "reason": "Unsupported run schema; no member list"
+      }
+    ],
+    "linked": [
+      {
+        "path": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-0/initial.pt",
+        "canonical": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-0/training/latest.pt",
+        "bytes": 531155046,
+        "sha256": "20ae8d01af1ec03a06c58f46dad8473f43bc816d24bdabbe4774cc0286c309c1"
+      },
+      {
+        "path": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-1/initial.pt",
+        "canonical": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-1/training/latest.pt",
+        "bytes": 767797350,
+        "sha256": "a8d2b310f1fbe22e82ccde3976ba92042b03ef35c0db04b405bc792ea3a1eba7"
+      },
+      {
+        "path": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population-human-extended/member-2/initial.pt",
+        "canonical": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population/member-2/training/latest.pt",
+        "bytes": 1714413537,
+        "sha256": "905ad12959a0a6e19c7376be776a2191ef90ebb25e37b3e8fd0dc67bc16e06a3"
+      }
+    ],
+    "removed_temporaries": [],
+    "checkpoint_paths_preserved": true,
+    "unique_checkpoints_deleted": 0,
+    "cache_advised_inodes": 48,
+    "filesystems": [
+      {
+        "path": "/root/autodl-tmp/tavern-mixed-popular-20260914/rl/runs/population",
+        "free_before": 4203462656,
+        "free_after": 7216832512
+      },
+      {
+        "path": "/root/tavern-independent-20260914/rl/runs/independent-four-hour",
+        "free_before": 9010872320,
+        "free_after": 4698075136
+      }
+    ],
+    "memory_after": {
+      "anon": 7792226304,
+      "file": 17992658944
+    },
+    "pid": 15910
+  },
+  "note": "Concurrent training writes affect free disk space and memory; unique historical checkpoints are retained.",
+  "followup_verification": {
+    "utc": "2026-09-14T07:17:28.060491+00:00",
+    "worker_pid": 16257,
+    "error": null,
+    "eligible_runs": 7,
+    "current_training_skipped": {
+      "root": "/root/tavern-four-hour-20260914/population",
+      "reason": "A recorded supervisor or learner is still alive"
+    },
+    "disk_free_gib": {
+      "system": 5.58,
+      "data": 6.72
+    }
+  }
+}

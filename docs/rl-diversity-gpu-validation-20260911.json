@@ -1,0 +1,237 @@
+{
+  "validation": "mixed-depth GPU compatibility, not a strength evaluation",
+  "games": [
+    {
+      "seed": 9753101,
+      "controllers": [
+        1,
+        2,
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "terminated": false,
+      "truncated": true,
+      "turn": 6,
+      "steps": 256,
+      "placements": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "rewards": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "actionLimitReached": false,
+      "heroes": [
+        "s14_clockwork",
+        "s14_hollidae",
+        "s14_mutanus",
+        "s14_aranna",
+        "s14_jandice",
+        "s14_patches",
+        "s14_lich",
+        "s14_kurtrus"
+      ],
+      "tribes": [
+        "\u6d77\u76d7",
+        "\u673a\u68b0",
+        "\u4ea1\u7075",
+        "\u9c7c\u4eba",
+        "\u91ce\u732a\u4eba"
+      ]
+    },
+    {
+      "seed": 9753102,
+      "controllers": [
+        2,
+        1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0,
+        0
+      ],
+      "terminated": false,
+      "truncated": true,
+      "turn": 5,
+      "steps": 256,
+      "placements": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "rewards": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "actionLimitReached": false,
+      "heroes": [
+        "s14_ratKing",
+        "s14_nzoth",
+        "s14_enhance",
+        "s14_ysera",
+        "s14_hooktusk",
+        "s14_elise",
+        "s14_zerek",
+        "s14_nozdormu"
+      ],
+      "tribes": [
+        "\u9f99",
+        "\u7eb3\u8fe6",
+        "\u91ce\u517d",
+        "\u4ea1\u7075",
+        "\u673a\u68b0"
+      ]
+    }
+  ],
+  "performance": {
+    "seconds": 19.552359182969667,
+    "environment_actions": 512,
+    "actions_per_second": 26.186098322393647,
+    "inference_seconds": 16.43409035447985,
+    "simulator_wait_seconds": 2.741757315932773,
+    "inference_batches": 423,
+    "mean_inference_batch": 1.210401891252955
+  },
+  "peak_allocated_mib": 339.35888671875,
+  "league": [
+    {
+      "generation": 0,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": "external:acea2ce1689c23f5",
+      "external": true,
+      "architecture": "entity-gru-resnet",
+      "depth": 256,
+      "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 256, \"seed\": 42, \"value_depth\": 256}",
+      "source_episodes": 620,
+      "source_sha256": "a6d01afd935332255e1b305e64e853170057322abdbdb2b14495a8c469fe84cd"
+    },
+    {
+      "generation": "external:473d7b14bb1c8dc8",
+      "external": true,
+      "architecture": "entity-gru-resnet",
+      "depth": 1024,
+      "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 1024, \"seed\": 42, \"value_depth\": 1024}",
+      "source_episodes": 260,
+      "source_sha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4"
+    },
+    {
+      "generation": 1,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 2,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 4,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 5,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 41,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 42,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 43,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 44,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    },
+    {
+      "generation": 45,
+      "external": false,
+      "architecture": "entity-gru-resnet",
+      "depth": 64,
+      "lineage": null,
+      "source_episodes": null,
+      "source_sha256": null
+    }
+  ],
+  "sourceHash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+  "passed": true
+}

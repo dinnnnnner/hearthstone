@@ -7,10 +7,12 @@ from pathlib import Path
 import random
 import time
 import hashlib
+from collections import Counter
 import numpy as np
 import torch
 from .model import make_model, ppo_update
 from .rollout import SimulationPool
+from .placement_rewards import validate_bonus, resolve_bonus
 
 
 def trainer_hash():
@@ -69,11 +71,9 @@ def league_entry(model, generation, anchor=False):
     return dict(generation=generation,anchor=anchor,model_spec=model.specification(),weights=cpu_weights(model),comparisons=0,learner_wins=0.)
 
 
-def league_weights(league):
-    # Smoothed multiplayer relative placement is a difficulty proxy, not a two-player Elo.
-    difficulty = np.array([1-(e.get('learner_wins',0)+2)/(e.get('comparisons',0)+4) for e in league])
-    weight = difficulty**2
-    return .5/len(league) + .5*weight/weight.sum()
+def league_weights(league, external_fraction=.4):
+    from .league import sampling_weights
+    return sampling_weights(league, external_fraction)
 
 
 def update_league_scores(league,games):
@@ -103,6 +103,11 @@ def parser():
     p = argparse.ArgumentParser(description="Eight-seat neural self-play PPO; no online game server or scripted bots")
     p.add_argument("--output", default="rl/runs/selfplay")
     p.add_argument("--resume", type=Path)
+    p.add_argument("--first-place-bonus", type=validate_bonus,
+                   help="Additional PPO reward for placement 1; omitted preserves saved value, legacy default 0")
+    p.add_argument("--hero-pool", type=Path, help="JSON whitelist for all eight seats; saved in checkpoints and retained on resume")
+    p.add_argument("--packed-host-transfer", action=argparse.BooleanOptionalAction, default=None,
+                   help="Experimentally combine inference results into one host copy; resumes preserve saved setting")
     p.add_argument("--resume-games-per-iteration", type=int, help="Explicitly change the saved rollout batch for a new experiment")
     p.add_argument("--resume-learning-rate", type=float, help="Explicitly change Adam learning rate when resuming")
     p.add_argument("--rollout-device", choices=['cpu','cuda'], help="Inference device; defaults to the optimizer device")
@@ -188,6 +193,7 @@ def main():
                   "sequence_length": args.sequence_length, "burn_in": args.burn_in, "sequence_batch_size": args.sequence_batch_size,
                   "learning_rate": args.learning_rate if args.learning_rate is not None else (3e-5 if args.architecture == 'entity-gru-resnet' else 3e-4),
                   "seed": args.seed, "learner_seats": args.learner_seats,
+                  "first_place_bonus": resolve_bonus({}, args.first_place_bonus),
                   "games_per_iteration": args.games_per_iteration, "league_size": args.league_size,
                   "options": {"maxActionsPerTurn": args.max_actions, "maxSteps": args.max_steps, "recordFrames": False}}
         iteration = 0; episodes = 0; league = []
@@ -195,7 +201,9 @@ def main():
         if args.resume:
             saved, model = load_checkpoint(args.resume, pool.meta, args.device)
             validate_resume_architecture(args, saved['model_spec'])
-            config = saved["config"]  # Resume the actual reward/action budget, not accidental CLI defaults.
+            config = dict(saved["config"])  # Preserve saved settings except the explicitly reset gold penalty.
+            config['first_place_bonus'] = resolve_bonus(config, args.first_place_bonus)
+            config.pop('unused_gold_penalty', None)
             if args.resume_games_per_iteration is not None: config['games_per_iteration'] = args.resume_games_per_iteration
             if args.resume_learning_rate is not None: config['learning_rate'] = args.resume_learning_rate
             iteration, episodes, league = saved["iteration"], saved["episodes"], saved["league"]
@@ -211,6 +219,13 @@ def main():
                 _, anchor = load_checkpoint(path,pool.meta,args.device,allow_legacy=True)
                 league.append(league_entry(anchor,'anchor:'+str(path),anchor=True))
             if len(league) >= args.league_size: raise ValueError('League needs space for anchors plus history')
+        from .hero_pool import load_hero_pool, validate_hero_pool, options_for_seed
+        config['packed_host_transfer'] = config.get('packed_host_transfer', False) if args.packed_host_transfer is None else args.packed_host_transfer
+        if args.hero_pool:
+            config['hero_pool'] = load_hero_pool(args.hero_pool, pool.meta)
+        if config.get('hero_pool') is not None:
+            validate_hero_pool(config['hero_pool'], pool.meta)
+            options_for_seed(config['options'], config['hero_pool'], config['seed'])
         from .training_performance import apply_overrides, make_optimizer
         apply_overrides(config, args)
         optimizer = make_optimizer(model, config, saved["optimizer"] if saved else None)
@@ -229,25 +244,33 @@ def main():
                 torch.cuda.set_rng_state_all(saved["cuda_rng"])
 
         def checkpoint():
+            from .league import members
             payload = {"format": 1, "trainerHash": code_hash, "meta": pool.meta, "model_spec": model.specification(), "model": cpu_weights(model),
                        "optimizer": optimizer.state_dict(), "iteration": iteration, "episodes": episodes,
                        "league": league, "config": config, "torch_rng": torch.get_rng_state(),
                        "numpy_rng": np.random.get_state(), "python_rng": random.getstate(),
                        "cuda_rng": torch.cuda.get_rng_state_all() if args.device == "cuda" else None}
+            if saved and saved.get('league_imports'): payload['league_imports'] = saved['league_imports']
             atomic_checkpoint(output / "latest.pt", payload)
             (output / "manifest.json").write_text(json.dumps({"format": 1, "trainerHash": code_hash, "meta": {k:v for k,v in pool.meta.items() if k not in ["actions", "cardIds", "heroIds", "entitySchema"]},
                 "config": config, "iteration": iteration, "episodes": episodes, "model_spec": {k:v for k,v in model.specification().items() if k not in ["entity_schema","actions"]},
                 "league_generations": [entry["generation"] for entry in league], "torch": torch.__version__, "numpy": np.__version__,
+                "league_members": members(league),
                 "device": args.device, "rollout_device": rollout_device, "workers": getattr(pool, "worker_count", len(pool.simulators)),
+                "rollout_host_transfer": "packed" if config['packed_host_transfer'] else "separate",
                 "parameters": sum(p.numel() for p in model.parameters())}, indent=2))
         checkpoint()
         for _ in range(args.iterations):
             iteration_started = time.monotonic()
             if args.device == "cuda": torch.cuda.reset_peak_memory_stats()
             seeds = [(config["seed"] + episodes + i) & 0xffffffff for i in range(config["games_per_iteration"])]
+            probabilities = league_weights(league,config.get('external_opponent_fraction',.4))
             tracks, games, performance = pool.collect(actor, opponents, seeds, config["options"], rollout_device,
                 learner_seats=8 if iteration == 0 and len(league) == 1 else config["learner_seats"],
-                opponent_weights=league_weights(league), seat_offset=episodes, progress=lambda row: print(json.dumps(row),flush=True),
+                first_place_bonus=config['first_place_bonus'],
+                hero_pool=config.get('hero_pool'),
+                packed_host_transfer=config['packed_host_transfer'],
+                opponent_weights=probabilities, seat_offset=episodes, progress=lambda row: print(json.dumps(row),flush=True),
                 replay_dir=output / "replays" if args.replays else None, error_dir=output / "debug")
             if any(game["truncated"] for game in games):
                 raise RuntimeError("A self-play game was truncated. Inspect replay/debug files and increase maxSteps; no PPO update was applied")
@@ -256,6 +279,9 @@ def main():
             metrics = optimized_update(ppo_update, model, optimizer, tracks, config, args.device)
             if args.device == "cuda": torch.cuda.synchronize()
             metrics["optimization_seconds"] = time.monotonic()-optimization_started
+            counts = Counter(c for game in games for c in game['controllers'] if c >= 0)
+            opponent_sampling = [dict(generation=e['generation'],external=e.get('external',False),
+                depth=e.get('model_spec',{}).get('policy_depth'),probability=float(probabilities[i]),seats=counts[i]) for i,e in enumerate(league)]
             episodes += len(games); iteration += 1
             update_league_scores(league,games)
             league.append(league_entry(model,iteration))
@@ -267,6 +293,9 @@ def main():
                    "end_to_end_actions_per_second": performance["environment_actions"]/total_seconds,
                    "cuda_peak_allocated_mib": torch.cuda.max_memory_allocated()/2**20 if args.device == "cuda" else None, "episodes": episodes, **performance, **metrics,
                    "completed_games": len(games), "league_generations": [entry["generation"] for entry in league]}
+            row['opponent_sampling'] = opponent_sampling
+            if config.get('hero_pool') is not None:
+                row['hero_counts'] = dict(Counter(h for game in games for h in game['heroes']))
             with (output / "metrics.jsonl").open("a") as file: file.write(json.dumps(row) + "\n")
             checkpoint()
             print(json.dumps(row), flush=True)

@@ -1,0 +1,85 @@
+{
+  "release": "20260914T053630Z",
+  "site": "/var/www/playroom/releases/20260914T053630Z",
+  "server": "/opt/bobs-tavern/releases/20260914T053630Z",
+  "previous_site": "/var/www/playroom/releases/20260914T020856Z",
+  "previous_server": "/opt/bobs-tavern/releases/20260914T021227Z",
+  "health": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 1,
+    "recording": {
+      "enabled": true,
+      "episodes": 1,
+      "decisions": 5,
+      "completed": 0,
+      "rejected": 0,
+      "errors": 0,
+      "bytes": 2495300
+    },
+    "ai": {
+      "mode": "neural",
+      "decisions": 89,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 90,
+        "rawRequestBytes": 905541,
+        "requestBytes": 270590,
+        "responseBytes": 122054,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1112",
+          "decisions": 89,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-908",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-436",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "restored_rooms": [
+    {
+      "stage": "recruit",
+      "turn": 6,
+      "previousTurn": 5
+    }
+  ],
+  "sector_pid": "119165",
+  "server_sha256": "bf73442e5e5849382fc209397cec5c80f0a2a7b24f2ab358f1e47f3d96e5e966",
+  "validation": {
+    "game_tests": 135,
+    "server_tests": 53,
+    "regression_tests": 3,
+    "public_browser_tests": 1,
+    "public_browser_scope": "Seeded local-practice save on public frontend: cast an existing Spitescale Special without Naga and verify three visible Spellcraft cards. Server shared engine covered by game/server tests, not injected into a live room.",
+    "frontend_build": "passed",
+    "verified_public_files": [
+      "https://8.153.150.101/tavern/index.html",
+      "https://8.153.150.101/tavern/assets/index-CKLbq0v0.css",
+      "https://8.153.150.101/tavern/assets/index-BG9N1QBs.js"
+    ],
+    "server_hash_matches_build": true,
+    "diff_check": "passed"
+  },
+  "activation_notes": "First attempt rolled back while asynchronous neural model health was still initializing. Final activation waits for model health; gameplay state restored and existing room progressed from turn 5 to turn 6. Deployment record regenerated after stale hero-pool metadata path failed after activation."
+}

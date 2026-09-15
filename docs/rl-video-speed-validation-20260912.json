@@ -1,0 +1,555 @@
+{
+  "recorded_at_utc": "2026-09-12T08:56:22.777561+00:00",
+  "source_url": "https://www.bilibili.com/video/BV17RYL64Ewv?p=2",
+  "model": "gpt-5.6-luna",
+  "effort": "max",
+  "local_benchmark": {
+    "config": {
+      "version": 2,
+      "selection": "changes",
+      "layout": "kimmy",
+      "threshold": 0.06,
+      "audit_every": 0,
+      "frames_per_chunk": 16
+    },
+    "sampled_frames": 840,
+    "baseline_requests": 56,
+    "planned_requests": 51,
+    "baseline_image_inputs": 895,
+    "planned_image_inputs": 718,
+    "image_input_reduction": 0.19776536312849158,
+    "planning_seconds": 2.2988044860003356,
+    "windows": [
+      {
+        "first": 0,
+        "last": 15,
+        "reason": "motion_candidate",
+        "start_time": 0.0,
+        "end_time": 7.5
+      },
+      {
+        "first": 15,
+        "last": 30,
+        "reason": "motion_candidate",
+        "start_time": 7.5,
+        "end_time": 15.0
+      },
+      {
+        "first": 36,
+        "last": 45,
+        "reason": "motion_candidate",
+        "start_time": 18.0,
+        "end_time": 22.5
+      },
+      {
+        "first": 45,
+        "last": 60,
+        "reason": "motion_candidate",
+        "start_time": 22.5,
+        "end_time": 30.0
+      },
+      {
+        "first": 60,
+        "last": 75,
+        "reason": "motion_candidate",
+        "start_time": 30.0,
+        "end_time": 37.5
+      },
+      {
+        "first": 75,
+        "last": 90,
+        "reason": "motion_candidate",
+        "start_time": 37.5,
+        "end_time": 45.0
+      },
+      {
+        "first": 90,
+        "last": 103,
+        "reason": "motion_candidate",
+        "start_time": 45.0,
+        "end_time": 51.5
+      },
+      {
+        "first": 105,
+        "last": 120,
+        "reason": "motion_candidate",
+        "start_time": 52.5,
+        "end_time": 60.0
+      },
+      {
+        "first": 120,
+        "last": 135,
+        "reason": "motion_candidate",
+        "start_time": 60.0,
+        "end_time": 67.5
+      },
+      {
+        "first": 135,
+        "last": 150,
+        "reason": "motion_candidate",
+        "start_time": 67.5,
+        "end_time": 75.0
+      },
+      {
+        "first": 150,
+        "last": 165,
+        "reason": "motion_candidate",
+        "start_time": 75.0,
+        "end_time": 82.5
+      },
+      {
+        "first": 165,
+        "last": 180,
+        "reason": "motion_candidate",
+        "start_time": 82.5,
+        "end_time": 90.0
+      },
+      {
+        "first": 180,
+        "last": 195,
+        "reason": "motion_candidate",
+        "start_time": 90.0,
+        "end_time": 97.5
+      },
+      {
+        "first": 195,
+        "last": 210,
+        "reason": "motion_candidate",
+        "start_time": 97.5,
+        "end_time": 105.0
+      },
+      {
+        "first": 210,
+        "last": 225,
+        "reason": "motion_candidate",
+        "start_time": 105.0,
+        "end_time": 112.5
+      },
+      {
+        "first": 228,
+        "last": 240,
+        "reason": "motion_candidate",
+        "start_time": 114.0,
+        "end_time": 120.0
+      },
+      {
+        "first": 240,
+        "last": 255,
+        "reason": "motion_candidate",
+        "start_time": 120.0,
+        "end_time": 127.5
+      },
+      {
+        "first": 296,
+        "last": 300,
+        "reason": "motion_candidate",
+        "start_time": 148.0,
+        "end_time": 150.0
+      },
+      {
+        "first": 300,
+        "last": 315,
+        "reason": "motion_candidate",
+        "start_time": 150.0,
+        "end_time": 157.5
+      },
+      {
+        "first": 318,
+        "last": 330,
+        "reason": "motion_candidate",
+        "start_time": 159.0,
+        "end_time": 165.0
+      },
+      {
+        "first": 330,
+        "last": 345,
+        "reason": "motion_candidate",
+        "start_time": 165.0,
+        "end_time": 172.5
+      },
+      {
+        "first": 346,
+        "last": 354,
+        "reason": "motion_candidate",
+        "start_time": 173.0,
+        "end_time": 177.0
+      },
+      {
+        "first": 361,
+        "last": 373,
+        "reason": "motion_candidate",
+        "start_time": 180.5,
+        "end_time": 186.5
+      },
+      {
+        "first": 383,
+        "last": 390,
+        "reason": "motion_candidate",
+        "start_time": 191.5,
+        "end_time": 195.0
+      },
+      {
+        "first": 390,
+        "last": 401,
+        "reason": "motion_candidate",
+        "start_time": 195.0,
+        "end_time": 200.5
+      },
+      {
+        "first": 410,
+        "last": 420,
+        "reason": "motion_candidate",
+        "start_time": 205.0,
+        "end_time": 210.0
+      },
+      {
+        "first": 420,
+        "last": 435,
+        "reason": "motion_candidate",
+        "start_time": 210.0,
+        "end_time": 217.5
+      },
+      {
+        "first": 435,
+        "last": 450,
+        "reason": "motion_candidate",
+        "start_time": 217.5,
+        "end_time": 225.0
+      },
+      {
+        "first": 450,
+        "last": 465,
+        "reason": "motion_candidate",
+        "start_time": 225.0,
+        "end_time": 232.5
+      },
+      {
+        "first": 470,
+        "last": 480,
+        "reason": "motion_candidate",
+        "start_time": 235.0,
+        "end_time": 240.0
+      },
+      {
+        "first": 480,
+        "last": 495,
+        "reason": "motion_candidate",
+        "start_time": 240.0,
+        "end_time": 247.5
+      },
+      {
+        "first": 496,
+        "last": 510,
+        "reason": "motion_candidate",
+        "start_time": 248.0,
+        "end_time": 255.0
+      },
+      {
+        "first": 516,
+        "last": 525,
+        "reason": "motion_candidate",
+        "start_time": 258.0,
+        "end_time": 262.5
+      },
+      {
+        "first": 525,
+        "last": 540,
+        "reason": "motion_candidate",
+        "start_time": 262.5,
+        "end_time": 270.0
+      },
+      {
+        "first": 540,
+        "last": 555,
+        "reason": "motion_candidate",
+        "start_time": 270.0,
+        "end_time": 277.5
+      },
+      {
+        "first": 555,
+        "last": 570,
+        "reason": "motion_candidate",
+        "start_time": 277.5,
+        "end_time": 285.0
+      },
+      {
+        "first": 570,
+        "last": 584,
+        "reason": "motion_candidate",
+        "start_time": 285.0,
+        "end_time": 292.0
+      },
+      {
+        "first": 585,
+        "last": 600,
+        "reason": "motion_candidate",
+        "start_time": 292.5,
+        "end_time": 300.0
+      },
+      {
+        "first": 600,
+        "last": 615,
+        "reason": "motion_candidate",
+        "start_time": 300.0,
+        "end_time": 307.5
+      },
+      {
+        "first": 615,
+        "last": 630,
+        "reason": "motion_candidate",
+        "start_time": 307.5,
+        "end_time": 315.0
+      },
+      {
+        "first": 630,
+        "last": 645,
+        "reason": "motion_candidate",
+        "start_time": 315.0,
+        "end_time": 322.5
+      },
+      {
+        "first": 665,
+        "last": 675,
+        "reason": "motion_candidate",
+        "start_time": 332.5,
+        "end_time": 337.5
+      },
+      {
+        "first": 675,
+        "last": 690,
+        "reason": "motion_candidate",
+        "start_time": 337.5,
+        "end_time": 345.0
+      },
+      {
+        "first": 690,
+        "last": 701,
+        "reason": "motion_candidate",
+        "start_time": 345.0,
+        "end_time": 350.5
+      },
+      {
+        "first": 705,
+        "last": 711,
+        "reason": "motion_candidate",
+        "start_time": 352.5,
+        "end_time": 355.5
+      },
+      {
+        "first": 720,
+        "last": 729,
+        "reason": "motion_candidate",
+        "start_time": 360.0,
+        "end_time": 364.5
+      },
+      {
+        "first": 743,
+        "last": 750,
+        "reason": "motion_candidate",
+        "start_time": 371.5,
+        "end_time": 375.0
+      },
+      {
+        "first": 751,
+        "last": 765,
+        "reason": "motion_candidate",
+        "start_time": 375.5,
+        "end_time": 382.5
+      },
+      {
+        "first": 765,
+        "last": 780,
+        "reason": "motion_candidate",
+        "start_time": 382.5,
+        "end_time": 390.0
+      },
+      {
+        "first": 780,
+        "last": 795,
+        "reason": "motion_candidate",
+        "start_time": 390.0,
+        "end_time": 397.5
+      },
+      {
+        "first": 795,
+        "last": 810,
+        "reason": "motion_candidate",
+        "start_time": 397.5,
+        "end_time": 405.0
+      }
+    ],
+    "action_recall_measured": false,
+    "phase_classification": false,
+    "local_preparation_seconds": 14.672637634999774
+  },
+  "full_frame_resolution": [
+    1920,
+    1080
+  ],
+  "cropped_resolution": [
+    1200,
+    980
+  ],
+  "planned_pixel_reduction": 0.5450289675150011,
+  "known_action_100_5_to_101_5_retained": true,
+  "three_frame_actions_probe": {
+    "annotation_seconds": 45.08474506899984,
+    "report": {
+      "accepted": 0,
+      "rejected": 1,
+      "failures": 0,
+      "chunks": 1,
+      "attempted_new_chunks": 1,
+      "out": "/home/zich/hearthstone/rl/runs/video-fast-20260912/actions-play",
+      "completed_chunks": 1,
+      "remaining_chunks": 0,
+      "ppo_ready": false,
+      "model": "gpt-5.6-luna",
+      "effort": "max",
+      "plan": {
+        "config": {
+          "version": 2,
+          "selection": "changes",
+          "layout": "kimmy",
+          "threshold": 0.06,
+          "audit_every": 0,
+          "frames_per_chunk": 3
+        },
+        "sampled_frames": 3,
+        "baseline_requests": 1,
+        "planned_requests": 1,
+        "baseline_image_inputs": 3,
+        "planned_image_inputs": 3,
+        "image_input_reduction": 0.0,
+        "planning_seconds": 0.06757027899993773,
+        "windows": [
+          {
+            "first": 0,
+            "last": 2,
+            "reason": "motion_candidate",
+            "start_time": 100.5,
+            "end_time": 101.5
+          }
+        ],
+        "action_recall_measured": false,
+        "phase_classification": false,
+        "local_preparation_seconds": 12.388663715000348
+      }
+    },
+    "rejected_reason": "model returned continuous=false"
+  },
+  "prior_three_frame_state_probe_seconds": 328.4,
+  "automated_tests_passed": 20,
+  "limitations": [
+    "Model timings are individual probes, not a controlled latency benchmark.",
+    "The first faster probe produced zero accepted training rows; detection alone is not sufficient.",
+    "Motion screening is not phase classification or OCR; action recall is unknown.",
+    "Cropping is specific to this broadcast layout; video labels are not PPO trajectories."
+  ],
+  "six_frame_actions_probe": {
+    "annotation_seconds": 35.5140217510002,
+    "report": {
+      "accepted": 1,
+      "rejected": 0,
+      "failures": 0,
+      "chunks": 1,
+      "attempted_new_chunks": 1,
+      "out": "/home/zich/hearthstone/rl/runs/video-fast-20260912/actions-play-dense",
+      "completed_chunks": 1,
+      "remaining_chunks": 0,
+      "ppo_ready": false,
+      "model": "gpt-5.6-luna",
+      "effort": "max",
+      "plan": {
+        "config": {
+          "version": 2,
+          "selection": "changes",
+          "layout": "kimmy",
+          "threshold": 0.06,
+          "audit_every": 0,
+          "frames_per_chunk": 6
+        },
+        "sampled_frames": 6,
+        "baseline_requests": 1,
+        "planned_requests": 1,
+        "baseline_image_inputs": 6,
+        "planned_image_inputs": 6,
+        "image_input_reduction": 0.0,
+        "planning_seconds": 0.05653946700022061,
+        "windows": [
+          {
+            "first": 0,
+            "last": 5,
+            "reason": "motion_candidate",
+            "start_time": 100.5,
+            "end_time": 101.5
+          }
+        ],
+        "action_recall_measured": false,
+        "phase_classification": false,
+        "local_preparation_seconds": 9.07403148100002
+      }
+    },
+    "extracted_events": [
+      {
+        "before_frame": 0,
+        "after_frame": 5,
+        "type": "play",
+        "source_slot": 0,
+        "target_zone": "board",
+        "target_slot": null,
+        "position": 0,
+        "card_name": null,
+        "confidence": 0.99,
+        "exactly_one_action": true,
+        "continuous": true,
+        "evidence": "手牌中的随从从底部被拖到场中央，并在最后一帧稳定落位。",
+        "before_stable": true
+      }
+    ],
+    "bc_labels_path": "rl/runs/video-fast-20260912/actions-play-dense/bc-labels.jsonl",
+    "full_state_reconstructed": false
+  },
+  "resume_verification": {
+    "accepted": 1,
+    "rejected": 0,
+    "failures": 0,
+    "chunks": 1,
+    "attempted_new_chunks": 0,
+    "out": "/home/zich/hearthstone/rl/runs/video-fast-20260912/actions-play-dense",
+    "completed_chunks": 1,
+    "remaining_chunks": 0,
+    "ppo_ready": false,
+    "model": "gpt-5.6-luna",
+    "effort": "max",
+    "plan": {
+      "config": {
+        "version": 2,
+        "selection": "changes",
+        "layout": "kimmy",
+        "threshold": 0.06,
+        "audit_every": 0,
+        "frames_per_chunk": 6
+      },
+      "sampled_frames": 6,
+      "baseline_requests": 1,
+      "planned_requests": 1,
+      "baseline_image_inputs": 6,
+      "planned_image_inputs": 6,
+      "image_input_reduction": 0.0,
+      "planning_seconds": 0.00013404900028035627,
+      "windows": [
+        {
+          "first": 0,
+          "last": 5,
+          "reason": "motion_candidate",
+          "start_time": 100.5,
+          "end_time": 101.5
+        }
+      ],
+      "action_recall_measured": false,
+      "phase_classification": false,
+      "local_preparation_seconds": 0.018477332000202296
+    }
+  }
+}

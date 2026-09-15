@@ -24,6 +24,7 @@ import {
 import {
   SEASON_CARDS,
   SEASON_HEROES,
+  AI_SEASON_HEROES,
   HERO_TRIBES,
   SEASON_SPELLS,
   SEASON_CATALOG,
@@ -223,7 +224,8 @@ function drawSpell(
   filter: (c: CardDef) => boolean = (d) => d.tier <= s.tier,
 ) {
   const ds = SEASON_SPELLS.filter(filter).filter((d) =>
-    d.id !== PREFIX + "BG31_819" || ss(s).tribes.includes("元素"),
+    (d.id !== PREFIX + "BG31_819" || ss(s).tribes.includes("元素")) &&
+    (d.id !== PREFIX + "BG28_606" || ss(s).tribes.includes("纳迦")),
   );
   const weights = [0, 5, 7, 9, 11, 7, 5];
   let n = rng() * ds.reduce((v, d) => v + weights[d.tier], 0);
@@ -516,7 +518,7 @@ export function createSeason(
   );
   const pool = { ...(shared?.pool || initialPool) };
   const opponents = shuffled(
-    SEASON_HEROES.filter((h) => h.id !== hero.id),
+    (shared ? SEASON_HEROES : AI_SEASON_HEROES).filter((h) => h.id !== hero.id),
     rng,
   )
     .slice(0, 7)
@@ -1532,12 +1534,17 @@ function expandedEffect(ctx: Context, m: Minion, a: Ability) {
       const spell = drawSpell(s, rng); if (spell) st.spellShop.push(spell);
       s.frozen = false; break;
     }
-    case "randomSpellcraft":
+    case "randomSpellcraft": {
+      const canCraft = (d: CardDef) => d.abilities?.some((a) => a.event === "spellcraft");
+      const lobbySources = poolCards(s).filter(canCraft);
+      // Old saves can already contain Spitescale Special in a lobby without Naga.
+      const sources = lobbySources.length ? lobbySources : SEASON_CARDS.filter(canCraft);
       for (let i = 0; i < n; i++) {
-        const d = pick(poolCards(s).filter((d) => d.abilities?.some((a) => a.event === "spellcraft")), rng);
+        const d = pick(sources, rng);
         if (d) run({ ...ctx, fromHand: false }, makeMinion(d.id), "spellcraft");
       }
       break;
+    }
     case "randomStatsSpell":
       for (let i = 0; i < n; i++) { const c = drawSpell(s, rng, (d) => d.tier <= s.tier && d.abilities?.some((a) => ["buff", "buffType", "nagaRepeatedBuff"].includes(a.op)) === true); if (c) putHand(s, c); }
       break;

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
-    "test": "tsx --test src/engine.test.ts src/season/engine.test.ts src/scouting.test.ts src/practice.test.ts src/ranking.test.ts src/table/presentation.test.ts",
+    "test": "tsx --test src/engine.test.ts src/season/engine.test.ts src/season/ai-hero-pool.test.ts src/scouting.test.ts src/practice.test.ts src/ranking.test.ts src/table/presentation.test.ts",
     "test:e2e": "playwright test",
     "build:site": "TAVERN_BASE=/tavern/ npm run build && python3 scripts/package-site.py",
     "build:server": "node scripts/build-server.mjs",
@@ -15,7 +15,7 @@
     "build:search": "node scripts/build-recruit-search.mjs",
     "test:search": "tsc -p rl/tsconfig.json && tsx --test rl/recruit-search.test.ts && bash rl/run.sh test -p test_recruit_search.py",
     "test:rl": "tsc -p rl/tsconfig.json && tsx --test rl/environment.test.ts",
-    "package:rl": "npm run build:rl && python3 scripts/package-rl.py",
+    "package:rl": "npm run build:rl && npm run build:search && python3 scripts/package-rl.py",
     "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts server/persistence.test.ts server/pairing.test.ts server/neural.test.ts server/demonstrations.test.ts"
   },
   "dependencies": {

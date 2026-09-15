@@ -1,0 +1,251 @@
+{
+  "stage": "launched",
+  "previous": {
+    "stage": "launched",
+    "previous": {
+      "depth": 64,
+      "pid": 13359,
+      "initial_episodes": 680,
+      "launched_utc": "2026-09-11T07:30:34.352566+00:00",
+      "expected_stop_utc": "2026-09-11T11:30:34.352566+00:00",
+      "hours": 4,
+      "workers": 8,
+      "games_per_iteration": 16,
+      "learning_rate": 3e-05,
+      "output": "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034",
+      "log": "/root/autodl-tmp/tavern-selfplay-deep64-20260911/logs/deep64-continuation-four-hour-20260911-073034.log",
+      "command": [
+        "bash",
+        "rl/run.sh",
+        "campaign",
+        "--resume",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/training/latest.pt",
+        "--output",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034",
+        "--anchors",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/checkpoints/episodes-0000264.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/checkpoints/episodes-0000520.pt",
+        "--games",
+        "8192",
+        "--hours",
+        "4",
+        "--workers",
+        "8",
+        "--games-per-iteration",
+        "16",
+        "--evaluate-every-games",
+        "256",
+        "--device",
+        "cuda",
+        "--rollout-device",
+        "cuda",
+        "--learning-rate",
+        "3e-5"
+      ],
+      "note": "Continue frozen rules, optimizer and training league. Monitoring opponents are immutable 264/520/680-game policies. Four-hour wall-clock budget includes evaluations; rental instance remains on. 256/1024 campaigns retain their original deadlines."
+    },
+    "expected_stop_utc": "2026-09-11T11:30:34.352566+00:00",
+    "observed_episodes": 712,
+    "saved_episodes": 728,
+    "stopped_utc": "2026-09-11T07:49:18.294787+00:00",
+    "league": {
+      "episodes": 728,
+      "sourceHash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+      "members": [
+        {
+          "generation": 0,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": "external:acea2ce1689c23f5",
+          "external": true,
+          "architecture": "entity-gru-resnet",
+          "depth": 256,
+          "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 256, \"seed\": 42, \"value_depth\": 256}",
+          "source_episodes": 620,
+          "source_sha256": "a6d01afd935332255e1b305e64e853170057322abdbdb2b14495a8c469fe84cd"
+        },
+        {
+          "generation": "external:473d7b14bb1c8dc8",
+          "external": true,
+          "architecture": "entity-gru-resnet",
+          "depth": 1024,
+          "lineage": "{\"architecture\": \"entity-gru-resnet\", \"heads\": 4, \"hidden\": 128, \"layers\": 2, \"policy_depth\": 1024, \"seed\": 42, \"value_depth\": 1024}",
+          "source_episodes": 260,
+          "source_sha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4"
+        },
+        {
+          "generation": 1,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 2,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 4,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 5,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 43,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 44,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 45,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 46,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        },
+        {
+          "generation": 47,
+          "external": false,
+          "architecture": "entity-gru-resnet",
+          "depth": 64,
+          "lineage": null,
+          "source_episodes": null,
+          "source_sha256": null
+        }
+      ],
+      "probabilities": [
+        0.03667388362138149,
+        0.2,
+        0.2,
+        0.03734288663673796,
+        0.036438496069453256,
+        0.03612931325644238,
+        0.03255951511401999,
+        0.07895339982697361,
+        0.07007296448421195,
+        0.08872187870401142,
+        0.10415426245979434,
+        0.07895339982697361
+      ],
+      "imports": [
+        {
+          "at_episodes": 728,
+          "model_sha256s": [
+            "acea2ce1689c23f5dd07523a4e82163a29549b8f08ffe0f1c56b039ef450f367",
+            "473d7b14bb1c8dc8cb705834a0246de3a72800148862835d03edb7b01a6b24c8"
+          ],
+          "external_fraction": 0.4
+        }
+      ]
+    },
+    "pid": 14347,
+    "output": "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918",
+    "resume": "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/diversity-resume-20260911-074918/latest.pt",
+    "log": "/root/autodl-tmp/tavern-selfplay-diverse-20260911/logs/deep64-diverse-continuation-20260911-074918.log",
+    "launched_utc": "2026-09-11T07:49:40.970222+00:00",
+    "mixing_error": null
+  },
+  "observed_episodes": 744,
+  "expected_stop_utc": "2026-09-11T11:30:34.352566+00:00",
+  "pid": 14935,
+  "output": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210",
+  "log": "/root/autodl-tmp/tavern-selfplay-population-20260911/logs/population-20260911-080210.log",
+  "command": [
+    "/root/miniconda3/bin/python",
+    "-u",
+    "-m",
+    "tavern_rl.population",
+    "--resumes",
+    "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/training/latest.pt",
+    "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/training/latest.pt",
+    "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/training/latest.pt",
+    "--output",
+    "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210",
+    "--deadline-utc",
+    "2026-09-11T11:30:34.352566+00:00",
+    "--workers",
+    "4",
+    "--iterations-per-exchange",
+    "2",
+    "--games-per-iteration",
+    "16",
+    "--max-per-lineage",
+    "2",
+    "--external-fraction",
+    "0.4",
+    "--device",
+    "cuda"
+  ],
+  "saved_64_episodes": 760,
+  "launched_utc": "2026-09-11T08:02:10.218459+00:00",
+  "resource_monitor_pid": 15144,
+  "resource_samples": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/resources.jsonl",
+  "validation": {
+    "local_tests": 47,
+    "isolated_package_tests": 45,
+    "mutual_import_preflight_passed": true,
+    "population_overlay_sha256": "3c253b4a3fca43c5c0ccb31a06b9a19891e475802dc1ef7878ee731cdeaa42e5",
+    "initial_episodes_by_depth": {
+      "64": 760,
+      "256": 636,
+      "1024": 260
+    },
+    "startup_verification": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/startup-verification.json",
+    "startup_observation": {
+      "all_three_collecting": true,
+      "observed_utc": "2026-09-11T08:04:26.988080+00:00",
+      "gpu_samples": 19,
+      "gpu_memory_peak_mib": 3874,
+      "gpu_utilization_mean_percent": 78.47368421052632,
+      "scope": "Startup and initial rollout only; first PPO update and first live snapshot exchange still pending at this observation."
+    }
+  }
+}

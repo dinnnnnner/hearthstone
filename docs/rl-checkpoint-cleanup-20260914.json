@@ -1,0 +1,199 @@
+{
+  "root": "/root/autodl-tmp",
+  "apply": true,
+  "free_before": 8015753216,
+  "groups": [
+    {
+      "sha256": "7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8",
+      "bytes": 213722044,
+      "canonical": "/root/autodl-tmp/deep64-serving-20260911-680/checkpoint.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034/final-suite/7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034/initial.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034/monitor-suite/7c56298516f3f207b283e67c4c6176b72a48df339f65106dc743668645f295e8.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/training/latest.pt"
+      ]
+    },
+    {
+      "sha256": "79c29465a2f7740212351a1e0eb2b930ec903c30db339d9cd6450d75e2e05699",
+      "bytes": 213722044,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034/final-suite/79c29465a2f7740212351a1e0eb2b930ec903c30db339d9cd6450d75e2e05699.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034/monitor-suite/79c29465a2f7740212351a1e0eb2b930ec903c30db339d9cd6450d75e2e05699.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/checkpoints/episodes-0000520.pt",
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/final-suite/79c29465a2f7740212351a1e0eb2b930ec903c30db339d9cd6450d75e2e05699.pt",
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/monitor-suite/79c29465a2f7740212351a1e0eb2b930ec903c30db339d9cd6450d75e2e05699.pt"
+      ]
+    },
+    {
+      "sha256": "3fa341fecaf19a5d87b430df013da5595a01578cd323bf44578df87195b0bc44",
+      "bytes": 607978119,
+      "canonical": "/root/autodl-tmp/deep256-serving-20260911/checkpoint.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/training/latest.pt",
+        "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-1/initial.pt"
+      ]
+    },
+    {
+      "sha256": "962ab2538b3821ec7cb6a7d4116328ed422dc6fb1ea1e2c80da59023a44f81f4",
+      "bytes": 2185135682,
+      "canonical": "/root/autodl-tmp/deep1024-serving-20260911/checkpoint.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/checkpoints/episodes-0000260.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/training/latest.pt",
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/diversity-opponents/deep1024.pt",
+        "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-2/initial.pt"
+      ]
+    },
+    {
+      "sha256": "815a1b1ad6a8a8ced24762a7e293b81a792066806bf2976bffc8dd8cbc89623c",
+      "bytes": 26035869,
+      "canonical": "/root/autodl-tmp/tavern-selfplay/rl/runs/gpu-check-v2/latest.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/gpu-fixed-suite/815a1b1ad6a8a8ced24762a7e293b81a792066806bf2976bffc8dd8cbc89623c.pt",
+        "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/final-suite/815a1b1ad6a8a8ced24762a7e293b81a792066806bf2976bffc8dd8cbc89623c.pt",
+        "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/monitor-suite/815a1b1ad6a8a8ced24762a7e293b81a792066806bf2976bffc8dd8cbc89623c.pt"
+      ]
+    },
+    {
+      "sha256": "4df0da4d74fedf116b290f05423653ace94774677a77e6e5d241fb9a5da3b937",
+      "bytes": 42384057,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/gpu-pilot-r2/latest.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/final-suite/4df0da4d74fedf116b290f05423653ace94774677a77e6e5d241fb9a5da3b937.pt",
+        "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/initial.pt",
+        "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/monitor-suite/4df0da4d74fedf116b290f05423653ace94774677a77e6e5d241fb9a5da3b937.pt"
+      ]
+    },
+    {
+      "sha256": "f98f4e2225049f74b4601ca13a2520c32d8a3b250927da17fa9266c06f2c2666",
+      "bytes": 80508028,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/checkpoints/episodes-0000780.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-v3/rl/runs/strong-selfplay-v3-001/training/latest.pt"
+      ]
+    },
+    {
+      "sha256": "1e060e56b41e850ca85bc9051dbc6adc603672a13e2e8a4c411dee1b97cca56f",
+      "bytes": 85904232,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/final-suite/1e060e56b41e850ca85bc9051dbc6adc603672a13e2e8a4c411dee1b97cca56f.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/initial.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/monitor-suite/1e060e56b41e850ca85bc9051dbc6adc603672a13e2e8a4c411dee1b97cca56f.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-smoke/latest.pt"
+      ]
+    },
+    {
+      "sha256": "8d96f470c789d20684e7ecc55ed0ddb4253737c84c939c135c87e1d50c7d3121",
+      "bytes": 15405927,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/final-suite/8d96f470c789d20684e7ecc55ed0ddb4253737c84c939c135c87e1d50c7d3121.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/monitor-suite/8d96f470c789d20684e7ecc55ed0ddb4253737c84c939c135c87e1d50c7d3121.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/final-suite/8d96f470c789d20684e7ecc55ed0ddb4253737c84c939c135c87e1d50c7d3121.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/monitor-suite/8d96f470c789d20684e7ecc55ed0ddb4253737c84c939c135c87e1d50c7d3121.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/final-suite/8d96f470c789d20684e7ecc55ed0ddb4253737c84c939c135c87e1d50c7d3121.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/monitor-suite/8d96f470c789d20684e7ecc55ed0ddb4253737c84c939c135c87e1d50c7d3121.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-monitor-anchors/generation-1-games-4.pt"
+      ]
+    },
+    {
+      "sha256": "fa5a916f6aadd8b6841be3be4bc7e3a29e943504a8afb3c2fc3298eac87f5f31",
+      "bytes": 213721596,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034/final-suite/fa5a916f6aadd8b6841be3be4bc7e3a29e943504a8afb3c2fc3298eac87f5f31.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-continuation-four-hour-20260911-073034/monitor-suite/fa5a916f6aadd8b6841be3be4bc7e3a29e943504a8afb3c2fc3298eac87f5f31.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep64-20260911/rl/runs/deep64-four-hour-20260911-0318/checkpoints/episodes-0000264.pt",
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/final-suite/fa5a916f6aadd8b6841be3be4bc7e3a29e943504a8afb3c2fc3298eac87f5f31.pt",
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/monitor-suite/fa5a916f6aadd8b6841be3be4bc7e3a29e943504a8afb3c2fc3298eac87f5f31.pt"
+      ]
+    },
+    {
+      "sha256": "cbe3fb641af885ffc05f17240a909683e539901fd0ddbec793fa17a533bb7ab8",
+      "bytes": 284266311,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/final-suite/cbe3fb641af885ffc05f17240a909683e539901fd0ddbec793fa17a533bb7ab8.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/initial.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-four-hour-20260911-034754/monitor-suite/cbe3fb641af885ffc05f17240a909683e539901fd0ddbec793fa17a533bb7ab8.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep256-20260911/rl/runs/deep256-parallel-20260911-0339/latest.pt"
+      ]
+    },
+    {
+      "sha256": "2d5461cc70e8d0130d5a2473da5a1f13f245c03104dbb6815b87725454491c74",
+      "bytes": 729367879,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/final-suite/2d5461cc70e8d0130d5a2473da5a1f13f245c03104dbb6815b87725454491c74.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/initial.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-four-hour-20260911-034754/monitor-suite/2d5461cc70e8d0130d5a2473da5a1f13f245c03104dbb6815b87725454491c74.pt",
+        "/root/autodl-tmp/tavern-selfplay-deep1024-20260911/rl/runs/deep1024-smoke/latest.pt"
+      ]
+    },
+    {
+      "sha256": "2ffd6b6b8e6850aaa443e9a52c1bd657ea4a09d92f0d353cc99d4f62a06f81a1",
+      "bytes": 372444679,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/final-suite/2ffd6b6b8e6850aaa443e9a52c1bd657ea4a09d92f0d353cc99d4f62a06f81a1.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/initial.pt",
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/monitor-suite/2ffd6b6b8e6850aaa443e9a52c1bd657ea4a09d92f0d353cc99d4f62a06f81a1.pt",
+        "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/diversity-resume-20260911-074918/latest.pt"
+      ]
+    },
+    {
+      "sha256": "fb5862c7944f2fbca744d8a40539bccc752a34941267d66da1289e00134362c8",
+      "bytes": 372457351,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-diverse-20260911/rl/runs/deep64-diverse-continuation-20260911-074918/training/latest.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-0/initial.pt"
+      ]
+    },
+    {
+      "sha256": "d53e687558763841e7dd61fef728e4ee7edc61bb2fad2ed8b0e7f7f57014dc88",
+      "bytes": 531194759,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-0/training/latest.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-0/initial.pt"
+      ]
+    },
+    {
+      "sha256": "c522918feb56415c2d3253bbd5f950c9fe9cff0869574c8aa5bcf2782abc5249",
+      "bytes": 767886855,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-1/training/latest.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-1/initial.pt"
+      ]
+    },
+    {
+      "sha256": "c195ea43b86431e8bc1fc21badae29901157bbaf55f34ac36b7591e610726898",
+      "bytes": 1714700034,
+      "canonical": "/root/autodl-tmp/tavern-selfplay-population-20260911/rl/runs/population-20260911-080210/member-2/training/latest.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-2/initial.pt"
+      ]
+    },
+    {
+      "sha256": "452a8fe616035ec39d1da05750cca3f441175a18d456ab2c6da87319176b32e1",
+      "bytes": 531196487,
+      "canonical": "/root/autodl-tmp/serving-reward-final-20260911/deep64/checkpoint.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-0/training/latest.pt"
+      ]
+    },
+    {
+      "sha256": "4078283c8680ec7433505dfce01b4eecce0b50ea31ed9c95e82706e2ead692c2",
+      "bytes": 767887687,
+      "canonical": "/root/autodl-tmp/serving-reward-final-20260911/deep256/checkpoint.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-1/training/latest.pt"
+      ]
+    },
+    {
+      "sha256": "f5208c89c1f8357aa1813966f03e1b87ceb93058e45dc2616326e74532637266",
+      "bytes": 1714701058,
+      "canonical": "/root/autodl-tmp/serving-reward-final-20260911/deep1024/checkpoint.pt",
+      "linked": [
+        "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-2/training/latest.pt"
+      ]
+    }
+  ],
+  "free_after": 31731208192,
+  "reclaimed_bytes": 23715454976
+}

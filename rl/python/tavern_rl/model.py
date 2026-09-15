@@ -37,11 +37,17 @@ class ActorCritic(nn.Module):
 def advantages(values, terminal_reward, gamma=1.0, gae_lambda=.95):
     """One complete player's trajectory. Never concatenate opponents' decisions."""
     values = np.asarray(values, dtype=np.float32)
+    rewards = np.asarray(terminal_reward, dtype=np.float32)
+    if rewards.ndim == 0:
+        rewards = np.zeros_like(values)
+        if len(values): rewards[-1] = terminal_reward
+    if rewards.shape != values.shape or not np.isfinite(rewards).all():
+        raise ValueError('Expected finite scalar terminal reward or one reward per decision')
     result = np.empty_like(values)
     last = 0.0
     for i in reversed(range(len(values))):
         next_value = values[i + 1] if i + 1 < len(values) else 0.0
-        reward = terminal_reward if i == len(values) - 1 else 0.0
+        reward = rewards[i]
         delta = reward + gamma * next_value - values[i]
         last = float(delta + gamma * gae_lambda * last)
         result[i] = last

@@ -1,0 +1,68 @@
+{
+  "release": "20260914T014602Z",
+  "previous_site": "/var/www/playroom/releases/20260911T075457Z",
+  "previous_server": "/opt/bobs-tavern/releases/20260911T114421Z",
+  "site": "/var/www/playroom/releases/20260914T014602Z",
+  "server": "/opt/bobs-tavern/releases/20260914T014602Z",
+  "hero_pool_sha256": "5d543022eee3a4e7a3091dff3b9d4b1a03922992ccc644cc5142001029af374d",
+  "health": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "ai": {
+      "mode": "neural",
+      "decisions": 0,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 0,
+        "rawRequestBytes": 0,
+        "requestBytes": 0,
+        "responseBytes": 0,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1112",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-908",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-436",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "sector_pid": "119165",
+  "sector_unchanged": true,
+  "validation": {
+    "game_tests_passed": 132,
+    "server_tests_passed": 49,
+    "python_hero_pool_and_independent_tests_passed": 9,
+    "frontend_build": "passed",
+    "live_room": {
+      "bot_count": 7,
+      "all_bot_heroes_in_pool": true,
+      "all_eight_heroes_distinct": true,
+      "human_outside_pool": "s14_reno",
+      "model_id": "deep64-1112",
+      "test_room_left": true
+    }
+  }
+}

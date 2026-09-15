@@ -1,0 +1,1037 @@
+{
+  "captured_utc": "2026-09-14T01:47:29.464120+00:00",
+  "launch": {
+    "pid": 2278,
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "-m",
+      "tavern_rl.independent",
+      "--resumes",
+      "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-0/training/latest.pt",
+      "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-1/training/latest.pt",
+      "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent",
+      "--hero-pool",
+      "/root/tavern-popular-heroes-20260914/src/season/ai-hero-pool.json",
+      "--deadline-utc",
+      "2026-09-14T05:29:33.374655+00:00",
+      "--workers",
+      "3",
+      "--device",
+      "cuda"
+    ],
+    "previous_output": "/root/tavern-independent-20260914/rl/runs/independent-four-hour",
+    "previous_pid": 1592,
+    "original_started_utc": "2026-09-14T01:29:33.374655+00:00",
+    "deadline_utc": "2026-09-14T05:29:33.374655+00:00",
+    "reason": "User requested a shared pool of 15 heroes for training and client AI",
+    "resumes": [
+      {
+        "depth": 64,
+        "episodes": 1128
+      },
+      {
+        "depth": 256,
+        "episodes": 908
+      },
+      {
+        "depth": 1024,
+        "episodes": 436
+      }
+    ]
+  },
+  "status": {
+    "stage": "running",
+    "pid": 2278,
+    "opponent_mode": "self_history_only",
+    "started_utc": "2026-09-14T01:45:35.497099+00:00",
+    "deadline_utc": "2026-09-14T05:29:33.374655+00:00",
+    "hours": 3.7327437655131024,
+    "workers_per_learner": 3,
+    "members": [
+      {
+        "source": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-0/training/latest.pt",
+        "initial": "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-0/initial.pt",
+        "episodes": 1128,
+        "iteration": 72,
+        "depth": 64,
+        "removed_generations": [],
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 4,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 68,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 69,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 70,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 71,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 72,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "probabilities": [
+          0.06365147530788662,
+          0.06372113493166622,
+          0.06334893542513202,
+          0.06305772781631351,
+          0.12184449144354158,
+          0.1500641743310313,
+          0.16339106117282104,
+          0.16085682524057637,
+          0.1500641743310313
+        ],
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 4,
+          "learning_rate": 3e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "self_history_only",
+          "hero_pool": {
+            "format": 1,
+            "name": "已实现热门英雄暂定名单",
+            "created_date": "2026-09-14",
+            "provisional": true,
+            "scope": "all_eight_seats",
+            "sampling": "uniform_without_replacement",
+            "source_date": "2026-04-18",
+            "source_patch": "35.2",
+            "sources": [
+              "https://www.hsbattlegrounds.help/en/meta-digest/2026-04-18-issue-1",
+              "https://www.hsbattlegrounds.help/en/tavern-pool/heroes/tier-list"
+            ],
+            "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练仍使用冻结的36.4.2规则；名单内等概率采样，不按历史选用率加权。",
+            "heroes": [
+              {
+                "id": "s14_genn",
+                "name": "吉恩，狼人国王",
+                "historical_pick_rate": 0.59
+              },
+              {
+                "id": "s14_marin",
+                "name": "经理马林",
+                "historical_pick_rate": 0.464
+              },
+              {
+                "id": "s14_buttons",
+                "name": "扣子",
+                "historical_pick_rate": 0.438
+              },
+              {
+                "id": "s14_clockwork",
+                "name": "钟表先生克劳沃斯",
+                "historical_pick_rate": 0.424
+              },
+              {
+                "id": "s14_brann",
+                "name": "恐龙大师布莱恩",
+                "historical_pick_rate": 0.406
+              },
+              {
+                "id": "s14_afk",
+                "name": "挂机的阿凯",
+                "historical_pick_rate": 0.379
+              },
+              {
+                "id": "s14_sylvanas",
+                "name": "希尔瓦娜斯·风行者",
+                "historical_pick_rate": 0.377
+              },
+              {
+                "id": "s14_chenvaala",
+                "name": "齐恩瓦拉",
+                "historical_pick_rate": 0.376
+              },
+              {
+                "id": "s14_shudderwock",
+                "name": "沙德沃克",
+                "historical_pick_rate": 0.367
+              },
+              {
+                "id": "s14_lich",
+                "name": "巫妖王",
+                "historical_pick_rate": 0.364
+              },
+              {
+                "id": "s14_teron",
+                "name": "塔隆·血魔",
+                "historical_pick_rate": 0.353
+              },
+              {
+                "id": "s14_yogg",
+                "name": "尤格-萨隆",
+                "historical_pick_rate": 0.269
+              },
+              {
+                "id": "s14_patchwerk",
+                "name": "帕奇维克",
+                "historical_pick_rate": 0.266
+              },
+              {
+                "id": "s14_millificent",
+                "name": "米尔菲丝·法力风暴",
+                "historical_pick_rate": 0.256
+              },
+              {
+                "id": "s14_vanndar",
+                "name": "范达尔·雷矛",
+                "historical_pick_rate": 0.253
+              }
+            ]
+          }
+        },
+        "source_hash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+        "rules_hash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "parameters": 3421950,
+        "pid": 2306,
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-0/initial.pt",
+          "--output",
+          "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-0/training",
+          "--iterations",
+          "1000000000",
+          "--workers",
+          "3",
+          "--threads",
+          "1",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda"
+        ],
+        "checkpoint": "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-0/training/latest.pt"
+      },
+      {
+        "source": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-1/training/latest.pt",
+        "initial": "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-1/initial.pt",
+        "episodes": 908,
+        "iteration": 59,
+        "depth": 256,
+        "removed_generations": [],
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 5,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 56,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 57,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 58,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 59,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "probabilities": [
+          0.07062926597276986,
+          0.07356483424071453,
+          0.07129129697858373,
+          0.0702945655175901,
+          0.2007073171356185,
+          0.15280689395166533,
+          0.20295151293336855,
+          0.15775431326968936
+        ],
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 16,
+          "learning_rate": 3e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "self_history_only",
+          "hero_pool": {
+            "format": 1,
+            "name": "已实现热门英雄暂定名单",
+            "created_date": "2026-09-14",
+            "provisional": true,
+            "scope": "all_eight_seats",
+            "sampling": "uniform_without_replacement",
+            "source_date": "2026-04-18",
+            "source_patch": "35.2",
+            "sources": [
+              "https://www.hsbattlegrounds.help/en/meta-digest/2026-04-18-issue-1",
+              "https://www.hsbattlegrounds.help/en/tavern-pool/heroes/tier-list"
+            ],
+            "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练仍使用冻结的36.4.2规则；名单内等概率采样，不按历史选用率加权。",
+            "heroes": [
+              {
+                "id": "s14_genn",
+                "name": "吉恩，狼人国王",
+                "historical_pick_rate": 0.59
+              },
+              {
+                "id": "s14_marin",
+                "name": "经理马林",
+                "historical_pick_rate": 0.464
+              },
+              {
+                "id": "s14_buttons",
+                "name": "扣子",
+                "historical_pick_rate": 0.438
+              },
+              {
+                "id": "s14_clockwork",
+                "name": "钟表先生克劳沃斯",
+                "historical_pick_rate": 0.424
+              },
+              {
+                "id": "s14_brann",
+                "name": "恐龙大师布莱恩",
+                "historical_pick_rate": 0.406
+              },
+              {
+                "id": "s14_afk",
+                "name": "挂机的阿凯",
+                "historical_pick_rate": 0.379
+              },
+              {
+                "id": "s14_sylvanas",
+                "name": "希尔瓦娜斯·风行者",
+                "historical_pick_rate": 0.377
+              },
+              {
+                "id": "s14_chenvaala",
+                "name": "齐恩瓦拉",
+                "historical_pick_rate": 0.376
+              },
+              {
+                "id": "s14_shudderwock",
+                "name": "沙德沃克",
+                "historical_pick_rate": 0.367
+              },
+              {
+                "id": "s14_lich",
+                "name": "巫妖王",
+                "historical_pick_rate": 0.364
+              },
+              {
+                "id": "s14_teron",
+                "name": "塔隆·血魔",
+                "historical_pick_rate": 0.353
+              },
+              {
+                "id": "s14_yogg",
+                "name": "尤格-萨隆",
+                "historical_pick_rate": 0.269
+              },
+              {
+                "id": "s14_patchwerk",
+                "name": "帕奇维克",
+                "historical_pick_rate": 0.266
+              },
+              {
+                "id": "s14_millificent",
+                "name": "米尔菲丝·法力风暴",
+                "historical_pick_rate": 0.256
+              },
+              {
+                "id": "s14_vanndar",
+                "name": "范达尔·雷矛",
+                "historical_pick_rate": 0.253
+              }
+            ]
+          }
+        },
+        "source_hash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+        "rules_hash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "parameters": 9860862,
+        "pid": 2307,
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-1/initial.pt",
+          "--output",
+          "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-1/training",
+          "--iterations",
+          "1000000000",
+          "--workers",
+          "3",
+          "--threads",
+          "1",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda"
+        ],
+        "checkpoint": "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-1/training/latest.pt"
+      },
+      {
+        "source": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-2/training/latest.pt",
+        "initial": "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-2/initial.pt",
+        "episodes": 436,
+        "iteration": 28,
+        "depth": 1024,
+        "removed_generations": [],
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 5,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 25,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 26,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 27,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 28,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "probabilities": [
+          0.09332527346616423,
+          0.09089415234666626,
+          0.09533035234025009,
+          0.09152655143308668,
+          0.11010368806822204,
+          0.18517613828385082,
+          0.20694573819660297,
+          0.1266981058651569
+        ],
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 16,
+          "learning_rate": 1e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "self_history_only",
+          "hero_pool": {
+            "format": 1,
+            "name": "已实现热门英雄暂定名单",
+            "created_date": "2026-09-14",
+            "provisional": true,
+            "scope": "all_eight_seats",
+            "sampling": "uniform_without_replacement",
+            "source_date": "2026-04-18",
+            "source_patch": "35.2",
+            "sources": [
+              "https://www.hsbattlegrounds.help/en/meta-digest/2026-04-18-issue-1",
+              "https://www.hsbattlegrounds.help/en/tavern-pool/heroes/tier-list"
+            ],
+            "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练仍使用冻结的36.4.2规则；名单内等概率采样，不按历史选用率加权。",
+            "heroes": [
+              {
+                "id": "s14_genn",
+                "name": "吉恩，狼人国王",
+                "historical_pick_rate": 0.59
+              },
+              {
+                "id": "s14_marin",
+                "name": "经理马林",
+                "historical_pick_rate": 0.464
+              },
+              {
+                "id": "s14_buttons",
+                "name": "扣子",
+                "historical_pick_rate": 0.438
+              },
+              {
+                "id": "s14_clockwork",
+                "name": "钟表先生克劳沃斯",
+                "historical_pick_rate": 0.424
+              },
+              {
+                "id": "s14_brann",
+                "name": "恐龙大师布莱恩",
+                "historical_pick_rate": 0.406
+              },
+              {
+                "id": "s14_afk",
+                "name": "挂机的阿凯",
+                "historical_pick_rate": 0.379
+              },
+              {
+                "id": "s14_sylvanas",
+                "name": "希尔瓦娜斯·风行者",
+                "historical_pick_rate": 0.377
+              },
+              {
+                "id": "s14_chenvaala",
+                "name": "齐恩瓦拉",
+                "historical_pick_rate": 0.376
+              },
+              {
+                "id": "s14_shudderwock",
+                "name": "沙德沃克",
+                "historical_pick_rate": 0.367
+              },
+              {
+                "id": "s14_lich",
+                "name": "巫妖王",
+                "historical_pick_rate": 0.364
+              },
+              {
+                "id": "s14_teron",
+                "name": "塔隆·血魔",
+                "historical_pick_rate": 0.353
+              },
+              {
+                "id": "s14_yogg",
+                "name": "尤格-萨隆",
+                "historical_pick_rate": 0.269
+              },
+              {
+                "id": "s14_patchwerk",
+                "name": "帕奇维克",
+                "historical_pick_rate": 0.266
+              },
+              {
+                "id": "s14_millificent",
+                "name": "米尔菲丝·法力风暴",
+                "historical_pick_rate": 0.256
+              },
+              {
+                "id": "s14_vanndar",
+                "name": "范达尔·雷矛",
+                "historical_pick_rate": 0.253
+              }
+            ]
+          }
+        },
+        "source_hash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+        "rules_hash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "parameters": 35616510,
+        "pid": 2308,
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-2/initial.pt",
+          "--output",
+          "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-2/training",
+          "--iterations",
+          "1000000000",
+          "--workers",
+          "3",
+          "--threads",
+          "1",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda"
+        ],
+        "checkpoint": "/root/tavern-popular-heroes-20260914/rl/runs/popular-independent/member-2/training/latest.pt"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "depth": 64,
+      "pid": 2306,
+      "episodes": 1128,
+      "native_opponents": 9,
+      "external_opponents": 0,
+      "hero_pool_saved": true,
+      "game_starts_verified": 5,
+      "last_collect": {
+        "stage": "collect",
+        "completed_games": 1,
+        "total_games": 16,
+        "environment_actions": 3954,
+        "seconds": 90.2
+      }
+    },
+    {
+      "depth": 256,
+      "pid": 2307,
+      "episodes": 908,
+      "native_opponents": 8,
+      "external_opponents": 0,
+      "hero_pool_saved": true,
+      "game_starts_verified": 3,
+      "last_collect": {
+        "stage": "collect",
+        "completed_games": 0,
+        "total_games": 16,
+        "environment_actions": 2994,
+        "seconds": 90.1
+      }
+    },
+    {
+      "depth": 1024,
+      "pid": 2308,
+      "episodes": 436,
+      "native_opponents": 8,
+      "external_opponents": 0,
+      "hero_pool_saved": true,
+      "game_starts_verified": 3,
+      "last_collect": {
+        "stage": "collect",
+        "completed_games": 0,
+        "total_games": 16,
+        "environment_actions": 792,
+        "seconds": 60.1
+      }
+    }
+  ],
+  "simulator_validation": {
+    "games_started": 20,
+    "all_15_heroes_covered": true,
+    "lineups": [
+      [
+        "s14_vanndar",
+        "s14_buttons",
+        "s14_patchwerk",
+        "s14_clockwork",
+        "s14_teron",
+        "s14_lich",
+        "s14_shudderwock",
+        "s14_yogg"
+      ],
+      [
+        "s14_genn",
+        "s14_lich",
+        "s14_shudderwock",
+        "s14_clockwork",
+        "s14_sylvanas",
+        "s14_afk",
+        "s14_teron",
+        "s14_patchwerk"
+      ],
+      [
+        "s14_vanndar",
+        "s14_teron",
+        "s14_marin",
+        "s14_shudderwock",
+        "s14_sylvanas",
+        "s14_afk",
+        "s14_lich",
+        "s14_genn"
+      ],
+      [
+        "s14_chenvaala",
+        "s14_brann",
+        "s14_millificent",
+        "s14_vanndar",
+        "s14_lich",
+        "s14_patchwerk",
+        "s14_buttons",
+        "s14_yogg"
+      ],
+      [
+        "s14_genn",
+        "s14_millificent",
+        "s14_yogg",
+        "s14_brann",
+        "s14_chenvaala",
+        "s14_marin",
+        "s14_lich",
+        "s14_afk"
+      ],
+      [
+        "s14_genn",
+        "s14_chenvaala",
+        "s14_patchwerk",
+        "s14_teron",
+        "s14_millificent",
+        "s14_brann",
+        "s14_sylvanas",
+        "s14_afk"
+      ],
+      [
+        "s14_chenvaala",
+        "s14_afk",
+        "s14_shudderwock",
+        "s14_clockwork",
+        "s14_marin",
+        "s14_genn",
+        "s14_teron",
+        "s14_lich"
+      ],
+      [
+        "s14_teron",
+        "s14_brann",
+        "s14_sylvanas",
+        "s14_yogg",
+        "s14_afk",
+        "s14_genn",
+        "s14_buttons",
+        "s14_millificent"
+      ],
+      [
+        "s14_millificent",
+        "s14_brann",
+        "s14_genn",
+        "s14_patchwerk",
+        "s14_vanndar",
+        "s14_marin",
+        "s14_yogg",
+        "s14_sylvanas"
+      ],
+      [
+        "s14_chenvaala",
+        "s14_genn",
+        "s14_brann",
+        "s14_yogg",
+        "s14_teron",
+        "s14_millificent",
+        "s14_vanndar",
+        "s14_patchwerk"
+      ],
+      [
+        "s14_sylvanas",
+        "s14_yogg",
+        "s14_vanndar",
+        "s14_shudderwock",
+        "s14_buttons",
+        "s14_marin",
+        "s14_patchwerk",
+        "s14_brann"
+      ],
+      [
+        "s14_clockwork",
+        "s14_genn",
+        "s14_yogg",
+        "s14_shudderwock",
+        "s14_teron",
+        "s14_afk",
+        "s14_millificent",
+        "s14_patchwerk"
+      ],
+      [
+        "s14_afk",
+        "s14_lich",
+        "s14_genn",
+        "s14_marin",
+        "s14_chenvaala",
+        "s14_sylvanas",
+        "s14_millificent",
+        "s14_shudderwock"
+      ],
+      [
+        "s14_vanndar",
+        "s14_lich",
+        "s14_millificent",
+        "s14_afk",
+        "s14_marin",
+        "s14_brann",
+        "s14_teron",
+        "s14_yogg"
+      ],
+      [
+        "s14_patchwerk",
+        "s14_marin",
+        "s14_yogg",
+        "s14_lich",
+        "s14_chenvaala",
+        "s14_afk",
+        "s14_shudderwock",
+        "s14_sylvanas"
+      ],
+      [
+        "s14_brann",
+        "s14_buttons",
+        "s14_patchwerk",
+        "s14_genn",
+        "s14_clockwork",
+        "s14_teron",
+        "s14_millificent",
+        "s14_afk"
+      ],
+      [
+        "s14_yogg",
+        "s14_teron",
+        "s14_afk",
+        "s14_brann",
+        "s14_genn",
+        "s14_marin",
+        "s14_chenvaala",
+        "s14_patchwerk"
+      ],
+      [
+        "s14_sylvanas",
+        "s14_clockwork",
+        "s14_patchwerk",
+        "s14_teron",
+        "s14_chenvaala",
+        "s14_millificent",
+        "s14_lich",
+        "s14_marin"
+      ],
+      [
+        "s14_brann",
+        "s14_genn",
+        "s14_marin",
+        "s14_lich",
+        "s14_millificent",
+        "s14_yogg",
+        "s14_teron",
+        "s14_sylvanas"
+      ],
+      [
+        "s14_buttons",
+        "s14_shudderwock",
+        "s14_patchwerk",
+        "s14_yogg",
+        "s14_brann",
+        "s14_afk",
+        "s14_genn",
+        "s14_lich"
+      ]
+    ],
+    "source_hash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+    "rules_hash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+    "hero_pool_sha256": "5d543022eee3a4e7a3091dff3b9d4b1a03922992ccc644cc5142001029af374d"
+  },
+  "latest_resources": {
+    "utc": "2026-09-14T01:47:20Z",
+    "gpu": "64, 3134, 12288, 53, 140.20",
+    "memory.current": "28817338368",
+    "memory.max": "32212254720",
+    "memory.events": "low 0\nhigh 3465\nmax 0\noom 0\noom_kill 0"
+  }
+}

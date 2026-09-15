@@ -1,0 +1,140 @@
+{
+  "recorded_at_utc": "2026-09-11T09:30:31.275968+00:00",
+  "provider": "codex app-server stdio",
+  "cli_version": "0.153.4",
+  "model": "gpt-5.6-luna",
+  "effort": "max",
+  "source_url": "https://www.bilibili.com/video/BV17RYL64Ewv?p=2",
+  "automated_tests": {
+    "command": "PYTHONPATH=rl/python python3 -m unittest discover -s rl/tests -p test_video_extract.py -v",
+    "passed": 12
+  },
+  "catalog_export": {
+    "cards": 1806,
+    "heroes": 89
+  },
+  "jobs": [
+    {
+      "run_directory": "rl/runs/video-demonstrations-20260911/luna-p2-sample",
+      "status": "complete",
+      "report": {
+        "accepted": 0,
+        "rejected": 0,
+        "failures": 0,
+        "chunks": 3,
+        "attempted_new_chunks": 3,
+        "out": "/home/zich/hearthstone/rl/runs/video-demonstrations-20260911/luna-p2-sample",
+        "ppo_ready": false,
+        "model": "gpt-5.6-luna",
+        "effort": "max"
+      },
+      "completed_model_calls": 3
+    },
+    {
+      "run_directory": "rl/runs/video-demonstrations-20260911/luna-p2-recruit",
+      "status": "complete",
+      "report": {
+        "accepted": 1,
+        "rejected": 0,
+        "failures": 1,
+        "chunks": 4,
+        "attempted_new_chunks": 4,
+        "out": "/home/zich/hearthstone/rl/runs/video-demonstrations-20260911/luna-p2-recruit",
+        "ppo_ready": false,
+        "model": "gpt-5.6-luna",
+        "effort": "max"
+      },
+      "failures": [
+        {
+          "chunk": 2,
+          "attempt": 0,
+          "error": "Codex request timed out"
+        }
+      ],
+      "completed_model_calls": 3
+    },
+    {
+      "run_directory": "rl/runs/video-demonstrations-20260911/luna-v2-recruit",
+      "status": "complete",
+      "report": {
+        "accepted": 0,
+        "rejected": 0,
+        "failures": 2,
+        "chunks": 2,
+        "attempted_new_chunks": 2,
+        "out": "/home/zich/hearthstone/rl/runs/video-demonstrations-20260911/luna-v2-recruit",
+        "ppo_ready": false,
+        "model": "gpt-5.6-luna",
+        "effort": "max"
+      },
+      "failures": [
+        {
+          "chunk": 0,
+          "attempt": 0,
+          "error": "Codex request timed out"
+        },
+        {
+          "chunk": 1,
+          "attempt": 0,
+          "error": "Codex request timed out"
+        }
+      ],
+      "completed_model_calls": 0
+    },
+    {
+      "run_directory": "rl/runs/video-demonstrations-20260911/luna-v2-play",
+      "status": "complete",
+      "report": {
+        "accepted": 1,
+        "rejected": 0,
+        "failures": 0,
+        "chunks": 1,
+        "attempted_new_chunks": 1,
+        "out": "/home/zich/hearthstone/rl/runs/video-demonstrations-20260911/luna-v2-play",
+        "completed_chunks": 1,
+        "remaining_chunks": 0,
+        "ppo_ready": false,
+        "model": "gpt-5.6-luna",
+        "effort": "max",
+        "mapped_labels": 1
+      },
+      "completed_model_calls": 1
+    }
+  ],
+  "limitations": [
+    "Model annotations are not human-verified ground truth.",
+    "Version 1 confused upgrade cost with tier and included a tavern spell in minion shop. The version 2 short sample correctly reports tier 1 and a separate spellShop. General annotation accuracy is not measured.",
+    "Video patch compatibility is unknown; policy inputs are partial observations.",
+    "Existing entity-policy behavior-cloning adapter/trainer is not implemented.",
+    "No human-video training, checkpoint modification or public deployment performed."
+  ],
+  "short_sample_validation": {
+    "source_start_seconds": 100.5,
+    "source_end_seconds": 101.5,
+    "frames": 3,
+    "elapsed_seconds_after_provider_check": 328.4,
+    "accepted_events": 1,
+    "action": "play",
+    "card_name": "剃刀沼泽地卜师",
+    "observation_tier": 1,
+    "shop_minions": 2,
+    "shop_spells": 1,
+    "hero_identity_unknown": true,
+    "unique_events_across_version_1_and_2": 1,
+    "dataset": "rl/runs/video-demonstrations-20260911/luna-v2-play/bc-labels.jsonl",
+    "resume_report": {
+      "accepted": 1,
+      "rejected": 0,
+      "failures": 0,
+      "chunks": 1,
+      "attempted_new_chunks": 0,
+      "out": "/home/zich/hearthstone/rl/runs/video-demonstrations-20260911/luna-v2-play",
+      "completed_chunks": 1,
+      "remaining_chunks": 0,
+      "ppo_ready": false,
+      "model": "gpt-5.6-luna",
+      "effort": "max",
+      "mapped_labels": 1
+    }
+  }
+}

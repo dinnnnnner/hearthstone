@@ -1,0 +1,581 @@
+{
+  "captured_utc": "2026-09-14T01:34:00.724215+00:00",
+  "launch": {
+    "pid": 1592,
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "-m",
+      "tavern_rl.independent",
+      "--resumes",
+      "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-0/training/latest.pt",
+      "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-1/training/latest.pt",
+      "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-independent-20260914/rl/runs/independent-four-hour",
+      "--hours",
+      "4",
+      "--workers",
+      "3",
+      "--device",
+      "cuda",
+      "--prepared"
+    ],
+    "root": "/root/tavern-independent-20260914",
+    "output": "/root/tavern-independent-20260914/rl/runs/independent-four-hour"
+  },
+  "status": {
+    "stage": "running",
+    "pid": 1592,
+    "opponent_mode": "self_history_only",
+    "started_utc": "2026-09-14T01:29:33.374655+00:00",
+    "deadline_utc": "2026-09-14T05:29:33.374655+00:00",
+    "hours": 4.0,
+    "workers_per_learner": 3,
+    "members": [
+      {
+        "source": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-0/training/latest.pt",
+        "initial": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-0/initial.pt",
+        "episodes": 1112,
+        "iteration": 71,
+        "depth": 64,
+        "removed_generations": [
+          "external:24d520b5efa6835c",
+          "external:06b33488c0acd520",
+          "external:87de2dec5011c615",
+          "external:0fb71e0e2e76c85e"
+        ],
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 4,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 68,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 69,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 70,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 71,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 64,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "probabilities": [
+          0.07438698888908288,
+          0.07471072181925605,
+          0.07435787196458554,
+          0.07355608250479007,
+          0.145423123402714,
+          0.20775893156617287,
+          0.1502292799427897,
+          0.19957699991060887
+        ],
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 4,
+          "learning_rate": 3e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "self_history_only"
+        },
+        "source_hash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+        "rules_hash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "parameters": 3421950,
+        "pid": 1595,
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-0/initial.pt",
+          "--output",
+          "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-0/training",
+          "--iterations",
+          "1000000000",
+          "--workers",
+          "3",
+          "--threads",
+          "1",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda"
+        ],
+        "checkpoint": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-0/training/latest.pt"
+      },
+      {
+        "source": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-1/training/latest.pt",
+        "initial": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-1/initial.pt",
+        "episodes": 908,
+        "iteration": 59,
+        "depth": 256,
+        "removed_generations": [
+          "external:da56f3292c212812",
+          "external:95d7e23570166f63",
+          "external:97e9ec74c2111c95",
+          "external:06b33488c0acd520"
+        ],
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 5,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 56,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 57,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 58,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 59,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 256,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "probabilities": [
+          0.07062926597276986,
+          0.07356483424071453,
+          0.07129129697858373,
+          0.0702945655175901,
+          0.2007073171356185,
+          0.15280689395166533,
+          0.20295151293336855,
+          0.15775431326968936
+        ],
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 16,
+          "learning_rate": 3e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "self_history_only"
+        },
+        "source_hash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+        "rules_hash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "parameters": 9860862,
+        "pid": 1596,
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-1/initial.pt",
+          "--output",
+          "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-1/training",
+          "--iterations",
+          "1000000000",
+          "--workers",
+          "3",
+          "--threads",
+          "1",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda"
+        ],
+        "checkpoint": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-1/training/latest.pt"
+      },
+      {
+        "source": "/root/autodl-tmp/tavern-selfplay-reward-20260911/rl/runs/population-unused-gold-20260911-091514/member-2/training/latest.pt",
+        "initial": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-2/initial.pt",
+        "episodes": 436,
+        "iteration": 28,
+        "depth": 1024,
+        "removed_generations": [
+          "external:da56f3292c212812",
+          "external:600ef0dae7bf738f",
+          "external:c2e925ea4c5e31a8",
+          "external:a5311bff0271d237"
+        ],
+        "league_members": [
+          {
+            "generation": 0,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 1,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 2,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 5,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 25,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 26,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 27,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          },
+          {
+            "generation": 28,
+            "external": false,
+            "architecture": "entity-gru-resnet",
+            "depth": 1024,
+            "lineage": null,
+            "source_episodes": null,
+            "source_sha256": null
+          }
+        ],
+        "probabilities": [
+          0.09332527346616423,
+          0.09089415234666626,
+          0.09533035234025009,
+          0.09152655143308668,
+          0.11010368806822204,
+          0.18517613828385082,
+          0.20694573819660297,
+          0.1266981058651569
+        ],
+        "config": {
+          "gamma": 1.0,
+          "gae_lambda": 0.95,
+          "clip": 0.2,
+          "value_coef": 0.5,
+          "entropy_coef": 0.01,
+          "target_kl": 0.03,
+          "max_grad_norm": 0.5,
+          "epochs": 2,
+          "batch_size": 256,
+          "sequence_length": 16,
+          "burn_in": 8,
+          "sequence_batch_size": 16,
+          "learning_rate": 1e-05,
+          "seed": 42,
+          "learner_seats": 4,
+          "games_per_iteration": 16,
+          "league_size": 12,
+          "options": {
+            "maxActionsPerTurn": 64,
+            "maxSteps": 30000,
+            "recordFrames": false
+          },
+          "unused_gold_penalty": 0.01,
+          "opponent_mode": "self_history_only"
+        },
+        "source_hash": "9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad",
+        "rules_hash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "parameters": 35616510,
+        "pid": 1597,
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-2/initial.pt",
+          "--output",
+          "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-2/training",
+          "--iterations",
+          "1000000000",
+          "--workers",
+          "3",
+          "--threads",
+          "1",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda"
+        ],
+        "checkpoint": "/root/tavern-independent-20260914/rl/runs/independent-four-hour/member-2/training/latest.pt"
+      }
+    ]
+  },
+  "isolation_verification": [
+    {
+      "depth": 64,
+      "episodes": 1112,
+      "learner_fingerprint": "d7fc1e280f9770caa195cd208a434fb62d8a4b284ae2f04b9cdb0499d99f36a9",
+      "optimizer_and_rng_preserved": true,
+      "native_opponents": 8,
+      "external_opponents": 0
+    },
+    {
+      "depth": 256,
+      "episodes": 908,
+      "learner_fingerprint": "f57ef64e042d06ce1d2c4a0b82b88a00600703b8644701b5f55a33fa3402554a",
+      "optimizer_and_rng_preserved": true,
+      "native_opponents": 8,
+      "external_opponents": 0
+    },
+    {
+      "depth": 1024,
+      "episodes": 436,
+      "learner_fingerprint": "2e9388cbe73f0128193a03166ebceb3d0d7db6ed564472e203617bd772f495cc",
+      "optimizer_and_rng_preserved": true,
+      "native_opponents": 8,
+      "external_opponents": 0
+    }
+  ],
+  "progress": [
+    {
+      "depth": 64,
+      "pid": 1595,
+      "alive": true,
+      "last_event": {
+        "stage": "collect",
+        "completed_games": 5,
+        "total_games": 16,
+        "environment_actions": 9783,
+        "seconds": 240.2
+      }
+    },
+    {
+      "depth": 256,
+      "pid": 1596,
+      "alive": true,
+      "last_event": {
+        "stage": "collect",
+        "completed_games": 3,
+        "total_games": 16,
+        "environment_actions": 7143,
+        "seconds": 240.5
+      }
+    },
+    {
+      "depth": 1024,
+      "pid": 1597,
+      "alive": true,
+      "last_event": {
+        "stage": "collect",
+        "completed_games": 1,
+        "total_games": 16,
+        "environment_actions": 2559,
+        "seconds": 210.9
+      }
+    }
+  ],
+  "resource_samples": [
+    {
+      "utc": "2026-09-14T01:33:01Z",
+      "gpu": "96, 3122, 12288, 54, 144.57",
+      "memory.current": "22187360256",
+      "memory.max": "32212254720",
+      "memory.events": "low 0\nhigh 3465\nmax 0\noom 0\noom_kill 0"
+    },
+    {
+      "utc": "2026-09-14T01:33:16Z",
+      "gpu": "83, 3122, 12288, 54, 144.19",
+      "memory.current": "22239469568",
+      "memory.max": "32212254720",
+      "memory.events": "low 0\nhigh 3465\nmax 0\noom 0\noom_kill 0"
+    },
+    {
+      "utc": "2026-09-14T01:33:31Z",
+      "gpu": "80, 3122, 12288, 54, 144.14",
+      "memory.current": "22279884800",
+      "memory.max": "32212254720",
+      "memory.events": "low 0\nhigh 3465\nmax 0\noom 0\noom_kill 0"
+    },
+    {
+      "utc": "2026-09-14T01:33:47Z",
+      "gpu": "66, 3122, 12288, 53, 141.61",
+      "memory.current": "22270185472",
+      "memory.max": "32212254720",
+      "memory.events": "low 0\nhigh 3465\nmax 0\noom 0\noom_kill 0"
+    }
+  ],
+  "cleanup_report": "rl-checkpoint-cleanup-20260914.json",
+  "validation": {
+    "independent_unit_tests": 5,
+    "passed": true
+  }
+}

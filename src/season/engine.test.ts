@@ -28,6 +28,7 @@ import {
   seasonPowerState,
   advanceRecruit,
   minionCost,
+  createSeason,
 } from "./engine";
 const rng = () => 0.23;
 function seed(n: number) {
@@ -311,6 +312,61 @@ test("Spellcraft is generated on play and its stat buff expires next recruit tur
   s = next(s);
   assert.equal(s.board[0].attack, 2);
   assert.equal(s.hand.filter((m) => m.tempSpell).length, 1);
+});
+test("Spitescale Special gives three usable Spellcraft spells even in an old lobby without Naga", () => {
+  for (const naga of [false, true]) {
+    let s = createSeason("s14_lich", seed(22), {
+      tribes: ["野兽", "恶魔", "龙", "机械", naga ? "纳迦" : "亡灵"],
+    });
+    const target = add(s, "BG25_001", "board");
+    const spell = add(s, "BG28_606");
+    const poolBefore = { ...s.pool };
+    s = apply(s, { type: "cast", uid: spell.uid });
+    assert.equal(s.hand.length, 3, `Naga present: ${naga}`);
+    assert.equal(new Set(s.hand.map((m) => m.uid)).size, 3);
+    assert.deepEqual(s.pool, poolBefore);
+    for (const card of [...s.hand]) {
+      assert.equal(getDef(card.id).spellSchool, "SPELLCRAFT");
+      assert.equal(card.golden, false);
+      assert.equal(card.expires, true);
+      s = apply(s, { type: "cast", uid: card.uid, target: target.uid });
+    }
+    assert.equal(s.hand.length, 0);
+    assert.ok(s.board[0].attack > getDef(target.id).attack);
+  }
+});
+test("Spitescale Special respects the hand limit and does not require remaining Naga copies", () => {
+  let s = createSeason("s14_lich", seed(22), { tribes: ["纳迦", "龙", "机械", "野兽", "恶魔"] });
+  for (const d of SEASON_CARDS.filter((d) => d.abilities?.some((a) => a.event === "spellcraft"))) {
+    const copies = s.pool[d.id];
+    if (copies === undefined) continue;
+    for (let i = 0; i < copies; i++) s.opponents[0].board.push(makeMinion(d.id, false, true));
+    s.pool[d.id] = 0;
+  }
+  for (let i = 0; i < 8; i++) add(s, "BG28_810");
+  const spell = add(s, "BG28_606");
+  s = apply(s, { type: "cast", uid: spell.uid });
+  assert.equal(s.hand.length, 10);
+  assert.equal(s.hand.filter((m) => getDef(m.id).spellSchool === "SPELLCRAFT").length, 2);
+  assert.ok(s.logs.some((line) => line.includes("手牌已满")));
+});
+test("Spitescale Special appears in the tavern only when Naga are present", () => {
+  for (const naga of [false, true]) {
+    let s = createSeason("s14_lich", seed(22), {
+      tribes: ["野兽", "恶魔", "龙", "机械", naga ? "纳迦" : "亡灵"],
+    });
+    s.tier = 4;
+    const random = seed(563);
+    let seen = false;
+    for (let i = 0; i < 250; i++) {
+      s.gold = 10;
+      const result = act(s, { type: "refresh" }, random);
+      assert.equal(result.error, undefined);
+      s = result.state;
+      seen ||= s.season!.spellShop.some((m) => m.id === PREFIX + "BG28_606");
+    }
+    assert.equal(seen, naga);
+  }
 });
 test("Soul Rewinder rewinds hero damage and buffs health using current values", () => {
   let s = fixture();

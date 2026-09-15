@@ -14,22 +14,16 @@
 | 7 | −0.714286 |
 | 8 | −1 |
 
-原有回合结束剩余铸币惩罚继续使用每枚 −0.01，累计扣除。
-第一名奖励与该惩罚在训练轨迹中合并。游戏名次、公开比分、评估结果及观察契约不变。
+2026-09-15 已移除回合结束剩余金币惩罚及采样开销。当前只有终局排名回报和第一名加分。游戏名次、公开比分、评估结果及观察契约不变。
 第一名比第二名多约 1.286，而其他相邻名次仍相差约 0.286，更强调争冠；这不保证实际胜率提高。
 
-`placement_rewards.py` 负责回报计算和参数校验。
-`scripts/enable-first-place-bonus.py` 向指定的冻结训练运行目录加入 `--first-place-bonus`，保存原文件及前后 SHA-256。
-参数未指定时沿用检查点的 `config.first_place_bonus`，旧检查点默认 0。
-本次服务器恢复协调器显式为每个训练进程传入 1，并写入后续检查点和训练日志。
+`rl/python/tavern_rl/placement_rewards.py` 负责回报计算和参数校验。训练与群体训练入口均支持 `--first-place-bonus`。参数未指定时沿用检查点的 `config.first_place_bonus`，新任务和没有该字段的旧检查点默认为 0；现有服务器运维入口显式传入 1。
 
-该补丁用于服务器已有的铸币惩罚运行版本，要求原文本匹配后才修改，避免覆盖其他代码。
-对应文件位于训练服务器 `/root/autodl-tmp/tavern-mixed-popular-20260914/rl/python/tavern_rl`，
-协调器是 `/root/tavern-human-current-06cd2177/population_resume.py`。
-原文件保存在 `/root/tavern-repeat-live-20260914/bonus-backup`。
-
-测试覆盖奖励排序、旧检查点默认值、恢复与显式覆盖、铸币惩罚叠加、游戏原始奖励与评估结果保持不变。
+奖励只加在学习席位最后一次决策的终局回报上。采样返回的原始游戏奖励、最终名次和评估结果保持不变。测试覆盖排序、旧值恢复、显式覆盖及真实采样路径，包含留钱仍只获得终局回报的情况。
 
 ```bash
-PYTHONPATH=rl/python .venv/bin/python -m unittest discover -s rl/tests -p test_first_place_bonus.py
+bash rl/run.sh test -p test_first_place_bonus.py
+bash rl/run.sh test -p test_rewards.py
 ```
+
+历史工具 `scripts/enable-first-place-bonus.py` 曾用于补丁修改服务器的旧冻结运行目录，要求原文本匹配。当前仓库已直接集成，无需再执行旧补丁工具。金币奖励迁移见 [移除说明](rl-unused-gold-penalty.md)。

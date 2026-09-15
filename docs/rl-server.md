@@ -1,5 +1,8 @@
 # 租用服务器训练
 
+本页保留早期实现或实验记录。当前网络、训练配置和已上线版本分别见 [网络结构](rl-network.md)、[训练流程](rl-training.md) 和 [在线推理](neural-serving.md)。旧命令需结合对应冻结版本使用。
+
+
 本文保留 v2 MLP 的历史验证和续训命令。新默认网络为 v3，部署目录单独使用 `/root/autodl-tmp/tavern-selfplay-v3`，见 [v3 说明](rl-v3.md)。
 
 训练目录为 `/root/autodl-tmp/tavern-selfplay`，Node 安装在 `/root/autodl-tmp/runtime/node`。模型、日志和代码均放在数据盘。服务器连接信息由租用平台提供，本文不保存登录密码。

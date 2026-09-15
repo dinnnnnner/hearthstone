@@ -1,4 +1,5 @@
 import snapshot from "./snapshot.json" with { type: "json" };
+import aiHeroPool from "./ai-hero-pool.json" with { type: "json" };
 import type { CardDef, Hero, Tribe, Keyword, Ability } from "../data";
 import { expandedMinions, expandedSpells } from "./expanded-catalog";
 import { expandedHeroKeys, expandedPassiveHeroes } from "./expanded-heroes";
@@ -434,6 +435,11 @@ export const SEASON_HEROES: Hero[] = snapshot.heroes
       "chenvaala",
     ].includes(heroKeys[h.id]),
   }));
+export const AI_HERO_POOL = aiHeroPool;
+const aiHeroIds = new Set(aiHeroPool.heroes.map(h => h.id));
+export const AI_SEASON_HEROES = SEASON_HEROES.filter(h => aiHeroIds.has(h.id));
+if (aiHeroIds.size !== aiHeroPool.heroes.length || AI_SEASON_HEROES.length !== aiHeroIds.size || aiHeroIds.size < 8)
+  throw new Error("AI hero pool must contain at least eight distinct implemented heroes");
 export const HERO_TRIBES: Record<string, Tribe> = {
   s14_millificent: "机械",
   s14_hoggarr: "海盗",

@@ -7,7 +7,7 @@
 | 用途 | SSH 地址 | 做什么 |
 |---|---|---|
 | 训练服务器 | `ssh -p 51735 root@connect.westb.seetacloud.com` | RTX PRO 6000 Blackwell，自我对战、保存完整训练检查点 |
-| 计算服务器 | `ssh zich@100.97.24.15` | 运行网页对局所用的三个模型 |
+| 计算服务器 | `ssh zich@100.97.24.15` | 运行三个普通模型及三个独立搜索版本 |
 | 公网服务器 | `ssh root@100.121.69.44` | 提供客户端和对局服务，通过隧道请求计算服务器 |
 
 客户端地址：<https://8.153.150.101/tavern/>。
@@ -45,6 +45,8 @@ python3 scripts/tavern-ops.py status
 ```bash
 python3 scripts/tavern-ops.py publish
 ```
+
+命令更新三个普通模型，保留已注册的独立搜索版本。搜索权重需要另行验证和部署，见 [回合搜索](rl-recruit-search.md)。
 
 命令会导出三个最终检查点，校验哈希和观察契约，把权重传给计算服务器，运行推理检查，然后切换公网版本并验证网页对局。
 
@@ -84,7 +86,17 @@ python3 scripts/tavern-ops.py train --hours 4 --model 256 \
   --sequence-batch-size 32 --fused-adam
 ```
 
-这里总计 256 个模拟器，每个采样进程 16 个。所有进程使用同一份冻结检查点，全部对局结束后才更新参数。`--training-graphs` 可为 PPO 的残差网络启用前向和反向 CUDA Graph，`--no-training-graphs` 关闭；只影响计算执行，不改变网络层数或浮点精度。MPS 使用独立的 `/tmp/tavern-training-mps` 管道，训练结束后守护进程可能继续空闲驻留。
+上面是集中训练一个模型的配置。2026-09-15 四小时任务实际同时训练三种深度，启动参数为：
+
+```bash
+python3 scripts/tavern-ops.py train --hours 4 --model all \
+  --workers 64 --games 64 --sampling-processes 8 --mps \
+  --sequence-batch-size 32 --fused-adam --training-graphs
+```
+
+每个模型 64 个模拟器、8 个采样进程，合计 192 个模拟器、24 个采样进程。每两轮共 128 局后交换对手。混合对手比例、奖励和训练与模仿的关系见 [训练流程](rl-training.md)。
+
+前面的单模型配置总计 256 个模拟器，每个采样进程 16 个。所有进程使用同一份冻结检查点，全部对局结束后才更新参数。`--training-graphs` 可为 PPO 的残差网络启用前向和反向 CUDA Graph，`--no-training-graphs` 关闭；只影响计算执行，不改变网络层数或浮点精度。MPS 使用独立的 `/tmp/tavern-training-mps` 管道，训练结束后守护进程可能继续空闲驻留。
 
 这些参数按当前机器的 25 核、120 GiB 内存和约 96 GB 显存测试，不应直接套用旧 3080 Ti。CPU、GPU 在采样和更新阶段的占用会变化；内存和显存占满本身不会增加吞吐。监测和原始测试说明见 [Blackwell 调优记录](rl-blackwell-20260915.md)。
 

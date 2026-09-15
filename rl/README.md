@@ -1,107 +1,118 @@
-# 酒馆战棋离线自博弈 PPO
+# 训练包使用说明
 
-这是可运行的离线训练器。八个席位由当前神经网络或冻结的历史网络控制，采样、战斗和训练都在本机完成。不依赖游戏网站、上传数据或现有脚本人机。安装依赖后，运行时不需要联网。
+训练器用 PyTorch 学习策略，Node.js 运行与游戏共享的八人规则引擎。双方通过本地标准输入输出通信。自我对战不依赖网站、真人数据或脚本人机，安装完成后可以离线运行。
 
-训练包不包含卡面和网页。Node 运行与游戏共享的规则引擎，Python 通过本地标准输入输出驱动多个模拟器。训练时关闭战斗逐帧记录和界面日志。
+先读 [网络结构](../docs/rl-network.md) 和 [训练流程](../docs/rl-training.md)。管理现有三台服务器使用仓库中的 [日常运维入口](../docs/tavern-operations.md)，本页说明从源码或独立包运行训练。
 
-当前默认是 v3：73 个卡牌和状态实体、Transformer + GRU、4316 个分层动作，以及按玩家连续序列更新的 PPO。完整说明和固定评估命令见 [v3 说明](../docs/rl-v3.md)。本次规则与公开战况更新使用观察版本 4、实体版本 3，`--architecture mlp` 使用 3209 维观察。旧规则的 v1、v2、v3 检查点不可直接续训或用作新版冻结对手；原模型需配合原软件包使用。历史 GPU 验证不代表本次更新的测试结果。
+## 环境和构建
 
-租用服务器的预装环境与启动命令见 [服务器说明](../docs/rl-server.md)。
+项目使用 Node.js 20 或更新版本，已验证的 Python 环境为 3.12 / 3.13。源码仓库先构建模拟器：
 
-新增 `--architecture entity-gru-resnet`，在策略和价值分支各使用 64 层残差 MLP。具体层数定义、当前规则与 GPU 启动命令见 [64 层实验](../docs/rl-deep64.md)。原架构和检查点加载方式仍受支持。
+```bash
+npm ci
+npm run build:rl
+npm run build:search
+```
 
-## 安装与首次运行
+独立包已有 `rl-dist/bridge.cjs`，不需要 npm 依赖。Python 模块由 `rl/run.sh` 设置路径。
 
-需要 Linux、Node.js 20 或更新版本、Python 3.12 或更新版本。本地验证使用 Python 3.13 和 CPU。以下命令在解压后的 `tavern-selfplay-v3` 目录执行。
+本机 CPU 环境按仓库锁定依赖安装：
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
 .venv/bin/python -m pip install -r rl/requirements.txt
-bash rl/run.sh test
-
-# 小规模验证，不用于衡量棋力
-bash rl/run.sh train --output rl/runs/smoke --iterations 2 \
-  --games-per-iteration 2 --workers 2 --hidden 64 --max-actions 8 --epochs 2
 ```
 
-`python3 -m venv` 不可用时，先安装系统对应的 Python venv 包。GPU 机器先按 [PyTorch 安装说明](https://pytorch.org/get-started/locally/) 安装与驱动兼容的 PyTorch 2.14.0 CUDA wheel，再安装 requirements，不要先执行上面的 CPU wheel 命令。确认 CUDA 可用后，给训练命令添加 `--device cuda`。
+`rl/requirements.txt` 固定 NumPy 2.5.3 和 PyTorch 2.14.0。GPU 环境需要与驱动匹配的 CUDA 构建。当前 Blackwell 冻结运行环境使用 Python 3.12.3 和 PyTorch 2.12.1+cu130，不能用上面的 CPU 安装命令或锁定文件覆盖它。该环境通过 `TAVERN_RL_PYTHON` 指向已有解释器，例如：
 
 ```bash
-.venv/bin/python -c 'import torch; print(torch.__version__, torch.cuda.is_available())'
+export TAVERN_RL_PYTHON=/root/miniconda3/bin/python
+"$TAVERN_RL_PYTHON" -c 'import torch; print(torch.__version__, torch.cuda.is_available())'
 ```
 
-源码仓库需要先运行 `npm ci && npm run build:rl`。独立包已有 `rl-dist/bridge.cjs`，无需安装 npm 依赖。
+这个绝对路径仅适用于现有训练服务器。换机器时设置实际解释器路径，并先完成短任务验证。版本与硬件实测见 [Blackwell 记录](../docs/rl-blackwell-20260915.md)。
 
-## 开始、续训与评估
+## 从头训练
 
-下面是起始配置。机器确定后先测吞吐，再调整 workers 和每轮对局数。每轮采集完整对局后更新网络。`--iterations` 表示本次额外训练多少轮。
+以下为有限轮流程检查，不用于评估棋力：
 
 ```bash
-bash rl/run.sh train --output rl/runs/main --iterations 100 \
+bash rl/run.sh train --output rl/runs/smoke --iterations 1 \
+  --architecture entity-gru-resnet --policy-depth 64 --value-depth 64 \
+  --hidden 128 --heads 4 --layers 2 --games-per-iteration 2 --workers 2 \
+  --max-actions 8 --epochs 1 --first-place-bonus 1 --device cpu
+```
+
+较长实验可从下面配置开始，再根据本机吞吐调整：
+
+```bash
+bash rl/run.sh train --output rl/runs/deep64 --iterations 100 \
+  --architecture entity-gru-resnet --policy-depth 64 --value-depth 64 \
+  --hidden 128 --heads 4 --layers 2 --learning-rate 0.00003 \
   --games-per-iteration 8 --workers 4 --learner-seats 4 \
-  --max-actions 64 --device cpu
-
-bash rl/run.sh train --output rl/runs/main \
-  --resume rl/runs/main/latest.pt --iterations 100 --workers 4 --device cpu
-
-bash rl/run.sh evaluate rl/runs/main/latest.pt \
-  --games 64 --workers 4 --seed 1000000 --output rl/runs/main/evaluation.json
+  --max-actions 64 --epochs 2 --first-place-bonus 1 --device cpu
 ```
 
-续训采用检查点中的网络结构、奖励、动作预算和优化参数。workers、device 和本次 iterations 可以重新指定。同一输出目录只能有一个训练进程；已有检查点时必须使用 `--resume`，或换一个输出目录。
+在已验证的 CUDA 环境中将 `--device cpu` 改为 `--device cuda`。256 / 1024 层实验需同时修改 `--policy-depth` 与 `--value-depth`，也可查看 `rl/deep256.sh`、`rl/deep1024.sh` 的参数。新目录省略 `--architecture` 时使用较浅的 `entity-gru`。
 
-无外部固定对手时，第一轮八人均使用随机初始化的当前网络。以后默认四席使用当前网络，四席选择历史网络，席位轮换。历史池默认 12 个，保留初始网络、外部固定对手及分散的早期和近期快照，并混合均匀与困难对手采样。PPO 只更新当前策略采集的轨迹，不混入历史策略的数据。
+需要与目前训练一致的英雄子集时，添加 `--hero-pool src/season/ai-hero-pool.json`，八席位从名单中不重复抽取。省略参数的新任务使用模拟器默认英雄池；续训继承已保存名单。
 
-评估时只有一个候选模型席位，其他七席使用冻结模型。报告候选席位的平均名次、前四率、第一率和名次标准误。可用 `--opponent-checkpoints file1.pt file2.pt` 指定固定对手。默认评估种子从 1000000 开始；不要与训练种子范围重合。比较候选模型时应固定对手、种子和对局预算。八席共用同一模型的平均名次恒为 4.5，不能用来判断进步。
-
-中断后从上一个完整更新轮恢复。检查点包含网络、优化器、历史池、完成局数及 Python、NumPy、PyTorch 随机状态，不保存正在采集的一轮轨迹。已在相同 CPU 环境和并发配置下验证续训一致性；跨设备或改变并发数不保证逐位一致。长期实验应定期备份检查点。PyTorch 完整检查点只能加载自己生成或可信来源的文件。
-
-## PPO 实现
-
-- 观察包含己方手牌、酒馆、战队、经济、种族、技能、发现选项、公共对手信息和上一场敌方阵容。八席均提供最近两回合的公开阵容类型、交战座位、胜负和伤害；座位编号固定，幽灵单独编号。输入包含排名生命值和法术护甲，不提供实时对手手牌、招募阵容或剩余共享牌池。
-- 默认两层 128 维 Transformer 编码卡牌关系，各玩家独立 GRU 记忆，分层策略和价值输出。实体模式、编号表与规则哈希写入检查点。
-- 4316 个固定动作编码覆盖买卖、刷新、冻结、升级、出牌位置、目标、发现、英雄技能、第二技能和饰品。引擎验证动作，非法动作概率为零。编码容量不足直接报错。
-- 每席位分别保存观察、掩码、动作、采样时 log probability、value、记忆和前一动作，按自己的决策序列计算 GAE；以有预热的连续片段进行 PPO 更新。
-- 终局奖励为 `(4.5 - 名次) / 3.5`，第一名为 1，第八名为 -1。无购买或属性增长奖励。gamma 为 1，GAE lambda 为 0.95。
-- PPO clip 为 0.2，价值损失系数 0.5，熵系数 0.01，梯度范数上限 0.5。重算采样动作的概率，更新策略和价值网络；KL 过大时提前停止优化。
-- 默认每席位每回合最多 64 次普通决策，之后完成必要选择并结束回合。整局达到 30000 步仍未结束时标记 truncated，保存诊断并停止本轮训练，不编造名次。
-
-算法参考 [PPO 原论文](https://arxiv.org/abs/1707.06347)。优化代码在 `rl/python/tavern_rl/model.py`，八席位采样在 `rollout.py`。
-
-## 输出与回放
-
-| 文件 | 用途 |
-| --- | --- |
-| `latest.pt` | 最新完整更新轮检查点 |
-| `manifest.json` | 规则、网络、配置、依赖版本和历史池代数 |
-| `metrics.jsonl` | 采样速度、样本数、损失、熵和 KL |
-| `debug/` | 异常状态或截断对局动作记录 |
-| `replays/` | 开启 `--replays` 后的种子和动作记录 |
-
-回放要求规则哈希一致。默认只保存动作，需要战斗帧时离线重算。
+## 续训与评估
 
 ```bash
-bash rl/run.sh train --output rl/runs/replay-demo --iterations 1 \
-  --games-per-iteration 2 --workers 2 --max-actions 8 --replays
-bash rl/run.sh replay rl/runs/replay-demo/replays/game-42.json \
-  --frames --output rl/runs/replay-demo/combat-42.json
-bash rl/run.sh benchmark --games 4 --max-actions 16
+bash rl/run.sh train --output rl/runs/deep64 \
+  --resume rl/runs/deep64/latest.pt --iterations 100 --workers 4 --device cpu
+
+bash rl/run.sh evaluate rl/runs/deep64/latest.pt \
+  --games 64 --workers 4 --seed 1000000 --output rl/runs/deep64/evaluation.json
 ```
 
-benchmark 用均匀随机合法动作测模拟器速度，不参与 PPO 训练。JSON 战斗回放目前用于调试，尚未接入网页回放界面。
+`--iterations` 表示本次额外更新轮数。续训恢复网络、优化器、历史对手、奖励设置和随机状态，移除旧 `unused_gold_penalty` 配置。第一名额外奖励默认继承；旧检查点没有该字段时为 0，可显式传 `--first-place-bonus 1`。不要传已移除的 `--unused-gold-penalty`。
 
-## 当前边界
+修改已保存的每轮局数、学习率或序列批量时，分别使用 `--resume-games-per-iteration`、`--resume-learning-rate`、`--resume-sequence-batch-size`。普通新建参数不会自动覆盖这些保存值。同一输出目录只允许一个训练进程。
 
-训练范围为项目的 36.4.2 规则实现，有 234 张常规随从、67 张酒馆法术、89 位英雄。尚缺 27 位英雄；黑暗之赐实现 21/43；饰品有 23 种，官方池未完整核验。条目齐全不表示事件顺序与官方完全一致，见 `docs/rules-coverage.json`。
+评估应指定固定 `--opponent-checkpoints`、种子和对局预算，报告候选模型的平均名次、前四率和第一率。没有固定评估基准的训练局数和损失不能证明棋力提高。完整说明见 [训练流程](../docs/rl-training.md#如何判断训练有效)。
 
-当前自动分配八个不同英雄，暂不学习四选一或刷新英雄。卡牌附加效果和计数字段已展开编码，默认网络已有 Transformer 和 GRU，但英雄、饰品的专用逻辑仍主要依赖身份嵌入学习。尚未实现 MCTS、独立训练的弱点针对模型或分布式多机采样。
+## 并行采样和混合对手
 
-小规模测试只能证明流程可运行，不能证明棋力。长期训练前应继续补规则、测量当前网络吞吐，并用固定评估套件检验进步。早先的 780 局模型已接入网站人机，见 [在线推理说明](../docs/neural-serving.md)。64、256、1024 层本轮最终检查点需等四小时任务结束并验证后再接入；模型选择、公网资源评估和本机转发安排见 [接入计划](../docs/rl-serving-plan.md)。
+单进程内批量推理配合多个 Node 模拟器。`--sampling-processes` 将采样分到多个 Python 进程，每轮使用同一冻结策略，完成整批对局后执行 PPO。CUDA 环境可试用 `--fused-adam` 和 `--training-graphs`；后者只对支持的残差网络启用图执行。
 
-现有 2 核 2 GiB 服务器继续承载网页。采样主要消耗 CPU 和内存，小 MLP 不一定能充分使用大 GPU。先在租用机器上用小任务测采样与更新耗时，再扩大并发。带宽主要影响首次安装和搬运检查点。
+NVIDIA MPS 的启停由现有服务器的运维入口管理，直接运行 `rl/run.sh` 不会替你配置 MPS。并发数需按实际 CPU 配额、内存和显存测试，见 [性能记录](../docs/rl-blackwell-20260915.md)。
 
-256 层残差模型可用 `bash rl/deep256.sh` 新建实验，默认只运行一轮。3080 Ti 上的并行采样实测、推理优化、完整对局验证和固定规则说明见 [256 层训练文档](../docs/rl-deep256.md)。用 `bash rl/run.sh profile` 比较实际模型的 CPU/GPU 延迟；用 `--rollout-only --rollout-workers 4 12 24` 测短采样，截断局不进入训练。
+混合已有检查点使用 `mix_league`；持续交换对手使用 `population`。各模型只更新自己的轨迹，保持独立参数和优化器。`independent` 用于移除外部对手后的独立实验，当前线上训练采用混合模式。具体命令见 [对手池](../docs/rl-opponent-diversity.md)、[群体训练](../docs/rl-population.md) 和 [独立训练](../docs/rl-independent.md)。
 
-1024 层试验使用 `bash rl/deep1024.sh`，同样默认一轮，详见 [1024 层试验记录](../docs/rl-deep1024.md)。深度增加的收益要结合采样吞吐和独立棋力评估判断。
+## 文件和兼容性
+
+| 产物 | 内容 |
+| --- | --- |
+| `latest.pt` | 完整检查点，含模型、优化器、配置、历史对手、随机状态 |
+| `manifest.json` | 网络规格、参数量、规则和源码哈希、版本、局数、配置 |
+| `metrics.jsonl` | 采样和更新耗时、样本数、损失、熵、KL、对手抽样统计 |
+| `replays/` | 使用 `--replays` 时保存种子和动作记录 |
+| `debug/` | 异常或截断对局诊断 |
+| 导出的 `model.pt` | 网站推理权重，不是完整 PPO 续训检查点 |
+
+每轮完整更新后原子保存检查点。中断恢复会舍弃尚未保存的采样；更换设备或并发配置不保证逐位复现。完整 PyTorch 检查点仅加载可信来源。
+
+检查点要求模拟器规则、观察和动作协议兼容。当前源码重新构建的 bundle 与服务器历史冻结 bundle 可能拥有不同哈希，不能直接混用。需要复现旧训练时，保留其原始软件包，或通过 `TAVERN_RL_BUNDLE` 指向对应 `bridge.cjs`。包名中的 `v3` 不是兼容性凭据。
+
+`benchmark` 测随机合法动作的模拟器速度；`profile` 测网络及短采样。它们的截断对局不进入 PPO。动作回放见 `bash rl/run.sh replay --help`，目前用于离线调试。
+
+## 检查和打包
+
+源码仓库执行：
+
+```bash
+npm run test:rl
+npm run test:search
+bash rl/run.sh test
+npm run package:rl
+```
+
+产物为 `rl-dist/tavern-selfplay-v3.tar.gz`，包含模拟器、Python 模块、说明文档和文件校验清单，不包含模型权重、真人原始对局和卡面素材。解压后先核对 `checksums.json`，在包根目录执行命令。
+
+部分 Python 集成测试还依赖仓库中的 TypeScript、开发脚本或浏览器环境；它们需要在源码仓库运行。独立包可用本页的有限轮训练命令检查运行环境。
+
+真人数据需要主动录制，模仿学习通过单独阶段接入完整检查点，见 [真人示范](../docs/rl-human-demonstrations.md)。视频提取是可选联网工具，当前产物仍需行为克隆输入适配，见 [视频说明](../docs/rl-video-extraction.md)。
