@@ -1,0 +1,2220 @@
+{
+  "date": "2026-09-15",
+  "sourceCommit": "870ae4f",
+  "aiActionLimits": {
+    "version": 2,
+    "freezes": 1,
+    "moves": 6,
+    "freezePolicy": "unaffordable-at-end"
+  },
+  "sourceHash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+  "rulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+  "searchVersion": "own-recruit-freeze-close-v3",
+  "training": {
+    "pid": 61032,
+    "startedUtc": "2026-09-15T07:07:37.628590+00:00",
+    "deadlineUtc": "2026-09-15T07:50:39.221287+00:00",
+    "hours": 0.7171090825,
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-human-current-06cd2177/population_resume.py",
+      "--resumes",
+      "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-four-hour-20260914/population",
+      "--deadline-utc",
+      "2026-09-15T07:50:39.221287+00:00",
+      "--workers",
+      "64",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "64",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--device",
+      "cuda",
+      "--sequence-batch-size",
+      "32",
+      "--fused-adam",
+      "--sampling-processes",
+      "8",
+      "--training-graphs"
+    ],
+    "mps": true,
+    "recoveryOf": "/root/tavern-ops/20260915-action-limits",
+    "switch": {
+      "oldPopulation": "/root/autodl-tmp/tavern-action-limits-20260915/population",
+      "population": "/root/autodl-tmp/tavern-freeze-close-20260915/population",
+      "oldRuntime": "/root/autodl-tmp/tavern-action-limits-20260915",
+      "runtime": "/root/autodl-tmp/tavern-freeze-close-20260915",
+      "deadlineUtc": "2026-09-15T07:50:39.221287+00:00"
+    },
+    "watchPid": 61062
+  },
+  "trainingCheck": {
+    "utc": "2026-09-15T07:15:23.068598+00:00",
+    "state": {
+      "stage": "running",
+      "pid": 61032,
+      "opponent_mode": "mixed_self_play",
+      "deadline_utc": "2026-09-15T07:50:39.221287+00:00",
+      "workers_per_learner": 64,
+      "iterations_per_exchange": 2,
+      "games_per_iteration": 64,
+      "external_fraction": 0.4,
+      "max_per_lineage": 2,
+      "members": [
+        {
+          "index": 0,
+          "root": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-0",
+          "source": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-0/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 61074,
+          "checkpoint": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-0/training/latest.pt"
+        },
+        {
+          "index": 1,
+          "root": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-1",
+          "source": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-1/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 61077,
+          "checkpoint": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-1/training/latest.pt"
+        },
+        {
+          "index": 2,
+          "root": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-2",
+          "source": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-2/training/latest.pt",
+          "round": 1,
+          "stage": "training",
+          "pid": 61105,
+          "checkpoint": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-2/training/latest.pt"
+        }
+      ],
+      "active_members": [
+        0,
+        1,
+        2
+      ]
+    },
+    "members": [
+      {
+        "depth": 64,
+        "episodes": 3656,
+        "iteration": 185,
+        "meta": {
+          "sourceHash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+          "rulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+          "aiActionLimits": {
+            "version": 2,
+            "freezes": 1,
+            "moves": 6,
+            "freezePolicy": "unaffordable-at-end"
+          }
+        },
+        "stage": "training",
+        "pid": 61074,
+        "processExists": true,
+        "latestMetrics": {
+          "iteration": 185,
+          "iteration_seconds": 363.58965432830155,
+          "end_to_end_actions_per_second": 185.63234458551622,
+          "cuda_peak_allocated_mib": 3045.935546875,
+          "episodes": 3656,
+          "seconds": 302.00571364350617,
+          "environment_actions": 67494,
+          "actions_per_second": 223.48583801851947,
+          "inference_batches": 36092,
+          "mean_inference_batch": 1.870054305663305,
+          "sampling_processes": 8,
+          "sampling_workers": 64,
+          "parallel_inference_seconds_sum": 1079.2047780472785,
+          "parallel_simulator_wait_seconds_sum": 945.1531387381256,
+          "sampling_graphs": true,
+          "sampling_graph_capture_seconds": 4.814030414447188,
+          "first_place_bonus": 1.0,
+          "action_counts": {
+            "buy": 6239,
+            "buySpell": 2572,
+            "refresh": 5265,
+            "end": 7066,
+            "freeze": 3593,
+            "play": 5464,
+            "power": 1368,
+            "cast": 4968,
+            "discover": 2943,
+            "upgrade": 1767,
+            "move": 18862,
+            "activate": 3281,
+            "sell": 1315,
+            "darkGift": 1484,
+            "choosePower": 68,
+            "buyTrinket": 1042,
+            "reward": 197
+          },
+          "learner_action_counts": {
+            "buy": 3389,
+            "freeze": 1931,
+            "refresh": 1930,
+            "play": 2951,
+            "end": 3660,
+            "power": 608,
+            "cast": 2747,
+            "buySpell": 1359,
+            "move": 10708,
+            "activate": 1887,
+            "discover": 1525,
+            "darkGift": 767,
+            "upgrade": 921,
+            "choosePower": 38,
+            "buyTrinket": 543,
+            "reward": 121,
+            "sell": 743
+          },
+          "policy_loss": -0.00611491962676204,
+          "value_loss": 0.04209078506667267,
+          "entropy": 2.460850828402751,
+          "approx_kl": 0.004944620189586299,
+          "gradient_norm": 1.5399019718170166,
+          "samples": 35828,
+          "optimizer_steps": 148,
+          "kl_early_stop": false,
+          "sequence_chunks": 2358,
+          "training_graphs": true,
+          "training_graph_count": 2,
+          "training_graph_replays": 292,
+          "training_graph_capture_seconds": 0.14353383891284466,
+          "optimization_seconds": 61.56677913479507,
+          "completed_games": 64,
+          "league_generations": [
+            0,
+            "external:bd3ff540c8824407",
+            "external:fd27461875fdcf63",
+            "external:b0b85df2fdbdde3e",
+            "external:0fb46388d76cbaad",
+            1,
+            2,
+            69,
+            182,
+            183,
+            184,
+            185
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 64,
+              "probability": 0.03857550668902533,
+              "seats": 8
+            },
+            {
+              "generation": "external:bd3ff540c8824407",
+              "external": true,
+              "depth": 256,
+              "probability": 0.10426571386903896,
+              "seats": 21
+            },
+            {
+              "generation": "external:fd27461875fdcf63",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.06690095846645368,
+              "seats": 15
+            },
+            {
+              "generation": "external:b0b85df2fdbdde3e",
+              "external": true,
+              "depth": 256,
+              "probability": 0.09573428613096106,
+              "seats": 24
+            },
+            {
+              "generation": "external:0fb46388d76cbaad",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.13309904153354632,
+              "seats": 38
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 64,
+              "probability": 0.038554253094704394,
+              "seats": 11
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 64,
+              "probability": 0.038396658505315116,
+              "seats": 14
+            },
+            {
+              "generation": 69,
+              "external": false,
+              "depth": 64,
+              "probability": 0.07645541171015977,
+              "seats": 21
+            },
+            {
+              "generation": 181,
+              "external": false,
+              "depth": 64,
+              "probability": 0.10333117201217686,
+              "seats": 28
+            },
+            {
+              "generation": 182,
+              "external": false,
+              "depth": 64,
+              "probability": 0.09778956011654595,
+              "seats": 26
+            },
+            {
+              "generation": 183,
+              "external": false,
+              "depth": 64,
+              "probability": 0.11676894658593642,
+              "seats": 25
+            },
+            {
+              "generation": 184,
+              "external": false,
+              "depth": 64,
+              "probability": 0.09012849128613612,
+              "seats": 25
+            }
+          ],
+          "hero_counts": {
+            "s14_clockwork": 35,
+            "s14_brann": 32,
+            "s14_chenvaala": 33,
+            "s14_genn": 32,
+            "s14_vanndar": 40,
+            "s14_shudderwock": 35,
+            "s14_marin": 34,
+            "s14_millificent": 38,
+            "s14_lich": 40,
+            "s14_teron": 40,
+            "s14_afk": 23,
+            "s14_yogg": 35,
+            "s14_patchwerk": 29,
+            "s14_sylvanas": 37,
+            "s14_buttons": 29
+          }
+        },
+        "logTail": [
+          "{\"stage\": \"collect\", \"sampling_processes\": 8, \"completed_games\": 0, \"total_games\": 64, \"environment_actions\": 0, \"seconds\": 30.1, \"actions_per_second\": 0.0}",
+          "{\"stage\": \"collect\", \"sampling_processes\": 8, \"completed_games\": 0, \"total_games\": 64, \"environment_actions\": 24592, \"seconds\": 60.1, \"actions_per_second\": 409.4529220316463}"
+        ],
+        "migration": {
+          "source": "/root/autodl-tmp/tavern-action-limits-20260915/population/member-0/training/latest.pt",
+          "output": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-0/training/latest.pt",
+          "sourceSha256": "f0c6bd5c44b007a3cee0d7a4f2085d211791a1e83e08cbe1669a833418c562d0",
+          "outputSha256": "1b2b575105c74fc1eae373342961f81a54b6f1eacd851e870c377fb295739f59",
+          "retainedStateSha256": "9737a99099b8bb5bb0478ce08b4a76080c88ec06a7384d7b9c77bcf8aa5eb19f",
+          "episodes": 3592,
+          "iteration": 184,
+          "depth": 64,
+          "migration": {
+            "kind": "ai-freeze-close-v2",
+            "utc": "2026-09-15T07:04:18.616467+00:00",
+            "sourceSha256": "f0c6bd5c44b007a3cee0d7a4f2085d211791a1e83e08cbe1669a833418c562d0",
+            "oldSourceHash": "c7fce93ab131753b8ecf18706a3d6b2b755e3d96f2b7ba6b1d20a164a1aa7bf9",
+            "oldRulesHash": "0adb3881ea81239a3af909b2af96b77a519251e439f590cc6785303819452c2f",
+            "sourceHash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+            "rulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+            "episodes": 3592,
+            "iteration": 184,
+            "retained": "model, optimizer, frozen league, counters and RNG; fresh rollouts required"
+          }
+        }
+      },
+      {
+        "depth": 256,
+        "episodes": 3164,
+        "iteration": 158,
+        "meta": {
+          "sourceHash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+          "rulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+          "aiActionLimits": {
+            "version": 2,
+            "freezes": 1,
+            "moves": 6,
+            "freezePolicy": "unaffordable-at-end"
+          }
+        },
+        "stage": "training",
+        "pid": 61077,
+        "processExists": true,
+        "latestMetrics": {
+          "iteration": 158,
+          "iteration_seconds": 375.314379600808,
+          "end_to_end_actions_per_second": 186.14261482415526,
+          "cuda_peak_allocated_mib": 3142.0205078125,
+          "episodes": 3164,
+          "seconds": 303.7684206701815,
+          "environment_actions": 69862,
+          "actions_per_second": 229.98440669332481,
+          "inference_batches": 35592,
+          "mean_inference_batch": 1.9628568217576983,
+          "sampling_processes": 8,
+          "sampling_workers": 64,
+          "parallel_inference_seconds_sum": 1213.2169433701783,
+          "parallel_simulator_wait_seconds_sum": 914.2541427016258,
+          "sampling_graphs": true,
+          "sampling_graph_capture_seconds": 7.224571676924825,
+          "first_place_bonus": 1.0,
+          "action_counts": {
+            "buySpell": 2305,
+            "buy": 5980,
+            "refresh": 8766,
+            "end": 7121,
+            "freeze": 3431,
+            "power": 1320,
+            "cast": 4580,
+            "play": 4882,
+            "discover": 2942,
+            "sell": 747,
+            "upgrade": 1950,
+            "move": 20192,
+            "activate": 2875,
+            "darkGift": 1480,
+            "choosePower": 80,
+            "buyTrinket": 1041,
+            "reward": 170
+          },
+          "learner_action_counts": {
+            "buySpell": 1188,
+            "buy": 3232,
+            "refresh": 5484,
+            "end": 3852,
+            "power": 789,
+            "cast": 2530,
+            "play": 2574,
+            "discover": 1609,
+            "freeze": 1822,
+            "sell": 324,
+            "upgrade": 1084,
+            "move": 12254,
+            "activate": 1801,
+            "darkGift": 768,
+            "choosePower": 37,
+            "buyTrinket": 546,
+            "reward": 104
+          },
+          "policy_loss": -0.004313420919948485,
+          "value_loss": 0.05106639854110232,
+          "entropy": 2.2159551527442,
+          "approx_kl": 0.006371066664143021,
+          "gradient_norm": 1.547242256926327,
+          "samples": 39998,
+          "optimizer_steps": 164,
+          "kl_early_stop": false,
+          "sequence_chunks": 2615,
+          "training_graphs": true,
+          "training_graph_count": 2,
+          "training_graph_replays": 324,
+          "training_graph_capture_seconds": 0.5720375794917345,
+          "optimization_seconds": 71.48491384461522,
+          "completed_games": 64,
+          "league_generations": [
+            0,
+            "external:029341c8708b1f28",
+            "external:fd27461875fdcf63",
+            "external:19edf67e2fcf9987",
+            "external:0fb46388d76cbaad",
+            1,
+            2,
+            57,
+            155,
+            156,
+            157,
+            158
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 256,
+              "probability": 0.03870171128098127,
+              "seats": 11
+            },
+            {
+              "generation": "external:029341c8708b1f28",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 31
+            },
+            {
+              "generation": "external:fd27461875fdcf63",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.1,
+              "seats": 23
+            },
+            {
+              "generation": "external:19edf67e2fcf9987",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 24
+            },
+            {
+              "generation": "external:0fb46388d76cbaad",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.1,
+              "seats": 28
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 256,
+              "probability": 0.03914818447067018,
+              "seats": 10
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 256,
+              "probability": 0.038738680227062845,
+              "seats": 14
+            },
+            {
+              "generation": 57,
+              "external": false,
+              "depth": 256,
+              "probability": 0.07491151210629385,
+              "seats": 18
+            },
+            {
+              "generation": 154,
+              "external": false,
+              "depth": 256,
+              "probability": 0.10365989615868655,
+              "seats": 20
+            },
+            {
+              "generation": 155,
+              "external": false,
+              "depth": 256,
+              "probability": 0.09661032020562473,
+              "seats": 24
+            },
+            {
+              "generation": 156,
+              "external": false,
+              "depth": 256,
+              "probability": 0.10707404634384007,
+              "seats": 26
+            },
+            {
+              "generation": 157,
+              "external": false,
+              "depth": 256,
+              "probability": 0.10115564920684045,
+              "seats": 27
+            }
+          ],
+          "hero_counts": {
+            "s14_buttons": 31,
+            "s14_marin": 33,
+            "s14_afk": 36,
+            "s14_vanndar": 38,
+            "s14_millificent": 36,
+            "s14_chenvaala": 26,
+            "s14_brann": 36,
+            "s14_teron": 32,
+            "s14_lich": 35,
+            "s14_shudderwock": 39,
+            "s14_yogg": 40,
+            "s14_clockwork": 35,
+            "s14_genn": 38,
+            "s14_sylvanas": 27,
+            "s14_patchwerk": 30
+          }
+        },
+        "logTail": [
+          "{\"iteration\": 158, \"iteration_seconds\": 375.314379600808, \"end_to_end_actions_per_second\": 186.14261482415526, \"cuda_peak_allocated_mib\": 3142.0205078125, \"episodes\": 3164, \"seconds\": 303.7684206701815, \"environment_actions\": 69862, \"actions_per_second\": 229.98440669332481, \"inference_batches\": 35592, \"mean_inference_batch\": 1.9628568217576983, \"sampling_processes\": 8, \"sampling_workers\": 64, \"parallel_inference_seconds_sum\": 1213.2169433701783, \"parallel_simulator_wait_seconds_sum\": 914.2541427016258, \"sampling_graphs\": true, \"sampling_graph_capture_seconds\": 7.224571676924825, \"first_place_bonus\": 1.0, \"action_counts\": {\"buySpell\": 2305, \"buy\": 5980, \"refresh\": 8766, \"end\": 7121, \"freeze\": 3431, \"power\": 1320, \"cast\": 4580, \"play\": 4882, \"discover\": 2942, \"sell\": 747, \"upgrade\": 1950, \"move\": 20192, \"activate\": 2875, \"darkGift\": 1480, \"choosePower\": 80, \"buyTrinket\": 1041, \"reward\": 170}, \"learner_action_counts\": {\"buySpell\": 1188, \"buy\": 3232, \"refresh\": 5484, \"end\": 3852, \"power\": 789, \"cast\": 2530, \"play\": 2574, \"discover\": 1609, \"freeze\": 1822, \"sell\": 324, \"upgrade\": 1084, \"move\": 12254, \"activate\": 1801, \"darkGift\": 768, \"choosePower\": 37, \"buyTrinket\": 546, \"reward\": 104}, \"policy_loss\": -0.004313420919948485, \"value_loss\": 0.05106639854110232, \"entropy\": 2.2159551527442, \"approx_kl\": 0.006371066664143021, \"gradient_norm\": 1.547242256926327, \"samples\": 39998, \"optimizer_steps\": 164, \"kl_early_stop\": false, \"sequence_chunks\": 2615, \"training_graphs\": true, \"training_graph_count\": 2, \"training_graph_replays\": 324, \"training_graph_capture_seconds\": 0.5720375794917345, \"optimization_seconds\": 71.48491384461522, \"completed_games\": 64, \"league_generations\": [0, \"external:029341c8708b1f28\", \"external:fd27461875fdcf63\", \"external:19edf67e2fcf9987\", \"external:0fb46388d76cbaad\", 1, 2, 57, 155, 156, 157, 158], \"opponent_sampling\": [{\"generation\": 0, \"external\": false, \"depth\": 256, \"probability\": 0.03870171128098127, \"seats\": 11}, {\"generation\": \"external:029341c8708b1f28\", \"external\": true, \"depth\": 64, \"probability\": 0.1, \"seats\": 31}, {\"generation\": \"external:fd27461875fdcf63\", \"external\": true, \"depth\": 1024, \"probability\": 0.1, \"seats\": 23}, {\"generation\": \"external:19edf67e2fcf9987\", \"external\": true, \"depth\": 64, \"probability\": 0.1, \"seats\": 24}, {\"generation\": \"external:0fb46388d76cbaad\", \"external\": true, \"depth\": 1024, \"probability\": 0.1, \"seats\": 28}, {\"generation\": 1, \"external\": false, \"depth\": 256, \"probability\": 0.03914818447067018, \"seats\": 10}, {\"generation\": 2, \"external\": false, \"depth\": 256, \"probability\": 0.038738680227062845, \"seats\": 14}, {\"generation\": 57, \"external\": false, \"depth\": 256, \"probability\": 0.07491151210629385, \"seats\": 18}, {\"generation\": 154, \"external\": false, \"depth\": 256, \"probability\": 0.10365989615868655, \"seats\": 20}, {\"generation\": 155, \"external\": false, \"depth\": 256, \"probability\": 0.09661032020562473, \"seats\": 24}, {\"generation\": 156, \"external\": false, \"depth\": 256, \"probability\": 0.10707404634384007, \"seats\": 26}, {\"generation\": 157, \"external\": false, \"depth\": 256, \"probability\": 0.10115564920684045, \"seats\": 27}], \"hero_counts\": {\"s14_buttons\": 31, \"s14_marin\": 33, \"s14_afk\": 36, \"s14_vanndar\": 38, \"s14_millificent\": 36, \"s14_chenvaala\": 26, \"s14_brann\": 36, \"s14_teron\": 32, \"s14_lich\": 35, \"s14_shudderwock\": 39, \"s14_yogg\": 40, \"s14_clockwork\": 35, \"s14_genn\": 38, \"s14_sylvanas\": 27, \"s14_patchwerk\": 30}}",
+          "{\"stage\": \"collect\", \"sampling_processes\": 8, \"completed_games\": 0, \"total_games\": 64, \"environment_actions\": 0, \"seconds\": 30.1, \"actions_per_second\": 0.0}"
+        ],
+        "migration": {
+          "source": "/root/autodl-tmp/tavern-action-limits-20260915/population/member-1/training/latest.pt",
+          "output": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-1/training/latest.pt",
+          "sourceSha256": "18a931b3164d8005eb6afbdc2c226fa0af3dbbf2ee9c4ce8eab56467d220a2ea",
+          "outputSha256": "af38777dfab678d2b7f0c3fccf087e37122ef74ac258f517e4abffbd55e4e22c",
+          "retainedStateSha256": "39d5631473ac67c15dca81524a5e35887fa40f1d7a29036d1860c01bec2b0c4d",
+          "episodes": 3100,
+          "iteration": 157,
+          "depth": 256,
+          "migration": {
+            "kind": "ai-freeze-close-v2",
+            "utc": "2026-09-15T07:04:29.533756+00:00",
+            "sourceSha256": "18a931b3164d8005eb6afbdc2c226fa0af3dbbf2ee9c4ce8eab56467d220a2ea",
+            "oldSourceHash": "c7fce93ab131753b8ecf18706a3d6b2b755e3d96f2b7ba6b1d20a164a1aa7bf9",
+            "oldRulesHash": "0adb3881ea81239a3af909b2af96b77a519251e439f590cc6785303819452c2f",
+            "sourceHash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+            "rulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+            "episodes": 3100,
+            "iteration": 157,
+            "retained": "model, optimizer, frozen league, counters and RNG; fresh rollouts required"
+          }
+        }
+      },
+      {
+        "depth": 1024,
+        "episodes": 2404,
+        "iteration": 103,
+        "meta": {
+          "sourceHash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+          "rulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+          "aiActionLimits": {
+            "version": 2,
+            "freezes": 1,
+            "moves": 6,
+            "freezePolicy": "unaffordable-at-end"
+          }
+        },
+        "stage": "training",
+        "pid": 61105,
+        "processExists": true,
+        "latestMetrics": {
+          "iteration": 103,
+          "iteration_seconds": 376.11957511492074,
+          "end_to_end_actions_per_second": 154.67155619918222,
+          "cuda_peak_allocated_mib": 4503.22021484375,
+          "episodes": 2404,
+          "seconds": 308.03892078995705,
+          "environment_actions": 58175,
+          "actions_per_second": 188.85600511393778,
+          "inference_batches": 32587,
+          "mean_inference_batch": 1.7852211004388252,
+          "sampling_processes": 8,
+          "sampling_workers": 64,
+          "parallel_inference_seconds_sum": 1376.3638512510806,
+          "parallel_simulator_wait_seconds_sum": 547.863182965666,
+          "sampling_graphs": true,
+          "sampling_graph_capture_seconds": 38.86366968229413,
+          "first_place_bonus": 1.0,
+          "action_counts": {
+            "buy": 5778,
+            "buySpell": 2373,
+            "refresh": 6303,
+            "end": 7081,
+            "freeze": 2915,
+            "power": 1166,
+            "play": 5058,
+            "cast": 4276,
+            "sell": 1158,
+            "discover": 2792,
+            "upgrade": 1858,
+            "move": 12430,
+            "activate": 2292,
+            "darkGift": 1441,
+            "choosePower": 67,
+            "buyTrinket": 1055,
+            "reward": 132
+          },
+          "learner_action_counts": {
+            "buy": 3006,
+            "buySpell": 1200,
+            "refresh": 3094,
+            "end": 3560,
+            "freeze": 1409,
+            "power": 499,
+            "play": 2639,
+            "cast": 2194,
+            "sell": 564,
+            "discover": 1415,
+            "upgrade": 928,
+            "move": 5299,
+            "activate": 1049,
+            "darkGift": 742,
+            "choosePower": 30,
+            "buyTrinket": 545,
+            "reward": 64
+          },
+          "policy_loss": -0.0004925315497222088,
+          "value_loss": 0.06389722239099822,
+          "entropy": 2.2389837442818337,
+          "approx_kl": 0.0025439363243511147,
+          "gradient_norm": 1.3157443171840604,
+          "samples": 28237,
+          "optimizer_steps": 118,
+          "kl_early_stop": false,
+          "sequence_chunks": 1884,
+          "training_graphs": true,
+          "training_graph_count": 2,
+          "training_graph_replays": 232,
+          "training_graph_capture_seconds": 1.8345764558762312,
+          "optimization_seconds": 67.75370308570564,
+          "completed_games": 64,
+          "league_generations": [
+            0,
+            "external:c4f5f34159eeab3f",
+            "external:029341c8708b1f28",
+            "external:b0b85df2fdbdde3e",
+            "external:19edf67e2fcf9987",
+            1,
+            2,
+            26,
+            100,
+            101,
+            102,
+            103
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.04452482669067391,
+              "seats": 16
+            },
+            {
+              "generation": "external:c4f5f34159eeab3f",
+              "external": true,
+              "depth": 256,
+              "probability": 0.1165051903114187,
+              "seats": 30
+            },
+            {
+              "generation": "external:029341c8708b1f28",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 32
+            },
+            {
+              "generation": "external:b0b85df2fdbdde3e",
+              "external": true,
+              "depth": 256,
+              "probability": 0.08349480968858132,
+              "seats": 16
+            },
+            {
+              "generation": "external:19edf67e2fcf9987",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 23
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.04466613538841564,
+              "seats": 10
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.04478801373352738,
+              "seats": 14
+            },
+            {
+              "generation": 26,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.05753828228647978,
+              "seats": 19
+            },
+            {
+              "generation": 99,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.10081083398432646,
+              "seats": 23
+            },
+            {
+              "generation": 100,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.10541379002655428,
+              "seats": 20
+            },
+            {
+              "generation": 101,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.09684432786346826,
+              "seats": 24
+            },
+            {
+              "generation": 102,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.10541379002655428,
+              "seats": 29
+            }
+          ],
+          "hero_counts": {
+            "s14_yogg": 35,
+            "s14_teron": 37,
+            "s14_afk": 38,
+            "s14_millificent": 35,
+            "s14_vanndar": 37,
+            "s14_genn": 31,
+            "s14_chenvaala": 36,
+            "s14_shudderwock": 30,
+            "s14_marin": 37,
+            "s14_buttons": 37,
+            "s14_lich": 36,
+            "s14_patchwerk": 32,
+            "s14_clockwork": 34,
+            "s14_brann": 29,
+            "s14_sylvanas": 28
+          }
+        },
+        "logTail": [
+          "{\"iteration\": 103, \"iteration_seconds\": 376.11957511492074, \"end_to_end_actions_per_second\": 154.67155619918222, \"cuda_peak_allocated_mib\": 4503.22021484375, \"episodes\": 2404, \"seconds\": 308.03892078995705, \"environment_actions\": 58175, \"actions_per_second\": 188.85600511393778, \"inference_batches\": 32587, \"mean_inference_batch\": 1.7852211004388252, \"sampling_processes\": 8, \"sampling_workers\": 64, \"parallel_inference_seconds_sum\": 1376.3638512510806, \"parallel_simulator_wait_seconds_sum\": 547.863182965666, \"sampling_graphs\": true, \"sampling_graph_capture_seconds\": 38.86366968229413, \"first_place_bonus\": 1.0, \"action_counts\": {\"buy\": 5778, \"buySpell\": 2373, \"refresh\": 6303, \"end\": 7081, \"freeze\": 2915, \"power\": 1166, \"play\": 5058, \"cast\": 4276, \"sell\": 1158, \"discover\": 2792, \"upgrade\": 1858, \"move\": 12430, \"activate\": 2292, \"darkGift\": 1441, \"choosePower\": 67, \"buyTrinket\": 1055, \"reward\": 132}, \"learner_action_counts\": {\"buy\": 3006, \"buySpell\": 1200, \"refresh\": 3094, \"end\": 3560, \"freeze\": 1409, \"power\": 499, \"play\": 2639, \"cast\": 2194, \"sell\": 564, \"discover\": 1415, \"upgrade\": 928, \"move\": 5299, \"activate\": 1049, \"darkGift\": 742, \"choosePower\": 30, \"buyTrinket\": 545, \"reward\": 64}, \"policy_loss\": -0.0004925315497222088, \"value_loss\": 0.06389722239099822, \"entropy\": 2.2389837442818337, \"approx_kl\": 0.0025439363243511147, \"gradient_norm\": 1.3157443171840604, \"samples\": 28237, \"optimizer_steps\": 118, \"kl_early_stop\": false, \"sequence_chunks\": 1884, \"training_graphs\": true, \"training_graph_count\": 2, \"training_graph_replays\": 232, \"training_graph_capture_seconds\": 1.8345764558762312, \"optimization_seconds\": 67.75370308570564, \"completed_games\": 64, \"league_generations\": [0, \"external:c4f5f34159eeab3f\", \"external:029341c8708b1f28\", \"external:b0b85df2fdbdde3e\", \"external:19edf67e2fcf9987\", 1, 2, 26, 100, 101, 102, 103], \"opponent_sampling\": [{\"generation\": 0, \"external\": false, \"depth\": 1024, \"probability\": 0.04452482669067391, \"seats\": 16}, {\"generation\": \"external:c4f5f34159eeab3f\", \"external\": true, \"depth\": 256, \"probability\": 0.1165051903114187, \"seats\": 30}, {\"generation\": \"external:029341c8708b1f28\", \"external\": true, \"depth\": 64, \"probability\": 0.1, \"seats\": 32}, {\"generation\": \"external:b0b85df2fdbdde3e\", \"external\": true, \"depth\": 256, \"probability\": 0.08349480968858132, \"seats\": 16}, {\"generation\": \"external:19edf67e2fcf9987\", \"external\": true, \"depth\": 64, \"probability\": 0.1, \"seats\": 23}, {\"generation\": 1, \"external\": false, \"depth\": 1024, \"probability\": 0.04466613538841564, \"seats\": 10}, {\"generation\": 2, \"external\": false, \"depth\": 1024, \"probability\": 0.04478801373352738, \"seats\": 14}, {\"generation\": 26, \"external\": false, \"depth\": 1024, \"probability\": 0.05753828228647978, \"seats\": 19}, {\"generation\": 99, \"external\": false, \"depth\": 1024, \"probability\": 0.10081083398432646, \"seats\": 23}, {\"generation\": 100, \"external\": false, \"depth\": 1024, \"probability\": 0.10541379002655428, \"seats\": 20}, {\"generation\": 101, \"external\": false, \"depth\": 1024, \"probability\": 0.09684432786346826, \"seats\": 24}, {\"generation\": 102, \"external\": false, \"depth\": 1024, \"probability\": 0.10541379002655428, \"seats\": 29}], \"hero_counts\": {\"s14_yogg\": 35, \"s14_teron\": 37, \"s14_afk\": 38, \"s14_millificent\": 35, \"s14_vanndar\": 37, \"s14_genn\": 31, \"s14_chenvaala\": 36, \"s14_shudderwock\": 30, \"s14_marin\": 37, \"s14_buttons\": 37, \"s14_lich\": 36, \"s14_patchwerk\": 32, \"s14_clockwork\": 34, \"s14_brann\": 29, \"s14_sylvanas\": 28}}",
+          "{\"stage\": \"collect\", \"sampling_processes\": 8, \"completed_games\": 0, \"total_games\": 64, \"environment_actions\": 0, \"seconds\": 30.1, \"actions_per_second\": 0.0}"
+        ],
+        "migration": {
+          "source": "/root/autodl-tmp/tavern-action-limits-20260915/population/member-2/training/latest.pt",
+          "output": "/root/autodl-tmp/tavern-freeze-close-20260915/population/member-2/training/latest.pt",
+          "sourceSha256": "032c89de738603018ccdb67381d1efea20686dd9a5acef26f657f208fa32bb0a",
+          "outputSha256": "676c9d849cfe6651971ea5f5e61b058b793e8e4fd4e8d19a6b5695f774798995",
+          "retainedStateSha256": "50a65790ba70f1b720702e3fb08fb8aa8b970e6254b028023f7c0d6b1fdf082a",
+          "episodes": 2340,
+          "iteration": 102,
+          "depth": 1024,
+          "migration": {
+            "kind": "ai-freeze-close-v2",
+            "utc": "2026-09-15T07:04:46.558708+00:00",
+            "sourceSha256": "032c89de738603018ccdb67381d1efea20686dd9a5acef26f657f208fa32bb0a",
+            "oldSourceHash": "c7fce93ab131753b8ecf18706a3d6b2b755e3d96f2b7ba6b1d20a164a1aa7bf9",
+            "oldRulesHash": "0adb3881ea81239a3af909b2af96b77a519251e439f590cc6785303819452c2f",
+            "sourceHash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+            "rulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+            "episodes": 2340,
+            "iteration": 102,
+            "retained": "model, optimizer, frozen league, counters and RNG; fresh rollouts required"
+          }
+        }
+      }
+    ],
+    "health": {
+      "utc": "2026-09-15T07:12:45.776885+00:00",
+      "stage": "running",
+      "coordinator_valid": true,
+      "members": [
+        {
+          "index": 0,
+          "stage": "training",
+          "pid": 61074,
+          "process_valid": true,
+          "start_ticks": 1449859861,
+          "cpu_seconds": 5.88,
+          "episodes": 3592,
+          "iteration": 184,
+          "activity_age_seconds": 2.6,
+          "sampler_reports": 8,
+          "sampled_actions": 65863,
+          "completed_sampling_games": 45,
+          "log_error": false
+        },
+        {
+          "index": 1,
+          "stage": "training",
+          "pid": 61077,
+          "process_valid": true,
+          "start_ticks": 1449859961,
+          "cpu_seconds": 8.1,
+          "episodes": 3100,
+          "iteration": 157,
+          "activity_age_seconds": 8.4,
+          "sampler_reports": 8,
+          "sampled_actions": 62930,
+          "completed_sampling_games": 16,
+          "log_error": false
+        },
+        {
+          "index": 2,
+          "stage": "training",
+          "pid": 61105,
+          "process_valid": true,
+          "start_ticks": 1449860362,
+          "cpu_seconds": 17.4,
+          "episodes": 2340,
+          "iteration": 102,
+          "activity_age_seconds": 4.2,
+          "sampler_reports": 8,
+          "sampled_actions": 44059,
+          "completed_sampling_games": 2,
+          "log_error": false
+        }
+      ],
+      "memory_gib": 99.00259399414062,
+      "memory_fraction": 0.8250216166178386,
+      "oom_kill": 0,
+      "cpu_usage_usec": 208912242448,
+      "cpu_quota_cores": 25.0,
+      "cpu_percent_since_previous_check": 93.27737160755188,
+      "disk_free_gib": 28.439342498779297,
+      "gpu": "52, 54441, 126.55",
+      "issues": [],
+      "healthy": true,
+      "watch_pid": 61062,
+      "job_pid": 61032,
+      "interval_seconds": 300,
+      "next_check_utc": "2026-09-15T07:17:45.776885+00:00",
+      "watch_complete": false
+    }
+  },
+  "online": {
+    "stage": "activated",
+    "public": {
+      "old": "/opt/bobs-tavern/releases/20260915-action-limits",
+      "new": "/opt/bobs-tavern/releases/20260915-freeze-close",
+      "serverSha256": "879373a3665a5aff4e7a933c5a804cb55642edb99e25921246707e86df9d14f4",
+      "aiActionLimits": {
+        "version": 2,
+        "freezes": 1,
+        "moves": 6,
+        "freezePolicy": "unaffordable-at-end"
+      },
+      "searchVersion": "own-recruit-freeze-close-v3"
+    },
+    "compute": [
+      {
+        "depth": 64,
+        "old": "/home/zich/.local/share/tavern-models/deep64-search/releases/20260915-action-limits",
+        "new": "/home/zich/.local/share/tavern-models/deep64-search/releases/20260915-freeze-close",
+        "modelSha256": "ae3febd69fc7bccc83ebdb67fbcc94201079bb27715eb3b315a573d06cb72479",
+        "bundleSha256": "667018d3074ed6c76e4a164bd90b7ccd7991c677c398a165a80eef1a66619ba7"
+      },
+      {
+        "depth": 256,
+        "old": "/home/zich/.local/share/tavern-models/deep256-search/releases/20260915-action-limits",
+        "new": "/home/zich/.local/share/tavern-models/deep256-search/releases/20260915-freeze-close",
+        "modelSha256": "b6c37f74d34578d19b69eb3d82aead4c4d343b7062fb07df8f1c20308f43283c",
+        "bundleSha256": "667018d3074ed6c76e4a164bd90b7ccd7991c677c398a165a80eef1a66619ba7"
+      },
+      {
+        "depth": 1024,
+        "old": "/home/zich/.local/share/tavern-models/deep1024-search/releases/20260915-action-limits",
+        "new": "/home/zich/.local/share/tavern-models/deep1024-search/releases/20260915-freeze-close",
+        "modelSha256": "da65b818b721fddfef38869f671c46b46097c0bb784d2befcde7e175373399c0",
+        "bundleSha256": "667018d3074ed6c76e4a164bd90b7ccd7991c677c398a165a80eef1a66619ba7"
+      }
+    ],
+    "health": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "recording": {
+        "enabled": true,
+        "episodes": 0,
+        "decisions": 0,
+        "completed": 0,
+        "rejected": 0,
+        "errors": 0,
+        "bytes": 9374524
+      },
+      "ai": {
+        "mode": "neural",
+        "decisions": 0,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 0,
+          "rawRequestBytes": 0,
+          "requestBytes": 0,
+          "responseBytes": 0,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1480",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-1164",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-612",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep64-search-2568",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-search-2140",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-search-1284",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    }
+  },
+  "afterBrowserHealth": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "recording": {
+      "enabled": true,
+      "episodes": 0,
+      "decisions": 0,
+      "completed": 0,
+      "rejected": 0,
+      "errors": 0,
+      "bytes": 9374524
+    },
+    "ai": {
+      "mode": "neural",
+      "decisions": 138,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 138,
+        "rawRequestBytes": 708992,
+        "requestBytes": 274607,
+        "responseBytes": 206729,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1480",
+          "decisions": 23,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "decisions": 28,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "decisions": 28,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep64-search-2568",
+          "decisions": 15,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-search-2140",
+          "decisions": 19,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-search-1284",
+          "decisions": 25,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "search": [
+    {
+      "metadata": {
+        "episodes": 2568,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 64,
+        "valueDepth": 64,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 162,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "b35897a07c452282e490cbbc2b4c7d7d540eda1f9c7915504183fb37fdfcbd50",
+            "weightSha256": "0f21d1fc111b01961b1372466a7017d6899c3156c6a131b34e725473c86b3496",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "ce5aa4eeb530d3fa537a1b850dc40bf327e9b604033c7fd88250c618518b5edd",
+            "weightSha256": "8fb0dd5976e97c742ce49f2506d658ce0876404e36a307466eebaf7fde96dfda",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "92f5c5a14a0f788c3f3d246503045e1aa4c20847d5f6b8cf9bc7f480f53213b5",
+            "weightSha256": "8ee68aab3bf79469bc7239132fc56d0b05cc51d9b34953e5dd5f2799deafb02f",
+            "datasets": [
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+            ],
+            "updates": 20,
+            "supervisedSteps": 274,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "132c4100b8bb18863be71b5b8433fdb3d67f1782502eed6bf3ef179df54c4bf6",
+            "weightSha256": "92c0516a07ed03e4069957419cac15cc296c9245382c888edbec23747ec1f883",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500"
+            ],
+            "updates": 24,
+            "supervisedSteps": 359,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "27bc33a955b33fbb918fb0b7383fa0cc24e55cf811e7081a72fb9841eab546aa",
+            "weightSha256": "1436a3750d9365d992b636f0ab660d6c0084671347d7a36691da60d208e3d9da",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+              "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 2529,
+            "supervisedSteps": 1555,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 22,
+            "supervisedStepVisits": 34512,
+            "stoppedEarlyByUser": true
+          },
+          {
+            "parentArtifactSha256": "1694d01b8858311defd16d62a2877cde47dc18855a149766cfe1f363333b8177",
+            "weightSha256": "b3dccc5be12cc91ffe5d6b00a601a67bb7475d76b64e7a92542f9220f7ba1c45",
+            "datasets": [
+              "081a14e422cb0830239d2f15de62c35ba346f2712992a435bc47f45f6377833a",
+              "cfed63a0268c504fe7aff4b87a321dd707dfc93657e51b6f6babc6ecde9a6edf"
+            ],
+            "updates": 156,
+            "supervisedSteps": 683,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 3,
+            "supervisedStepVisits": 2049,
+            "stoppedEarlyByUser": false
+          }
+        ],
+        "imitationUpdates": 2769,
+        "demonstrationGames": 7,
+        "search": {
+          "version": "own-recruit-freeze-close-v3",
+          "simulations": 32,
+          "max_depth": 64,
+          "max_nodes": 128,
+          "time_ms": 1000,
+          "exploration": 1.5
+        }
+      },
+      "python_peak_rss_mib": 285.625,
+      "memory_isolation": true,
+      "authoritative_mask": true,
+      "deadline_direct_policy": true,
+      "scope": "Functional/latency fixtures with reset recurrent memory; not a playing-strength evaluation",
+      "fixtures": [
+        {
+          "turn": 1,
+          "action": 22,
+          "elapsed_ms": 499.0435420186259,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 32,
+            "recruit_ends": 32,
+            "cutoffs": 0,
+            "nodes": 16,
+            "max_depth": 8,
+            "evaluations": 40,
+            "sampled_root_outcomes": 5,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 489.26,
+            "actions": [
+              {
+                "action": 6,
+                "visits": 24,
+                "value": 0.27048494790991146,
+                "prior": 0.7138183643763004
+              },
+              {
+                "action": 8,
+                "visits": 4,
+                "value": 0.24440860748291016,
+                "prior": 0.12465215649333168
+              },
+              {
+                "action": 7,
+                "visits": 2,
+                "value": 0.24470388889312744,
+                "prior": 0.08875755875747328
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.2181786447763443,
+                "prior": 0.0028100562958949817
+              },
+              {
+                "action": 22,
+                "visits": 1,
+                "value": 0.2856820225715637,
+                "prior": 0.04023996292521904
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.02972190115178066
+              }
+            ]
+          }
+        },
+        {
+          "turn": 4,
+          "action": 5,
+          "elapsed_ms": 1012.5299079809338,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 10,
+            "recruit_ends": 9,
+            "cutoffs": 1,
+            "nodes": 11,
+            "max_depth": 12,
+            "evaluations": 76,
+            "sampled_root_outcomes": 7,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1000.95,
+            "actions": [
+              {
+                "action": 5,
+                "visits": 5,
+                "value": 0.18146440684795379,
+                "prior": 0.4626590460897849
+              },
+              {
+                "action": 7,
+                "visits": 4,
+                "value": 0.18037103489041328,
+                "prior": 0.3704237163449771
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.13810251653194427,
+                "prior": 0.0013694295636123668
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.016805626994542897
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.012372951422744362
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.03731274725262474
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.029411018844286763
+              },
+              {
+                "action": 22,
+                "visits": 0,
+                "value": null,
+                "prior": 0.023357421913844302
+              }
+            ]
+          }
+        },
+        {
+          "turn": 8,
+          "action": 0,
+          "elapsed_ms": 1027.1014220197685,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 5,
+            "recruit_ends": 4,
+            "cutoffs": 1,
+            "nodes": 6,
+            "max_depth": 12,
+            "evaluations": 41,
+            "sampled_root_outcomes": 5,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1015.14,
+            "actions": [
+              {
+                "action": 5,
+                "visits": 3,
+                "value": 0.09202110270659129,
+                "prior": 0.3839163627660074
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.11946112662553787,
+                "prior": 0.002867392150368357
+              },
+              {
+                "action": 9,
+                "visits": 1,
+                "value": 0.08614357560873032,
+                "prior": 0.18502073744861625
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.024766459076957657
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.03005929730598773
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.03912724771592416
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.03509544069191197
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.05836433685368513
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "episodes": 2140,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 136,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+            "weightSha256": "2a75391e990dedbf185a743f3b24d9654fc97c61b60e91f36dc50530dcc86fc0",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+            "weightSha256": "4c9d8de6b5fff43cd4511a73837a049b63b1b2367aa75c2e737160726690520f",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+            "weightSha256": "0aad5c140640532ca0c30f8df7237132dd6e1507adbc4a954a7d5bee25db9202",
+            "datasets": [
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+            ],
+            "updates": 20,
+            "supervisedSteps": 274,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "145c54fc83a9529f8962e4dc57217e8289a9b5f5ae647551f803bcd6e8b20453",
+            "weightSha256": "47d0b844d9ba43c7e42b7d0ceaec01d00263f724edcbb74a53b188794dbfa0e6",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500"
+            ],
+            "updates": 24,
+            "supervisedSteps": 359,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "a578cfd55fadd182dc152646c4d573aecce19a65325deba7fd27484cb741dce1",
+            "weightSha256": "a3e55af1d9321a395dd339cb30ea38d8e9f01aa8e20a216721206f54a710765b",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+              "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 1291,
+            "supervisedSteps": 1555,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 11,
+            "supervisedStepVisits": 17600,
+            "stoppedEarlyByUser": true
+          },
+          {
+            "parentArtifactSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+            "weightSha256": "ce7044b6659269aadcd9c5d25b24848fec79baf4f3e83df331e8fe51efa76f7a",
+            "datasets": [
+              "081a14e422cb0830239d2f15de62c35ba346f2712992a435bc47f45f6377833a",
+              "cfed63a0268c504fe7aff4b87a321dd707dfc93657e51b6f6babc6ecde9a6edf"
+            ],
+            "updates": 156,
+            "supervisedSteps": 683,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 3,
+            "supervisedStepVisits": 2049,
+            "stoppedEarlyByUser": false
+          }
+        ],
+        "imitationUpdates": 1531,
+        "demonstrationGames": 7,
+        "search": {
+          "version": "own-recruit-freeze-close-v3",
+          "simulations": 32,
+          "max_depth": 64,
+          "max_nodes": 128,
+          "time_ms": 1000,
+          "exploration": 1.5
+        }
+      },
+      "python_peak_rss_mib": 330.8359375,
+      "memory_isolation": true,
+      "authoritative_mask": true,
+      "deadline_direct_policy": true,
+      "scope": "Functional/latency fixtures with reset recurrent memory; not a playing-strength evaluation",
+      "fixtures": [
+        {
+          "turn": 1,
+          "action": 6,
+          "elapsed_ms": 1033.1518279854208,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 20,
+            "recruit_ends": 19,
+            "cutoffs": 1,
+            "nodes": 17,
+            "max_depth": 7,
+            "evaluations": 45,
+            "sampled_root_outcomes": 7,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1012.52,
+            "actions": [
+              {
+                "action": 8,
+                "visits": 9,
+                "value": 0.25732487440109253,
+                "prior": 0.4599181018920157
+              },
+              {
+                "action": 6,
+                "visits": 5,
+                "value": 0.28333898782730105,
+                "prior": 0.243519614865465
+              },
+              {
+                "action": 1,
+                "visits": 2,
+                "value": 0.22476550936698914,
+                "prior": 0.12696038742283192
+              },
+              {
+                "action": 22,
+                "visits": 2,
+                "value": 0.22335678339004517,
+                "prior": 0.10389241285896246
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.182425856590271,
+                "prior": 0.00844056289336314
+              },
+              {
+                "action": 7,
+                "visits": 1,
+                "value": 0.22438177466392517,
+                "prior": 0.057268920067361784
+              }
+            ]
+          }
+        },
+        {
+          "turn": 4,
+          "action": 5,
+          "elapsed_ms": 1024.022988975048,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 5,
+            "recruit_ends": 4,
+            "cutoffs": 1,
+            "nodes": 6,
+            "max_depth": 14,
+            "evaluations": 40,
+            "sampled_root_outcomes": 5,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1001.26,
+            "actions": [
+              {
+                "action": 5,
+                "visits": 4,
+                "value": 0.17112738639116287,
+                "prior": 0.5438516808998429
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.09888879209756851,
+                "prior": 0.0029977793276186647
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04605408447186151
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.03285469158861125
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.027231989793768948
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.15503427594291283
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.09705206882036883
+              },
+              {
+                "action": 22,
+                "visits": 0,
+                "value": null,
+                "prior": 0.0388799314946998
+              }
+            ]
+          }
+        },
+        {
+          "turn": 8,
+          "action": 0,
+          "elapsed_ms": 1034.4093950116076,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 3,
+            "recruit_ends": 2,
+            "cutoffs": 1,
+            "nodes": 4,
+            "max_depth": 16,
+            "evaluations": 26,
+            "sampled_root_outcomes": 3,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1011.55,
+            "actions": [
+              {
+                "action": 5,
+                "visits": 2,
+                "value": 0.01845712587237358,
+                "prior": 0.41661477692946763
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.05972563847899437,
+                "prior": 0.0046924056602891655
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.059859667284472874
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.05005953547940081
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04429075986848863
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.13363128138345481
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.0991317871296336
+              },
+              {
+                "action": 9,
+                "visits": 0,
+                "value": null,
+                "prior": 0.014471652092155413
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "metadata": {
+        "episodes": 1284,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 81,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+            "weightSha256": "901acab2125a42c7f06ed2563db0612a11edf87b7dc9b6f13d99b7383912a6d3",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+            "weightSha256": "5336173221d6fb0fafe9e4564c82a01c7724d78294bf34f009ee0fd114e67980",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+            "weightSha256": "25e29036dd8067fc295e75e4e92d28d35d465fe3afb523ac9d3bcff7016b5214",
+            "datasets": [
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+            ],
+            "updates": 20,
+            "supervisedSteps": 274,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "8a99208d78c8f66143ae78ed0ad8b7ec890b24151ebdfb59943aefa1a5547f30",
+            "weightSha256": "f6c71b263121c8c3d116dfbe9fdf20d5710034786cb019e2636eaa0d2d5579d5",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500"
+            ],
+            "updates": 24,
+            "supervisedSteps": 359,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "a1d2a0f44cd7a54783ae4d92d417fb2631b947b8d98fd62bbbad92ab973a9dca",
+            "weightSha256": "5c1d7477d28952397d63d4501d919eec75e79e135061f01fb5e693463dce5706",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+              "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 419,
+            "supervisedSteps": 1555,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 3,
+            "supervisedStepVisits": 5708,
+            "stoppedEarlyByUser": true
+          },
+          {
+            "parentArtifactSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+            "weightSha256": "0104d1662adb33c4963030c12ef5b42b25846b0fd6a17230a647eaf1297cad44",
+            "datasets": [
+              "081a14e422cb0830239d2f15de62c35ba346f2712992a435bc47f45f6377833a",
+              "cfed63a0268c504fe7aff4b87a321dd707dfc93657e51b6f6babc6ecde9a6edf"
+            ],
+            "updates": 156,
+            "supervisedSteps": 683,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 3,
+            "supervisedStepVisits": 2049,
+            "stoppedEarlyByUser": false
+          }
+        ],
+        "imitationUpdates": 659,
+        "demonstrationGames": 7,
+        "search": {
+          "version": "own-recruit-freeze-close-v3",
+          "simulations": 32,
+          "max_depth": 64,
+          "max_nodes": 128,
+          "time_ms": 1000,
+          "exploration": 1.5
+        }
+      },
+      "python_peak_rss_mib": 548.7109375,
+      "memory_isolation": true,
+      "authoritative_mask": true,
+      "deadline_direct_policy": true,
+      "scope": "Functional/latency fixtures with reset recurrent memory; not a playing-strength evaluation",
+      "fixtures": [
+        {
+          "turn": 1,
+          "action": 1,
+          "elapsed_ms": 1072.6459720171988,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 6,
+            "recruit_ends": 5,
+            "cutoffs": 1,
+            "nodes": 7,
+            "max_depth": 4,
+            "evaluations": 15,
+            "sampled_root_outcomes": 5,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1004.94,
+            "actions": [
+              {
+                "action": 6,
+                "visits": 2,
+                "value": 0.0591948963701725,
+                "prior": 0.3797603560787731
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": -0.009994874708354473,
+                "prior": 0.0551482148962495
+              },
+              {
+                "action": 1,
+                "visits": 1,
+                "value": 0.08366142958402634,
+                "prior": 0.17394788498749386
+              },
+              {
+                "action": 8,
+                "visits": 1,
+                "value": 0.02086341194808483,
+                "prior": 0.17106833965891402
+              },
+              {
+                "action": 22,
+                "visits": 1,
+                "value": -0.019583621993660927,
+                "prior": 0.16226565677614677
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.05780954760242271
+              }
+            ]
+          }
+        },
+        {
+          "turn": 4,
+          "action": 6,
+          "elapsed_ms": 1128.994013008196,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 3,
+            "recruit_ends": 2,
+            "cutoffs": 1,
+            "nodes": 4,
+            "max_depth": 8,
+            "evaluations": 15,
+            "sampled_root_outcomes": 3,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1062.86,
+            "actions": [
+              {
+                "action": 0,
+                "visits": 1,
+                "value": -0.029455000534653664,
+                "prior": 0.03420482567746502
+              },
+              {
+                "action": 5,
+                "visits": 1,
+                "value": 0.0017333230935037136,
+                "prior": 0.19977205258537056
+              },
+              {
+                "action": 6,
+                "visits": 1,
+                "value": 0.06522943079471588,
+                "prior": 0.21816111163212654
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.1081180005147112
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.07834839693956688
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.11166508743168978
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04797610851643144
+              },
+              {
+                "action": 22,
+                "visits": 0,
+                "value": null,
+                "prior": 0.10073280703502666
+              }
+            ]
+          }
+        },
+        {
+          "turn": 8,
+          "action": 5,
+          "elapsed_ms": 1140.077073010616,
+          "search": {
+            "version": "own-recruit-freeze-close-v3",
+            "simulations": 2,
+            "recruit_ends": 1,
+            "cutoffs": 1,
+            "nodes": 3,
+            "max_depth": 12,
+            "evaluations": 13,
+            "sampled_root_outcomes": 2,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1072.21,
+            "actions": [
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.02114846371114254,
+                "prior": 0.029975133412383965
+              },
+              {
+                "action": 5,
+                "visits": 1,
+                "value": 0.16940370202064514,
+                "prior": 0.17377846582627868
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.0944478167564832
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.06849121712232031
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.12741582962173006
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.08145828891499168
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.07361933228692627
+              },
+              {
+                "action": 9,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04651979874396865
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "smoke": {
+    "iteration": 185,
+    "iteration_seconds": 46.96169246546924,
+    "end_to_end_actions_per_second": 49.50843715246344,
+    "cuda_peak_allocated_mib": 3029.125,
+    "episodes": 3594,
+    "seconds": 44.02995518781245,
+    "environment_actions": 2325,
+    "actions_per_second": 52.80495948911534,
+    "inference_batches": 2325,
+    "mean_inference_batch": 1.0,
+    "sampling_processes": 2,
+    "sampling_workers": 2,
+    "parallel_inference_seconds_sum": 24.286818232387304,
+    "parallel_simulator_wait_seconds_sum": 43.83538570813835,
+    "sampling_graphs": true,
+    "sampling_graph_capture_seconds": 0.3600035049021244,
+    "first_place_bonus": 1.0,
+    "action_counts": {
+      "buy": 193,
+      "buySpell": 92,
+      "play": 169,
+      "end": 228,
+      "cast": 187,
+      "discover": 104,
+      "refresh": 172,
+      "power": 37,
+      "freeze": 113,
+      "move": 692,
+      "darkGift": 48,
+      "sell": 41,
+      "activate": 154,
+      "upgrade": 58,
+      "buyTrinket": 33,
+      "reward": 4
+    },
+    "learner_action_counts": {
+      "buy": 99,
+      "play": 95,
+      "end": 120,
+      "freeze": 54,
+      "buySpell": 50,
+      "move": 386,
+      "cast": 105,
+      "refresh": 50,
+      "discover": 51,
+      "darkGift": 24,
+      "power": 10,
+      "sell": 25,
+      "activate": 86,
+      "buyTrinket": 17,
+      "upgrade": 32,
+      "reward": 3
+    },
+    "policy_loss": -0.01689376092205445,
+    "value_loss": 0.03883314349999031,
+    "entropy": 2.507831851641337,
+    "approx_kl": 0.00036631741040042226,
+    "gradient_norm": 1.9411090811093648,
+    "samples": 1207,
+    "optimizer_steps": 6,
+    "kl_early_stop": false,
+    "sequence_chunks": 79,
+    "training_graphs": true,
+    "training_graph_count": 2,
+    "training_graph_replays": 8,
+    "training_graph_capture_seconds": 0.18252393417060375,
+    "optimization_seconds": 2.9172954112291336,
+    "completed_games": 2,
+    "league_generations": [
+      0,
+      "external:d81ac8b0ccb3223e",
+      "external:9fc8ec6250bbd0ea",
+      "external:bd3ff540c8824407",
+      "external:fd27461875fdcf63",
+      1,
+      2,
+      69,
+      182,
+      183,
+      184,
+      185
+    ],
+    "opponent_sampling": [
+      {
+        "generation": 0,
+        "external": false,
+        "depth": 64,
+        "probability": 0.03857550668902533,
+        "seats": 0
+      },
+      {
+        "generation": "external:d81ac8b0ccb3223e",
+        "external": true,
+        "depth": 256,
+        "probability": 0.09300261315555981,
+        "seats": 0
+      },
+      {
+        "generation": "external:9fc8ec6250bbd0ea",
+        "external": true,
+        "depth": 1024,
+        "probability": 0.10175581638292491,
+        "seats": 1
+      },
+      {
+        "generation": "external:bd3ff540c8824407",
+        "external": true,
+        "depth": 256,
+        "probability": 0.10699738684444018,
+        "seats": 2
+      },
+      {
+        "generation": "external:fd27461875fdcf63",
+        "external": true,
+        "depth": 1024,
+        "probability": 0.0982441836170751,
+        "seats": 0
+      },
+      {
+        "generation": 1,
+        "external": false,
+        "depth": 64,
+        "probability": 0.038554253094704394,
+        "seats": 0
+      },
+      {
+        "generation": 2,
+        "external": false,
+        "depth": 64,
+        "probability": 0.038396658505315116,
+        "seats": 1
+      },
+      {
+        "generation": 69,
+        "external": false,
+        "depth": 64,
+        "probability": 0.07645541171015977,
+        "seats": 1
+      },
+      {
+        "generation": 181,
+        "external": false,
+        "depth": 64,
+        "probability": 0.10333117201217686,
+        "seats": 1
+      },
+      {
+        "generation": 182,
+        "external": false,
+        "depth": 64,
+        "probability": 0.09778956011654595,
+        "seats": 0
+      },
+      {
+        "generation": 183,
+        "external": false,
+        "depth": 64,
+        "probability": 0.11676894658593642,
+        "seats": 1
+      },
+      {
+        "generation": 184,
+        "external": false,
+        "depth": 64,
+        "probability": 0.09012849128613612,
+        "seats": 1
+      }
+    ],
+    "hero_counts": {
+      "s14_clockwork": 1,
+      "s14_sylvanas": 2,
+      "s14_marin": 2,
+      "s14_vanndar": 1,
+      "s14_shudderwock": 2,
+      "s14_brann": 2,
+      "s14_chenvaala": 1,
+      "s14_teron": 2,
+      "s14_afk": 1,
+      "s14_millificent": 1,
+      "s14_yogg": 1
+    }
+  },
+  "smokeReplay": {
+    "games": [
+      {
+        "seed": 3634,
+        "actions": 1228,
+        "placements": [
+          1,
+          6,
+          8,
+          4,
+          7,
+          2,
+          3,
+          5
+        ]
+      },
+      {
+        "seed": 3635,
+        "actions": 1097,
+        "placements": [
+          6,
+          4,
+          5,
+          1,
+          3,
+          8,
+          7,
+          2
+        ]
+      }
+    ],
+    "actionCounts": {
+      "buy": 193,
+      "buySpell": 92,
+      "play": 169,
+      "end": 228,
+      "cast": 187,
+      "discover": 104,
+      "refresh": 172,
+      "power": 37,
+      "freeze": 113,
+      "move": 692,
+      "darkGift": 48,
+      "sell": 41,
+      "activate": 154,
+      "upgrade": 58,
+      "buyTrinket": 33,
+      "reward": 4
+    },
+    "freezeEligibilityChecks": 113,
+    "closingChecks": 113,
+    "metricsMatchReplay": true
+  },
+  "validation": {
+    "rules": 141,
+    "rl": 14,
+    "server": 59,
+    "searchTypescript": 7,
+    "searchPython": 10,
+    "pythonLocal": {
+      "total": 143,
+      "skippedCuda": 5
+    },
+    "pythonGpu": {
+      "total": 143,
+      "skippedFfmpeg": 4,
+      "packagedHelperAdded": true,
+      "samplingRetestPassed": 6
+    },
+    "browserAllSix": true
+  },
+  "limitations": [
+    "No playing-strength evaluation; action restrictions do not establish better ranking.",
+    "PPO still uses final placement rewards; no gold-planning search distillation.",
+    "Online weights remain at their previously deployed versions."
+  ]
+}
