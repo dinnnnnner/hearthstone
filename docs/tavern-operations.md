@@ -108,6 +108,17 @@ python3 scripts/tavern-ops.py stop
 
 ## 日志、磁盘和检查点
 
+当前四小时任务已启用后台健康巡检，每 300 秒检查训练进程身份、采样进度、检查点、当前异常日志、内存、GPU 和磁盘。巡检绑定本次任务，到训练停止后结束；不会自动重启训练或上线模型。正常的 PPO 计算可能没有新日志，巡检还会比较进程 CPU 时间，避免仅凭 GPU 低占用或检查点未更新判断卡死。
+
+在训练服务器查看最新结果和告警：
+
+```bash
+cat /root/tavern-ops/20260915T035039-57399/health/latest.json
+tail /root/tavern-ops/20260915T035039-57399/health/alerts.jsonl
+```
+
+`healthy: true` 表示本次未发现异常；`checks.jsonl` 保存全部检查，`alerts.jsonl` 仅在发现异常时创建。`next_check_utc` 是下一次检查时间，`watch_complete` 表示巡检已结束。后台结果写在服务器文件中，不会自动向聊天窗口推送消息。实现入口为 `scripts/watch-training.py`，启动新的训练任务时需绑定新的 `resume.json`。
+
 每次命令结束都会打印本次文件目录，位于本机：
 
 ```text

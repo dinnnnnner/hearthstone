@@ -1,0 +1,85 @@
+{
+  "launch": {
+    "pid": 27745,
+    "started_utc": "2026-09-15T04:10:41.886955+00:00",
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-blackwell-20260915/watch-training.py",
+      "--population",
+      "/root/tavern-four-hour-20260914/population",
+      "--job",
+      "/root/tavern-ops/20260915T035039-57399/resume.json",
+      "--output",
+      "/root/tavern-ops/20260915T035039-57399/health",
+      "--interval",
+      "300"
+    ]
+  },
+  "first_check": {
+    "utc": "2026-09-15T04:10:42.089931+00:00",
+    "stage": "running",
+    "coordinator_valid": true,
+    "members": [
+      {
+        "index": 0,
+        "stage": "training",
+        "pid": 23100,
+        "process_valid": true,
+        "start_ticks": 1448677518,
+        "cpu_seconds": 278.57,
+        "episodes": 2760,
+        "iteration": 171,
+        "activity_age_seconds": 9.4,
+        "sampler_reports": 8,
+        "sampled_actions": 93792,
+        "completed_sampling_games": 0,
+        "log_error": false
+      },
+      {
+        "index": 1,
+        "stage": "training",
+        "pid": 23104,
+        "process_valid": true,
+        "start_ticks": 1448677619,
+        "cpu_seconds": 281.88,
+        "episodes": 2332,
+        "iteration": 145,
+        "activity_age_seconds": 9.1,
+        "sampler_reports": 8,
+        "sampled_actions": 90544,
+        "completed_sampling_games": 0,
+        "log_error": false
+      },
+      {
+        "index": 2,
+        "stage": "training",
+        "pid": 23129,
+        "process_valid": true,
+        "start_ticks": 1448677919,
+        "cpu_seconds": 239.4,
+        "episodes": 1444,
+        "iteration": 88,
+        "activity_age_seconds": 148.0,
+        "sampler_reports": 0,
+        "sampled_actions": 0,
+        "completed_sampling_games": 0,
+        "log_error": false
+      }
+    ],
+    "memory_gib": 66.2559814453125,
+    "memory_fraction": 0.5521331787109375,
+    "oom_kill": 0,
+    "cpu_usage_usec": 34919838875,
+    "cpu_quota_cores": 25.0,
+    "disk_free_gib": 40.666927337646484,
+    "gpu": "22, 47124, 102.99",
+    "issues": [],
+    "healthy": true,
+    "watch_pid": 27745,
+    "job_pid": 23059,
+    "interval_seconds": 300,
+    "next_check_utc": "2026-09-15T04:15:42.089931+00:00",
+    "watch_complete": false
+  }
+}
