@@ -442,5 +442,142 @@
     "localDatasetTests": 12,
     "serverFreshTests": 4,
     "serverCudaPassed": true
+  },
+  "stoppingUpdate": {
+    "activation": {
+      "pid": 89626,
+      "startedUtc": "2026-09-15T08:58:11.923670+00:00",
+      "command": [
+        "/root/miniconda3/bin/python",
+        "-u",
+        "/root/autodl-tmp/tavern-imitation-stopping-20260915/scripts/control-imitation-stopping.py",
+        "--job",
+        "/root/tavern-ops/20260915-fresh-imitation/launch.json",
+        "--output",
+        "/root/tavern-ops/20260915-fresh-imitation/stopping-v2"
+      ],
+      "rule": {
+        "patience": 3,
+        "minDelta": 0.01,
+        "minEpochs": 5
+      }
+    },
+    "status": {
+      "utc": "2026-09-15T08:58:23.102866+00:00",
+      "members": [
+        {
+          "depth": 64,
+          "pid": 88975,
+          "alive": false,
+          "stage": "complete",
+          "rule": {
+            "stop": true,
+            "completedEpochs": 15,
+            "staleEpochs": 9,
+            "significantReference": 2.3578974864014515,
+            "bestNll": 2.3496071470467337,
+            "bestEpoch": 9,
+            "patience": 3,
+            "minDelta": 0.01,
+            "minEpochs": 5
+          },
+          "stopRequested": false
+        },
+        {
+          "depth": 256,
+          "pid": 88976,
+          "alive": false,
+          "stage": "complete",
+          "rule": {
+            "stop": true,
+            "completedEpochs": 11,
+            "staleEpochs": 4,
+            "significantReference": 2.375725737460495,
+            "bestNll": 2.375725737460495,
+            "bestEpoch": 7,
+            "patience": 3,
+            "minDelta": 0.01,
+            "minEpochs": 5
+          },
+          "stopRequested": true
+        },
+        {
+          "depth": 1024,
+          "pid": 88977,
+          "alive": true,
+          "stage": "training",
+          "rule": {
+            "stop": false,
+            "completedEpochs": 4,
+            "staleEpochs": 0,
+            "significantReference": 2.4622631423650243,
+            "bestNll": 2.4622631423650243,
+            "bestEpoch": 4,
+            "patience": 3,
+            "minDelta": 0.01,
+            "minEpochs": 5
+          },
+          "stopRequested": false
+        }
+      ],
+      "complete": false,
+      "intervalSeconds": 10,
+      "rule": {
+        "patience": 3,
+        "minDelta": 0.01,
+        "minEpochs": 5
+      },
+      "stopRequests": {
+        "256": {
+          "utc": "2026-09-15T08:58:13.095011+00:00",
+          "depth": 256,
+          "pid": 88976,
+          "alive": true,
+          "stage": "validating",
+          "rule": {
+            "stop": true,
+            "completedEpochs": 11,
+            "staleEpochs": 4,
+            "significantReference": 2.375725737460495,
+            "bestNll": 2.375725737460495,
+            "bestEpoch": 7,
+            "patience": 3,
+            "minDelta": 0.01,
+            "minEpochs": 5
+          }
+        }
+      }
+    },
+    "checkpoints": [
+      {
+        "depth": 64,
+        "bestEpoch": 9,
+        "bestNll": 2.3496071470467337,
+        "stage": "complete",
+        "stopReason": "validation_patience",
+        "bestExists": true,
+        "latestExists": true
+      },
+      {
+        "depth": 256,
+        "bestEpoch": 7,
+        "bestNll": 2.375725737460495,
+        "stage": "complete",
+        "stopReason": "interrupted",
+        "bestExists": true,
+        "latestExists": true
+      },
+      {
+        "depth": 1024,
+        "bestEpoch": 4,
+        "bestNll": 2.4622631423650243,
+        "stage": "training",
+        "stopReason": null,
+        "bestExists": true,
+        "latestExists": true
+      }
+    ],
+    "localRuleTests": 6,
+    "serverRuleTests": 6
   }
 }

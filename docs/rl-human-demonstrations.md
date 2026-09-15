@@ -124,12 +124,12 @@ TEST_BASE_URL=https://8.153.150.101 TAVERN_TEST_PATH=/tavern/ npx playwright tes
 ```sh
 PYTHONPATH=rl/python .venv/bin/python -m tavern_rl.imitate_fresh \
   --dataset /path/to/selected-human-games --output /path/to/new-run \
-  --depth 64 --device cuda --deadline-utc 2026-09-15T11:57:55.136701+00:00
+  --depth 64 --device cuda --patience 3 --min-delta 0.01 --min-epochs 5 --deadline-utc 2026-09-15T11:57:55.136701+00:00
 ```
 
 截止时间必须在未来。64、256、1024 使用同一份数据，整场对局按固定哈希分成约 80% 训练、20% 验证。缺口按既有读取器分段，段首记忆归零。每批并行最多 16 段，每 16 步反向传播一次，段内记忆跨训练块传递并截断梯度；记忆保留生成时的权重上下文，不在每次更新后重算前缀。填充行不贡献损失，也不推进对应记忆。
 
-学习率为 1e-4，CUDA 使用 fused Adam。每轮覆盖一次训练段，再计算验证集负对数似然、动作一致率和类别一致率，另报非强制动作指标。验证最优参数保存在 `best.pt`，最新参数保存在 `latest.pt`，初始随机参数保存在 `initial.pt`。连续 6 轮无验证改善时提前停止，最多 200 轮，并受截止时间限制。每 30 秒写进度、至少每 300 秒及每轮完成后保存检查点。
+学习率为 1e-4，CUDA 使用 fused Adam。每轮覆盖一次训练段，再计算验证集负对数似然、动作一致率和类别一致率，另报非强制动作指标。验证最优参数保存在 `best.pt`，最新参数保存在 `latest.pt`，初始随机参数保存在 `initial.pt`。至少完成 5 轮后，连续 3 轮验证损失未比上次显著改善的参考值降低超过 0.01 时提前停止。细小改善可以累积，超过 0.01 后重新计数；任何更低的验证损失仍更新 `best.pt`。最多 200 轮，并受截止时间限制。每 30 秒写进度、至少每 300 秒及每轮完成后保存检查点。
 
 这些是带模仿优化器的候选文件，`kind=fresh_human_imitation`，不是完整 PPO 检查点。自我对战局数为 0。后续 PPO 需新建优化器与历史池，再导入选定策略；价值头完成回报训练之前，不应把其估值用于金币规划标签或网页搜索。验证集参与候选选择，仍需独立对战评估棋力。
 
@@ -138,3 +138,5 @@ PYTHONPATH=rl/python .venv/bin/python -m tavern_rl.imitate_fresh \
 每五分钟检查记录位于 `/root/tavern-ops/20260915-fresh-imitation/health/latest.json`，启动信息为该目录的 `launch.json`。`/root/tavern-ops/current-imitation.json` 指向这次任务。旧的 population 状态仍显示停止，新的模仿任务不会冒充 PPO population。网页继续运行此前发布的模型。
 
 已核验三个初始权重与相同种子重新初始化的网络逐张量指纹一致，三个候选均已完成并保存真实样本的梯度更新，价值塔与价值头参数保持初始化值。测试覆盖随机初始化、整局分离、填充记忆、冻结参数和 CUDA 更新，详见 [启动验证记录](rl-fresh-imitation-20260915.json)。
+
+2026-09-15 停止标准调整为上述 3 轮、0.01、至少 5 轮。已经运行的旧进程由 `scripts/control-imitation-stopping.py` 每 10 秒读取已完成轮次的验证记录，并在达到条件时验证 PID、启动时间和输出路径后发送正常停止信号；原训练进程保存最新候选后退出。已结束的 64 层保留原结果，不重启。停止请求和依据保存在 `/root/tavern-ops/20260915-fresh-imitation/stopping-v2`，控制器信息为 `stopping-controller.json`。旧训练进程收到信号后仍会在自身报告写 `interrupted`，具体的验证停止原因以控制器记录为准。新启动的模仿训练直接在每轮末应用同一标准。`best.pt` 始终保留；19:57:55 仍是最晚停止时间。

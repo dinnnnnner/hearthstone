@@ -13,6 +13,7 @@ from .demonstrations import load_dataset, split_games
 from .features import prepare_entities
 from .imitate_repeated import atomic_json
 from .model import make_model
+from .imitation_stopping import stopping_status
 
 
 def fingerprint(weights):
@@ -66,10 +67,12 @@ def evaluate(model, episodes, types, batch_size, device, stopped):
 
 
 def fresh_trial(dataset, output, deadline_utc, *, depth=64, device='cpu', learning_rate=1e-4,
-                batch_size=16, sequence_length=16, patience=6, max_epochs=200, seed=42, hidden=128, heads=4, layers=2):
+                batch_size=16, sequence_length=16, patience=3, min_delta=.01, min_epochs=5,
+                max_epochs=200, seed=42, hidden=128, heads=4, layers=2):
     end=datetime.datetime.fromisoformat(deadline_utc)
     if end.tzinfo is None or end.timestamp()<=time.time():raise ValueError('A future deadline with timezone is required')
     if not 0<learning_rate<1 or min(batch_size,sequence_length,patience,max_epochs)<1:raise ValueError('Invalid training settings')
+    stopping_status(0.,[],patience=patience,min_delta=min_delta,min_epochs=min_epochs)
     output=Path(output)
     if output.exists():raise FileExistsError(output)
     manifest,episodes,rejected=load_dataset(dataset,allow_incomplete_segments=True,allow_partial_start=True)
@@ -100,17 +103,17 @@ def fresh_trial(dataset, output, deadline_utc, *, depth=64, device='cpu', learni
     initial={k:v.detach().cpu().clone() for k,v in model.state_dict().items()}
     summary=dict(kind='fresh_human_imitation',initialization='random',initialWeightSha256=fingerprint(initial),
                  contract=manifest['contract'],depth=depth,seed=seed,deadlineUtc=deadline_utc,learningRate=learning_rate,
-                 batchSize=batch_size,sequenceLength=sequence_length,patience=patience,maxEpochs=max_epochs,
+                 batchSize=batch_size,sequenceLength=sequence_length,patience=patience,minDelta=min_delta,minEpochs=min_epochs,maxEpochs=max_epochs,
                  selfPlayEpisodes=0,valueHeadTrained=False,
                  datasets=[dict(file=e['file'],sha256=e['sha256'],gameId=e['start']['gameId'],
                      split='training' if e in training else 'validation',steps=len(e['steps']),selection=e['selection']) for e in episodes])
     torch.save(dict(model=initial,model_spec=spec,report=summary),output/'initial.pt');del initial
-    epoch=updates=visits=0;best_epoch=0;best_score=float('inf');stale=0;latest_validation=None
+    epoch=updates=visits=0;best_epoch=0;best_score=float('inf');latest_validation=None;scores=[];stopping=None
     last_save=time.monotonic();last_progress=0.;reason='max_epochs'
     def state(stage):
         return dict(summary,stage=stage,epoch=epoch,updates=updates,supervisedStepVisits=visits,bestEpoch=best_epoch,
                     bestValidationNll=best_score if best_score!=float('inf') else None,validation=latest_validation,
-                    timestampUtc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+                    timestampUtc=datetime.datetime.now(datetime.timezone.utc).isoformat(),stopping=stopping)
     def save(name):
         weights={k:v.detach().cpu().clone() for k,v in model.state_dict().items()}
         if not all(torch.isfinite(v).all().item() for v in weights.values()):raise ValueError('Non-finite candidate')
@@ -153,14 +156,16 @@ def fresh_trial(dataset, output, deadline_utc, *, depth=64, device='cpu', learni
                 latest_validation=evaluate(model,validation,types,batch_size,device,stopped)
                 if latest_validation is None:break
                 score=latest_validation['all']['negative_log_likelihood']
-                if score<best_score-1e-4:best_score=score;best_epoch=epoch;stale=0;save('best.pt')
-                else:stale+=1
+                scores.append(score)
+                stopping=stopping_status(summary['before']['all']['negative_log_likelihood'],scores,
+                                         patience=patience,min_delta=min_delta,min_epochs=min_epochs)
+                if score<best_score:best_score=score;best_epoch=epoch;save('best.pt')
                 save('latest.pt');last_save=time.monotonic()
                 result=state('epoch_complete')
                 with (output/'metrics.jsonl').open('a') as log:log.write(json.dumps(result)+'\n')
                 atomic_json(output/'progress.json',result)
                 print(json.dumps(dict(epoch=epoch,updates=updates,validationNll=score,bestEpoch=best_epoch)),flush=True)
-                if stale>=patience:reason='validation_patience';break
+                if stopping['stop']:reason='validation_patience';break
         if stopped():reason='interrupted' if stop_requested else 'deadline'
         if updates:save('latest.pt')
         result=state('complete')|dict(stopReason=reason)
@@ -175,8 +180,12 @@ def main():
     for name in ('dataset','output','deadline-utc'):parser.add_argument('--'+name,required=True)
     parser.add_argument('--depth',type=int,choices=[64,256,1024],required=True)
     parser.add_argument('--device',default='cuda')
+    parser.add_argument('--patience',type=int,default=3)
+    parser.add_argument('--min-delta',type=float,default=.01)
+    parser.add_argument('--min-epochs',type=int,default=5)
     args=parser.parse_args();torch.set_num_threads(1)
-    fresh_trial(args.dataset,args.output,args.deadline_utc,depth=args.depth,device=args.device)
+    fresh_trial(args.dataset,args.output,args.deadline_utc,depth=args.depth,device=args.device,
+                patience=args.patience,min_delta=args.min_delta,min_epochs=args.min_epochs)
 
 
 if __name__=='__main__':main()
