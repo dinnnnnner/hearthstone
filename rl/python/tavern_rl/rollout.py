@@ -13,6 +13,23 @@ from .features import prepare_entities
 from .hero_pool import options_for_seed
 
 
+def sample_masked_cdf(probabilities, masks, uniforms):
+    """Inverse-CDF sampling with the legal mask enforced at the selected index.
+
+    CUDA's parallel FP32 scan can introduce a one-ULP increase across a run of
+    zero probabilities. Binary search can then land on an illegal action. Pick
+    the first *legal* crossing instead, retaining the per-seat random streams.
+    """
+    cdf = probabilities.cumsum(-1)
+    cdf = cdf / cdf[:, -1:]
+    indices = torch.arange(cdf.shape[-1], device=cdf.device)
+    crossing = masks & (cdf > uniforms[:, None])
+    selected = torch.where(crossing, indices, cdf.shape[-1]).amin(-1)
+    # A rounded tail can miss the crossing at the largest representable draw.
+    last_legal = torch.where(masks, indices, -1).amax(-1)
+    return torch.minimum(selected, last_legal)
+
+
 def inference_to_host(actions, logs=None, values=None, memory=None, packed=True):
     """One device-to-host synchronization for the action and its recurrent PPO record."""
     if not packed:
@@ -117,11 +134,9 @@ class SimulationPool:
                         distribution, values = model.distribution(obs, masks)
                     # Separate action random stream per seat/game: changing the candidate
                     # cannot consume opponents' draws, and worker count cannot change sampling.
-                    cdf = distribution.probs.cumsum(-1)
-                    cdf = cdf / cdf[:, -1:]
-                    uniforms = torch.tensor([active[w]['action_rng'][s].random() for w,s,_,_ in group], device=device, dtype=cdf.dtype)
+                    uniforms = torch.tensor([active[w]['action_rng'][s].random() for w,s,_,_ in group], device=device, dtype=distribution.probs.dtype)
                     uniforms = uniforms.clamp_max(torch.nextafter(torch.ones((),device=device),torch.zeros((),device=device)))
-                    actions = torch.searchsorted(cdf.contiguous(), uniforms[:,None], right=True).squeeze(-1)
+                    actions = sample_masked_cdf(distribution.probs, masks, uniforms)
                     logs = distribution.log_prob(actions) if need_value else None
                     values = values if need_value else None
                     actions, logs, values, updated = inference_to_host(actions, logs, values, updated, packed_host_transfer and self.meta['actionCount'] <= 2**24)
