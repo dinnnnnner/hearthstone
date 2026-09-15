@@ -114,6 +114,11 @@ class ProcessSimulationPool:
                 sampling_graphs=all(m.get('sampling_graphs',False) for m in metrics),
                 sampling_graph_capture_seconds=sum(m.get('sampling_graph_capture_seconds',0.) for m in metrics),
                 first_place_bonus=kwargs.get('first_place_bonus',0.))
+            from collections import Counter
+            for key in ('action_counts', 'learner_action_counts'):
+                combined = Counter()
+                for metric in metrics: combined.update(metric.get(key, {}))
+                performance[key] = dict(combined)
             return tracks,games,performance
         finally:
             for process in active:

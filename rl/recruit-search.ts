@@ -9,7 +9,7 @@ import { ENTITY_SCHEMA, IDS, OFFSETS, SIZES, observeEntities, type Entity } from
 import type { ScoutRound } from '../src/scouting';
 import { AI_ACTION_LIMITS, enableAIActionLimits } from '../src/ai-action-limits';
 
-export const SEARCH_VERSION = 'own-recruit-puct-limits-v2';
+export const SEARCH_VERSION = 'own-recruit-freeze-close-v3';
 type Details = Record<string, any>;
 const take = (source: Details, keys: string[]) => Object.fromEntries(keys.filter(k => source[k] !== undefined).map(k => [k, structuredClone(source[k])]));
 const cardFields = ['attack', 'health', 'golden', 'keywords', 'lockedUntil', 'lockedTier', 'bothChoices', 'magneticCount',
@@ -80,10 +80,12 @@ export function gameFromObservation(input: (Entity | null)[]): Game {
       !Number.isInteger(limits.moveRemaining) || limits.moveRemaining < 0 || limits.moveRemaining > AI_ACTION_LIMITS.moves)
       throw Error('Invalid AI action allowances');
     const undo = limits.undoOrder;
+    if (typeof limits.freezeClosing !== 'boolean') throw Error('Invalid AI freeze close state');
     if (undo !== undefined && (!Array.isArray(undo) || undo.length !== s.board.length || new Set(undo).size !== undo.length ||
       undo.some(i => !Number.isInteger(i) || i < 0 || i >= s.board.length))) throw Error('Invalid AI previous move order');
     s.aiActionUsage = { turn: s.turn, freezes: AI_ACTION_LIMITS.freezes - limits.freezeRemaining,
       moves: AI_ACTION_LIMITS.moves - limits.moveRemaining,
+      ...(limits.freezeClosing ? { freezeClosing: true } : {}),
       ...(undo ? { previousMoveOrder: undo.map((i: number) => s.board[i].uid) } : {}),
     };
   }

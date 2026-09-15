@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from tavern_rl.migrate_action_limits import (
     migrate, retained_digest, OLD_SOURCE, OLD_RULES, NEW_SOURCE, NEW_RULES,
+    FREEZE_SOURCE, FREEZE_RULES,
 )
 
 
@@ -49,6 +50,17 @@ class ActionLimitsMigrationTests(unittest.TestCase):
         before = retained_digest(self.saved)
         self.saved['optimizer']['step'] += 1
         self.assertNotEqual(before, retained_digest(self.saved))
+
+    def test_freeze_close_transition_keeps_prior_migration_and_training_state(self):
+        first = migrate(self.saved, self.meta, 'first')
+        target = self.meta | dict(sourceHash=FREEZE_SOURCE, rulesHash=FREEZE_RULES,
+            aiActionLimits=dict(version=2, freezes=1, moves=6, freezePolicy='unaffordable-at-end'))
+        final = migrate(first, target, 'second')
+        self.assertEqual(retained_digest(final), retained_digest(first))
+        records = final['config']['rule_migrations']
+        self.assertEqual([r['kind'] for r in records], ['ai-action-limits-v1', 'ai-freeze-close-v2'])
+        self.assertEqual(records[-1]['oldSourceHash'], NEW_SOURCE)
+        with self.assertRaises(ValueError): migrate(self.saved, target, 'skipped migration')
 
 
 if __name__ == '__main__':

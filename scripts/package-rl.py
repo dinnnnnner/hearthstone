@@ -26,6 +26,7 @@ for name in ["rl-deep64-diversity-20260911.json", "rl-diversity-gpu-validation-2
     record = ROOT / "docs" / name
     if record.exists(): files.append(record)
 files += sorted((ROOT / "rl/tests").rglob("*.py"))
+files += [ROOT / "scripts/enable-sampling-graphs.py"]
 validation = ROOT / "docs/rl-validation.json"
 if validation.exists(): files.append(validation)
 server_validation = ROOT / "docs/rl-server-validation.json"

@@ -79,13 +79,15 @@ class PPOTests(unittest.TestCase):
                 return self.state()
         from concurrent.futures import ThreadPoolExecutor
         pool = SimulationPool.__new__(SimulationPool)
-        pool.simulators = [FakeSimulator()]; pool.meta = {"actionCount": 5}
+        pool.simulators = [FakeSimulator()]; pool.meta = {"actionCount": 5, "actions": [dict(type=t) for t in ["end", "buy", "play", "refresh", "upgrade"]]}
         pool.executor = ThreadPoolExecutor(max_workers=1)
         try:
-            tracks, games, _ = pool.collect(ActorCritic(3, 5, 8), [ActorCritic(3, 5, 8)], [1, 2], {}, "cpu", learner_seats=1)
+            tracks, games, perf = pool.collect(ActorCritic(3, 5, 8), [ActorCritic(3, 5, 8)], [1, 2], {}, "cpu", learner_seats=1)
             shifted, shifted_games, _ = pool.collect(ActorCritic(3, 5, 8), [ActorCritic(3, 5, 8)], [3, 4], {}, "cpu", learner_seats=1, seat_offset=7)
         finally:
             pool.executor.shutdown()
+        self.assertEqual(sum(perf["action_counts"].values()), 16)
+        self.assertEqual(sum(perf["learner_action_counts"].values()), 2)
         self.assertEqual(len(tracks), 2)
         self.assertEqual([t[0][0][0][0] for t in tracks], [0, 1])
         self.assertEqual([t[1] for t in tracks], [1, (4.5-2)/3.5])

@@ -1,4 +1,4 @@
-"""Explicit, one-way migration of full PPO checkpoints to the September 15 limits.
+"""Explicit, one-way migrations of full PPO checkpoints between audited AI rules.
 
 Only the audited source/rules pair is accepted. Ordinary checkpoint loading
 remains strict. The input is never overwritten; callers must stop training.
@@ -17,6 +17,8 @@ OLD_SOURCE = '9074e697a84044483b109afa0900472cba382fbdeca99dfb01c70ef1396bb0ad'
 OLD_RULES = '9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc'
 NEW_SOURCE = 'c7fce93ab131753b8ecf18706a3d6b2b755e3d96f2b7ba6b1d20a164a1aa7bf9'
 NEW_RULES = '0adb3881ea81239a3af909b2af96b77a519251e439f590cc6785303819452c2f'
+FREEZE_SOURCE = 'eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1'
+FREEZE_RULES = 'bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c'
 
 
 def migrate(saved, meta, source_sha256):
@@ -25,11 +27,16 @@ def migrate(saved, meta, source_sha256):
     if not required <= saved.keys():
         raise ValueError('Migration requires a full PPO checkpoint')
     old = saved['meta']
-    if (old.get('sourceHash'), old.get('rulesHash')) != (OLD_SOURCE, OLD_RULES):
-        raise ValueError('Source checkpoint is not the audited pre-limits version')
-    if (meta.get('sourceHash'), meta.get('rulesHash')) != (NEW_SOURCE, NEW_RULES):
-        raise ValueError('Target simulator is not the audited action-limits version')
-    if meta.get('aiActionLimits') != dict(version=1, freezes=2, moves=6):
+    pair = (old.get('sourceHash'), old.get('rulesHash'), meta.get('sourceHash'), meta.get('rulesHash'))
+    if pair == (OLD_SOURCE, OLD_RULES, NEW_SOURCE, NEW_RULES):
+        limits, kind = dict(version=1, freezes=2, moves=6), 'ai-action-limits-v1'
+    elif pair == (NEW_SOURCE, NEW_RULES, FREEZE_SOURCE, FREEZE_RULES):
+        if old.get('aiActionLimits') != dict(version=1, freezes=2, moves=6):
+            raise ValueError('Source freeze rules differ')
+        limits, kind = dict(version=2, freezes=1, moves=6, freezePolicy='unaffordable-at-end'), 'ai-freeze-close-v2'
+    else:
+        raise ValueError('Source/target is not an audited AI rule transition')
+    if meta.get('aiActionLimits') != limits:
         raise ValueError('Unexpected action limits')
     changed = {k for k in old.keys() | meta.keys() if old.get(k) != meta.get(k)}
     if changed != {'sourceHash', 'rulesHash', 'aiActionLimits'}:
@@ -41,9 +48,9 @@ def migrate(saved, meta, source_sha256):
         opponent = entry.get('model_spec', spec)
         if opponent.get('entity_schema') != meta['entitySchema'] or opponent.get('actions') != meta['actions']:
             raise ValueError('Historical opponent has a different observation/action schema')
-    record = dict(kind='ai-action-limits-v1', utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                  sourceSha256=source_sha256, oldSourceHash=OLD_SOURCE, oldRulesHash=OLD_RULES,
-                  sourceHash=NEW_SOURCE, rulesHash=NEW_RULES,
+    record = dict(kind=kind, utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                  sourceSha256=source_sha256, oldSourceHash=old['sourceHash'], oldRulesHash=old['rulesHash'],
+                  sourceHash=meta['sourceHash'], rulesHash=meta['rulesHash'],
                   episodes=saved['episodes'], iteration=saved['iteration'],
                   retained='model, optimizer, frozen league, counters and RNG; fresh rollouts required')
     config = saved['config'] | {

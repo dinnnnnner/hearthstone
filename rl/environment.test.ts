@@ -69,20 +69,24 @@ test("self-play publishes actual completed battles on the following recruit turn
 test('self-play limits every policy seat, persists spent allowances and resets on the next turn', () => {
   const env = new SelfPlayEnv(); let view = env.reset(42);
   for (const seat of env.room.seats) assert.ok(seat.game!.aiActionUsage);
+  // Restore a public test position with insufficient gold on every seat.
+  const initial = env.snapshot(); initial.room.seats.forEach(p => { p.game!.gold = 2; });
+  view = env.restore(initial);
   const allowed = () => view.entities[0]!.details.aiActionLimits as { freezeRemaining: number; moveRemaining: number };
-  for (let i = 0; i < 16; i++) {
-    assert.equal(allowed().freezeRemaining, i < 8 ? 2 : 1);
+  for (let i = 0; i < 8; i++) {
+    assert.equal(allowed().freezeRemaining, 1);
     view = env.step(actionId('freeze'));
   }
   assert.equal(allowed().freezeRemaining, 0);
   assert.ok(!view.legalActions.includes(actionId('freeze')));
+  assert.deepEqual(view.legalActions, [actionId('end')]);
   const saved = env.snapshot(), restored = new SelfPlayEnv();
   assert.deepEqual(restored.restore(saved), view);
   assert.throws(() => env.step(actionId('freeze')), /Illegal action/);
   assert.deepEqual(env.snapshot(), saved);
   while (env.room.turn === 1) view = env.step(view.legalActions.includes(0) ? 0 : view.legalActions[0]);
-  assert.equal(allowed().freezeRemaining, 2); assert.equal(allowed().moveRemaining, 6);
-  assert.ok(view.legalActions.includes(actionId('freeze')));
+  assert.equal(allowed().freezeRemaining, 1); assert.equal(allowed().moveRemaining, 6);
+  assert.equal(view.entities[0]!.details.aiActionLimits && (view.entities[0]!.details.aiActionLimits as any).freezeClosing, false);
 });
 
 test("entity input retains effect fields and resolves instance links without leaking private state", () => {

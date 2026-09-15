@@ -110,7 +110,7 @@ class RecurrentTests(unittest.TestCase):
                 expected=torch.where(memory[:,0]==0,2,previous)
                 if not torch.equal(previous,expected):raise AssertionError('Previous action leaked across games')
                 return torch.distributions.Categorical(logits=torch.zeros_like(masks,dtype=torch.float32)),memory[:,0],memory+1
-        pool=SimulationPool.__new__(SimulationPool);pool.simulators=[FakeSimulator()];pool.meta=dict(actionCount=2)
+        pool=SimulationPool.__new__(SimulationPool);pool.simulators=[FakeSimulator()];pool.meta=dict(actionCount=2, actions=[dict(type="end"), dict(type="buy")])
         pool.executor=ThreadPoolExecutor(max_workers=1)
         try:tracks,games,_=pool.collect(CountingModel(),[],[1,2],{},'cpu',learner_seats=8)
         finally:pool.executor.shutdown()
@@ -157,7 +157,7 @@ class RecurrentTests(unittest.TestCase):
                 dist = torch.distributions.Categorical(probs=torch.ones(len(obs), 1))
                 return dist, torch.zeros(len(obs)) if with_value else None, memory + 1
         pool = SimulationPool.__new__(SimulationPool)
-        pool.simulators = [FakeSimulator(), FakeSimulator()]; pool.meta = dict(actionCount=1)
+        pool.simulators = [FakeSimulator(), FakeSimulator()]; pool.meta = dict(actionCount=1, actions=[dict(type="end")])
         pool.executor = ThreadPoolExecutor(max_workers=2)
         try:
             tracks, games, perf = pool.collect(Policy(), [Policy(wait=True)], [1, 2], {}, 'cpu',
@@ -166,6 +166,8 @@ class RecurrentTests(unittest.TestCase):
         self.assertEqual(len(tracks), 1)
         self.assertEqual(len(games), 2)
         self.assertEqual(perf['environment_actions'], 2)
+        self.assertEqual(perf['action_counts'], {'end': 2})
+        self.assertEqual(perf['learner_action_counts'], {'end': 1})
         self.assertEqual(perf['mean_inference_batch'], 1)
 
     def test_comparison_needs_enough_games_and_clear_improvement(self):

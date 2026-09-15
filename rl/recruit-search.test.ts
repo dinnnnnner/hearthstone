@@ -92,7 +92,7 @@ test('unreconstructable future discoveries and private opposing powers are expli
 test('search restores remaining allowances and inverse moves, and each branch spends only its own quota', () => {
   let { s } = setup();
   s.board = ['s14_BG25_001', 's14_BG20_100', 's14_BG21_015'].map(id => makeMinion(id));
-  s = actSeason(s, { type: 'freeze' }).state;
+  s.gold = 2;
   s = actSeason(s, { type: 'move', uid: s.board[0].uid, to: 2 }).state;
   const input = json(observeEntities(s, 2, 64)), before = structuredClone(input);
   const branch = new RecruitSearchEnv(input, 2);
@@ -101,7 +101,12 @@ test('search restores remaining allowances and inverse moves, and each branch sp
   assert.ok(!root.legal.includes(actionId('move', 2, 0, 0)));
   const child = branch.step(actionId('freeze'));
   assert.ok(!child.legal.includes(actionId('freeze')));
-  assert.deepEqual(child.entities[0]!.details.aiActionLimits, { version: 1, freezeRemaining: 0, moveRemaining: 5 });
+  const closing = child.entities[0]!.details.aiActionLimits as any;
+  assert.equal(closing.version, 2); assert.equal(closing.freezeRemaining, 0);
+  assert.equal(closing.moveRemaining, 5); assert.equal(closing.freezeClosing, true);
+  assert.deepEqual(child.legal, [actionId('end')]);
+  const restored = new RecruitSearchEnv(json(child.entities), 3);
+  assert.deepEqual(restored.reset(12), { ...child, steps: 0 });
   assert.throws(() => branch.step(actionId('freeze')), /Illegal search action/);
   assert.deepEqual(branch.reset(11), root);
   assert.deepEqual(input, before);

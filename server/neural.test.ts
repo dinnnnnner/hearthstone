@@ -99,8 +99,9 @@ test('search bots cannot endlessly freeze and unfreeze an unchanged shop', async
     const bot = room.seats.find(p => p.bot)!;
     for (const p of room.seats) if (p.bot && p !== bot) p.ended = true;
     store.autoChoices(room, bot);
+    bot.game!.gold = 2;
     await until(() => bot.ended);
-    assert.deepEqual(choices, [2, 2, 0]); assert.equal(store.ai.errors, 0);
+    assert.deepEqual(choices, [2, 0]); assert.equal(store.ai.errors, 0);
   } finally { store.stop(); }
 });
 
@@ -110,7 +111,7 @@ for (const search of [false, true]) test(`${search ? 'search' : 'ordinary'} bots
     const row = body.rows[0], limits = row.entities[0].details.aiActionLimits;
     assert.ok(limits); observed.push({ freezes: limits.freezeRemaining, moves: limits.moveRemaining });
     const move = row.legal.find((id: number) => ACTIONS[id].type === 'move');
-    const action = row.legal.includes(2) ? 2 : move ?? 0;
+    const action = move ?? (row.legal.includes(2) ? 2 : 0);
     return { rows: [{ action, memory: row.memory }] };
   };
   const store = new NeuralRooms(infer, Date.now, () => .3, 'scouting-v4', [
@@ -122,10 +123,11 @@ for (const search of [false, true]) test(`${search ? 'search' : 'ordinary'} bots
     const bot = room.seats.find(p => p.bot)!;
     for (const p of room.seats) if (p.bot && p !== bot) p.ended = true;
     store.autoChoices(room, bot);
+    bot.game!.gold = 2;
     bot.game!.board = ['s14_BG25_001', 's14_BG20_100', 's14_BG21_015'].map(id => makeMinion(id));
     await until(() => bot.ended);
     assert.equal(store.ai.errors, 0);
-    assert.equal(observed.length, 9); // Two toggles, six moves, then end.
+    assert.equal(observed.length, 8); // Six moves, freeze commitment, then end.
     assert.deepEqual(observed.at(-1), { freezes: 0, moves: 0 });
     assert.equal(publicAIActionLimits(bot.game!)!.freezeRemaining, 0);
     // Reconstruct the actual room save, without a neural-memory cache.

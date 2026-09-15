@@ -11,10 +11,11 @@ class PublicObservationTests(unittest.TestCase):
             self.assertEqual(meta['observationVersion'], 4)
             self.assertEqual(meta['entitySchema']['version'], 3)
             self.assertIsNone(meta['legacyV2SourceHash'])
-            self.assertEqual(meta['aiActionLimits'], {'version': 1, 'freezes': 2, 'moves': 6})
+            self.assertEqual(meta['aiActionLimits'], {'version': 2, 'freezes': 1, 'moves': 6, 'freezePolicy': 'unaffordable-at-end'})
             state = simulator.reset(42)
             self.assertEqual(state['entities'][0]['details']['aiActionLimits'],
-                             {'version': 1, 'freezeRemaining': 2, 'moveRemaining': 6})
+                             {'version': 2, 'freezeRemaining': 1, 'moveRemaining': 6, 'freezeClosing': False,
+                              'freezeOffers': {'shop': [], 'spellShop': []}})
             while state['info']['turn'] == 1:
                 legal = state['legalActions']
                 action = next((i for i in legal if meta['actions'][i]['type'] == 'end'), legal[0])

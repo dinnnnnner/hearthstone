@@ -1,6 +1,6 @@
 from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
-from collections import defaultdict
+from collections import defaultdict, Counter
 from pathlib import Path
 import json
 import time
@@ -79,6 +79,8 @@ class SimulationPool:
         active, summaries, tracks = {}, [], []
         cursor = 0; start_time = time.monotonic(); action_count = 0; last_progress = start_time
         inference_seconds = 0.; simulator_wait_seconds = 0.; inference_batches = 0; inference_decisions = 0
+        action_types = [a['type'] for a in self.meta['actions']]
+        action_counts, learner_action_counts = Counter(), Counter()
         if schedule is not None and len(schedule) != len(seeds): raise ValueError("Schedule length differs from seeds")
         models = {-1: current, **{i: model for i, model in enumerate(opponents)}}
         for model in models.values(): model.eval()
@@ -165,7 +167,12 @@ class SimulationPool:
                             pass
                     raise
                 action_count += 1
-                game = active[worker]; game["state"] = state
+                game = active[worker]
+                previous_seat = game['state']['actor']
+                kind = action_types[game['previous'][previous_seat]]
+                action_counts[kind] += 1
+                if game['controllers'][previous_seat] == -1: learner_action_counts[kind] += 1
+                game["state"] = state
                 if not (state["terminated"] or state["truncated"]):
                     continue
                 if state["terminated"]:
@@ -195,6 +202,7 @@ class SimulationPool:
                 last_progress = now
         elapsed = time.monotonic() - start_time
         return tracks, summaries, {"seconds": elapsed, "environment_actions": action_count, "actions_per_second": action_count / max(elapsed, 1e-9),
+            "action_counts": dict(action_counts), "learner_action_counts": dict(learner_action_counts),
             "first_place_bonus": first_place_bonus,
             "inference_seconds": inference_seconds, "simulator_wait_seconds": simulator_wait_seconds,
 

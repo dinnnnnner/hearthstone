@@ -2,7 +2,7 @@ import { type Action, type Game, type Minion, heroPowerState } from "../src/engi
 import { getDef } from "../src/data";
 import { seasonTargets } from "../src/season/engine";
 import { equippedPowers } from "../src/season/powers";
-import { aiActionError } from '../src/ai-action-limits';
+import { aiActionError, aiFreezeClosing } from '../src/ai-action-limits';
 
 // Chromie's full spell tavern contains SHOP_SIZE[tier] + 1 cards, up to seven.
 export const LIMITS = { board: 7, shop: 16, spellShop: 7, hand: 10, discovery: 4, powers: 2, choices: 4 } as const;
@@ -68,7 +68,7 @@ export function candidates(s: Game, endOnly = false): Map<number, Action> {
     return result;
   }
   put({ type: "end" });
-  if (endOnly) return result;
+  if (endOnly || aiFreezeClosing(s)) return result;
   for (const type of ["refresh", "freeze", "upgrade", "reward", "darkGift"] as const) put({ type });
   s.shop.forEach((m, i) => put({ type: "buy", uid: m.uid }, i));
   s.season!.spellShop.forEach((m, i) => put({ type: "buySpell", uid: m.uid }, i));

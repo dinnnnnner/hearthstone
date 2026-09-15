@@ -1,11 +1,13 @@
 import type { Action, Game } from './engine';
+import { minionCost, spellCost, spellUsesHealth } from './season/engine';
 
-export const AI_ACTION_LIMITS = { version: 1, freezes: 2, moves: 6 } as const;
+export const AI_ACTION_LIMITS = { version: 2, freezes: 1, moves: 6, freezePolicy: 'unaffordable-at-end' } as const;
 export interface AIActionUsage {
   turn: number;
   freezes: number;
   moves: number;
   previousMoveOrder?: string[];
+  freezeClosing?: boolean;
 }
 
 export function enableAIActionLimits(s: Game) {
@@ -16,6 +18,17 @@ function usage(s: Game) {
   return s.aiActionUsage?.turn === s.turn ? s.aiActionUsage : { turn: s.turn, freezes: 0, moves: 0 };
 }
 
+/** Candidates to retain, not a claim that these cards are worth buying. */
+export function aiFreezeOffers(s: Game) {
+  if (!s.season) return { shop: [] as number[], spellShop: [] as number[] };
+  return {
+    shop: s.shop.flatMap((m, i) => minionCost(s, m) > s.gold ? [i] : []),
+    spellShop: s.season.spellShop.flatMap((m, i) => !spellUsesHealth(m) && spellCost(s, m) > s.gold ? [i] : []),
+  };
+}
+
+export function aiFreezeClosing(s: Game) { return !!s.aiActionUsage && !!usage(s).freezeClosing; }
+
 /** Own public slot indices only; instance IDs never enter model observations. */
 export function publicAIActionLimits(s: Game) {
   if (!s.aiActionUsage) return undefined;
@@ -24,6 +37,8 @@ export function publicAIActionLimits(s: Game) {
   return { version: AI_ACTION_LIMITS.version,
     freezeRemaining: Math.max(0, AI_ACTION_LIMITS.freezes - u.freezes),
     moveRemaining: Math.max(0, AI_ACTION_LIMITS.moves - u.moves),
+    freezeClosing: !!u.freezeClosing,
+    freezeOffers: aiFreezeOffers(s),
     ...(order && order.length === s.board.length && order.every(i => i >= 0) ? { undoOrder: order } : {}),
   };
 }
@@ -31,7 +46,14 @@ export function publicAIActionLimits(s: Game) {
 export function aiActionError(s: Game, a: Action): string | undefined {
   if (!s.aiActionUsage) return;
   const u = usage(s);
-  if (a.type === 'freeze' && u.freezes >= AI_ACTION_LIMITS.freezes) return '人机本回合最多切换冻结状态2次。';
+  if (u.freezeClosing && a.type !== 'end' && a.type !== 'continue') return '人机已确认冻结收尾，请结束招募。';
+  if (a.type === 'freeze') {
+    if (u.freezes >= AI_ACTION_LIMITS.freezes) return '人机本回合只能确认一次冻结收尾。';
+    if (!s.frozen) {
+      const offers = aiFreezeOffers(s);
+      if (!offers.shop.length && !offers.spellShop.length) return '没有因金币不足而买不起的商店牌，无需冻结。';
+    }
+  }
   if (a.type !== 'move') return;
   if (u.moves >= AI_ACTION_LIMITS.moves) return '人机本回合最多换位6次。';
   const order = s.board.map(m => m.uid), from = order.indexOf(a.uid);
@@ -49,6 +71,7 @@ export function recordAIAction(before: Game, after: Game, a: Action) {
   const u = usage(before);
   after.aiActionUsage = { turn: before.turn,
     freezes: u.freezes + +(a.type === 'freeze'), moves: u.moves + +(a.type === 'move'),
+    ...(u.freezeClosing || a.type === 'freeze' ? { freezeClosing: true } : {}),
     ...(a.type === 'move' ? { previousMoveOrder: before.board.map(m => m.uid) } : {}),
   };
 }
