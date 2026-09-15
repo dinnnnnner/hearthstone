@@ -197,3 +197,22 @@ python3 -m unittest discover -s scripts -p test_tavern_ops.py
 入口复用了已完成上线和续训的脚本，并移除了固定发布日期及模仿对局数限制。本次新增入口已验证只读状态查询、模板语法，以及训练锁、活跃对局和切换回滚保护；未为测试它而再次切换线上版本或重启当前训练。
 
 `publish` 成功后会更新本地 `deploy/inference-models.json`。需要同步 Git 时可单独提交这个文件；命令不会自动提交工作区里的其他修改。
+
+## 停训后发布并续训
+
+`publish --include-search` 会同时更新普通版和搜索版的六个选项。每个深度的两种选项使用同一份导出权重，保留各自服务端口、模型 ID 和搜索运行代码。发布先对六份新 release 做推理检查，搜索版额外验证合法动作和记忆隔离，再一起切换服务。普通 `publish` 仍只更新三个普通版。
+
+`scripts/after-training.py` 可以接手一个指定的训练任务。它要求协调器 PID 和原定截止时间都吻合，并等待 `time_limit` 状态及全部子进程停止。手动中断、异常停止、换任务或改截止时间会终止接续流程。发布通过健康检查和六选项浏览器测试后，才从刚刚发布的完整检查点继续训练。
+
+2026-09-15 已安排的流程使用本机用户 systemd 服务 `tavern-after-freeze-close-20260915`。它等待原任务在北京时间 15:50:39 停止，发布六个模型选项，再续训 4 小时。续训保持每模型 64 个模拟器、8 个采样进程、每轮 64 局、MPS、CUDA Graph 和融合 Adam，并新建每 300 秒检查一次的监控进程。新的 4 小时从发布验证完成后开始计算。
+
+本机状态和日志位于 `~/.local/share/tavern-ops/jobs/20260915-after-freeze-close/status.json` 与 `pipeline.log`。发布及训练运行记录在训练机 `/root/tavern-ops/20260915-after-freeze-close/`。若有活跃房间，流程等房间空闲再切换。失败会记录为 `failed`，不会自动重试发布或重复启动训练。
+
+查看接续流程：
+
+```bash
+systemctl --user status tavern-after-freeze-close-20260915
+cat ~/.local/share/tavern-ops/jobs/20260915-after-freeze-close/status.json
+```
+
+流程作为后台服务运行，使用固定源码副本。后续编辑工作目录不会改变已安排的发布步骤。它依赖本机持续运行及三台主机的 SSH 连接。

@@ -49,13 +49,13 @@ def remote_python(host, code):
 
 
 def copy_to(host, files, directory):
-    args = ['scp', '-r']
+    args = ['scp', '-r', '-o', 'BatchMode=yes']
     if host == TRAINING: args += ['-P', TRAINING_PORT, '-o', f'ControlPath={CONTROL}']
     run([*args, *files, host+':'+directory+'/'])
 
 
 def copy_from(host, path, target):
-    args = ['scp', '-r']
+    args = ['scp', '-r', '-o', 'BatchMode=yes']
     if host == TRAINING: args += ['-P', TRAINING_PORT, '-o', f'ControlPath={CONTROL}']
     run([*args, host+':'+path, target])
 
@@ -151,7 +151,25 @@ def published_base_models(models, exported):
     return base
 
 
-def publish(work, tag):
+def publication_plan(models, reports, include_search=False):
+    bases = published_base_models(models, reports)
+    plan = []
+    for i, (base, report) in enumerate(zip(bases, reports)):
+        for key in ('episodes', 'checkpointSha256'): base[key] = report[key]
+        plan.append(dict(id=base['id'], source=report['id'], unit='tavern-model@'+base['id'],
+                         port=[18890,18892,18894][i], search=False, **{k:report[k] for k in ('episodes','checkpointSha256','hashes')}))
+        if include_search:
+            depth = [64,256,1024][i]
+            variants = [m for m in models if m.get('search') is True and m['id'].startswith(f'deep{depth}-search-')]
+            if len(variants) != 1: raise RuntimeError(f'Expected one search model for depth {depth}')
+            variant = variants[0]
+            for key in ('episodes','checkpointSha256'): variant[key] = report[key]
+            plan.append(dict(id=f'deep{depth}-search', source=report['id'], unit=f'tavern-deep{depth}-search',
+                             port=[18896,18900,18902][i], search=True, **{k:report[k] for k in ('episodes','checkpointSha256','hashes')}))
+    return plan
+
+
+def publish(work, tag, include_search=False, wait_for_idle=False):
     require_stopped(state())
     if not (REPO/'node_modules/@playwright/test').exists():
         raise RuntimeError('缺少项目依赖，请先在仓库运行 npm ci')
@@ -170,12 +188,14 @@ def publish(work, tag):
         metadata = json.loads((work/'export'/model['id']/'metadata.json').read_text())
         assert metadata['contract'] == health['ai']['contract'], '线上观察契约与模型不同'
         for key in ('episodes','checkpointSha256'): model[key] = r[key]
+    plan = publication_plan(models, report['models'], include_search)
+    (work/'deployment.json').write_text(json.dumps(plan,indent=2)+'\n')
     (work/'inference-models.json').write_text(json.dumps(models,ensure_ascii=False,indent=2)+'\n')
     verification = dict(stage='staged', release=tag+'-models', models=models, training=report)
     (work/'model-verification.json').write_text(json.dumps(verification,indent=2)+'\n')
     incoming='.local/share/tavern-models/incoming-'+tag
     ssh(COMPUTE, 'mkdir -p '+incoming)
-    copy_to(COMPUTE, [work/n for n in ['export','report.json','stage_compute.py','activate_compute.py','preflight.py']], incoming)
+    copy_to(COMPUTE, [work/n for n in ['export','report.json','deployment.json','stage_compute.py','activate_compute.py','preflight.py']], incoming)
     ssh(COMPUTE, 'python3 '+incoming+'/stage_compute.py')
     copy_from(COMPUTE, incoming+'/preflight-results.json', work)
     public_work='/tmp/tavern-ops-'+tag
@@ -183,7 +203,7 @@ def publish(work, tag):
     copy_to(PUBLIC, [work/n for n in ['inference-models.json','model-verification.json','stage_public.py','activate_public.py']], public_work)
     rollback=ssh(PUBLIC, 'python3 '+public_work+'/stage_public.py', capture=True)
     (work/'public-rollback.json').write_text(rollback)
-    run([sys.executable, work/'deploy.py'])
+    run([sys.executable, work/'deploy.py', *(['--wait-for-idle'] if wait_for_idle else [])])
     env=dict(os.environ,TEST_BASE_URL='https://8.153.150.101',TAVERN_TEST_PATH='/tavern/')
     run(['npx','playwright','test','tests/ai-models.spec.ts','--workers=1'],cwd=REPO,env=env)
     final=json.loads(ssh(PUBLIC,'curl -fsS http://127.0.0.1:8787/tavern-api/health',capture=True))
@@ -205,7 +225,8 @@ def main():
     sub=parser.add_subparsers(dest='action',required=True)
     sub.add_parser('status',help='查看训练和线上模型状态')
     sub.add_parser('stop',help='提前停止自我对战，保留已保存检查点')
-    sub.add_parser('publish',help='正常停训后导出、上线并测试三个模型')
+    p=sub.add_parser('publish',help='正常停训后导出、上线并测试模型')
+    p.add_argument('--include-search',action='store_true',help='Also update all three search variants to the exported weights')
     p=sub.add_parser('train',help='从当前完整检查点继续训练')
     p.add_argument('--hours',type=float,required=True)
     p.add_argument('--model',choices=['all','64','256','1024'],default='all',help='Only update this model; other models remain opponents')
@@ -238,7 +259,7 @@ def main():
             print(ssh(PUBLIC,'curl -fsS http://127.0.0.1:8787/models',capture=True));return
         if args.action=='stop':stop();return
         if args.action=='train':train(work,tag,hours)
-        elif args.action=='publish':publish(work,tag)
+        elif args.action=='publish':publish(work,tag,args.include_search)
     finally:
         archive=Path.home()/'.local/share/tavern-ops/jobs'/tag
         archive.parent.mkdir(parents=True,exist_ok=True)
