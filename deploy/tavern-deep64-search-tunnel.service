@@ -1,0 +1,14 @@
+[Unit]
+Description=Forward Battlegrounds 64-layer search to public server
+Wants=tavern-deep64-search.service
+After=tavern-deep64-search.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ssh -NT -i %h/.ssh/tavern_public_ed25519 -o IdentitiesOnly=yes -o UserKnownHostsFile=%h/.ssh/tavern_public_known_hosts -o StrictHostKeyChecking=yes -o BatchMode=yes -o ExitOnForwardFailure=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -R 127.0.0.1:18897:127.0.0.1:18896 root@100.121.69.44
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

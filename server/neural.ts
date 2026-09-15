@@ -1,6 +1,7 @@
 import { setImmediate as yieldLoop } from 'node:timers/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { gzipSync } from 'node:zlib';
+import { createHash } from 'node:crypto';
 import { Rooms, type Room, type Seat, type AIModel, type AIModelOption } from './rooms';
 import { ACTIONS, candidates } from '../rl/actions';
 import { inferenceProfile } from './neural-profile';
@@ -10,7 +11,7 @@ import type { Action } from '../src/engine';
 
 export const runtimeSchema = inferenceProfile().schema;
 export const contract = inferenceProfile().contract;
-type Memory = { memory: number[]; previous: number; turn: number; decisions: number };
+type Memory = { memory: number[]; previous: number; turn: number; decisions: number; positions?: Set<string> };
 type Prediction = { rows: { action: number; memory: number[] }[] };
 type Traffic = { requests: number; rawRequestBytes: number; requestBytes: number; responseBytes: number; maxKbps: number };
 export type Infer = { (body: unknown): Promise<Prediction>; traffic?: Traffic };
@@ -48,7 +49,14 @@ export function httpInference(url: string, options: { compress?: boolean; maxKbp
   return infer;
 }
 
-export type NeuralModel = AIModel & { infer: Infer; profile: string; health?: () => Promise<boolean> };
+export type NeuralModel = AIModel & { infer: Infer; profile: string; search?: boolean; health?: () => Promise<boolean> };
+
+/** Reserve time for remaining actions and other bots; never extend the game clock. */
+export function recruitSearchBudget(deadline: number, now: number, pendingBots: number) {
+  if (!deadline) return 1000;
+  const remaining = deadline - now - 2000;
+  return remaining <= 0 ? 0 : Math.min(1000, Math.max(0, Math.floor(remaining / Math.max(1, pendingBots) / 20)));
+}
 type ModelRuntime = NeuralModel & { observation: ReturnType<typeof inferenceProfile>; available: boolean;
   retryAt: number; decisions: number; errors: number; fallbackRounds: number };
 
@@ -144,16 +152,29 @@ export class NeuralRooms extends Rooms {
       state = { memory: Array(128).fill(0), previous: ACTIONS.length, turn, decisions: 0 };
       this.memories.set(p, state);
     }
-    if (state.turn !== turn) { state.turn = turn; state.decisions = 0; }
+    if (state.turn !== turn) { state.turn = turn; state.decisions = 0; state.positions = undefined; }
     // The model gets the same public projection as training. Private enemy boards
     // are supplied only to the authoritative rule validator, never to inference.
     const s = { ...p.game!, pool: r.pool };
+    const position = (game: typeof s) => createHash('sha256').update(JSON.stringify(model.observation.observe(game, 0, 64))).digest('hex');
+    if (model.search) {
+      state.positions ??= new Set();
+      state.positions.add(position(s));
+      if (state.positions.size > 128) state.positions.delete(state.positions.values().next().value!);
+    }
     const pair = r.pairings?.find(pair => pair.includes(p.id));
     const enemy = r.seats.find(seat => seat.id === pair?.find(id => id !== p.id));
     const valid = new Map<number, Action>();
     let checked = 0;
-    for (const [id, action] of candidates(s, state.decisions >= 64)) {
+    for (const [id, action] of candidates(s, !model.search && state.decisions >= 64)) {
       let uid = 0;
+      if (model.search && ['move', 'freeze'].includes(action.type)) {
+        const preview = withSimulation({ uid: () => `preview-${uid++}`, recordLogs: false, recordFrames: false },
+          () => actSeason(s, action, () => .5));
+        // Prune reversible cycles in the AI's choices, not productive operations
+        // or the rules' action count. Only public observations enter this cache.
+        if (!preview.error && state.positions!.has(position(preview.state))) continue;
+      }
       const error = ['end', 'move', 'freeze'].includes(action.type) ? undefined : withSimulation(
         { uid: () => `preview-${uid++}`, recordLogs: false, recordFrames: false },
         () => actSeason(s, action, () => 0.5, { opponentBoard: enemy?.game?.board || r.grave?.board || [] }).error,
@@ -162,8 +183,10 @@ export class NeuralRooms extends Rooms {
       if (++checked % 16 === 0) await yieldLoop();
       if (!fresh()) return;
     }
-    if (!valid.size || state.decisions >= 96) throw Error('Neural action limit or unresolved mandatory choice');
-    const result = await model.infer({ checkpointSha256: model.checkpointSha256, contract: model.observation.contract, rows: [{ entities: model.observation.observe(s, state.decisions, 64),
+    if (!valid.size || !model.search && state.decisions >= 96) throw Error('Neural action limit or unresolved mandatory choice');
+    const result = await model.infer({ checkpointSha256: model.checkpointSha256, contract: model.observation.contract,
+      ...(model.search ? { search: true, searchTimeMs: recruitSearchBudget(r.mode === 'training' ? 0 : r.deadline,
+        this.now(), this.living(r).filter(seat => seat.bot && !seat.ended).length) } : {}), rows: [{ entities: model.observation.observe(s, state.decisions, 64),
       legal: [...valid.keys()], memory: state.memory, previous: state.previous }] });
     if (!fresh()) return;
     const chosen = result.rows?.[0];
@@ -175,6 +198,7 @@ export class NeuralRooms extends Rooms {
       const error = this.apply(r, p, action);
       // The shared pool can change while awaiting inference. Retry with a fresh mask.
       if (error) { state.decisions++; return; }
+      if (!['move', 'freeze'].includes(action.type)) state.positions?.clear();
     }
     state.memory = chosen.memory; state.previous = chosen.action; state.decisions++;
     this.ai.decisions++; this.ai.mode = 'neural';

@@ -17,6 +17,20 @@ TEMPLATES=Path(__file__).parent/'tavern-ops-templates'
 
 
 class OperationGuards(unittest.TestCase):
+    def test_blackwell_host_and_performance_flags(self):
+        spec=importlib.util.spec_from_file_location('ops',Path(__file__).with_name('tavern-ops.py'))
+        ops=importlib.util.module_from_spec(spec);spec.loader.exec_module(ops)
+        self.assertEqual(ops.TRAINING_SERVERS['west'],('root@connect.westb.seetacloud.com','51735'))
+        self.assertIn('51735',ops.ssh_args(ops.TRAINING))
+        directory=ops.render('test-'+uuid.uuid4().hex,4,model='all',workers=64,games=64,sequence_batch_size=32,fused_adam=True,sampling_processes=8,mps=True,training_graphs=True)
+        try:
+            source=(directory/'resume.py').read_text()
+            self.assertIn("performance_args=['--sequence-batch-size', '32', '--fused-adam', '--training-graphs', '--sampling-processes', '8']",source)
+            self.assertIn('use_mps=True',source)
+            self.assertIn('*performance_args]',source)
+            self.assertIn('hours=4',source)
+        finally:shutil.rmtree(directory)
+
     def test_primary_model_and_batch_parameters_render_into_launcher(self):
         spec=importlib.util.spec_from_file_location('ops',Path(__file__).with_name('tavern-ops.py'))
         ops=importlib.util.module_from_spec(spec);spec.loader.exec_module(ops)
@@ -48,6 +62,7 @@ class OperationGuards(unittest.TestCase):
                 self.assertEqual(elapsed.total_seconds(),9000)
                 self.assertTrue(launch.call_args.kwargs['start_new_session'])
                 self.assertEqual(record['command'][record['command'].index('--workers')+1],'16')
+                self.assertNotIn('--unused-gold-penalty',record['command'])
 
     def test_export_refuses_active_training(self):
         with tempfile.TemporaryDirectory() as d:

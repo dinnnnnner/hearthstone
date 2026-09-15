@@ -131,6 +131,8 @@ def parser():
     p.add_argument("--league-size", type=int, default=12)
     p.add_argument("--threads", type=int, default=1)
     p.add_argument("--replays", action="store_true", help="Save action tapes for deterministic offline replay")
+    from .training_performance import add_arguments
+    add_arguments(p)
     return p
 
 
@@ -177,7 +179,8 @@ def main():
         lock.close()
         raise ValueError("Output already contains a checkpoint; use --resume or choose a new --output")
     code_hash = trainer_hash()
-    pool = SimulationPool(args.workers)
+    from .training_performance import make_pool
+    pool = make_pool(args, output)
     try:
         state = pool.simulators[0].reset(args.seed & 0xffffffff)
         config = {"gamma": 1.0, "gae_lambda": .95, "clip": .2, "value_coef": .5, "entropy_coef": .01,
@@ -208,10 +211,9 @@ def main():
                 _, anchor = load_checkpoint(path,pool.meta,args.device,allow_legacy=True)
                 league.append(league_entry(anchor,'anchor:'+str(path),anchor=True))
             if len(league) >= args.league_size: raise ValueError('League needs space for anchors plus history')
-        optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"], eps=1e-5)
-        if saved:
-            optimizer.load_state_dict(saved["optimizer"])
-            for group in optimizer.param_groups: group['lr'] = config['learning_rate']
+        from .training_performance import apply_overrides, make_optimizer
+        apply_overrides(config, args)
+        optimizer = make_optimizer(model, config, saved["optimizer"] if saved else None)
         def inference_model():
             if rollout_device == args.device: return model
             copy = make_model(model.specification()).to(rollout_device)
@@ -219,7 +221,7 @@ def main():
             for parameter in copy.parameters(): parameter.requires_grad_(False)
             return copy
         actor = inference_model()
-        opponents = frozen_models(league, model.specification(), rollout_device)
+        opponents = [] if args.sampling_processes > 1 else frozen_models(league, model.specification(), rollout_device)
         if saved:
             torch.set_rng_state(saved["torch_rng"])
             np.random.set_state(saved["numpy_rng"]); random.setstate(saved["python_rng"])
@@ -236,7 +238,7 @@ def main():
             (output / "manifest.json").write_text(json.dumps({"format": 1, "trainerHash": code_hash, "meta": {k:v for k,v in pool.meta.items() if k not in ["actions", "cardIds", "heroIds", "entitySchema"]},
                 "config": config, "iteration": iteration, "episodes": episodes, "model_spec": {k:v for k,v in model.specification().items() if k not in ["entity_schema","actions"]},
                 "league_generations": [entry["generation"] for entry in league], "torch": torch.__version__, "numpy": np.__version__,
-                "device": args.device, "rollout_device": rollout_device, "workers": len(pool.simulators),
+                "device": args.device, "rollout_device": rollout_device, "workers": getattr(pool, "worker_count", len(pool.simulators)),
                 "parameters": sum(p.numel() for p in model.parameters())}, indent=2))
         checkpoint()
         for _ in range(args.iterations):
@@ -250,7 +252,8 @@ def main():
             if any(game["truncated"] for game in games):
                 raise RuntimeError("A self-play game was truncated. Inspect replay/debug files and increase maxSteps; no PPO update was applied")
             optimization_started = time.monotonic()
-            metrics = ppo_update(model, optimizer, tracks, config, args.device)
+            from .training_performance import optimized_update
+            metrics = optimized_update(ppo_update, model, optimizer, tracks, config, args.device)
             if args.device == "cuda": torch.cuda.synchronize()
             metrics["optimization_seconds"] = time.monotonic()-optimization_started
             episodes += len(games); iteration += 1
@@ -258,7 +261,7 @@ def main():
             league.append(league_entry(model,iteration))
             league = prune_league(league,config["league_size"])
             actor = inference_model()
-            opponents = frozen_models(league, model.specification(), rollout_device)
+            opponents = [] if args.sampling_processes > 1 else frozen_models(league, model.specification(), rollout_device)
             total_seconds = time.monotonic()-iteration_started
             row = {"iteration": iteration, "iteration_seconds": total_seconds,
                    "end_to_end_actions_per_second": performance["environment_actions"]/total_seconds,

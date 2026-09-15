@@ -5,6 +5,14 @@ from tavern_rl.serve import decode_request, Policy
 
 
 class ServingTests(unittest.TestCase):
+    def test_search_must_be_explicitly_supported_and_boolean(self):
+        policy = Policy.__new__(Policy)
+        policy.metadata = {'contract': 'c', 'checkpointSha256': 'p'}
+        policy.search = None
+        for value in (True, 'true', 1):
+            with self.assertRaisesRegex(ValueError, 'search is unavailable'):
+                policy.predict({'contract': 'c', 'search': value})
+
     def test_compression_preserves_payload_and_enforces_decoded_limit(self):
         data = {'rows': [{'legal': [1, 2], 'text': '公开战况'}]}
         raw = json.dumps(data).encode()

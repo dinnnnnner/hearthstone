@@ -6,7 +6,7 @@
 
 | 用途 | SSH 地址 | 做什么 |
 |---|---|---|
-| 训练服务器 | `ssh -p 34884 root@connect.nmb2.seetacloud.com` | GPU 模仿学习、自我对战、保存完整训练检查点 |
+| 训练服务器 | `ssh -p 51735 root@connect.westb.seetacloud.com` | RTX PRO 6000 Blackwell，自我对战、保存完整训练检查点 |
 | 计算服务器 | `ssh zich@100.97.24.15` | 运行网页对局所用的三个模型 |
 | 公网服务器 | `ssh root@100.121.69.44` | 提供客户端和对局服务，通过隧道请求计算服务器 |
 
@@ -22,6 +22,8 @@ SSH 密码在终端提示时输入，脚本不会保存密码。如果 Tailscale
 cd /home/zich/hearthstone
 python3 scripts/tavern-ops.py status
 ```
+
+默认连接新 Blackwell 服务器。旧 3080 Ti 保持停止，可用 `python3 scripts/tavern-ops.py --training-server legacy status` 查看。两个服务器的 SSH 连接分别保存。
 
 先显示训练状态，再显示客户端正在使用的模型版本。
 
@@ -64,13 +66,27 @@ python3 scripts/tavern-ops.py train --hours 8
 
 时间从实际启动续训时计算，终端会打印北京时间的截止时间。训练在服务器后台执行，关闭本机终端后继续运行，到时自动停止。训练服务器本身需要保持运行。
 
-未指定模型和并行参数时，三个模型各用 16 个模拟器，每轮 16 局，每两轮交换历史对手，外部对手占比 0.4；第一名排名奖励 +2、第八名 −1，每枚剩余铸币惩罚 0.01。
+未指定模型和并行参数时，三个模型各用 16 个模拟器，每轮 16 局，每两轮交换历史对手，外部对手占比 0.4；第一名排名奖励 +2、第八名 −1，已移除回合结束剩余金币扣分及逐步扣分记录，仅使用终局排名奖励。
 
 集中训练一个主模型并扩大采样批量，例如训练 256 层、64 并行、每轮 64 局：
 
 ```bash
 python3 scripts/tavern-ops.py train --hours 2 --model 256 --workers 64 --games 64
 ```
+
+`--sequence-batch-size` 可以明确修改 PPO 每次更新的序列数量，`--fused-adam` 启用融合 CUDA Adam，`--no-fused-adam` 可恢复普通实现。不传这些选项时沿用检查点设置。新续训会移除旧检查点中的金币扣分配置，优化器状态继续保留。
+
+Blackwell 上可以将采样拆成多个 Python 进程，并通过 NVIDIA MPS 并发提交 GPU 工作：
+
+```bash
+python3 scripts/tavern-ops.py train --hours 4 --model 256 \
+  --workers 256 --games 256 --sampling-processes 16 --mps \
+  --sequence-batch-size 32 --fused-adam
+```
+
+这里总计 256 个模拟器，每个采样进程 16 个。所有进程使用同一份冻结检查点，全部对局结束后才更新参数。`--training-graphs` 可为 PPO 的残差网络启用前向和反向 CUDA Graph，`--no-training-graphs` 关闭；只影响计算执行，不改变网络层数或浮点精度。MPS 使用独立的 `/tmp/tavern-training-mps` 管道，训练结束后守护进程可能继续空闲驻留。
+
+这些参数按当前机器的 25 核、120 GiB 内存和约 96 GB 显存测试，不应直接套用旧 3080 Ti。CPU、GPU 在采样和更新阶段的占用会变化；内存和显存占满本身不会增加吞吐。监测和原始测试说明见 [Blackwell 调优记录](rl-blackwell-20260915.md)。
 
 `--model` 可选 `64`、`256`、`1024` 或 `all`。只更新选中的模型，其他模型的已保存权重继续作为历史对手。`--games` 必须不小于 `--workers`；每轮收集指定局数后执行 PPO。CUDA Graph 采样加速默认启用。增加每轮局数也会改变 PPO 更新间隔，更多对局不直接等于更强棋力。
 
@@ -107,7 +123,7 @@ python3 scripts/tavern-ops.py stop
 进入训练服务器查看：
 
 ```bash
-ssh -p 34884 root@connect.nmb2.seetacloud.com
+ssh -p 51735 root@connect.westb.seetacloud.com
 cat /root/tavern-four-hour-20260914/population/status.json
 nvidia-smi
 df -h / /root/autodl-tmp
@@ -129,7 +145,7 @@ tail -f /root/tavern-ops/本次编号/population.log
 
 完整检查点含优化器、随机数状态及历史对手，用于续训。上线用的 `model.pt` 是精简推理文件。
 
-训练服务器重启后，可恢复现有磁盘维护程序：
+以下磁盘维护程序位于旧 3080 Ti 服务器，新 Blackwell 服务器无需执行：
 
 ```bash
 bash /root/tavern-maintenance/start.sh

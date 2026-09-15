@@ -16,13 +16,17 @@ import time
 
 REPO = Path(__file__).resolve().parents[1]
 TEMPLATES = REPO / 'scripts/tavern-ops-templates'
-TRAINING = 'root@connect.nmb2.seetacloud.com'
+TRAINING_SERVERS = {
+    'west': ('root@connect.westb.seetacloud.com', '51735'),
+    'legacy': ('root@connect.nmb2.seetacloud.com', '34884'),
+}
+TRAINING, TRAINING_PORT = TRAINING_SERVERS['west']
 COMPUTE = 'zich@100.97.24.15'
 PUBLIC = 'root@100.121.69.44'
 ROOT = '/root/tavern-four-hour-20260914/population'
 PYTHON = '/root/miniconda3/bin/python'
 RUNTIME = '/root/autodl-tmp/tavern-mixed-popular-20260914/rl/python'
-CONTROL = str(Path.home()/'.cache/tavern-ops/training-ssh')
+CONTROL = str(Path.home()/'.cache/tavern-ops/training-west-ssh')
 
 
 def run(command, capture=False, **kwargs):
@@ -32,7 +36,7 @@ def run(command, capture=False, **kwargs):
 
 
 def ssh_args(host):
-    return ['ssh', '-p', '34884', '-o', f'ControlPath={CONTROL}', TRAINING] if host == TRAINING else ['ssh', host]
+    return ['ssh', '-p', TRAINING_PORT, '-o', f'ControlPath={CONTROL}', TRAINING] if host == TRAINING else ['ssh', host]
 
 
 def ssh(host, command, capture=False):
@@ -46,13 +50,13 @@ def remote_python(host, code):
 
 def copy_to(host, files, directory):
     args = ['scp', '-r']
-    if host == TRAINING: args += ['-P', '34884', '-o', f'ControlPath={CONTROL}']
+    if host == TRAINING: args += ['-P', TRAINING_PORT, '-o', f'ControlPath={CONTROL}']
     run([*args, *files, host+':'+directory+'/'])
 
 
 def copy_from(host, path, target):
     args = ['scp', '-r']
-    if host == TRAINING: args += ['-P', '34884', '-o', f'ControlPath={CONTROL}']
+    if host == TRAINING: args += ['-P', TRAINING_PORT, '-o', f'ControlPath={CONTROL}']
     run([*args, host+':'+path, target])
 
 
@@ -62,7 +66,7 @@ def connect():
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if check.returncode:
         run(['ssh', '-M', '-N', '-f', '-S', CONTROL, '-o', 'ControlPersist=2h',
-             '-o', 'ConnectTimeout=15', '-p', '34884', TRAINING])
+             '-o', 'ConnectTimeout=15', '-p', TRAINING_PORT, TRAINING])
 
 
 def state():
@@ -74,9 +78,13 @@ def require_stopped(s):
         raise RuntimeError('训练尚未停止。先用 status 查看进度；需要提前停止时用 stop。')
 
 
-def render(tag, hours=2, model='all', workers=16, games=16):
+def render(tag, hours=2, model='all', workers=16, games=16, sequence_batch_size=None, fused_adam=None, sampling_processes=1, mps=False, training_graphs=None):
     if model not in ('all', '64', '256', '1024') or min(workers, games) < 1 or workers > games:
         raise ValueError('Choose a valid model and positive workers <= games')
+    if sequence_batch_size is not None and sequence_batch_size < 1:
+        raise ValueError('Sequence batch size must be positive')
+    if not 1 <= sampling_processes <= workers:
+        raise ValueError('Sampling processes must be between 1 and workers')
     directory = Path('/tmp')/('tavern-ops-'+tag)
     directory.mkdir(mode=0o700)
     for template in TEMPLATES.glob('*.py'):
@@ -84,6 +92,13 @@ def render(tag, hours=2, model='all', workers=16, games=16):
         if template.name == 'resume.py':
             active = [] if model == 'all' else ['--active-members', str(['64','256','1024'].index(model))]
             source = source.replace("workers=16;games=16;active_members=[]", f"workers={workers};games={games};active_members={active!r}")
+            performance = []
+            if sequence_batch_size is not None: performance += ['--sequence-batch-size', str(sequence_batch_size)]
+            if fused_adam is not None: performance += ['--fused-adam' if fused_adam else '--no-fused-adam']
+            if training_graphs is not None: performance += ['--training-graphs' if training_graphs else '--no-training-graphs']
+            if sampling_processes > 1: performance += ['--sampling-processes',str(sampling_processes)]
+            source = source.replace('performance_args=[]', f'performance_args={performance!r}')
+            source = source.replace('use_mps=False', f'use_mps={mps!r}')
         ast.parse(source)
         (directory/template.name).write_text(source)
     return directory
@@ -127,6 +142,15 @@ def train(work, tag, hours):
     print('训练日志：'+remote+'/population.log')
 
 
+def published_base_models(models, exported):
+    # Search variants are independently frozen services. A PPO publication must
+    # preserve their endpoint/checkpoint instead of assigning unrelated weights.
+    base = [model for model in models if model.get('search') is not True]
+    if [m['id'] for m in base] != [m['id'] for m in exported]:
+        raise RuntimeError('模型选择项发生变化，需要更新部署配置')
+    return base
+
+
 def publish(work, tag):
     require_stopped(state())
     if not (REPO/'node_modules/@playwright/test').exists():
@@ -140,9 +164,7 @@ def publish(work, tag):
     copy_from(TRAINING, remote+'/export', work)
     copy_from(TRAINING, remote+'/report.json', work)
     report = json.loads((work/'report.json').read_text())
-    if [m['id'] for m in models] != [m['id'] for m in report['models']]:
-        raise RuntimeError('模型选择项发生变化，需要更新部署配置')
-    for model, r in zip(models, report['models']):
+    for model, r in zip(published_base_models(models, report['models']), report['models']):
         for name, digest in r['hashes'].items():
             assert hashlib.sha256((work/'export'/model['id']/name).read_bytes()).hexdigest() == digest
         metadata = json.loads((work/'export'/model['id']/'metadata.json').read_text())
@@ -176,9 +198,10 @@ def publish(work, tag):
 
 
 def main():
-    global CONTROL
+    global CONTROL, TRAINING, TRAINING_PORT
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--control-path',default=CONTROL,help='Existing SSH control socket, optional')
+    parser.add_argument('--training-server',choices=TRAINING_SERVERS,default='west',help='west is the Blackwell server; legacy is the stopped 3080 Ti')
+    parser.add_argument('--control-path',help='Existing SSH control socket, optional')
     sub=parser.add_subparsers(dest='action',required=True)
     sub.add_parser('status',help='查看训练和线上模型状态')
     sub.add_parser('stop',help='提前停止自我对战，保留已保存检查点')
@@ -188,14 +211,25 @@ def main():
     p.add_argument('--model',choices=['all','64','256','1024'],default='all',help='Only update this model; other models remain opponents')
     p.add_argument('--workers',type=int,default=16,help='Simulators per active learner')
     p.add_argument('--games',type=int,default=16,help='Complete games collected before each PPO update')
+    p.add_argument('--sequence-batch-size',type=int,help='Explicitly override saved recurrent PPO batch')
+    p.add_argument('--fused-adam',action=argparse.BooleanOptionalAction,default=None)
+    p.add_argument('--training-graphs',action=argparse.BooleanOptionalAction,default=None)
+    p.add_argument('--sampling-processes',type=int,default=1)
+    p.add_argument('--mps',action='store_true',help='Enable NVIDIA MPS for concurrent CUDA sampler processes')
     sub.add_parser('check',help='只验证本地模板语法，不连接服务器')
-    args=parser.parse_args();CONTROL=args.control_path
+    args=parser.parse_args()
+    TRAINING,TRAINING_PORT=TRAINING_SERVERS[args.training_server]
+    CONTROL=args.control_path or str(Path.home()/'.cache/tavern-ops'/('training-'+args.training_server+'-ssh'))
     hours=getattr(args,'hours',2)
     if not math.isfinite(hours) or hours<=0:parser.error('--hours 必须是正数')
     tag=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S')+'-'+str(os.getpid())
     if getattr(args,'workers',16)<1 or getattr(args,'games',16)<getattr(args,'workers',16):
         parser.error('--games must be at least --workers, both positive')
-    work=render(tag,hours,getattr(args,'model','all'),getattr(args,'workers',16),getattr(args,'games',16))
+    if getattr(args,'sequence_batch_size',None) is not None and args.sequence_batch_size < 1:
+        parser.error('--sequence-batch-size must be positive')
+    if not 1 <= getattr(args,'sampling_processes',1) <= getattr(args,'workers',16):
+        parser.error('--sampling-processes must be between 1 and --workers')
+    work=render(tag,hours,getattr(args,'model','all'),getattr(args,'workers',16),getattr(args,'games',16),getattr(args,'sequence_batch_size',None),getattr(args,'fused_adam',None),getattr(args,'sampling_processes',1),getattr(args,'mps',False),getattr(args,'training_graphs',None))
     try:
         if args.action=='check': print('模板语法检查通过。');return
         connect()

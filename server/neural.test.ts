@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { setTimeout as delay } from 'node:timers/promises';
-import { NeuralRooms, httpInference, inferenceBudget, type Infer } from './neural';
+import { NeuralRooms, httpInference, inferenceBudget, recruitSearchBudget, type Infer } from './neural';
 import { ACTIONS } from '../rl/actions';
 import { inferenceProfile } from './neural-profile';
 import { createServer } from 'node:http';
@@ -22,6 +22,85 @@ async function until(check: () => boolean) {
 const endPolicy: Infer = async (body: any) => ({ rows: body.rows.map((r: any) => ({
   action: r.legal.includes(0) ? 0 : r.legal[0], memory: r.memory.map((n: number) => n + .01),
 })) });
+
+test('search time shrinks with the recruit clock and reserves direct-policy time before the rope ends', () => {
+  assert.equal(recruitSearchBudget(0, 100000, 7), 1000);
+  assert.equal(recruitSearchBudget(90000, 0, 7), 628);
+  assert.equal(recruitSearchBudget(90000, 80000, 7), 57);
+  assert.equal(recruitSearchBudget(90000, 88000, 7), 0);
+  assert.equal(recruitSearchBudget(90000, 90001, 7), 0);
+});
+
+test('rope expiry starts combat and discards a still-pending search response', async () => {
+  let now = 100000, calls = 0, release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const infer: Infer = async (body: any) => {
+    calls++; await gate;
+    return { rows: [{ action: 2, memory: body.rows[0].memory.map((n: number) => n + 1) }] };
+  };
+  const store = new NeuralRooms(infer, () => now, () => .3, 'scouting-v4', [
+    { id: 'search', label: 'search', profile: 'scouting-v4', search: true, infer },
+  ]);
+  try {
+    const guest = store.auth(store.guest('rope-search').token);
+    const room = store.create(guest, 'ai', 's14_patchwerk', 'timed', 'free', 'search');
+    await until(() => calls === 1);
+    now = room.deadline; store.tick();
+    assert.equal(room.stage, 'combat');
+    const revision = room.storageRev;
+    release(); await delay(20);
+    assert.equal(store.ai.decisions, 0); assert.equal(room.storageRev, revision);
+  } finally { release(); store.stop(); }
+});
+
+test('64-layer search mode can act beyond 96 decisions and sends only the public policy input', async () => {
+  let calls = 0;
+  const infer: Infer = async (body: any) => {
+    calls++;
+    assert.equal(body.search, true);
+    assert.deepEqual(Object.keys(body.rows[0]).sort(), ['entities', 'legal', 'memory', 'previous']);
+    const text = JSON.stringify(body);
+    for (const key of ['"pool"', '"initialPool"', '"copies"', '"rng"']) assert.ok(!text.includes(key));
+    const row = body.rows[0], count = row.entities[0].details.decisions;
+    assert.ok(row.legal.includes(1), 'resource-backed refresh stays legal beyond the old action cap');
+    return { rows: [{ action: count < 110 ? 1 : 0, memory: row.memory.map((n: number) => n + 1) }] };
+  };
+  const store = new NeuralRooms(infer, Date.now, () => .3, 'scouting-v4', [
+    { id: 'deep64-search', label: '64 搜索', profile: 'scouting-v4', search: true, infer },
+  ]);
+  try {
+    const guest = store.auth(store.guest('search-test').token);
+    const room = store.create(guest, 'ai', 's14_patchwerk', 'training', 'free', 'deep64-search');
+    // Keep one bot active so the test exercises that seat's entire long turn.
+    const bot = room.seats.find(p => p.bot)!;
+    for (const p of room.seats) if (p.bot && p !== bot) p.ended = true;
+    store.autoChoices(room, bot);
+    bot.game!.season!.freeRefresh = 150;
+    await until(() => bot.ended);
+    assert.equal(calls, 111); assert.equal(store.ai.errors, 0);
+    assert.equal(room.turn, 1); assert.equal(room.stage, 'recruit');
+  } finally { store.stop(); }
+});
+
+test('search bots cannot endlessly freeze and unfreeze an unchanged shop', async () => {
+  const choices: number[] = [];
+  const infer: Infer = async (body: any) => {
+    const row = body.rows[0], action = row.legal.includes(2) ? 2 : 0; choices.push(action);
+    return { rows: [{ action, memory: row.memory }] };
+  };
+  const store = new NeuralRooms(infer, Date.now, () => .3, 'scouting-v4', [
+    { id: 'search', label: 'search', profile: 'scouting-v4', search: true, infer },
+  ]);
+  try {
+    const guest = store.auth(store.guest('freeze-loop').token);
+    const room = store.create(guest, 'ai', 's14_patchwerk', 'training', 'free', 'search');
+    const bot = room.seats.find(p => p.bot)!;
+    for (const p of room.seats) if (p.bot && p !== bot) p.ended = true;
+    store.autoChoices(room, bot);
+    await until(() => bot.ended);
+    assert.deepEqual(choices, [2, 0]); assert.equal(store.ai.errors, 0);
+  } finally { store.stop(); }
+});
 
 test('neural bots await policy without blocking the human; last bot starts combat', async () => {
   let release!: () => void;

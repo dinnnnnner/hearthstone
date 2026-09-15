@@ -10,6 +10,9 @@ files = [ROOT / path for path in ["rl-dist/bridge.cjs", "rl-dist/build.json", "r
     "rl/requirements.txt", "rl/run.sh", "rl/deep256.sh", "docs/rules-coverage.json", "docs/rl-roadmap.md", "docs/rl-server.md", "docs/rl-v3.md", "docs/rl-campaign.md", "docs/rl-public-scouting.md", "docs/rl-deep64.md", "docs/rl-deep256.md"]]
 files += sorted((ROOT / "rl/python").rglob("*.py"))
 files += [ROOT / "rl/deep1024.sh", ROOT / "docs/rl-deep1024.md"]
+files += [ROOT / "docs/rl-recruit-search.md"]
+if (ROOT / "rl-dist/recruit-search.cjs").exists():
+    files += [ROOT / "rl-dist/recruit-search.cjs"]
 files += sorted((ROOT / "rl/tests").rglob("*.py"))
 validation = ROOT / "docs/rl-validation.json"
 if validation.exists(): files.append(validation)

@@ -1,0 +1,22 @@
+[Unit]
+Description=Battlegrounds 1024-layer own-turn search
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.local/share/tavern-models/deep1024-search/current
+Environment=PYTHONPATH=%h/.local/share/tavern-models/deep1024-search/current/python
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=NODE_OPTIONS=--max-old-space-size=192
+Environment=OMP_NUM_THREADS=1
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=MKL_NUM_THREADS=1
+ExecStart=%h/.local/share/tavern-models/venv/bin/python -m tavern_rl.serve model.pt --port 18902 --search-bundle recruit-search.cjs --search-ms 1000 --search-simulations 32
+Restart=on-failure
+RestartSec=3
+MemoryMax=2G
+CPUQuota=100%
+TasksMax=32
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

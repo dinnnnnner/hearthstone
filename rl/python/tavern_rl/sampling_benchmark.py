@@ -20,6 +20,19 @@ from .sampling_graphs import accelerate_sampling
 from .train import load_checkpoint, frozen_models, league_weights
 
 
+def rollout_kwargs(saved):
+    config = saved['config']
+    probabilities = (league_weights(saved['league'], config.get('external_opponent_fraction', .4))
+                     if len(inspect.signature(league_weights).parameters) > 1
+                     else league_weights(saved['league']))
+    kwargs = dict(learner_seats=config['learner_seats'], opponent_weights=probabilities)
+    parameters = inspect.signature(SimulationPool.collect).parameters
+    for key, default in [('hero_pool', None), ('packed_host_transfer', False), ('first_place_bonus', 0.)]:
+        if key in parameters:
+            kwargs[key] = config.get(key, default)
+    return kwargs
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkpoint', required=True, type=Path)
@@ -44,20 +57,10 @@ def main():
         source.seek(0)
         saved, model = load_checkpoint(source, meta, 'cuda')
     opponents = frozen_models(saved['league'], model.specification(), 'cuda')
-    if len(inspect.signature(league_weights).parameters) > 1:
-        probabilities = league_weights(saved['league'], saved['config'].get('external_opponent_fraction', .4))
-    else:
-        probabilities = league_weights(saved['league'])
-    config = saved['config']
+    kwargs = rollout_kwargs(saved)
+    config = dict(saved['config'])
     del saved
     gc.collect()
-    kwargs = dict(learner_seats=config['learner_seats'], opponent_weights=probabilities)
-    # Preserve extensions in deployed runtimes while supporting the base sampler.
-    parameters = inspect.signature(SimulationPool.collect).parameters
-    for key, default in [('unused_gold_penalty', 0.), ('hero_pool', None),
-                         ('packed_host_transfer', False), ('first_place_bonus', 0.)]:
-        if key in parameters:
-            kwargs[key] = config.get(key, default)
     options = dict(config['options'], recordFrames=False)
     if args.steps:
         options['maxSteps'] = args.steps

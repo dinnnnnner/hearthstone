@@ -1,0 +1,897 @@
+{
+  "recorded_utc": "2026-09-15T03:29:18.856432+00:00",
+  "public": {
+    "previous_release": "/opt/bobs-tavern/releases/20260915-deep64-search",
+    "release": "/opt/bobs-tavern/releases/20260915-all-search",
+    "models": [
+      {
+        "id": "deep64-1480",
+        "label": "64 层模型",
+        "episodes": 2568,
+        "checkpointSha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18891"
+      },
+      {
+        "id": "deep256-1164",
+        "label": "256 层模型",
+        "episodes": 2140,
+        "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18893"
+      },
+      {
+        "id": "deep1024-612",
+        "label": "1024 层模型",
+        "episodes": 1284,
+        "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18895"
+      },
+      {
+        "id": "deep64-search-2568",
+        "label": "64 层模型＋回合搜索（实验）",
+        "episodes": 2568,
+        "checkpointSha256": "4736f856b91c06cd4bb68a01bfa4612c495d949d25c59ae2eebc20f309fdf969",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18897",
+        "search": true
+      },
+      {
+        "id": "deep256-search-2140",
+        "label": "256 层模型＋回合搜索（实验）",
+        "episodes": 2140,
+        "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18901",
+        "search": true
+      },
+      {
+        "id": "deep1024-search-1284",
+        "label": "1024 层模型＋回合搜索（实验）",
+        "episodes": 1284,
+        "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18903",
+        "search": true
+      }
+    ],
+    "server_sha256": "fc4e1f202cefae55d55f7f96f061ca77f687a0e1aee53f1dafd647a6a937003f",
+    "activated_utc": "2026-09-15T03:26:12.986009+00:00",
+    "health": {
+      "ok": true,
+      "service": "tavern",
+      "rooms": 0,
+      "recording": {
+        "enabled": true,
+        "episodes": 0,
+        "decisions": 0,
+        "completed": 0,
+        "rejected": 0,
+        "errors": 0,
+        "bytes": 9374524
+      },
+      "ai": {
+        "mode": "neural",
+        "decisions": 0,
+        "errors": 0,
+        "fallbackRounds": 0,
+        "lastError": "",
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "profile": "scouting-v4",
+        "traffic": {
+          "requests": 0,
+          "rawRequestBytes": 0,
+          "requestBytes": 0,
+          "responseBytes": 0,
+          "maxKbps": 512
+        },
+        "models": [
+          {
+            "id": "deep64-1480",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-1164",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-612",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep64-search-2568",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep256-search-2140",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          },
+          {
+            "id": "deep1024-search-1284",
+            "decisions": 0,
+            "errors": 0,
+            "fallbackRounds": 0,
+            "available": true
+          }
+        ]
+      }
+    }
+  },
+  "compute": [
+    {
+      "metadata": {
+        "episodes": 2140,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "196dd44ca4abdf8842808f1adf923745189cadacf47c876c9528f6396edf1041",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 136,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "4aa6be77637892d787deb827ce264b2a8ee9f18ae328d8e76e714cd0003421c4",
+            "weightSha256": "2a75391e990dedbf185a743f3b24d9654fc97c61b60e91f36dc50530dcc86fc0",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "cde7bcf311239ed720a55d61a17cb5be2ab4523b66e506550c9d6eda9feb2a37",
+            "weightSha256": "4c9d8de6b5fff43cd4511a73837a049b63b1b2367aa75c2e737160726690520f",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "f5d9620701ea4bf32ae8fc317629af81f682de735f671149cae88e0559a5e305",
+            "weightSha256": "0aad5c140640532ca0c30f8df7237132dd6e1507adbc4a954a7d5bee25db9202",
+            "datasets": [
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+            ],
+            "updates": 20,
+            "supervisedSteps": 274,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "145c54fc83a9529f8962e4dc57217e8289a9b5f5ae647551f803bcd6e8b20453",
+            "weightSha256": "47d0b844d9ba43c7e42b7d0ceaec01d00263f724edcbb74a53b188794dbfa0e6",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500"
+            ],
+            "updates": 24,
+            "supervisedSteps": 359,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "a578cfd55fadd182dc152646c4d573aecce19a65325deba7fd27484cb741dce1",
+            "weightSha256": "a3e55af1d9321a395dd339cb30ea38d8e9f01aa8e20a216721206f54a710765b",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+              "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 1291,
+            "supervisedSteps": 1555,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 11,
+            "supervisedStepVisits": 17600,
+            "stoppedEarlyByUser": true
+          },
+          {
+            "parentArtifactSha256": "fb032f71edc29d8977c52427aebf5bbbd81965532acde515421fe21ab20ef48c",
+            "weightSha256": "ce7044b6659269aadcd9c5d25b24848fec79baf4f3e83df331e8fe51efa76f7a",
+            "datasets": [
+              "081a14e422cb0830239d2f15de62c35ba346f2712992a435bc47f45f6377833a",
+              "cfed63a0268c504fe7aff4b87a321dd707dfc93657e51b6f6babc6ecde9a6edf"
+            ],
+            "updates": 156,
+            "supervisedSteps": 683,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 3,
+            "supervisedStepVisits": 2049,
+            "stoppedEarlyByUser": false
+          }
+        ],
+        "imitationUpdates": 1531,
+        "demonstrationGames": 7,
+        "search": {
+          "version": "own-recruit-puct-v1",
+          "simulations": 32,
+          "max_depth": 64,
+          "max_nodes": 128,
+          "time_ms": 1000,
+          "exploration": 1.5
+        }
+      },
+      "python_peak_rss_mib": 330.67578125,
+      "memory_isolation": true,
+      "authoritative_mask": true,
+      "deadline_direct_policy": true,
+      "scope": "Functional/latency fixtures with reset recurrent memory; not a playing-strength evaluation",
+      "fixtures": [
+        {
+          "turn": 1,
+          "action": 22,
+          "elapsed_ms": 1023.6907820217311,
+          "search": {
+            "version": "own-recruit-puct-v1",
+            "simulations": 17,
+            "recruit_ends": 8,
+            "cutoffs": 9,
+            "nodes": 15,
+            "max_depth": 8,
+            "evaluations": 45,
+            "sampled_root_outcomes": 7,
+            "cycle_cutoffs": 8,
+            "elapsed_ms": 1004.22,
+            "actions": [
+              {
+                "action": 8,
+                "visits": 7,
+                "value": 0.16352315885680063,
+                "prior": 0.4447731524816095
+              },
+              {
+                "action": 6,
+                "visits": 4,
+                "value": 0.17060936242341995,
+                "prior": 0.24045712561947902
+              },
+              {
+                "action": 1,
+                "visits": 2,
+                "value": 0.15606436878442764,
+                "prior": 0.12379441080298162
+              },
+              {
+                "action": 22,
+                "visits": 2,
+                "value": 0.20674362033605576,
+                "prior": 0.1020603884702306
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.17412877082824707,
+                "prior": 0.008319238479707934
+              },
+              {
+                "action": 7,
+                "visits": 1,
+                "value": 0.16798952221870422,
+                "prior": 0.058792403076334404
+              },
+              {
+                "action": 2,
+                "visits": 0,
+                "value": null,
+                "prior": 0.021803281069656944
+              }
+            ]
+          }
+        },
+        {
+          "turn": 4,
+          "action": 5,
+          "elapsed_ms": 1040.7428710022941,
+          "search": {
+            "version": "own-recruit-puct-v1",
+            "simulations": 3,
+            "recruit_ends": 2,
+            "cutoffs": 1,
+            "nodes": 4,
+            "max_depth": 23,
+            "evaluations": 41,
+            "sampled_root_outcomes": 3,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1018.77,
+            "actions": [
+              {
+                "action": 5,
+                "visits": 2,
+                "value": 0.23103561997413635,
+                "prior": 0.5439010082110995
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.11457235366106033,
+                "prior": 0.002924336954826665
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04507077708380092
+              },
+              {
+                "action": 2,
+                "visits": 0,
+                "value": null,
+                "prior": 0.008375230898860156
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.031864459500952166
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.02536982586290348
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.15647766965248433
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.09234971991878393
+              }
+            ]
+          }
+        },
+        {
+          "turn": 8,
+          "action": 0,
+          "elapsed_ms": 1057.1162450360134,
+          "search": {
+            "version": "own-recruit-puct-v1",
+            "simulations": 3,
+            "recruit_ends": 2,
+            "cutoffs": 1,
+            "nodes": 4,
+            "max_depth": 20,
+            "evaluations": 29,
+            "sampled_root_outcomes": 3,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1033.76,
+            "actions": [
+              {
+                "action": 5,
+                "visits": 2,
+                "value": 0.040440389420837164,
+                "prior": 0.4166710142329955
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.06572233885526657,
+                "prior": 0.004466272639305534
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.05847812487516158
+              },
+              {
+                "action": 2,
+                "visits": 0,
+                "value": null,
+                "prior": 0.012551704646831929
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04838812451535356
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04316372554063909
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.13425818820480845
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.09523111046054003
+              }
+            ]
+          }
+        }
+      ],
+      "depth": 256,
+      "release": "/home/zich/.local/share/tavern-models/deep256-search/releases/20260915-search",
+      "model_file_sha256": "b6c37f74d34578d19b69eb3d82aead4c4d343b7062fb07df8f1c20308f43283c"
+    },
+    {
+      "metadata": {
+        "episodes": 1284,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "b876b07a7ecf85232424454afe9dfdbfef6371a87c7e43bf427ebecf18c4c792",
+        "trainedRulesHash": "9fc789d8e455716068ae811eef6634c35e6d4c8be2401ce5085f1b1081ac47fc",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 81,
+        "unusedGoldPenalty": 0.01,
+        "humanImitation": [
+          {
+            "parentArtifactSha256": "f45a3437f23f6267bd30a54efec7cd06b8e077680c9df7b0c39e4b9c07d8b0cb",
+            "weightSha256": "901acab2125a42c7f06ed2563db0612a11edf87b7dc9b6f13d99b7383912a6d3",
+            "datasets": [
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3"
+            ],
+            "updates": 20,
+            "supervisedSteps": 288,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "32439b2c082110eef20fab085ba0b99b7a1650b88d50f016b87e650dd83319ba",
+            "weightSha256": "5336173221d6fb0fafe9e4564c82a01c7724d78294bf34f009ee0fd114e67980",
+            "datasets": [
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 20,
+            "supervisedSteps": 248,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "ee092357ff0ed4ec7d8c53ec143bd183d0bc42175ff3cf289addc281365f68a9",
+            "weightSha256": "25e29036dd8067fc295e75e4e92d28d35d465fe3afb523ac9d3bcff7016b5214",
+            "datasets": [
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a"
+            ],
+            "updates": 20,
+            "supervisedSteps": 274,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "8a99208d78c8f66143ae78ed0ad8b7ec890b24151ebdfb59943aefa1a5547f30",
+            "weightSha256": "f6c71b263121c8c3d116dfbe9fdf20d5710034786cb019e2636eaa0d2d5579d5",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500"
+            ],
+            "updates": 24,
+            "supervisedSteps": 359,
+            "incompleteSegments": true
+          },
+          {
+            "parentArtifactSha256": "a1d2a0f44cd7a54783ae4d92d417fb2631b947b8d98fd62bbbad92ab973a9dca",
+            "weightSha256": "5c1d7477d28952397d63d4501d919eec75e79e135061f01fb5e693463dce5706",
+            "datasets": [
+              "668b7019878cd8345efeb3088ee06e4e9239ebef7bebb950a8fe4b3bbcda5500",
+              "5b4bab48604185f2b4c543ffd5d9604d1b0f778111ee8951dd60038a57ba11a1",
+              "923b59fee7dbf586c6a3e6a8d81f7960c4003ca039c6adec48b4fdbb6651136a",
+              "4303ff9c54d1eb5ca29fec185209144f082434bdc4305f97808618f0baf14cc3",
+              "417ad5c6532fb2aefdaf155962f96070e93bf0e1a1af36b7f2eb75348f1954f0"
+            ],
+            "updates": 419,
+            "supervisedSteps": 1555,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 3,
+            "supervisedStepVisits": 5708,
+            "stoppedEarlyByUser": true
+          },
+          {
+            "parentArtifactSha256": "04b6d79e4a5c44ee0dcf1e28927a063e3043b726a0cca0c74ad18c296996b5d5",
+            "weightSha256": "0104d1662adb33c4963030c12ef5b42b25846b0fd6a17230a647eaf1297cad44",
+            "datasets": [
+              "081a14e422cb0830239d2f15de62c35ba346f2712992a435bc47f45f6377833a",
+              "cfed63a0268c504fe7aff4b87a321dd707dfc93657e51b6f6babc6ecde9a6edf"
+            ],
+            "updates": 156,
+            "supervisedSteps": 683,
+            "incompleteSegments": true,
+            "repeated": true,
+            "fullPasses": 3,
+            "supervisedStepVisits": 2049,
+            "stoppedEarlyByUser": false
+          }
+        ],
+        "imitationUpdates": 659,
+        "demonstrationGames": 7,
+        "search": {
+          "version": "own-recruit-puct-v1",
+          "simulations": 32,
+          "max_depth": 64,
+          "max_nodes": 128,
+          "time_ms": 1000,
+          "exploration": 1.5
+        }
+      },
+      "python_peak_rss_mib": 548.4296875,
+      "memory_isolation": true,
+      "authoritative_mask": true,
+      "deadline_direct_policy": true,
+      "scope": "Functional/latency fixtures with reset recurrent memory; not a playing-strength evaluation",
+      "fixtures": [
+        {
+          "turn": 1,
+          "action": 6,
+          "elapsed_ms": 1075.999220018275,
+          "search": {
+            "version": "own-recruit-puct-v1",
+            "simulations": 6,
+            "recruit_ends": 2,
+            "cutoffs": 4,
+            "nodes": 7,
+            "max_depth": 6,
+            "evaluations": 15,
+            "sampled_root_outcomes": 5,
+            "cycle_cutoffs": 3,
+            "elapsed_ms": 1010.63,
+            "actions": [
+              {
+                "action": 6,
+                "visits": 2,
+                "value": 0.024944769218564034,
+                "prior": 0.3430085326876402
+              },
+              {
+                "action": 0,
+                "visits": 1,
+                "value": -0.03544541075825691,
+                "prior": 0.05051152182318918
+              },
+              {
+                "action": 1,
+                "visits": 1,
+                "value": -0.017187492921948433,
+                "prior": 0.15934296730117645
+              },
+              {
+                "action": 8,
+                "visits": 1,
+                "value": -0.0342712439596653,
+                "prior": 0.16134730750259874
+              },
+              {
+                "action": 22,
+                "visits": 1,
+                "value": -0.043188367038965225,
+                "prior": 0.1487223737512958
+              },
+              {
+                "action": 2,
+                "visits": 0,
+                "value": null,
+                "prior": 0.08343702181710205
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.053630275116997576
+              }
+            ]
+          }
+        },
+        {
+          "turn": 4,
+          "action": 5,
+          "elapsed_ms": 1132.619052019436,
+          "search": {
+            "version": "own-recruit-puct-v1",
+            "simulations": 3,
+            "recruit_ends": 2,
+            "cutoffs": 1,
+            "nodes": 4,
+            "max_depth": 8,
+            "evaluations": 15,
+            "sampled_root_outcomes": 3,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1067.94,
+            "actions": [
+              {
+                "action": 0,
+                "visits": 1,
+                "value": -0.0389547161757946,
+                "prior": 0.032330615298758664
+              },
+              {
+                "action": 5,
+                "visits": 1,
+                "value": 0.10283678025007248,
+                "prior": 0.18914464430380146
+              },
+              {
+                "action": 6,
+                "visits": 1,
+                "value": 0.04422060772776604,
+                "prior": 0.2046047768952615
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.1022948484605354
+              },
+              {
+                "action": 2,
+                "visits": 0,
+                "value": null,
+                "prior": 0.053407606142612446
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.07411930249308847
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.10667871765717454
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.046536263910778225
+              }
+            ]
+          }
+        },
+        {
+          "turn": 8,
+          "action": 5,
+          "elapsed_ms": 1123.8481390173547,
+          "search": {
+            "version": "own-recruit-puct-v1",
+            "simulations": 2,
+            "recruit_ends": 1,
+            "cutoffs": 1,
+            "nodes": 3,
+            "max_depth": 12,
+            "evaluations": 13,
+            "sampled_root_outcomes": 2,
+            "cycle_cutoffs": 0,
+            "elapsed_ms": 1056.84,
+            "actions": [
+              {
+                "action": 0,
+                "visits": 1,
+                "value": 0.006868635769933462,
+                "prior": 0.028540344238136017
+              },
+              {
+                "action": 5,
+                "visits": 1,
+                "value": 0.1483820378780365,
+                "prior": 0.1656336596427306
+              },
+              {
+                "action": 1,
+                "visits": 0,
+                "value": null,
+                "prior": 0.08999111291883731
+              },
+              {
+                "action": 2,
+                "visits": 0,
+                "value": null,
+                "prior": 0.04690327012584917
+              },
+              {
+                "action": 3,
+                "visits": 0,
+                "value": null,
+                "prior": 0.06525417263940658
+              },
+              {
+                "action": 6,
+                "visits": 0,
+                "value": null,
+                "prior": 0.1197550194135237
+              },
+              {
+                "action": 7,
+                "visits": 0,
+                "value": null,
+                "prior": 0.07843594813796949
+              },
+              {
+                "action": 8,
+                "visits": 0,
+                "value": null,
+                "prior": 0.07121573221219687
+              }
+            ]
+          }
+        }
+      ],
+      "depth": 1024,
+      "release": "/home/zich/.local/share/tavern-models/deep1024-search/releases/20260915-search",
+      "model_file_sha256": "da65b818b721fddfef38869f671c46b46097c0bb784d2befcde7e175373399c0"
+    }
+  ],
+  "isolated_rooms": {
+    "256": {
+      "rounds": [
+        {
+          "turn": 1,
+          "stage": "combat",
+          "elapsed_ms": 2414,
+          "decisions": 4,
+          "board_size": 1,
+          "gold": 0
+        },
+        {
+          "turn": 2,
+          "stage": "combat",
+          "elapsed_ms": 3323,
+          "decisions": 7,
+          "board_size": 2,
+          "gold": 1
+        },
+        {
+          "turn": 3,
+          "stage": "combat",
+          "elapsed_ms": 3321,
+          "decisions": 10,
+          "board_size": 2,
+          "gold": 2
+        }
+      ],
+      "errors": 0,
+      "lastError": "",
+      "actions": [
+        {
+          "turn": 1,
+          "action": 6
+        },
+        {
+          "turn": 1,
+          "action": 2
+        },
+        {
+          "turn": 1,
+          "action": 85
+        },
+        {
+          "turn": 1,
+          "action": 0
+        },
+        {
+          "turn": 2,
+          "action": 8
+        },
+        {
+          "turn": 2,
+          "action": 85
+        },
+        {
+          "turn": 2,
+          "action": 0
+        },
+        {
+          "turn": 3,
+          "action": 5
+        },
+        {
+          "turn": 3,
+          "action": 4226
+        },
+        {
+          "turn": 3,
+          "action": 0
+        }
+      ]
+    },
+    "1024": {
+      "rounds": [
+        {
+          "turn": 1,
+          "stage": "combat",
+          "elapsed_ms": 4728,
+          "decisions": 4,
+          "board_size": 1,
+          "gold": 0
+        },
+        {
+          "turn": 2,
+          "stage": "combat",
+          "elapsed_ms": 3518,
+          "decisions": 7,
+          "board_size": 1,
+          "gold": 0
+        },
+        {
+          "turn": 3,
+          "stage": "combat",
+          "elapsed_ms": 1208,
+          "decisions": 8,
+          "board_size": 1,
+          "gold": 5
+        }
+      ],
+      "errors": 0,
+      "lastError": "",
+      "actions": [
+        {
+          "turn": 1,
+          "action": 6
+        },
+        {
+          "turn": 1,
+          "action": 2
+        },
+        {
+          "turn": 1,
+          "action": 85
+        },
+        {
+          "turn": 1,
+          "action": 0
+        },
+        {
+          "turn": 2,
+          "action": 6
+        },
+        {
+          "turn": 2,
+          "action": 1
+        },
+        {
+          "turn": 2,
+          "action": 0
+        },
+        {
+          "turn": 3,
+          "action": 0
+        }
+      ]
+    }
+  },
+  "tests": {
+    "python_search": 10,
+    "browser": "All six options passed, 1.7 minutes, includes recruit completion/reconnect/mobile/friend rooms"
+  },
+  "playing_strength": "Not established; feature, legality, recurrent isolation and latency checks only"
+}

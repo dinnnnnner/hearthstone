@@ -45,7 +45,16 @@ def prepare_entities(entities):
 
 
 def numeric(value, kind):
-    return [math.copysign(math.log1p(abs(value)), value) / 10, math.tanh(value / 10), float(kind == 2), float(kind == 1)]
+    # Equal float keys merge +0 and -0 in a cache. Preserve their original bits.
+    if value == 0:
+        zero = math.copysign(0., value)
+        return (zero, zero, float(kind == 2), float(kind == 1))
+    return _numeric_nonzero(value, kind)
+
+
+@lru_cache(maxsize=16384)
+def _numeric_nonzero(value, kind):
+    return (math.copysign(math.log1p(abs(value)), value) / 10, math.tanh(value / 10), float(kind == 2), float(kind == 1))
 
 
 def pack_entities(observations, schema, device):
