@@ -74,11 +74,16 @@ def require_stopped(s):
         raise RuntimeError('训练尚未停止。先用 status 查看进度；需要提前停止时用 stop。')
 
 
-def render(tag, hours=2):
+def render(tag, hours=2, model='all', workers=16, games=16):
+    if model not in ('all', '64', '256', '1024') or min(workers, games) < 1 or workers > games:
+        raise ValueError('Choose a valid model and positive workers <= games')
     directory = Path('/tmp')/('tavern-ops-'+tag)
     directory.mkdir(mode=0o700)
     for template in TEMPLATES.glob('*.py'):
         source = template.read_text().replace('__TAG__', tag).replace('__HOURS__', repr(hours))
+        if template.name == 'resume.py':
+            active = [] if model == 'all' else ['--active-members', str(['64','256','1024'].index(model))]
+            source = source.replace("workers=16;games=16;active_members=[]", f"workers={workers};games={games};active_members={active!r}")
         ast.parse(source)
         (directory/template.name).write_text(source)
     return directory
@@ -117,6 +122,8 @@ def train(work, tag, hours):
         raise RuntimeError('续训启动检查未通过，请查看 '+remote+'/population.log')
     end = datetime.datetime.fromisoformat(receipt['deadlineUtc']).astimezone(datetime.timezone(datetime.timedelta(hours=8)))
     print(f"已启动 {hours:g} 小时续训；北京时间 {end:%Y-%m-%d %H:%M:%S} 停止。")
+    depths=[str([64,256,1024][i]) for i in s.get('active_members',[0,1,2])]
+    print('本次更新模型：'+ '、'.join(depths)+' 层；每个模型 '+str(s['workers_per_learner'])+' 并行，每轮 '+str(s['games_per_iteration'])+' 局。')
     print('训练日志：'+remote+'/population.log')
 
 
@@ -178,12 +185,17 @@ def main():
     sub.add_parser('publish',help='正常停训后导出、上线并测试三个模型')
     p=sub.add_parser('train',help='从当前完整检查点继续训练')
     p.add_argument('--hours',type=float,required=True)
+    p.add_argument('--model',choices=['all','64','256','1024'],default='all',help='Only update this model; other models remain opponents')
+    p.add_argument('--workers',type=int,default=16,help='Simulators per active learner')
+    p.add_argument('--games',type=int,default=16,help='Complete games collected before each PPO update')
     sub.add_parser('check',help='只验证本地模板语法，不连接服务器')
     args=parser.parse_args();CONTROL=args.control_path
     hours=getattr(args,'hours',2)
     if not math.isfinite(hours) or hours<=0:parser.error('--hours 必须是正数')
     tag=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S')+'-'+str(os.getpid())
-    work=render(tag,hours)
+    if getattr(args,'workers',16)<1 or getattr(args,'games',16)<getattr(args,'workers',16):
+        parser.error('--games must be at least --workers, both positive')
+    work=render(tag,hours,getattr(args,'model','all'),getattr(args,'workers',16),getattr(args,'games',16))
     try:
         if args.action=='check': print('模板语法检查通过。');return
         connect()

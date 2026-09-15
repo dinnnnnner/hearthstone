@@ -1,0 +1,1179 @@
+{
+  "date": "2026-09-15",
+  "candidate_depth": 256,
+  "sampling": {
+    "checkpoint_sha256": "a9ba37cca2d3af44eadefe22471a0ca5aae710f2cf29abcbdc66d2559afac1c6",
+    "depth": 256,
+    "workers": 16,
+    "worker_cases": [
+      16,
+      32,
+      64,
+      16
+    ],
+    "games": 64,
+    "steps": 256,
+    "note": "Sampling only, includes graph capture/release, no optimizer updates.",
+    "rows": [
+      {
+        "mode": "graph",
+        "workers": 16,
+        "seconds": 101.48562705190852,
+        "environment_actions": 16384,
+        "actions_per_second": 161.44158021135158,
+        "inference_seconds": 81.07066469849087,
+        "simulator_wait_seconds": 12.214532772777602,
+        "first_place_bonus": 1.0,
+        "unused_gold_penalty_coefficient": 0.01,
+        "unused_gold_penalty_total": 0.8400000000000005,
+        "unused_gold_penalized_ends": 53,
+        "inference_batches": 6231,
+        "mean_inference_batch": 2.629433477772428,
+        "sampling_graphs": true,
+        "sampling_graph_count": 14,
+        "sampling_graph_replays": 7229,
+        "sampling_graph_capture_seconds": 1.2230520972516388,
+        "tapes": {
+          "game-820000.json": "b0ae6742d3238be4b28e2c32b8209e4969b7e2fc69e9a2c220c7f707a94d2213",
+          "game-820001.json": "3eb34dfd349f2c5d233b05fac47c8fbdfc61eca19ff35cf925b28440a71675a8",
+          "game-820002.json": "42b974c0d0f5444c233925f3491b07f19afadb7357daff374f41cb1ea903e1bb",
+          "game-820003.json": "a46eca6fea45b6f3a6ac2f761e02abee35213ffd88646ab3cd848bfba7c569fd",
+          "game-820004.json": "803d6d9eb0860278d5fe2d67a8d1662b4ab6903be4f1e1c371c45d24cc5bd2d1",
+          "game-820005.json": "6b15b6d71a59fff9b160ff3753961d0682d261f8674104f90669d4cd696e1d36",
+          "game-820006.json": "317277de6c26debf986d61b8e0dcf52c792e0e5bd104aec8736c9642da653a2e",
+          "game-820007.json": "694c493e7fc8360861e179e91158ff32d723dcc3902eeac4a098aa7b5b682f9c",
+          "game-820008.json": "1532f15e43e9d9eeae34a52a142622996db9775c635f2f87d17926f70ee423db",
+          "game-820009.json": "b2e5735cabf5dc33c5474f72f56d3fbf3d4843f8ec8af694df20aaa97f013964",
+          "game-820010.json": "93a837f8d0ac6169f2cbff65108679ea30144fe1f39b109c8b62e03e0acb1284",
+          "game-820011.json": "c015492e88457a3dbd2c5eeb26fbcca69f91911bd2e9cf3b38345fdc022120d7",
+          "game-820012.json": "34dd94f7008534d25cda534449dee63313de557334999735cdbf98cd6292830f",
+          "game-820013.json": "357a55bac7021266e1d03e4b345b1d2cec62ea5e12499dc0be8c71a328ddf79a",
+          "game-820014.json": "2eccd07844fac48baa3d5aa2ed0c8f0f140c9d1275090f4cf96c819fb77fa85c",
+          "game-820015.json": "54f7fd974cef98098d20edc9d5a61c99c53a679fa824e2e143c5ba3e82a9fd04",
+          "game-820016.json": "45afd1cf2e8afbc6cfbc3c647212a09fab3e96dbd586e649f7f43643217b8c6a",
+          "game-820017.json": "4f43aa49d59875dd61a8929d9a1ff67405e02ea1124fb34e1d9034d9a1dde00e",
+          "game-820018.json": "bc75529612875acf58695961eb4d43ed21c9a1ffab78eadd761fbb9e2b6594b4",
+          "game-820019.json": "6db3e4efbcd8cf47de43cffc1835976a2f397afae605f038b680909dc069e92d",
+          "game-820020.json": "ab45596b8ba19863bc36a6f038facd65ae3d0e101006892d705bb16c9c7b1d68",
+          "game-820021.json": "f98d530be81506fa4e11dce433281f875890f4e588da8023d493db8fd76e4296",
+          "game-820022.json": "d9af45d249e6181c3df4d214dcc131013b5907822e0237fd282e2ad44ff2fcb0",
+          "game-820023.json": "f72963290b70ecf7d357906802fef7e73b8b48de6d593ed30ec4d7f5ffa1c054",
+          "game-820024.json": "5d8ae6bfdf726c85d8487b9191a301417bcbaaa29bfde49594457eba4266556e",
+          "game-820025.json": "3116bae560118e205a2f589723b2ebd4d7a3c6a2420ccf391fff5f31ab8eef05",
+          "game-820026.json": "5a6a71223e37924af4fdee4a20a2cacf262e21ac16ed292b4f9e22735d76317a",
+          "game-820027.json": "23a6e8acffca3efc6c86c56bf3768d75c03773b031249ffdfae4725516d3590c",
+          "game-820028.json": "33827119419c1965475f6cbd2093508f2e0a8c5bd88a0757f126184f0032c3a4",
+          "game-820029.json": "7e529edffa0f0ef0a75b50c9ee058ed920befb8045e1e5ffe6d367a2cb433b44",
+          "game-820030.json": "beb90bbf6edaeff5370940077731f4e4b8d637d3fc9cba149c07f0b8e3730d6a",
+          "game-820031.json": "4c434bb54ca194add6ed0531851f8681d0e4d8cea8899424029626d63140ab87",
+          "game-820032.json": "4268f21e3fd35dbda9bcad1f567da8fe70c0c2969dfab337d0ca98ec2eb727e9",
+          "game-820033.json": "4c63dbcd6b06c42a87e848b1d117d250e8f12d424b9444dfc0eed196c44bbdcf",
+          "game-820034.json": "a51369806d5abd6adf7eb8f364ac8d557b22a73a869218fc3b709cd562284b9d",
+          "game-820035.json": "d69d471deecba4965a149700f101e994ca7858b8ca87d36cc91752e5a329c7f1",
+          "game-820036.json": "25a2346cf53e690424c31a546e68d27170c7899d61a975ff47a19081b11071da",
+          "game-820037.json": "0fdc941835ef804b04fc5f86fe7651c58005f3be0b433f44202f564d558c72c1",
+          "game-820038.json": "4cf37f39637e76dbdbdeebdc9dc59a4791a8387566fcbe47e53366b1449d2dd2",
+          "game-820039.json": "7ec5eb13f1a4b27ebc64e0858d58df13f58e153d075c04584da505412f799fc4",
+          "game-820040.json": "46aa0ebb41d7c93bf90a426917828a949303fa7f93a6c42dfdf55cd5d961ed00",
+          "game-820041.json": "a181789e2d88e25a6a219a14d016659f14faa3e98aa500bbddd48105ba8064ce",
+          "game-820042.json": "f4cf73542bc4b7d54d68ce4adca8c5bed2d8eadd6208674ced5ee480b670e8fa",
+          "game-820043.json": "016491cddf02fecb3f6a0fa7c986f168147f6f9b35811c9f560d96992281bdd0",
+          "game-820044.json": "3f94fb94b1c7f6a6cec0cca01840c3f75f8478d091a5ac7fde5bc25bef2c313e",
+          "game-820045.json": "dcd89d92fd96cf4fadb4cf94029d27ac75ce441030c4bb3c6eae01d5eb81041e",
+          "game-820046.json": "f91f368a35e71fd12fced06b58899df26e91637d5b2e893200880bb65e6e8a66",
+          "game-820047.json": "1590014876591be1121fad3cafa33d5fb3cd18394f360a638515e8a41a98663d",
+          "game-820048.json": "81ff62bfbeb7b7cf2ea838383318ca410c102cacd1e935b7181ddd529f1c54d6",
+          "game-820049.json": "b6d2d6770872dd75d1380b29b1b63471954ab001ba882e1cdcd8a0ccfc4afaa3",
+          "game-820050.json": "0eb1280dd54e58bdd1fdf5655e844e2687626d46ebd15ed54f09b6a68074f738",
+          "game-820051.json": "06354fa5121d55d225d6b955590b7a238f7b79c1fa98807422752bc2c01b7e84",
+          "game-820052.json": "239daf05f7e2548a21fc33c2910bc2e9dbc3ca8dacb464709e079da90e667f72",
+          "game-820053.json": "b7e0f82a760642522243da96e6b6bda0c6a7df7b1fa8dcda7b898158f0898c36",
+          "game-820054.json": "bf55397274b4830aa09a8d7c48d51b220efc200aae93debec452eec090392a16",
+          "game-820055.json": "a3957d9c2b2c8ed11889729820d152a92dff1a767b0828339e53184032b2c827",
+          "game-820056.json": "5da1e6ff5d6a7c9208fc01a72ed5289da6fb1ad50f0c586e827af46b3cb6251d",
+          "game-820057.json": "081074060086578d50b4cbd1f87947531dfa292b54080d8acb62a0ce936dbc9b",
+          "game-820058.json": "7130f5baa41ef7d85e569d1aec4e2185104789597cfd6a1e9cb034e7bc6c8edc",
+          "game-820059.json": "72785a1a6d7745e992829ad1882f955669178e998bf796f18dba8b1c0776b5e9",
+          "game-820060.json": "cae1cbc03c6d477f68082a031ae89f8ffaf77b6bb7a6381a4aacb3d0a033103b",
+          "game-820061.json": "11f2e9d3bb128eb9a9e7538276f991bc06d50dd241bc6201f535e1485a291916",
+          "game-820062.json": "511e9a8b44cdc938f8a1e5027035e134f31d5c8f2730ce0fac6a90aa25950842",
+          "game-820063.json": "4dc1c8eb5ee391a73f0cb128da85f780a702bdebb854f9ff89787eba90ffa703"
+        },
+        "replay_actions_equal": true,
+        "cuda_peak_mib": 800.939453125,
+        "complete_games": 0,
+        "truncated_games": 64,
+        "trajectories": 0
+      },
+      {
+        "mode": "graph",
+        "workers": 32,
+        "seconds": 91.40624913084321,
+        "environment_actions": 16384,
+        "actions_per_second": 179.24376238814014,
+        "inference_seconds": 74.90401237481274,
+        "simulator_wait_seconds": 7.641502432757989,
+        "first_place_bonus": 1.0,
+        "unused_gold_penalty_coefficient": 0.01,
+        "unused_gold_penalty_total": 0.8400000000000005,
+        "unused_gold_penalized_ends": 53,
+        "inference_batches": 4280,
+        "mean_inference_batch": 3.8280373831775703,
+        "sampling_graphs": true,
+        "sampling_graph_count": 14,
+        "sampling_graph_replays": 4780,
+        "sampling_graph_capture_seconds": 1.3028409508988261,
+        "tapes": {
+          "game-820000.json": "b0ae6742d3238be4b28e2c32b8209e4969b7e2fc69e9a2c220c7f707a94d2213",
+          "game-820001.json": "3eb34dfd349f2c5d233b05fac47c8fbdfc61eca19ff35cf925b28440a71675a8",
+          "game-820002.json": "42b974c0d0f5444c233925f3491b07f19afadb7357daff374f41cb1ea903e1bb",
+          "game-820003.json": "a46eca6fea45b6f3a6ac2f761e02abee35213ffd88646ab3cd848bfba7c569fd",
+          "game-820004.json": "803d6d9eb0860278d5fe2d67a8d1662b4ab6903be4f1e1c371c45d24cc5bd2d1",
+          "game-820005.json": "6b15b6d71a59fff9b160ff3753961d0682d261f8674104f90669d4cd696e1d36",
+          "game-820006.json": "317277de6c26debf986d61b8e0dcf52c792e0e5bd104aec8736c9642da653a2e",
+          "game-820007.json": "694c493e7fc8360861e179e91158ff32d723dcc3902eeac4a098aa7b5b682f9c",
+          "game-820008.json": "1532f15e43e9d9eeae34a52a142622996db9775c635f2f87d17926f70ee423db",
+          "game-820009.json": "b2e5735cabf5dc33c5474f72f56d3fbf3d4843f8ec8af694df20aaa97f013964",
+          "game-820010.json": "93a837f8d0ac6169f2cbff65108679ea30144fe1f39b109c8b62e03e0acb1284",
+          "game-820011.json": "c015492e88457a3dbd2c5eeb26fbcca69f91911bd2e9cf3b38345fdc022120d7",
+          "game-820012.json": "34dd94f7008534d25cda534449dee63313de557334999735cdbf98cd6292830f",
+          "game-820013.json": "357a55bac7021266e1d03e4b345b1d2cec62ea5e12499dc0be8c71a328ddf79a",
+          "game-820014.json": "2eccd07844fac48baa3d5aa2ed0c8f0f140c9d1275090f4cf96c819fb77fa85c",
+          "game-820015.json": "54f7fd974cef98098d20edc9d5a61c99c53a679fa824e2e143c5ba3e82a9fd04",
+          "game-820016.json": "45afd1cf2e8afbc6cfbc3c647212a09fab3e96dbd586e649f7f43643217b8c6a",
+          "game-820017.json": "4f43aa49d59875dd61a8929d9a1ff67405e02ea1124fb34e1d9034d9a1dde00e",
+          "game-820018.json": "bc75529612875acf58695961eb4d43ed21c9a1ffab78eadd761fbb9e2b6594b4",
+          "game-820019.json": "6db3e4efbcd8cf47de43cffc1835976a2f397afae605f038b680909dc069e92d",
+          "game-820020.json": "ab45596b8ba19863bc36a6f038facd65ae3d0e101006892d705bb16c9c7b1d68",
+          "game-820021.json": "f98d530be81506fa4e11dce433281f875890f4e588da8023d493db8fd76e4296",
+          "game-820022.json": "d9af45d249e6181c3df4d214dcc131013b5907822e0237fd282e2ad44ff2fcb0",
+          "game-820023.json": "f72963290b70ecf7d357906802fef7e73b8b48de6d593ed30ec4d7f5ffa1c054",
+          "game-820024.json": "5d8ae6bfdf726c85d8487b9191a301417bcbaaa29bfde49594457eba4266556e",
+          "game-820025.json": "3116bae560118e205a2f589723b2ebd4d7a3c6a2420ccf391fff5f31ab8eef05",
+          "game-820026.json": "5a6a71223e37924af4fdee4a20a2cacf262e21ac16ed292b4f9e22735d76317a",
+          "game-820027.json": "23a6e8acffca3efc6c86c56bf3768d75c03773b031249ffdfae4725516d3590c",
+          "game-820028.json": "33827119419c1965475f6cbd2093508f2e0a8c5bd88a0757f126184f0032c3a4",
+          "game-820029.json": "7e529edffa0f0ef0a75b50c9ee058ed920befb8045e1e5ffe6d367a2cb433b44",
+          "game-820030.json": "beb90bbf6edaeff5370940077731f4e4b8d637d3fc9cba149c07f0b8e3730d6a",
+          "game-820031.json": "4c434bb54ca194add6ed0531851f8681d0e4d8cea8899424029626d63140ab87",
+          "game-820032.json": "4268f21e3fd35dbda9bcad1f567da8fe70c0c2969dfab337d0ca98ec2eb727e9",
+          "game-820033.json": "4c63dbcd6b06c42a87e848b1d117d250e8f12d424b9444dfc0eed196c44bbdcf",
+          "game-820034.json": "a51369806d5abd6adf7eb8f364ac8d557b22a73a869218fc3b709cd562284b9d",
+          "game-820035.json": "d69d471deecba4965a149700f101e994ca7858b8ca87d36cc91752e5a329c7f1",
+          "game-820036.json": "25a2346cf53e690424c31a546e68d27170c7899d61a975ff47a19081b11071da",
+          "game-820037.json": "0fdc941835ef804b04fc5f86fe7651c58005f3be0b433f44202f564d558c72c1",
+          "game-820038.json": "4cf37f39637e76dbdbdeebdc9dc59a4791a8387566fcbe47e53366b1449d2dd2",
+          "game-820039.json": "7ec5eb13f1a4b27ebc64e0858d58df13f58e153d075c04584da505412f799fc4",
+          "game-820040.json": "46aa0ebb41d7c93bf90a426917828a949303fa7f93a6c42dfdf55cd5d961ed00",
+          "game-820041.json": "a181789e2d88e25a6a219a14d016659f14faa3e98aa500bbddd48105ba8064ce",
+          "game-820042.json": "f4cf73542bc4b7d54d68ce4adca8c5bed2d8eadd6208674ced5ee480b670e8fa",
+          "game-820043.json": "016491cddf02fecb3f6a0fa7c986f168147f6f9b35811c9f560d96992281bdd0",
+          "game-820044.json": "3f94fb94b1c7f6a6cec0cca01840c3f75f8478d091a5ac7fde5bc25bef2c313e",
+          "game-820045.json": "dcd89d92fd96cf4fadb4cf94029d27ac75ce441030c4bb3c6eae01d5eb81041e",
+          "game-820046.json": "f91f368a35e71fd12fced06b58899df26e91637d5b2e893200880bb65e6e8a66",
+          "game-820047.json": "1590014876591be1121fad3cafa33d5fb3cd18394f360a638515e8a41a98663d",
+          "game-820048.json": "81ff62bfbeb7b7cf2ea838383318ca410c102cacd1e935b7181ddd529f1c54d6",
+          "game-820049.json": "b6d2d6770872dd75d1380b29b1b63471954ab001ba882e1cdcd8a0ccfc4afaa3",
+          "game-820050.json": "0eb1280dd54e58bdd1fdf5655e844e2687626d46ebd15ed54f09b6a68074f738",
+          "game-820051.json": "06354fa5121d55d225d6b955590b7a238f7b79c1fa98807422752bc2c01b7e84",
+          "game-820052.json": "239daf05f7e2548a21fc33c2910bc2e9dbc3ca8dacb464709e079da90e667f72",
+          "game-820053.json": "b7e0f82a760642522243da96e6b6bda0c6a7df7b1fa8dcda7b898158f0898c36",
+          "game-820054.json": "bf55397274b4830aa09a8d7c48d51b220efc200aae93debec452eec090392a16",
+          "game-820055.json": "a3957d9c2b2c8ed11889729820d152a92dff1a767b0828339e53184032b2c827",
+          "game-820056.json": "5da1e6ff5d6a7c9208fc01a72ed5289da6fb1ad50f0c586e827af46b3cb6251d",
+          "game-820057.json": "081074060086578d50b4cbd1f87947531dfa292b54080d8acb62a0ce936dbc9b",
+          "game-820058.json": "7130f5baa41ef7d85e569d1aec4e2185104789597cfd6a1e9cb034e7bc6c8edc",
+          "game-820059.json": "72785a1a6d7745e992829ad1882f955669178e998bf796f18dba8b1c0776b5e9",
+          "game-820060.json": "cae1cbc03c6d477f68082a031ae89f8ffaf77b6bb7a6381a4aacb3d0a033103b",
+          "game-820061.json": "11f2e9d3bb128eb9a9e7538276f991bc06d50dd241bc6201f535e1485a291916",
+          "game-820062.json": "511e9a8b44cdc938f8a1e5027035e134f31d5c8f2730ce0fac6a90aa25950842",
+          "game-820063.json": "4dc1c8eb5ee391a73f0cb128da85f780a702bdebb854f9ff89787eba90ffa703"
+        },
+        "replay_actions_equal": true,
+        "cuda_peak_mib": 837.369140625,
+        "complete_games": 0,
+        "truncated_games": 64,
+        "trajectories": 0
+      },
+      {
+        "mode": "graph",
+        "workers": 64,
+        "seconds": 85.88937485497445,
+        "environment_actions": 16384,
+        "actions_per_second": 190.75700606349318,
+        "inference_seconds": 69.34701060806401,
+        "simulator_wait_seconds": 5.134836906334385,
+        "first_place_bonus": 1.0,
+        "unused_gold_penalty_coefficient": 0.01,
+        "unused_gold_penalty_total": 0.8400000000000004,
+        "unused_gold_penalized_ends": 53,
+        "inference_batches": 2579,
+        "mean_inference_batch": 6.352849941837921,
+        "sampling_graphs": true,
+        "sampling_graph_count": 14,
+        "sampling_graph_replays": 2829,
+        "sampling_graph_capture_seconds": 1.2597101342398673,
+        "tapes": {
+          "game-820000.json": "b0ae6742d3238be4b28e2c32b8209e4969b7e2fc69e9a2c220c7f707a94d2213",
+          "game-820001.json": "3eb34dfd349f2c5d233b05fac47c8fbdfc61eca19ff35cf925b28440a71675a8",
+          "game-820002.json": "42b974c0d0f5444c233925f3491b07f19afadb7357daff374f41cb1ea903e1bb",
+          "game-820003.json": "a46eca6fea45b6f3a6ac2f761e02abee35213ffd88646ab3cd848bfba7c569fd",
+          "game-820004.json": "803d6d9eb0860278d5fe2d67a8d1662b4ab6903be4f1e1c371c45d24cc5bd2d1",
+          "game-820005.json": "6b15b6d71a59fff9b160ff3753961d0682d261f8674104f90669d4cd696e1d36",
+          "game-820006.json": "317277de6c26debf986d61b8e0dcf52c792e0e5bd104aec8736c9642da653a2e",
+          "game-820007.json": "694c493e7fc8360861e179e91158ff32d723dcc3902eeac4a098aa7b5b682f9c",
+          "game-820008.json": "1532f15e43e9d9eeae34a52a142622996db9775c635f2f87d17926f70ee423db",
+          "game-820009.json": "b2e5735cabf5dc33c5474f72f56d3fbf3d4843f8ec8af694df20aaa97f013964",
+          "game-820010.json": "93a837f8d0ac6169f2cbff65108679ea30144fe1f39b109c8b62e03e0acb1284",
+          "game-820011.json": "c015492e88457a3dbd2c5eeb26fbcca69f91911bd2e9cf3b38345fdc022120d7",
+          "game-820012.json": "34dd94f7008534d25cda534449dee63313de557334999735cdbf98cd6292830f",
+          "game-820013.json": "357a55bac7021266e1d03e4b345b1d2cec62ea5e12499dc0be8c71a328ddf79a",
+          "game-820014.json": "2eccd07844fac48baa3d5aa2ed0c8f0f140c9d1275090f4cf96c819fb77fa85c",
+          "game-820015.json": "54f7fd974cef98098d20edc9d5a61c99c53a679fa824e2e143c5ba3e82a9fd04",
+          "game-820016.json": "45afd1cf2e8afbc6cfbc3c647212a09fab3e96dbd586e649f7f43643217b8c6a",
+          "game-820017.json": "4f43aa49d59875dd61a8929d9a1ff67405e02ea1124fb34e1d9034d9a1dde00e",
+          "game-820018.json": "bc75529612875acf58695961eb4d43ed21c9a1ffab78eadd761fbb9e2b6594b4",
+          "game-820019.json": "6db3e4efbcd8cf47de43cffc1835976a2f397afae605f038b680909dc069e92d",
+          "game-820020.json": "ab45596b8ba19863bc36a6f038facd65ae3d0e101006892d705bb16c9c7b1d68",
+          "game-820021.json": "f98d530be81506fa4e11dce433281f875890f4e588da8023d493db8fd76e4296",
+          "game-820022.json": "d9af45d249e6181c3df4d214dcc131013b5907822e0237fd282e2ad44ff2fcb0",
+          "game-820023.json": "f72963290b70ecf7d357906802fef7e73b8b48de6d593ed30ec4d7f5ffa1c054",
+          "game-820024.json": "5d8ae6bfdf726c85d8487b9191a301417bcbaaa29bfde49594457eba4266556e",
+          "game-820025.json": "3116bae560118e205a2f589723b2ebd4d7a3c6a2420ccf391fff5f31ab8eef05",
+          "game-820026.json": "5a6a71223e37924af4fdee4a20a2cacf262e21ac16ed292b4f9e22735d76317a",
+          "game-820027.json": "23a6e8acffca3efc6c86c56bf3768d75c03773b031249ffdfae4725516d3590c",
+          "game-820028.json": "33827119419c1965475f6cbd2093508f2e0a8c5bd88a0757f126184f0032c3a4",
+          "game-820029.json": "7e529edffa0f0ef0a75b50c9ee058ed920befb8045e1e5ffe6d367a2cb433b44",
+          "game-820030.json": "beb90bbf6edaeff5370940077731f4e4b8d637d3fc9cba149c07f0b8e3730d6a",
+          "game-820031.json": "4c434bb54ca194add6ed0531851f8681d0e4d8cea8899424029626d63140ab87",
+          "game-820032.json": "4268f21e3fd35dbda9bcad1f567da8fe70c0c2969dfab337d0ca98ec2eb727e9",
+          "game-820033.json": "4c63dbcd6b06c42a87e848b1d117d250e8f12d424b9444dfc0eed196c44bbdcf",
+          "game-820034.json": "a51369806d5abd6adf7eb8f364ac8d557b22a73a869218fc3b709cd562284b9d",
+          "game-820035.json": "d69d471deecba4965a149700f101e994ca7858b8ca87d36cc91752e5a329c7f1",
+          "game-820036.json": "25a2346cf53e690424c31a546e68d27170c7899d61a975ff47a19081b11071da",
+          "game-820037.json": "0fdc941835ef804b04fc5f86fe7651c58005f3be0b433f44202f564d558c72c1",
+          "game-820038.json": "4cf37f39637e76dbdbdeebdc9dc59a4791a8387566fcbe47e53366b1449d2dd2",
+          "game-820039.json": "7ec5eb13f1a4b27ebc64e0858d58df13f58e153d075c04584da505412f799fc4",
+          "game-820040.json": "46aa0ebb41d7c93bf90a426917828a949303fa7f93a6c42dfdf55cd5d961ed00",
+          "game-820041.json": "a181789e2d88e25a6a219a14d016659f14faa3e98aa500bbddd48105ba8064ce",
+          "game-820042.json": "f4cf73542bc4b7d54d68ce4adca8c5bed2d8eadd6208674ced5ee480b670e8fa",
+          "game-820043.json": "016491cddf02fecb3f6a0fa7c986f168147f6f9b35811c9f560d96992281bdd0",
+          "game-820044.json": "3f94fb94b1c7f6a6cec0cca01840c3f75f8478d091a5ac7fde5bc25bef2c313e",
+          "game-820045.json": "dcd89d92fd96cf4fadb4cf94029d27ac75ce441030c4bb3c6eae01d5eb81041e",
+          "game-820046.json": "f91f368a35e71fd12fced06b58899df26e91637d5b2e893200880bb65e6e8a66",
+          "game-820047.json": "1590014876591be1121fad3cafa33d5fb3cd18394f360a638515e8a41a98663d",
+          "game-820048.json": "81ff62bfbeb7b7cf2ea838383318ca410c102cacd1e935b7181ddd529f1c54d6",
+          "game-820049.json": "b6d2d6770872dd75d1380b29b1b63471954ab001ba882e1cdcd8a0ccfc4afaa3",
+          "game-820050.json": "0eb1280dd54e58bdd1fdf5655e844e2687626d46ebd15ed54f09b6a68074f738",
+          "game-820051.json": "06354fa5121d55d225d6b955590b7a238f7b79c1fa98807422752bc2c01b7e84",
+          "game-820052.json": "239daf05f7e2548a21fc33c2910bc2e9dbc3ca8dacb464709e079da90e667f72",
+          "game-820053.json": "b7e0f82a760642522243da96e6b6bda0c6a7df7b1fa8dcda7b898158f0898c36",
+          "game-820054.json": "bf55397274b4830aa09a8d7c48d51b220efc200aae93debec452eec090392a16",
+          "game-820055.json": "a3957d9c2b2c8ed11889729820d152a92dff1a767b0828339e53184032b2c827",
+          "game-820056.json": "5da1e6ff5d6a7c9208fc01a72ed5289da6fb1ad50f0c586e827af46b3cb6251d",
+          "game-820057.json": "081074060086578d50b4cbd1f87947531dfa292b54080d8acb62a0ce936dbc9b",
+          "game-820058.json": "7130f5baa41ef7d85e569d1aec4e2185104789597cfd6a1e9cb034e7bc6c8edc",
+          "game-820059.json": "72785a1a6d7745e992829ad1882f955669178e998bf796f18dba8b1c0776b5e9",
+          "game-820060.json": "cae1cbc03c6d477f68082a031ae89f8ffaf77b6bb7a6381a4aacb3d0a033103b",
+          "game-820061.json": "11f2e9d3bb128eb9a9e7538276f991bc06d50dd241bc6201f535e1485a291916",
+          "game-820062.json": "511e9a8b44cdc938f8a1e5027035e134f31d5c8f2730ce0fac6a90aa25950842",
+          "game-820063.json": "4dc1c8eb5ee391a73f0cb128da85f780a702bdebb854f9ff89787eba90ffa703"
+        },
+        "replay_actions_equal": true,
+        "cuda_peak_mib": 910.74169921875,
+        "complete_games": 0,
+        "truncated_games": 64,
+        "trajectories": 0
+      },
+      {
+        "mode": "graph",
+        "workers": 16,
+        "seconds": 101.5271138518583,
+        "environment_actions": 16384,
+        "actions_per_second": 161.37561069554738,
+        "inference_seconds": 81.41259212349541,
+        "simulator_wait_seconds": 12.14217637758702,
+        "first_place_bonus": 1.0,
+        "unused_gold_penalty_coefficient": 0.01,
+        "unused_gold_penalty_total": 0.8400000000000005,
+        "unused_gold_penalized_ends": 53,
+        "inference_batches": 6231,
+        "mean_inference_batch": 2.629433477772428,
+        "sampling_graphs": true,
+        "sampling_graph_count": 14,
+        "sampling_graph_replays": 7229,
+        "sampling_graph_capture_seconds": 1.3039265498518944,
+        "tapes": {
+          "game-820000.json": "b0ae6742d3238be4b28e2c32b8209e4969b7e2fc69e9a2c220c7f707a94d2213",
+          "game-820001.json": "3eb34dfd349f2c5d233b05fac47c8fbdfc61eca19ff35cf925b28440a71675a8",
+          "game-820002.json": "42b974c0d0f5444c233925f3491b07f19afadb7357daff374f41cb1ea903e1bb",
+          "game-820003.json": "a46eca6fea45b6f3a6ac2f761e02abee35213ffd88646ab3cd848bfba7c569fd",
+          "game-820004.json": "803d6d9eb0860278d5fe2d67a8d1662b4ab6903be4f1e1c371c45d24cc5bd2d1",
+          "game-820005.json": "6b15b6d71a59fff9b160ff3753961d0682d261f8674104f90669d4cd696e1d36",
+          "game-820006.json": "317277de6c26debf986d61b8e0dcf52c792e0e5bd104aec8736c9642da653a2e",
+          "game-820007.json": "694c493e7fc8360861e179e91158ff32d723dcc3902eeac4a098aa7b5b682f9c",
+          "game-820008.json": "1532f15e43e9d9eeae34a52a142622996db9775c635f2f87d17926f70ee423db",
+          "game-820009.json": "b2e5735cabf5dc33c5474f72f56d3fbf3d4843f8ec8af694df20aaa97f013964",
+          "game-820010.json": "93a837f8d0ac6169f2cbff65108679ea30144fe1f39b109c8b62e03e0acb1284",
+          "game-820011.json": "c015492e88457a3dbd2c5eeb26fbcca69f91911bd2e9cf3b38345fdc022120d7",
+          "game-820012.json": "34dd94f7008534d25cda534449dee63313de557334999735cdbf98cd6292830f",
+          "game-820013.json": "357a55bac7021266e1d03e4b345b1d2cec62ea5e12499dc0be8c71a328ddf79a",
+          "game-820014.json": "2eccd07844fac48baa3d5aa2ed0c8f0f140c9d1275090f4cf96c819fb77fa85c",
+          "game-820015.json": "54f7fd974cef98098d20edc9d5a61c99c53a679fa824e2e143c5ba3e82a9fd04",
+          "game-820016.json": "45afd1cf2e8afbc6cfbc3c647212a09fab3e96dbd586e649f7f43643217b8c6a",
+          "game-820017.json": "4f43aa49d59875dd61a8929d9a1ff67405e02ea1124fb34e1d9034d9a1dde00e",
+          "game-820018.json": "bc75529612875acf58695961eb4d43ed21c9a1ffab78eadd761fbb9e2b6594b4",
+          "game-820019.json": "6db3e4efbcd8cf47de43cffc1835976a2f397afae605f038b680909dc069e92d",
+          "game-820020.json": "ab45596b8ba19863bc36a6f038facd65ae3d0e101006892d705bb16c9c7b1d68",
+          "game-820021.json": "f98d530be81506fa4e11dce433281f875890f4e588da8023d493db8fd76e4296",
+          "game-820022.json": "d9af45d249e6181c3df4d214dcc131013b5907822e0237fd282e2ad44ff2fcb0",
+          "game-820023.json": "f72963290b70ecf7d357906802fef7e73b8b48de6d593ed30ec4d7f5ffa1c054",
+          "game-820024.json": "5d8ae6bfdf726c85d8487b9191a301417bcbaaa29bfde49594457eba4266556e",
+          "game-820025.json": "3116bae560118e205a2f589723b2ebd4d7a3c6a2420ccf391fff5f31ab8eef05",
+          "game-820026.json": "5a6a71223e37924af4fdee4a20a2cacf262e21ac16ed292b4f9e22735d76317a",
+          "game-820027.json": "23a6e8acffca3efc6c86c56bf3768d75c03773b031249ffdfae4725516d3590c",
+          "game-820028.json": "33827119419c1965475f6cbd2093508f2e0a8c5bd88a0757f126184f0032c3a4",
+          "game-820029.json": "7e529edffa0f0ef0a75b50c9ee058ed920befb8045e1e5ffe6d367a2cb433b44",
+          "game-820030.json": "beb90bbf6edaeff5370940077731f4e4b8d637d3fc9cba149c07f0b8e3730d6a",
+          "game-820031.json": "4c434bb54ca194add6ed0531851f8681d0e4d8cea8899424029626d63140ab87",
+          "game-820032.json": "4268f21e3fd35dbda9bcad1f567da8fe70c0c2969dfab337d0ca98ec2eb727e9",
+          "game-820033.json": "4c63dbcd6b06c42a87e848b1d117d250e8f12d424b9444dfc0eed196c44bbdcf",
+          "game-820034.json": "a51369806d5abd6adf7eb8f364ac8d557b22a73a869218fc3b709cd562284b9d",
+          "game-820035.json": "d69d471deecba4965a149700f101e994ca7858b8ca87d36cc91752e5a329c7f1",
+          "game-820036.json": "25a2346cf53e690424c31a546e68d27170c7899d61a975ff47a19081b11071da",
+          "game-820037.json": "0fdc941835ef804b04fc5f86fe7651c58005f3be0b433f44202f564d558c72c1",
+          "game-820038.json": "4cf37f39637e76dbdbdeebdc9dc59a4791a8387566fcbe47e53366b1449d2dd2",
+          "game-820039.json": "7ec5eb13f1a4b27ebc64e0858d58df13f58e153d075c04584da505412f799fc4",
+          "game-820040.json": "46aa0ebb41d7c93bf90a426917828a949303fa7f93a6c42dfdf55cd5d961ed00",
+          "game-820041.json": "a181789e2d88e25a6a219a14d016659f14faa3e98aa500bbddd48105ba8064ce",
+          "game-820042.json": "f4cf73542bc4b7d54d68ce4adca8c5bed2d8eadd6208674ced5ee480b670e8fa",
+          "game-820043.json": "016491cddf02fecb3f6a0fa7c986f168147f6f9b35811c9f560d96992281bdd0",
+          "game-820044.json": "3f94fb94b1c7f6a6cec0cca01840c3f75f8478d091a5ac7fde5bc25bef2c313e",
+          "game-820045.json": "dcd89d92fd96cf4fadb4cf94029d27ac75ce441030c4bb3c6eae01d5eb81041e",
+          "game-820046.json": "f91f368a35e71fd12fced06b58899df26e91637d5b2e893200880bb65e6e8a66",
+          "game-820047.json": "1590014876591be1121fad3cafa33d5fb3cd18394f360a638515e8a41a98663d",
+          "game-820048.json": "81ff62bfbeb7b7cf2ea838383318ca410c102cacd1e935b7181ddd529f1c54d6",
+          "game-820049.json": "b6d2d6770872dd75d1380b29b1b63471954ab001ba882e1cdcd8a0ccfc4afaa3",
+          "game-820050.json": "0eb1280dd54e58bdd1fdf5655e844e2687626d46ebd15ed54f09b6a68074f738",
+          "game-820051.json": "06354fa5121d55d225d6b955590b7a238f7b79c1fa98807422752bc2c01b7e84",
+          "game-820052.json": "239daf05f7e2548a21fc33c2910bc2e9dbc3ca8dacb464709e079da90e667f72",
+          "game-820053.json": "b7e0f82a760642522243da96e6b6bda0c6a7df7b1fa8dcda7b898158f0898c36",
+          "game-820054.json": "bf55397274b4830aa09a8d7c48d51b220efc200aae93debec452eec090392a16",
+          "game-820055.json": "a3957d9c2b2c8ed11889729820d152a92dff1a767b0828339e53184032b2c827",
+          "game-820056.json": "5da1e6ff5d6a7c9208fc01a72ed5289da6fb1ad50f0c586e827af46b3cb6251d",
+          "game-820057.json": "081074060086578d50b4cbd1f87947531dfa292b54080d8acb62a0ce936dbc9b",
+          "game-820058.json": "7130f5baa41ef7d85e569d1aec4e2185104789597cfd6a1e9cb034e7bc6c8edc",
+          "game-820059.json": "72785a1a6d7745e992829ad1882f955669178e998bf796f18dba8b1c0776b5e9",
+          "game-820060.json": "cae1cbc03c6d477f68082a031ae89f8ffaf77b6bb7a6381a4aacb3d0a033103b",
+          "game-820061.json": "11f2e9d3bb128eb9a9e7538276f991bc06d50dd241bc6201f535e1485a291916",
+          "game-820062.json": "511e9a8b44cdc938f8a1e5027035e134f31d5c8f2730ce0fac6a90aa25950842",
+          "game-820063.json": "4dc1c8eb5ee391a73f0cb128da85f780a702bdebb854f9ff89787eba90ffa703"
+        },
+        "replay_actions_equal": true,
+        "cuda_peak_mib": 800.939453125,
+        "complete_games": 0,
+        "truncated_games": 64,
+        "trajectories": 0
+      }
+    ]
+  },
+  "prior_training": [
+    {
+      "episodes": 2236,
+      "iteration_seconds": 742.465961840935,
+      "seconds": 616.9955239421688,
+      "optimization_seconds": 109.02370833186433,
+      "samples": 18991,
+      "optimizer_steps": 154,
+      "kl_early_stop": false,
+      "approx_kl": 0.008566140637743625
+    },
+    {
+      "episodes": 2252,
+      "iteration_seconds": 732.3364919039886,
+      "seconds": 609.7961879570503,
+      "optimization_seconds": 112.94897009711713,
+      "samples": 20091,
+      "optimizer_steps": 162,
+      "kl_early_stop": false,
+      "approx_kl": 0.008759837164989435
+    },
+    {
+      "episodes": 2268,
+      "iteration_seconds": 752.9386696377769,
+      "seconds": 612.1168746061157,
+      "optimization_seconds": 118.20896658301353,
+      "samples": 19017,
+      "optimizer_steps": 154,
+      "kl_early_stop": false,
+      "approx_kl": 0.008480026903908354
+    }
+  ],
+  "full_training": {
+    "stage": "complete",
+    "rows": [
+      {
+        "workers": 16,
+        "games": 16,
+        "wall_seconds": 488.28524376102723,
+        "wall_games_per_hour": 117.96383514753549,
+        "iteration_games_per_hour": 123.80115121208351,
+        "metrics": {
+          "iteration": 145,
+          "iteration_seconds": 465.2622325080447,
+          "end_to_end_actions_per_second": 72.36779099498007,
+          "cuda_peak_allocated_mib": 2304.9873046875,
+          "episodes": 2284,
+          "seconds": 354.34033052809536,
+          "environment_actions": 33670,
+          "actions_per_second": 95.02164190516928,
+          "inference_seconds": 218.72556230449118,
+          "simulator_wait_seconds": 104.26918594399467,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 4.559999999999998,
+          "unused_gold_penalized_ends": 121,
+          "inference_batches": 12993,
+          "mean_inference_batch": 2.591395366735935,
+          "sampling_graphs": true,
+          "sampling_graph_count": 14,
+          "sampling_graph_replays": 15593,
+          "sampling_graph_capture_seconds": 1.2104206951335073,
+          "policy_loss": -0.004403022347758405,
+          "value_loss": 0.01861945777021062,
+          "entropy": 2.5137653335546837,
+          "approx_kl": 0.007977995368317163,
+          "gradient_norm": 1.9640559355417888,
+          "samples": 19438,
+          "optimizer_steps": 156,
+          "kl_early_stop": false,
+          "sequence_chunks": 1242,
+          "optimization_seconds": 104.38690108805895,
+          "completed_games": 16,
+          "league_generations": [
+            0,
+            "external:cfdbae3a4dd12248",
+            "external:99c08b1867764558",
+            "external:85b76201e9d22226",
+            "external:241b600a84618e2a",
+            1,
+            2,
+            57,
+            142,
+            143,
+            144,
+            145
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 256,
+              "probability": 0.039136458804477255,
+              "seats": 1
+            },
+            {
+              "generation": "external:cfdbae3a4dd12248",
+              "external": true,
+              "depth": 64,
+              "probability": 0.11282527881040894,
+              "seats": 4
+            },
+            {
+              "generation": "external:99c08b1867764558",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.05773162939297125,
+              "seats": 6
+            },
+            {
+              "generation": "external:85b76201e9d22226",
+              "external": true,
+              "depth": 64,
+              "probability": 0.08717472118959108,
+              "seats": 3
+            },
+            {
+              "generation": "external:241b600a84618e2a",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.14226837060702877,
+              "seats": 6
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 256,
+              "probability": 0.039762250268698104,
+              "seats": 3
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 256,
+              "probability": 0.03939935505171479,
+              "seats": 3
+            },
+            {
+              "generation": 57,
+              "external": false,
+              "depth": 256,
+              "probability": 0.08307113227372522,
+              "seats": 12
+            },
+            {
+              "generation": 141,
+              "external": false,
+              "depth": 256,
+              "probability": 0.07943716258138278,
+              "seats": 8
+            },
+            {
+              "generation": 142,
+              "external": false,
+              "depth": 256,
+              "probability": 0.11605837189452298,
+              "seats": 8
+            },
+            {
+              "generation": 143,
+              "external": false,
+              "depth": 256,
+              "probability": 0.1090790124080261,
+              "seats": 6
+            },
+            {
+              "generation": 144,
+              "external": false,
+              "depth": 256,
+              "probability": 0.09405625671745273,
+              "seats": 4
+            }
+          ],
+          "hero_counts": {
+            "s14_chenvaala": 9,
+            "s14_teron": 9,
+            "s14_afk": 8,
+            "s14_sylvanas": 8,
+            "s14_marin": 7,
+            "s14_shudderwock": 8,
+            "s14_yogg": 9,
+            "s14_vanndar": 9,
+            "s14_buttons": 9,
+            "s14_millificent": 8,
+            "s14_clockwork": 11,
+            "s14_patchwerk": 9,
+            "s14_genn": 8,
+            "s14_lich": 8,
+            "s14_brann": 8
+          }
+        },
+        "resources": [
+          {
+            "seconds": 0,
+            "gpu": "0, 1",
+            "cgroup_memory_bytes": 4038660096
+          },
+          {
+            "seconds": 30,
+            "gpu": "30, 1536",
+            "cgroup_memory_bytes": 7634825216
+          },
+          {
+            "seconds": 60,
+            "gpu": "25, 1536",
+            "cgroup_memory_bytes": 8036294656
+          },
+          {
+            "seconds": 90,
+            "gpu": "13, 1536",
+            "cgroup_memory_bytes": 8398864384
+          },
+          {
+            "seconds": 120,
+            "gpu": "22, 1536",
+            "cgroup_memory_bytes": 8605396992
+          },
+          {
+            "seconds": 150,
+            "gpu": "9, 1536",
+            "cgroup_memory_bytes": 8816623616
+          },
+          {
+            "seconds": 180,
+            "gpu": "6, 1536",
+            "cgroup_memory_bytes": 8948518912
+          },
+          {
+            "seconds": 211,
+            "gpu": "0, 1538",
+            "cgroup_memory_bytes": 9038495744
+          },
+          {
+            "seconds": 241,
+            "gpu": "14, 1538",
+            "cgroup_memory_bytes": 9154809856
+          },
+          {
+            "seconds": 271,
+            "gpu": "20, 1538",
+            "cgroup_memory_bytes": 9198125056
+          },
+          {
+            "seconds": 301,
+            "gpu": "3, 1538",
+            "cgroup_memory_bytes": 9242501120
+          },
+          {
+            "seconds": 331,
+            "gpu": "11, 1538",
+            "cgroup_memory_bytes": 9013784576
+          },
+          {
+            "seconds": 361,
+            "gpu": "3, 1538",
+            "cgroup_memory_bytes": 8990617600
+          },
+          {
+            "seconds": 391,
+            "gpu": "1, 3308",
+            "cgroup_memory_bytes": 9240150016
+          },
+          {
+            "seconds": 421,
+            "gpu": "3, 3310",
+            "cgroup_memory_bytes": 9017061376
+          },
+          {
+            "seconds": 451,
+            "gpu": "0, 3312",
+            "cgroup_memory_bytes": 8974041088
+          },
+          {
+            "seconds": 481,
+            "gpu": "0, 3540",
+            "cgroup_memory_bytes": 9134637056
+          }
+        ],
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+          "--output",
+          "/root/autodl-tmp/tavern-scaling-20260915/full-16",
+          "--iterations",
+          "1",
+          "--resume-games-per-iteration",
+          "16",
+          "--workers",
+          "16",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda",
+          "--unused-gold-penalty",
+          "0.01",
+          "--first-place-bonus",
+          "1.0"
+        ]
+      },
+      {
+        "workers": 64,
+        "games": 64,
+        "wall_seconds": 1538.0215550460853,
+        "wall_games_per_hour": 149.80284199794346,
+        "iteration_games_per_hour": 153.22722345354578,
+        "metrics": {
+          "iteration": 145,
+          "iteration_seconds": 1503.64925244404,
+          "end_to_end_actions_per_second": 87.89017770280728,
+          "cuda_peak_allocated_mib": 2309.21875,
+          "episodes": 2332,
+          "seconds": 1060.9677066628356,
+          "environment_actions": 132156,
+          "actions_per_second": 124.5617554333327,
+          "inference_seconds": 814.8126101111993,
+          "simulator_wait_seconds": 120.82239917269908,
+          "first_place_bonus": 1.0,
+          "unused_gold_penalty_coefficient": 0.01,
+          "unused_gold_penalty_total": 16.84999999999995,
+          "unused_gold_penalized_ends": 455,
+          "inference_batches": 22788,
+          "mean_inference_batch": 5.799368088467615,
+          "sampling_graphs": true,
+          "sampling_graph_count": 14,
+          "sampling_graph_replays": 25527,
+          "sampling_graph_capture_seconds": 1.2124533588066697,
+          "policy_loss": -0.002316395674584925,
+          "value_loss": 0.020706722208341213,
+          "entropy": 2.5313938619259515,
+          "approx_kl": 0.010172145926826902,
+          "gradient_norm": 1.928322089708589,
+          "samples": 76646,
+          "optimizer_steps": 614,
+          "kl_early_stop": false,
+          "sequence_chunks": 4910,
+          "optimization_seconds": 436.19112304993905,
+          "completed_games": 64,
+          "league_generations": [
+            0,
+            "external:cfdbae3a4dd12248",
+            "external:99c08b1867764558",
+            "external:85b76201e9d22226",
+            "external:241b600a84618e2a",
+            1,
+            2,
+            57,
+            142,
+            143,
+            144,
+            145
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 256,
+              "probability": 0.039136458804477255,
+              "seats": 9
+            },
+            {
+              "generation": "external:cfdbae3a4dd12248",
+              "external": true,
+              "depth": 64,
+              "probability": 0.11282527881040894,
+              "seats": 30
+            },
+            {
+              "generation": "external:99c08b1867764558",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.05773162939297125,
+              "seats": 15
+            },
+            {
+              "generation": "external:85b76201e9d22226",
+              "external": true,
+              "depth": 64,
+              "probability": 0.08717472118959108,
+              "seats": 17
+            },
+            {
+              "generation": "external:241b600a84618e2a",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.14226837060702877,
+              "seats": 39
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 256,
+              "probability": 0.039762250268698104,
+              "seats": 14
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 256,
+              "probability": 0.03939935505171479,
+              "seats": 10
+            },
+            {
+              "generation": 57,
+              "external": false,
+              "depth": 256,
+              "probability": 0.08307113227372522,
+              "seats": 31
+            },
+            {
+              "generation": 141,
+              "external": false,
+              "depth": 256,
+              "probability": 0.07943716258138278,
+              "seats": 21
+            },
+            {
+              "generation": 142,
+              "external": false,
+              "depth": 256,
+              "probability": 0.11605837189452298,
+              "seats": 28
+            },
+            {
+              "generation": 143,
+              "external": false,
+              "depth": 256,
+              "probability": 0.1090790124080261,
+              "seats": 23
+            },
+            {
+              "generation": 144,
+              "external": false,
+              "depth": 256,
+              "probability": 0.09405625671745273,
+              "seats": 19
+            }
+          ],
+          "hero_counts": {
+            "s14_buttons": 36,
+            "s14_chenvaala": 39,
+            "s14_afk": 34,
+            "s14_brann": 29,
+            "s14_vanndar": 41,
+            "s14_patchwerk": 35,
+            "s14_sylvanas": 28,
+            "s14_marin": 35,
+            "s14_clockwork": 33,
+            "s14_yogg": 34,
+            "s14_genn": 35,
+            "s14_shudderwock": 35,
+            "s14_teron": 29,
+            "s14_lich": 31,
+            "s14_millificent": 38
+          }
+        },
+        "resources": [
+          {
+            "seconds": 0,
+            "gpu": "0, 1",
+            "cgroup_memory_bytes": 4042317824
+          },
+          {
+            "seconds": 30,
+            "gpu": "34, 1536",
+            "cgroup_memory_bytes": 9048178688
+          },
+          {
+            "seconds": 60,
+            "gpu": "8, 1674",
+            "cgroup_memory_bytes": 9935396864
+          },
+          {
+            "seconds": 90,
+            "gpu": "8, 1674",
+            "cgroup_memory_bytes": 10502045696
+          },
+          {
+            "seconds": 120,
+            "gpu": "8, 1674",
+            "cgroup_memory_bytes": 11140341760
+          },
+          {
+            "seconds": 150,
+            "gpu": "0, 1674",
+            "cgroup_memory_bytes": 11511324672
+          },
+          {
+            "seconds": 180,
+            "gpu": "9, 1674",
+            "cgroup_memory_bytes": 11694964736
+          },
+          {
+            "seconds": 211,
+            "gpu": "22, 1674",
+            "cgroup_memory_bytes": 12021735424
+          },
+          {
+            "seconds": 241,
+            "gpu": "0, 1674",
+            "cgroup_memory_bytes": 12565458944
+          },
+          {
+            "seconds": 271,
+            "gpu": "25, 1674",
+            "cgroup_memory_bytes": 13163692032
+          },
+          {
+            "seconds": 301,
+            "gpu": "0, 1674",
+            "cgroup_memory_bytes": 13383901184
+          },
+          {
+            "seconds": 331,
+            "gpu": "9, 1674",
+            "cgroup_memory_bytes": 13668003840
+          },
+          {
+            "seconds": 361,
+            "gpu": "16, 1674",
+            "cgroup_memory_bytes": 13874438144
+          },
+          {
+            "seconds": 391,
+            "gpu": "10, 1674",
+            "cgroup_memory_bytes": 14114250752
+          },
+          {
+            "seconds": 421,
+            "gpu": "29, 1674",
+            "cgroup_memory_bytes": 14410473472
+          },
+          {
+            "seconds": 451,
+            "gpu": "0, 1674",
+            "cgroup_memory_bytes": 14654803968
+          },
+          {
+            "seconds": 481,
+            "gpu": "8, 1674",
+            "cgroup_memory_bytes": 14949400576
+          },
+          {
+            "seconds": 512,
+            "gpu": "9, 1674",
+            "cgroup_memory_bytes": 15141810176
+          },
+          {
+            "seconds": 542,
+            "gpu": "10, 1674",
+            "cgroup_memory_bytes": 15103283200
+          },
+          {
+            "seconds": 572,
+            "gpu": "11, 1674",
+            "cgroup_memory_bytes": 14874271744
+          },
+          {
+            "seconds": 602,
+            "gpu": "16, 1674",
+            "cgroup_memory_bytes": 14681513984
+          },
+          {
+            "seconds": 632,
+            "gpu": "4, 1674",
+            "cgroup_memory_bytes": 14758342656
+          },
+          {
+            "seconds": 662,
+            "gpu": "2, 1674",
+            "cgroup_memory_bytes": 14895562752
+          },
+          {
+            "seconds": 692,
+            "gpu": "0, 1674",
+            "cgroup_memory_bytes": 14916333568
+          },
+          {
+            "seconds": 723,
+            "gpu": "1, 1674",
+            "cgroup_memory_bytes": 14845743104
+          },
+          {
+            "seconds": 753,
+            "gpu": "6, 1674",
+            "cgroup_memory_bytes": 15097180160
+          },
+          {
+            "seconds": 783,
+            "gpu": "25, 1674",
+            "cgroup_memory_bytes": 15237677056
+          },
+          {
+            "seconds": 813,
+            "gpu": "0, 1674",
+            "cgroup_memory_bytes": 15364530176
+          },
+          {
+            "seconds": 843,
+            "gpu": "21, 1674",
+            "cgroup_memory_bytes": 15545917440
+          },
+          {
+            "seconds": 873,
+            "gpu": "10, 1674",
+            "cgroup_memory_bytes": 15777419264
+          },
+          {
+            "seconds": 903,
+            "gpu": "0, 1674",
+            "cgroup_memory_bytes": 15991291904
+          },
+          {
+            "seconds": 933,
+            "gpu": "14, 1674",
+            "cgroup_memory_bytes": 16161501184
+          },
+          {
+            "seconds": 964,
+            "gpu": "17, 1674",
+            "cgroup_memory_bytes": 16179630080
+          },
+          {
+            "seconds": 994,
+            "gpu": "9, 1674",
+            "cgroup_memory_bytes": 16294518784
+          },
+          {
+            "seconds": 1024,
+            "gpu": "11, 1674",
+            "cgroup_memory_bytes": 16308518912
+          },
+          {
+            "seconds": 1054,
+            "gpu": "13, 1674",
+            "cgroup_memory_bytes": 16368259072
+          },
+          {
+            "seconds": 1084,
+            "gpu": "14, 1674",
+            "cgroup_memory_bytes": 16416665600
+          },
+          {
+            "seconds": 1114,
+            "gpu": "3, 3312",
+            "cgroup_memory_bytes": 16806047744
+          },
+          {
+            "seconds": 1144,
+            "gpu": "0, 3312",
+            "cgroup_memory_bytes": 16767614976
+          },
+          {
+            "seconds": 1174,
+            "gpu": "4, 3312",
+            "cgroup_memory_bytes": 16767475712
+          },
+          {
+            "seconds": 1204,
+            "gpu": "4, 3312",
+            "cgroup_memory_bytes": 16767533056
+          },
+          {
+            "seconds": 1234,
+            "gpu": "0, 3312",
+            "cgroup_memory_bytes": 16767528960
+          },
+          {
+            "seconds": 1264,
+            "gpu": "20, 3312",
+            "cgroup_memory_bytes": 16767721472
+          },
+          {
+            "seconds": 1294,
+            "gpu": "0, 3312",
+            "cgroup_memory_bytes": 16767541248
+          },
+          {
+            "seconds": 1325,
+            "gpu": "0, 3316",
+            "cgroup_memory_bytes": 16767918080
+          },
+          {
+            "seconds": 1355,
+            "gpu": "0, 3316",
+            "cgroup_memory_bytes": 16768122880
+          },
+          {
+            "seconds": 1385,
+            "gpu": "1, 3316",
+            "cgroup_memory_bytes": 16768135168
+          },
+          {
+            "seconds": 1415,
+            "gpu": "14, 3316",
+            "cgroup_memory_bytes": 16769564672
+          },
+          {
+            "seconds": 1445,
+            "gpu": "0, 3316",
+            "cgroup_memory_bytes": 16769044480
+          },
+          {
+            "seconds": 1475,
+            "gpu": "0, 3316",
+            "cgroup_memory_bytes": 16768376832
+          },
+          {
+            "seconds": 1505,
+            "gpu": "13, 3316",
+            "cgroup_memory_bytes": 16768708608
+          },
+          {
+            "seconds": 1535,
+            "gpu": "0, 3686",
+            "cgroup_memory_bytes": 10970849280
+          }
+        ],
+        "command": [
+          "/root/miniconda3/bin/python",
+          "-u",
+          "-m",
+          "tavern_rl.train",
+          "--resume",
+          "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+          "--output",
+          "/root/autodl-tmp/tavern-scaling-20260915/full-64",
+          "--iterations",
+          "1",
+          "--resume-games-per-iteration",
+          "64",
+          "--workers",
+          "64",
+          "--device",
+          "cuda",
+          "--rollout-device",
+          "cuda",
+          "--unused-gold-penalty",
+          "0.01",
+          "--first-place-bonus",
+          "1.0"
+        ]
+      }
+    ],
+    "selected_workers": 64,
+    "production_checkpoint_hashes": [
+      "3c8e364f8782cfcba7246b4ab6bdce0d95385e28892bf50d29b834405aa092a0",
+      "a9ba37cca2d3af44eadefe22471a0ca5aae710f2cf29abcbdc66d2559afac1c6",
+      "4202b074b0269b8b7c015c7b69e2487787fafd97667ea945d872292b9fbfa029"
+    ],
+    "production_checkpoints_unchanged": true
+  },
+  "coordinator_deployment": {
+    "coordinator": "/root/tavern-human-current-06cd2177/population_resume.py",
+    "before_sha256": "c450b71ffce0b6de5154266bf461374588870ff267786b37be76599f16741bd6",
+    "after_sha256": "4ec04b1385c12f9f2b5249f979bf5f38fb17eff7dc926e41a3e767dffc91c204"
+  },
+  "coordinator_before_source": "\"\"\"Asynchronous independent PPO learners exchanging frozen neural opponents.\"\"\"\nfrom __future__ import annotations\nimport argparse\nimport datetime\nimport fcntl\nimport json\nimport os\nfrom pathlib import Path\nimport shutil\nimport signal\nimport subprocess\nimport sys\nimport time\nfrom tavern_rl.rewards import penalty_coefficient\n\n\ndef deadline_seconds(value):\n    parsed = datetime.datetime.fromisoformat(value)\n    if parsed.tzinfo is None: raise ValueError('Deadline must include a timezone')\n    return parsed.timestamp()\n\n\ndef latest_checkpoint(member):\n    latest = member['root']/'training/latest.pt'\n    return latest if latest.is_file() else member['root']/'initial.pt'\n\n\ndef stop_processes(processes):\n    # Each child owns a new process group, including its simulator children.\n    for process in processes:\n        try: os.killpg(process.pid,signal.SIGTERM)\n        except ProcessLookupError: pass\n    for process in processes:\n        try: process.wait(timeout=10)\n        except subprocess.TimeoutExpired:\n            try: os.killpg(process.pid,signal.SIGKILL)\n            except ProcessLookupError: pass\n            process.wait()\n\n\ndef main():\n    p=argparse.ArgumentParser(description=__doc__)\n    p.add_argument('--resumes',type=Path,nargs='+',required=True)\n    p.add_argument('--output',type=Path,required=True)\n    p.add_argument('--deadline-utc',required=True,help='Absolute stop time including timezone')\n    p.add_argument('--workers',type=int,default=16,help='Simulator workers per learner')\n    p.add_argument('--iterations-per-exchange',type=int,default=2)\n    p.add_argument('--games-per-iteration',type=int,default=16)\n    p.add_argument('--max-per-lineage',type=int,default=2)\n    p.add_argument('--external-fraction',type=float,default=.4)\n    p.add_argument('--unused-gold-penalty',type=penalty_coefficient,help='Explicitly set reward shaping for every learner; omitted preserves saved reward')\n    p.add_argument('--device',choices=['cpu','cuda'],default='cuda')\n    args=p.parse_args()\n    seconds=deadline_seconds(args.deadline_utc)-time.time()\n    if seconds <= 0: raise ValueError('Deadline has passed')\n    deadline=time.monotonic()+seconds\n    if len(args.resumes)<2 or len({p.resolve() for p in args.resumes}) != len(args.resumes):\n        raise ValueError('At least two distinct learner checkpoints required')\n    if min(args.workers,args.iterations_per_exchange,args.games_per_iteration,args.max_per_lineage)<1:\n        raise ValueError('Positive training sizes required')\n    if not 0<args.external_fraction<1: raise ValueError('External fraction must be between zero and one')\n    if any(not path.is_file() for path in args.resumes): raise FileNotFoundError('Missing learner checkpoint')\n    root=args.output.resolve(); root.mkdir(parents=True,exist_ok=True); prior=json.loads((root/'status.json').read_text()); assert prior['stage']=='interrupted' and all(m['pid'] is None for m in prior['members'])\n    lock=(root/'.population.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)\n    state=dict(stage='preparing',pid=os.getpid(),opponent_mode='mixed_self_play',deadline_utc=args.deadline_utc,workers_per_learner=args.workers,\n        iterations_per_exchange=args.iterations_per_exchange,games_per_iteration=args.games_per_iteration,\n        unused_gold_penalty=args.unused_gold_penalty,external_fraction=args.external_fraction,max_per_lineage=args.max_per_lineage,members=[])\n    members=[];active={}\n\n    def status():\n        state['members']=[dict(index=i,root=str(m['root']),source=str(args.resumes[i].resolve()),\n            round=m['round'],stage=m['stage'],pid=active[i].pid if i in active else None,\n            checkpoint=str(latest_checkpoint(m))) for i,m in enumerate(members)]\n        temp=root/'status.json.next';temp.write_text(json.dumps(state,indent=2)+'\\n')\n        os.replace(temp,root/'status.json')\n        print(json.dumps(state),flush=True)\n\n    def launch(i, stage):\n        member=members[i]; target=member['root'];member['stage']=stage\n        if stage=='mixing':\n            member['round']+=1\n            # Only the previous completed segment used these generated files.\n            exchange=target/'exchange'\n            if exchange.exists():\n                (exchange/'latest.pt').unlink();(exchange/'league.json').unlink();exchange.rmdir()\n            command=['mix_league','--resume',latest_checkpoint(member),'--opponents',\n                *[latest_checkpoint(other) for j,other in enumerate(members) if j!=i],\n                '--output',exchange,'--external-fraction',args.external_fraction,'--max-per-lineage',args.max_per_lineage]\n        else:\n            # Preserve a compact audit before the next exchange replaces it.\n            shutil.copyfile(target/'exchange/league.json',target/f'exchange-{member[\"round\"]:04d}.json')\n            command=['train','--resume',target/'exchange/latest.pt','--output',target/'training',\n                '--iterations',args.iterations_per_exchange,'--resume-games-per-iteration',args.games_per_iteration,\n                '--workers',args.workers,'--device',args.device,'--rollout-device',args.device]\n        if stage=='training' and args.unused_gold_penalty is not None:\n            command += ['--unused-gold-penalty',args.unused_gold_penalty]\n        if stage=='training': command += ['--first-place-bonus', '1.0']\n        with (target/f'{stage}-{member[\"round\"]:04d}.log').open('a') as log:\n            active[i]=subprocess.Popen([sys.executable,'-m','tavern_rl.'+command[0],*map(str,command[1:])],\n                stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)\n        status()\n\n    def interrupted(signum,frame): raise KeyboardInterrupt(f'Signal {signum}')\n    previous=signal.signal(signal.SIGTERM,interrupted)\n    try:\n        for i,source in enumerate(args.resumes):\n            target=root/f'member-{i}'\n            assert source.resolve() == (target/'training/latest.pt').resolve()\n            assert source.is_file()\n            members.append(dict(root=target,round=prior['members'][i]['round'],stage='ready'))\n        state['stage']='running';status()\n        while time.monotonic()<deadline:\n            for i,member in enumerate(members):\n                if time.monotonic()>=deadline: break\n                if i not in active: launch(i,'mixing');continue\n                process=active[i];code=process.poll()\n                if code is None: continue\n                if code:\n                    raise RuntimeError(f'Member {i} {member[\"stage\"]} exited {code}; inspect its log')\n                active.pop(i)\n                launch(i,'training' if member['stage']=='mixing' else 'mixing')\n            time.sleep(min(1,max(0,deadline-time.monotonic())))\n        state['stage']='time_limit'\n    except BaseException as error:\n        state.update(stage='interrupted' if isinstance(error,KeyboardInterrupt) else 'failed',error=repr(error))\n        raise\n    finally:\n        stop_processes(list(active.values()))\n        active.clear()\n        for member in members: member['stage']='stopped'\n        status();lock.close();signal.signal(signal.SIGTERM,previous)\n\n\nif __name__=='__main__': main()\n",
+  "full_benchmark_source": "import fcntl,hashlib,json,os,signal,subprocess,sys,time\nfrom pathlib import Path\nw=Path('/root/tavern-scaling-20260915');root=Path('/root/tavern-four-hour-20260914/population');data=Path('/root/autodl-tmp/tavern-scaling-20260915');data.mkdir(exist_ok=True)\nreport=dict(stage='waiting',rows=[])\nwhile True:\n active=[]\n for p in Path('/proc').glob('[0-9]*/cmdline'):\n  try:parts=p.read_bytes().decode().split('\\0')\n  except (FileNotFoundError,PermissionError,ProcessLookupError):continue\n  if 'tavern_rl.sampling_benchmark' in parts and str(w/'sampling-256.json') in parts:active.append(p)\n if not active:break\n time.sleep(2)\nsampling=json.loads((w/'sampling-256.json').read_text())\nassert len(sampling['rows'])==4 and all(r['replay_actions_equal'] for r in sampling['rows'])\nbest=max((r for r in sampling['rows'] if r['workers'] in (32,64)),key=lambda r:r['actions_per_second'])['workers']\nreport['selected_workers']=best\nwith (root/'.population.lock').open('a') as lock:\n fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)\n status=json.loads((root/'status.json').read_text());assert status['stage']=='interrupted' and all(m['pid'] is None for m in status['members'])\n sources=[root/f'member-{i}/training/latest.pt' for i in range(3)]\n def digest(path):\n  with path.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()\n hashes=[digest(p) for p in sources];report['production_checkpoint_hashes']=hashes\n for workers in [16,best]:\n  output=data/f'full-{workers}';assert not output.exists();output.mkdir()\n  command=[sys.executable,'-u','-m','tavern_rl.train','--resume',str(sources[1]),'--output',str(output),'--iterations','1','--resume-games-per-iteration',str(workers),'--workers',str(workers),'--device','cuda','--rollout-device','cuda','--unused-gold-penalty','0.01','--first-place-bonus','1.0']\n  start=time.monotonic();last=0;resources=[];process=None\n  try:\n   with (w/f'full-{workers}.log').open('w') as log:process=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)\n   while process.poll() is None:\n    if time.monotonic()-start>3600:raise TimeoutError('Full iteration benchmark timeout')\n    if time.monotonic()-last>30:\n     last=time.monotonic();resource=dict(seconds=round(last-start),gpu=subprocess.check_output(['nvidia-smi','--query-gpu=utilization.gpu,memory.used','--format=csv,noheader,nounits'],text=True).strip(),cgroup_memory_bytes=int(Path('/sys/fs/cgroup/memory.current').read_text()));resources.append(resource)\n     print(json.dumps(dict(workers=workers,stage='full_iteration',**resource)),flush=True)\n    time.sleep(1)\n   if process.returncode!=0:raise RuntimeError(f'Test trainer exited {process.returncode}, see full-{workers}.log')\n   wall=time.monotonic()-start;metrics=[json.loads(line) for line in (output/'metrics.jsonl').read_text().splitlines()]\n   assert len(metrics)==1 and metrics[0]['completed_games']==workers\n   manifest=json.loads((output/'manifest.json').read_text())\n   assert manifest['config']['first_place_bonus']==1 and manifest['config']['unused_gold_penalty']==.01\n   row=dict(workers=workers,games=workers,wall_seconds=wall,wall_games_per_hour=3600*workers/wall,iteration_games_per_hour=3600*workers/metrics[0]['iteration_seconds'],metrics=metrics[0],resources=resources,command=command)\n   report['rows'].append(row);report['stage']='running';(w/'full-results.json').write_text(json.dumps(report,indent=2)+'\\n');print(json.dumps({k:v for k,v in row.items() if k not in ['metrics','resources','command']}),flush=True)\n   for name in ['manifest.json','metrics.jsonl']:(w/f'full-{workers}-{name}').write_bytes((output/name).read_bytes())\n   # These are disposable test checkpoints. Production sources were read only.\n   (output/'latest.pt').unlink()\n  finally:\n   if process is not None and process.poll() is None:\n    os.killpg(process.pid,signal.SIGTERM)\n    try:process.wait(timeout=10)\n    except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait()\n assert [digest(p) for p in sources]==hashes\n report.update(stage='complete',production_checkpoints_unchanged=True)\n (w/'full-results.json').write_text(json.dumps(report,indent=2)+'\\n')\n print('COMPLETED full iteration benchmarks; production checkpoints unchanged',flush=True)\n",
+  "summary": {
+    "prior_iteration_games_per_hour": 77.567361030537,
+    "rows": [
+      {
+        "workers": 16,
+        "wall_seconds": 488.28524376102723,
+        "wall_games_per_hour": 117.96383514753549,
+        "iteration_games_per_hour": 123.80115121208351,
+        "iteration_speedup_over_prior": 1.5960469657249912,
+        "seconds": 354.34033052809536,
+        "optimization_seconds": 104.38690108805895,
+        "iteration_seconds": 465.2622325080447,
+        "samples": 19438,
+        "optimizer_steps": 156,
+        "kl_early_stop": false,
+        "approx_kl": 0.007977995368317163,
+        "environment_actions": 33670,
+        "cuda_peak_allocated_mib": 2304.9873046875
+      },
+      {
+        "workers": 64,
+        "wall_seconds": 1538.0215550460853,
+        "wall_games_per_hour": 149.80284199794346,
+        "iteration_games_per_hour": 153.22722345354578,
+        "iteration_speedup_over_prior": 1.9754084890579522,
+        "seconds": 1060.9677066628356,
+        "optimization_seconds": 436.19112304993905,
+        "iteration_seconds": 1503.64925244404,
+        "samples": 76646,
+        "optimizer_steps": 614,
+        "kl_early_stop": false,
+        "approx_kl": 0.010172145926826902,
+        "environment_actions": 132156,
+        "cuda_peak_allocated_mib": 2309.21875
+      }
+    ]
+  }
+}

@@ -3,17 +3,31 @@ import contextlib
 import datetime
 import fcntl
 import io
+import importlib.util
 import json
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import uuid
+import shutil
 from unittest.mock import patch
 
 TEMPLATES=Path(__file__).parent/'tavern-ops-templates'
 
 
 class OperationGuards(unittest.TestCase):
+    def test_primary_model_and_batch_parameters_render_into_launcher(self):
+        spec=importlib.util.spec_from_file_location('ops',Path(__file__).with_name('tavern-ops.py'))
+        ops=importlib.util.module_from_spec(spec);spec.loader.exec_module(ops)
+        directory=ops.render('test-'+uuid.uuid4().hex,3,model='256',workers=64,games=64)
+        try:
+            source=(directory/'resume.py').read_text()
+            self.assertIn("workers=64;games=64;active_members=['--active-members', '1']",source)
+            self.assertIn('hours=3',source)
+        finally:shutil.rmtree(directory)
+        with self.assertRaises(ValueError):ops.render('invalid',1,model='256',workers=64,games=16)
+
     def test_resume_duration_and_lock(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d)/'population';root.mkdir();work=Path(d)/'work';work.mkdir()

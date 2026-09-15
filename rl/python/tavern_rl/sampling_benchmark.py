@@ -25,12 +25,16 @@ def main():
     parser.add_argument('--checkpoint', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--workers', type=int, default=16)
+    parser.add_argument('--worker-cases', type=int, nargs='+', help='Compare simulator counts using the same loaded weights and seeds')
     parser.add_argument('--games', type=int, default=16)
     parser.add_argument('--steps', type=int, default=256, help='0 uses full training game limit')
     parser.add_argument('--cases', nargs='+', choices=['eager', 'graph'], default=['eager', 'graph', 'eager'])
     args = parser.parse_args()
     if args.workers < 1 or args.games < 1 or args.steps < 0:
         parser.error('Positive workers/games and nonnegative steps required')
+    workers_to_test = args.worker_cases or [args.workers]
+    if any(workers < 1 for workers in workers_to_test):
+        parser.error('Worker counts must be positive')
     torch.set_num_threads(1)
     with Simulator() as simulator:
         meta = simulator.meta
@@ -58,16 +62,21 @@ def main():
     if args.steps:
         options['maxSteps'] = args.steps
     report = dict(checkpoint_sha256=digest, depth=model.specification()['policy_depth'],
-                  workers=args.workers, games=args.games, steps=args.steps,
+                  workers=args.workers, worker_cases=workers_to_test, games=args.games, steps=args.steps,
                   note='Sampling only, includes graph capture/release, no optimizer updates.', rows=[])
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    pool = SimulationPool(args.workers)
+    pool = SimulationPool(workers_to_test[0])
     # Also works with an unpatched local rollout, without stacking decorators.
     if not hasattr(SimulationPool.collect, '__wrapped__'):
         pool.collect = accelerate_sampling(SimulationPool.collect).__get__(pool)
     baseline = None
     try:
-        for mode in args.cases:
+        for workers, mode in [(workers, mode) for workers in workers_to_test for mode in args.cases]:
+            if len(pool.simulators) != workers:
+                pool.close()
+                pool = SimulationPool(workers)
+                if not hasattr(SimulationPool.collect, '__wrapped__'):
+                    pool.collect = accelerate_sampling(SimulationPool.collect).__get__(pool)
             os.environ['TAVERN_SAMPLING_GRAPHS'] = '0' if mode == 'eager' else '1'
             pool.collect(model, opponents, range(810000, 810000 + args.games),
                          dict(options, maxSteps=4), 'cuda', **kwargs)
@@ -76,13 +85,13 @@ def main():
             with tempfile.TemporaryDirectory(prefix='sampling-benchmark-') as directory:
                 tracks, games, perf = pool.collect(model, opponents, range(820000, 820000 + args.games),
                     options, 'cuda', **kwargs, replay_dir=directory,
-                    progress=lambda row: print(json.dumps(dict(mode=mode, **row)), flush=True))
+                    progress=lambda row: print(json.dumps(dict(mode=mode, workers=workers, **row)), flush=True))
                 tapes = {p.name: hashlib.sha256(json.dumps(json.loads(p.read_text())['actions'], sort_keys=True).encode()).hexdigest()
                          for p in Path(directory).glob('game-*.json')}
                 assert len(tapes) == args.games
                 if baseline is None:
                     baseline = tapes
-                row = dict(mode=mode, **perf, tapes=tapes, replay_actions_equal=tapes == baseline,
+                row = dict(mode=mode, workers=workers, **perf, tapes=tapes, replay_actions_equal=tapes == baseline,
                            cuda_peak_mib=torch.cuda.max_memory_allocated() / 2**20,
                            complete_games=sum(g['terminated'] for g in games),
                            truncated_games=sum(g['truncated'] for g in games), trajectories=len(tracks))
