@@ -76,7 +76,7 @@ class Policy:
         dist, values, updated = self.model.act([prepare_entities(r['entities']) for r in rows], masks, memories, previous, with_value=run_search)
         if not torch.isfinite(updated).all() or not torch.isfinite(dist.probs).all():
             raise ValueError('Non-finite model output')
-        actions = dist.sample().tolist()
+        actions = dist.probs.argmax(-1).tolist() if hasattr(self.model,'action_value_type') else dist.sample().tolist()
         reports = [None] * len(rows)
         if use_search:
             from .recruit_search import Evaluation

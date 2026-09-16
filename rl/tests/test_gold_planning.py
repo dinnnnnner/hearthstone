@@ -35,6 +35,87 @@ class GoldPlanningTests(unittest.TestCase):
         self.assertEqual(random.getstate(),before)
         np.testing.assert_equal(np.random.get_state(),numpy_before)
 
+    def test_zero_gold_sale_is_captured_after_funded_position_in_same_turn(self):
+        pool=SimpleNamespace(planning_examples=[])
+        game=dict(seed=42,state=dict(legalActions=[0,1],entities=[dict(details=dict(turn=5,gold=2,decisions=1))]),
+                  planning_seen=set(),memory=[np.zeros(2)],previous=[3])
+        types=['end','sell','freeze']
+        capture(pool,game,0,types,32)
+        game['state']=dict(legalActions=[0,1],entities=[dict(details=dict(turn=5,gold=0,decisions=2))])
+        capture(pool,game,0,types,32);capture(pool,game,0,types,32)
+        self.assertEqual(sorted(r['entities'][0]['details']['gold'] for r in pool.planning_examples),[0,2])
+        game['planning_seen']=set();game['state']['legalActions']=[0,2]
+        capture(pool,game,0,types,32)
+        self.assertEqual(len(pool.planning_examples),2)
+        self.assertEqual(game['planning_seen'],set())
+
+    def test_all_sales_keep_twelve_paired_trials_across_branch_batches(self):
+        types=['end','upgrade','buy','buy','buySpell','refresh','play']+['sell']*7
+        legal=list(range(len(types)))
+        probabilities=np.array([.1,.1,.4,.2,.1,.05,.05]+[0.]*7)
+        self.assertEqual(set(root_actions(legal,probabilities,types)),set(legal))
+        def view(gold=2,actions=None,value=0,ended=False,stage='root'):
+            return dict(gold=gold,legal=legal if actions is None else actions,ended=ended,
+                        entities=[dict(details=dict(gold=gold,turn=5,decisions=0,budget=64,stage=stage,value=value))])
+        class Batch:
+            def __init__(self):self.history=[];self.sizes=[]
+            random_actions=set(legal)
+            def call(self,command,**kwargs):
+                if command=='release':return {}
+                if command=='plan_open':
+                    requests=kwargs['branches'];self.sizes.append(len(requests))
+                    self.rows=[view() for _ in requests];self.routes=[[] for _ in requests]
+                    self.requests=requests
+                    return dict(views=copy.deepcopy(self.rows))
+                if command=='plan_expand':
+                    old_rows=self.rows;old_routes=self.routes;old_requests=self.requests
+                    self.rows=[];self.routes=[];self.requests=[];output=[]
+                    for request in kwargs['actions']:
+                        parent=request['index'];action=request['action']
+                        sampled=action in self.random_actions and 'seeds' in request
+                        seeds=request['seeds'] if sampled else [old_requests[parent]['seed']]
+                        for seed in seeds:
+                            index=len(self.rows);self.rows.append(copy.deepcopy(old_rows[parent]))
+                            self.routes.append(list(old_routes[parent]));self.requests.append(dict(seed=seed))
+                            child_view=self.call('plan_step',actions=[dict(index=index,action=action)])[0]
+                            output.append(dict(parent=parent,index=index,view=child_view,sampled=sampled))
+                            if child_view['ended'] and hasattr(self,'history'):self.history.append((dict(seed=seed),list(self.routes[index])))
+                    return output
+                output=[]
+                for request in kwargs['actions']:
+                    i,a=request['index'],request['action'];old=self.rows[i];route=self.routes[i];route.append(a)
+                    value=old['entities'][0]['details']['value']
+                    if a==0:new=view(old['gold'],[],value,True,'end')
+                    elif types[a]=='sell':new=view(3,[0,2],.5 if a==7 else -2,stage='sold')
+                    elif a==2 and len(route)>1:new=view(0,[0,6],value,stage='bought')
+                    elif a==6 and len(route)>1:new=view(0,[0],value+.5,stage='played')
+                    else:new=view(0,[0],0,stage='ordinary')
+                    self.rows[i]=new;output.append(copy.deepcopy(new))
+                return output
+        planner=GoldPlanner.__new__(GoldPlanner);planner.types=types;planner.config=PlanningConfig(states=1)
+        planner.model=SimpleNamespace(eval=lambda:None);planner.simulator=Batch()
+        def evaluate(views,memories,previous):
+            output=[]
+            for v,m in zip(views,memories):
+                p=probabilities.copy()
+                if v['entities'][0]['details']['stage']=='bought':p[6]=1
+                output.append((p,v['entities'][0]['details']['value'],np.array(m)+1))
+            return output
+        planner.evaluate=evaluate
+        row=dict(view(),priority='sales',memory=[7.],previous=14,turn=5);before=copy.deepcopy(row)
+        labels,metrics,traces=planner.plan([row])
+        self.assertEqual(row,before)
+        self.assertEqual(planner.simulator.sizes,[8,6])
+        self.assertEqual(metrics['completed_routes'],14*12)
+        self.assertEqual(metrics['root_candidates']['sell'],7)
+        self.assertEqual(metrics['max_live_branches'],96)
+        self.assertEqual(labels[0]['best'],7)
+        seeds={a:[r['seed'] for r,route in planner.simulator.history if route[0]==a] for a in legal}
+        self.assertTrue(all(s==seeds[0] and len(set(s))==12 for s in seeds.values()))
+        self.assertTrue(any(t['first_action']==7 and t['actions']==['sell','buy','play','end']
+                            and t['coins']==[2,3,0,0,0] for t in traces))
+        self.assertEqual(len([t for t in traces if t['first']=='sell']),7)
+
     def test_config_is_explicit_and_resumes_saved_settings(self):
         args=SimpleNamespace(gold_planning=None,planning_states=None)
         config={}
@@ -76,11 +157,26 @@ class GoldPlanningTests(unittest.TestCase):
             return dict(gold=gold,legal=legal if legal is not None else [0,1,3,4],ended=ended,
                         entities=[dict(details=dict(gold=gold,turn=5,decisions=0,budget=64,stage=stage,value=value))])
         class Batch:
+            random_actions={4}
             def call(self,command,**kwargs):
                 if command=='release':return {}
                 if command=='plan_open':
                     self.requests=kwargs['branches'];self.rows=[view() for _ in self.requests];self.routes=[[] for _ in self.requests]
                     return dict(views=copy.deepcopy(self.rows))
+                if command=='plan_expand':
+                    old_rows=self.rows;old_routes=self.routes;old_requests=self.requests
+                    self.rows=[];self.routes=[];self.requests=[];output=[]
+                    for request in kwargs['actions']:
+                        parent=request['index'];action=request['action']
+                        sampled=action in self.random_actions and 'seeds' in request
+                        seeds=request['seeds'] if sampled else [old_requests[parent]['seed']]
+                        for seed in seeds:
+                            index=len(self.rows);self.rows.append(copy.deepcopy(old_rows[parent]))
+                            self.routes.append(list(old_routes[parent]));self.requests.append(dict(seed=seed))
+                            child_view=self.call('plan_step',actions=[dict(index=index,action=action)])[0]
+                            output.append(dict(parent=parent,index=index,view=child_view,sampled=sampled))
+                            if child_view['ended'] and hasattr(self,'history'):self.history.append((dict(seed=seed),list(self.routes[index])))
+                    return output
                 output=[]
                 for r in kwargs['actions']:
                     i,a=r['index'],r['action'];old=self.rows[i];route=self.routes[i];route.append(a)
@@ -104,10 +200,9 @@ class GoldPlanningTests(unittest.TestCase):
         self.assertEqual(metrics['root_candidates']['upgrade'],1)
         if trials==3:
             self.assertTrue(any(t['actions']==['upgrade','buy','play','end'] and t['coins'][:3]==[10,5,2] for t in traces))
-        seeds={a:[r['seed'] for r,route in zip(planner.simulator.requests,planner.simulator.routes) if route[0]==a] for a in [0,1,3,4]}
-        self.assertTrue(all(s==seeds[0] for s in seeds.values()))
-        self.assertEqual(len(set(seeds[0])),trials)
-        self.assertEqual(metrics['completed_routes'],4*trials)
+        self.assertEqual(metrics['completed_routes'],3+trials)
+        self.assertEqual(metrics['chance_nodes'],1)
+        self.assertEqual(dict(zip(labels[0]['actions'],labels[0]['sample_counts'])),{0:1,1:1,3:1,4:trials})
         self.assertEqual(labels[0]['trials'],trials)
         self.assertEqual(metrics['trials'],trials)
         self.assertLessEqual(len(planner.simulator.requests),96)

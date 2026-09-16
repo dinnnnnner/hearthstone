@@ -122,7 +122,12 @@ class EntityActorCritic(nn.Module):
         nn.init.orthogonal_(self.action_type.weight, .01); nn.init.zeros_(self.action_type.bias)
 
     def specification(self):
-        return dict(architecture='entity-gru', entity_schema=self.schema, actions=self.actions, hidden=self.hidden, heads=self.heads, layers=self.layers)
+        return dict(architecture='entity-gru', entity_schema=self.schema, actions=self.actions, hidden=self.hidden, heads=self.heads, layers=self.layers) | (
+            dict(auxiliary_heads='combat-economy-v1') if hasattr(self,'auxiliary') else {}) | (
+            dict(card_value_head='card-cash-v1') if hasattr(self,'card_value_head') else {}) | (
+            dict(action_values=dict(self.action_value_settings)) if hasattr(self,'action_value_type') else {}) | (
+            dict(scene_value_head='combat-benchmark-v1') if hasattr(self,'scene_current') else {}) | (
+            dict(multi_horizon='multi-horizon-v1') if hasattr(self,'horizon_embedding') else {})
 
     def initial_memory(self, batch, device):
         return torch.zeros(batch, self.hidden, device=device)
@@ -169,13 +174,32 @@ class EntityActorCritic(nn.Module):
         normalizer = maximum + total.clamp_min(1e-30).log()
         return option_scores.gather(1,index)-normalizer.gather(1,parent_ids.expand(batch,-1))
 
-    def distribution_from(self, encoded, memory, masks, with_value=True):
+    def distribution_from(self, encoded, memory, masks, with_value=True, with_action_values=False):
         if not masks.any(-1).all(): raise ValueError('Every decision must have a legal action')
-        policy, value = self.head_features(memory, with_value=with_value)
-        action_type = self.action_type(policy)[:,self.action_types]
+        policy, value = self.head_features(memory, with_value=with_value or with_action_values)
+        type_logits=self.action_type(policy)
+        if hasattr(self,'card_value_head'):
+            from .card_value import predictions
+            cash_values=predictions(self,encoded,memory).detach()
+            choices=[]
+            for kind in ('buy','sell','play'):
+                indices=getattr(self,'card_value_'+kind)
+                if not len(indices):choices.append(cash_values.new_zeros(len(memory)));continue
+                legal=masks[:,indices];scores=cash_values[:,self.source_slots[indices]]
+                if kind=='sell':scores=-scores
+                best=scores.masked_fill(~legal,-1e9).max(1).values
+                choices.append(torch.where(legal.any(1),best,torch.zeros_like(best)))
+            type_logits=type_logits+self.card_value_type(torch.tanh(torch.stack(choices,1)/4))
+        action_type = type_logits[:,self.action_types]
         contexts = policy[:,None] + self.type_embedding.weight[None]
         one, two = self.representatives_1, self.representatives_2
         source_features = encoded[:,self.source_slots[one]] + self.source_index(self.action_sources[one])
+        if hasattr(self,'card_value_head'):
+            # A bounded extra feature, with a zero-initialized learned projection.
+            # PPO learns how to use prices; only calibrated labels train the price
+            # head itself, so policy gradients do not redefine its gold units.
+            cash=cash_values[:,self.source_slots[one]]
+            source_features=source_features+self.card_value_projection(torch.tanh(cash/4)[...,None])*self.card_value_actions[one][None,:,None]
         source_unique = (self.source_query(contexts)[:,self.action_types[one]]*source_features).sum(-1)/math.sqrt(self.hidden)
         target_context = contexts[:,self.action_types[one]] + source_features
         target_features = encoded[:,self.target_slots[two]] + self.target_index(self.action_targets[two])
@@ -188,7 +212,20 @@ class EntityActorCritic(nn.Module):
         log_probs = log_probs + self._conditional_log_probs(source_score,self.prefix_0,self.prefix_1,masks,1)
         log_probs = log_probs + self._conditional_log_probs(target_score,self.prefix_1,self.prefix_2,masks,2)
         log_probs = log_probs + self._conditional_log_probs(position_score,self.prefix_2,self.leaf_ids,masks,3)
-        return Categorical(logits=log_probs.masked_fill(~masks,-1e9)), self.critic(value).squeeze(-1) if with_value else None
+        value=self.critic(value).squeeze(-1) if value is not None else None
+        if hasattr(self,'action_value_type'):
+            from .action_value import from_advantage
+            temperature=self.action_value_settings['temperature']
+            residual_type=self.action_value_type(policy)[:,self.action_types]
+            residual_source=(self.action_value_source(contexts)[:,self.action_types[one]]*source_features).sum(-1)/math.sqrt(self.hidden)
+            advantage=temperature*log_probs+residual_type+residual_source[:,self.prefix_1]
+            if hasattr(self,'scene_current'):
+                from .scene_value import adjustment
+                advantage=advantage+adjustment(self,encoded,memory)
+            dist,q=from_advantage(advantage,value,masks,temperature)
+            return (dist,value,q) if with_action_values else (dist,value)
+        if with_action_values:raise ValueError('Model does not have action-value heads')
+        return Categorical(logits=log_probs.masked_fill(~masks,-1e9)), value
 
     def act(self, observations, masks, memory, previous, with_value=True):
         encoded = self.encode(observations, masks.device)

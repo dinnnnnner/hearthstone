@@ -2,32 +2,32 @@
   {
     "id": "deep64-1480",
     "label": "64 层模型",
-    "episodes": 4040,
-    "checkpointSha256": "00897326533096b1fbf39b82e4578e764495caf37f3cfa1733f5aed4b77a26b9",
+    "episodes": 7554,
+    "checkpointSha256": "807c295e1f4eef922797716152c39228d572bf905a2dbf8f4b35520390dbd1f6",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18891"
   },
   {
     "id": "deep256-1164",
     "label": "256 层模型",
-    "episodes": 3548,
-    "checkpointSha256": "6ad1aee216128df5c7d84643af17812a37bb2aefcf5c5dad46d465ccf3dd0ef7",
+    "episodes": 7618,
+    "checkpointSha256": "558f44e4967f1cda2bb42895ce9ecf5de490dc1cb5440614c8084c17bd8b1c36",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18893"
   },
   {
     "id": "deep1024-612",
     "label": "1024 层模型",
-    "episodes": 2724,
-    "checkpointSha256": "6930b33739b2203120e3bb4a860305a9ee02272cc81900ab79cd599a827cecf1",
+    "episodes": 7298,
+    "checkpointSha256": "fc0cee9e233e6c8e1a11c4dc26d38f79902489ef7e3184b40d7dc0669970015b",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18895"
   },
   {
     "id": "deep64-search-2568",
     "label": "64 层模型＋回合搜索（实验）",
-    "episodes": 4040,
-    "checkpointSha256": "00897326533096b1fbf39b82e4578e764495caf37f3cfa1733f5aed4b77a26b9",
+    "episodes": 7554,
+    "checkpointSha256": "807c295e1f4eef922797716152c39228d572bf905a2dbf8f4b35520390dbd1f6",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18897",
     "search": true
@@ -35,8 +35,8 @@
   {
     "id": "deep256-search-2140",
     "label": "256 层模型＋回合搜索（实验）",
-    "episodes": 3548,
-    "checkpointSha256": "6ad1aee216128df5c7d84643af17812a37bb2aefcf5c5dad46d465ccf3dd0ef7",
+    "episodes": 7618,
+    "checkpointSha256": "558f44e4967f1cda2bb42895ce9ecf5de490dc1cb5440614c8084c17bd8b1c36",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18901",
     "search": true
@@ -44,8 +44,8 @@
   {
     "id": "deep1024-search-1284",
     "label": "1024 层模型＋回合搜索（实验）",
-    "episodes": 2724,
-    "checkpointSha256": "6930b33739b2203120e3bb4a860305a9ee02272cc81900ab79cd599a827cecf1",
+    "episodes": 7298,
+    "checkpointSha256": "fc0cee9e233e6c8e1a11c4dc26d38f79902489ef7e3184b40d7dc0669970015b",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18903",
     "search": true

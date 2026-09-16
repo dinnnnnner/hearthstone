@@ -57,6 +57,11 @@ class ProcessSimulationPool:
     def collect(self,current,opponents,seeds,options,device,**kwargs):
         seeds=list(seeds)
         self.planning_examples=[]
+        self.card_evaluations=[]
+        self.stage_evaluations=[]
+        self.branch_labels=[];self.branch_reports=[]
+        self.card_value_labels=[];self.card_value_reports=[]
+        if kwargs.get('streaming') and not getattr(self,'streaming_state',None):self.stream_completed_seeds=set()
         if kwargs.get('replay_dir'):
             kwargs['replay_dir']=str(kwargs['replay_dir'])
         if kwargs.get('error_dir'):
@@ -73,6 +78,8 @@ class ProcessSimulationPool:
             snapshot=directory/'checkpoint.pt';os.link(self.checkpoint,snapshot)
             job=dict(checkpoint=str(snapshot),seeds=seeds,options=options,device=str(device),kwargs=kwargs)
             (directory/'job.json').write_text(json.dumps(job))
+            if kwargs.get('streaming') and getattr(self,'streaming_state',None):
+                for index,state in self.streaming_state.items():torch.save(state,directory/f'{index}.resume.pt')
             for index,(start,end,workers) in enumerate(shards(seeds,self.worker_count,self.processes)):
                 command=[sys.executable,'-u','-m','tavern_rl.process_rollout','--job',str(directory/'job.json'),
                          '--index',str(index),'--start',str(start),'--end',str(end),'--workers',str(workers)]
@@ -94,7 +101,8 @@ class ProcessSimulationPool:
                     actions=sum(r.get('environment_actions',0) for r in rows)
                     elapsed=time.monotonic()-started
                     progress(dict(stage='collect',sampling_processes=len(active),completed_games=sum(r.get('completed_games',0) for r in rows),
-                                  total_games=len(seeds),environment_actions=actions,seconds=round(elapsed,1),actions_per_second=actions/elapsed))
+                                  total_games=len(seeds),environment_actions=actions,seconds=round(elapsed,1),actions_per_second=actions/elapsed,
+                                  branch_actions=sum(r.get('branch_actions',0) for r in rows),branch_completed=sum(r.get('branch_completed',0) for r in rows)))
                     last=time.monotonic()
                 if pending:time.sleep(.1)
             # Completion timing must not change recurrent PPO's shuffled input order.
@@ -102,10 +110,18 @@ class ProcessSimulationPool:
                 result=results[index]
                 tracks.extend(result['tracks']);games.extend(result['games']);metrics.append(result['performance'])
                 self.planning_examples.extend(result.get('planning_examples',[]))
+                self.card_evaluations.extend(result.get('card_evaluations',[]))
+                self.stage_evaluations.extend(result.get('stage_evaluations',[]))
+                self.branch_labels.extend(result.get('branch_labels',[]))
+                self.branch_reports.extend(result.get('branch_reports',[]))
+                self.card_value_labels.extend(result.get('card_value_labels',[]))
+                self.card_value_reports.extend(result.get('card_value_reports',[]))
+            self.card_evaluations.sort(key=lambda r:r['priority']);del self.card_evaluations[256:]
             self.planning_examples.sort(key=lambda r:r['priority'])
             del self.planning_examples[kwargs.get('planning_states',0):]
+            stream_states={index:result['streaming_state'] for index,result in results.items()} if kwargs.get('streaming') else None
             results.clear()
-            if len(games)!=len(seeds) or sorted(g['seed'] for g in games)!=sorted(seeds):
+            if not kwargs.get('streaming') and (len(games)!=len(seeds) or sorted(g['seed'] for g in games)!=sorted(seeds)):
                 raise RuntimeError('Parallel sampler lost or duplicated games')
             elapsed=time.monotonic()-started
             actions=sum(m['environment_actions'] for m in metrics)
@@ -119,10 +135,39 @@ class ProcessSimulationPool:
                 sampling_graph_capture_seconds=sum(m.get('sampling_graph_capture_seconds',0.) for m in metrics),
                 first_place_bonus=kwargs.get('first_place_bonus',0.))
             from collections import Counter
+            if kwargs.get('streaming'):
+                self.streaming_state=stream_states
+                completed={g['seed'] for g in games}
+                if len(completed)!=len(games) or completed-set(seeds) or completed & self.stream_completed_seeds:
+                    raise RuntimeError('Streaming sampler duplicated or replaced a game')
+                self.stream_completed_seeds.update(completed)
+                performance.update(streaming_done=all(state['done'] for state in self.streaming_state.values()),
+                    streaming_active_games=sum(len(state['active']) for state in self.streaming_state.values()),
+                    streaming_tracks=len(tracks),tier_tempo_checks=[row for m in metrics for row in m.get('tier_tempo_checks',[])])
+                if performance['streaming_done'] and self.stream_completed_seeds!=set(seeds):raise RuntimeError('Streaming sampler lost games')
+            if kwargs.get('counterfactual'):
+                combined=Counter()
+                for metric in metrics:combined.update(metric.get('counterfactual',{}))
+                performance['counterfactual']=dict(combined)
+            if kwargs.get('card_value'):
+                combined=Counter()
+                for metric in metrics:combined.update(metric.get('card_value',{}))
+                performance['card_value']=dict(combined)
+            if kwargs.get('stage_feedback'):
+                performance['stage_feedback']=dict(milestones=len(self.stage_evaluations),**kwargs['stage_feedback'])
             for key in ('action_counts', 'learner_action_counts'):
                 combined = Counter()
                 for metric in metrics: combined.update(metric.get(key, {}))
                 performance[key] = dict(combined)
+            if kwargs.get('direct_planning'):
+                combined=Counter();selected=Counter();routes=[];peak=0
+                for metric in metrics:
+                    search=metric['direct_planning'];selected.update(search.get('selected',{}));routes.extend(search.get('routes',[]))
+                    peak=max(peak,search.get('max_live_branches',0))
+                    for key in ('calls','decisions','fallbacks','seconds','chance_nodes','deterministic_steps','evaluations','completed_routes','cutoff_routes','purchase_comparisons'):
+                        combined[key]+=search.get(key,0)
+                performance['direct_planning']=dict(combined,selected=dict(selected),routes=routes[:24],max_live_branches=peak,
+                    trials=kwargs['direct_planning']['trials'],chance_policy='first-random-transition-v1',candidate_policy='all-sales-zero-gold-v2')
             return tracks,games,performance
         finally:
             for process in active:
@@ -147,19 +192,27 @@ def main():
     args=p.parse_args();job=json.loads(args.job.read_text());torch.set_num_threads(1)
     from .train import load_checkpoint,frozen_models
     signal.signal(signal.SIGTERM,interrupted)
-    prepare_descriptor_limit(args.workers)
+    prepare_descriptor_limit(max(args.workers,(job['kwargs'].get('counterfactual') or {}).get('workers',0)))
     pool=SimulationPool(args.workers)
     try:
         saved,model=load_checkpoint(job['checkpoint'],pool.meta,job['device'])
         opponents=frozen_models(saved['league'],model.specification(),job['device'])
         del saved;gc.collect()
         kwargs=job['kwargs'];kwargs['seat_offset']=kwargs.get('seat_offset',0)+args.start
+        resume=args.job.parent/f'{args.index}.resume.pt'
+        if kwargs.get('streaming') and resume.exists():kwargs['resume_state']=torch.load(resume,map_location='cpu',weights_only=False)
         if kwargs.get('schedule') is not None:kwargs['schedule']=kwargs['schedule'][args.start:args.end]
         path=args.job.parent/f'{args.index}.progress.json'
+        latest={}
         def progress(row):
-            if 'environment_actions' in row:write_json(path,row)
+            if 'environment_actions' in row or row.get('stage')=='counterfactual':
+                latest.update(row);write_json(path,latest)
         tracks,games,performance=pool.collect(model,opponents,job['seeds'][args.start:args.end],job['options'],job['device'],progress=progress,**kwargs)
-        torch.save(dict(tracks=tracks,games=games,performance=performance,planning_examples=pool.planning_examples),args.job.parent/f'{args.index}.pt')
+        torch.save(dict(tracks=tracks,games=games,performance=performance,planning_examples=pool.planning_examples,
+                        card_evaluations=pool.card_evaluations,stage_evaluations=pool.stage_evaluations,
+                        branch_labels=pool.branch_labels,branch_reports=pool.branch_reports,
+                        card_value_labels=pool.card_value_labels,card_value_reports=pool.card_value_reports,
+                        streaming_state=getattr(pool,'streaming_state',None)),args.job.parent/f'{args.index}.pt')
         write_json(path,dict(performance,completed_games=len(games)))
     finally:pool.close()
 

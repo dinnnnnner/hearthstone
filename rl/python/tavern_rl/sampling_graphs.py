@@ -89,7 +89,9 @@ def accelerate_sampling(collect):
         if not enabled or torch.device(device).type != 'cuda':
             return collect(self, current, opponents, seeds, options, device, *args, **kwargs)
         started = time.monotonic()
-        with tower_graphs([current, *opponents], len(self.simulators)) as graphs:
+        batch=max(len(self.simulators),kwargs.get('counterfactual',{}).get('workers',0) if kwargs.get('counterfactual') else 0,
+                  32 if kwargs.get('direct_planning') else 0)
+        with tower_graphs([current, *opponents], batch) as graphs:
             tracks, games, performance = collect(self, current, opponents, seeds, options, device, *args, **kwargs)
             performance.update(sampling_graphs=True,
                 sampling_graph_count=sum(g.graph is not None for g in graphs),

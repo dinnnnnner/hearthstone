@@ -111,7 +111,7 @@ def parser():
     p.add_argument("--resume-games-per-iteration", type=int, help="Explicitly change the saved rollout batch for a new experiment")
     p.add_argument("--resume-learning-rate", type=float, help="Explicitly change Adam learning rate when resuming")
     p.add_argument("--rollout-device", choices=['cpu','cuda'], help="Inference device; defaults to the optimizer device")
-    p.add_argument("--iterations", type=int, default=100, help="Additional PPO iterations, including when resuming")
+    p.add_argument("--iterations", type=int, default=100, help="Additional complete game batches; streaming may update PPO multiple times per batch")
     p.add_argument("--games-per-iteration", type=int, default=8)
     p.add_argument("--workers", type=int, default=4)
     p.add_argument("--learner-seats", type=int, default=4)
@@ -140,6 +140,19 @@ def parser():
     add_arguments(p)
     from .gold_planning import add_arguments as planning_arguments
     planning_arguments(p)
+    from .counterfactual import add_arguments as branch_arguments
+    branch_arguments(p)
+    p.add_argument('--streaming',action=argparse.BooleanOptionalAction,default=None,
+                   help='Update PPO between live-game chunks; add combat/income prediction heads')
+    p.add_argument('--stream-turns',type=int,default=None)
+    p.add_argument('--tier-tempo',action=argparse.BooleanOptionalAction,default=None,
+        help='Streaming only: small one-time survival reward for tier 4/5 after turn 8')
+    p.add_argument('--card-value',action=argparse.BooleanOptionalAction,default=None,
+        help='Learn contextual per-minion cash equivalents through paired resource comparisons')
+    p.add_argument('--action-value',action=argparse.BooleanOptionalAction,default=None,
+        help='Replace PPO action selection training with unified action-return regression')
+    p.add_argument('--scene-value',action=argparse.BooleanOptionalAction,default=None,help='Train combat benchmark heads from direct simulation')
+    p.add_argument('--multi-horizon',action=argparse.BooleanOptionalAction,default=None,help='Compare 1/3/5-turn outcomes against turn-matched references')
     return p
 
 
@@ -233,9 +246,24 @@ def main():
         apply_overrides(config, args)
         from .gold_planning import configure, PlanningConfig, GoldPlanner, teach
         configure(config, args)
-        if config.get('gold_planning'):
+        from .stage_feedback import configure as configure_stages
+        configure_stages(config)
+        from .counterfactual import configure as configure_branches
+        configure_branches(config,args)
+        from .streaming import configure as configure_streaming,migrate_optimizer
+        configure_streaming(config,args,model,saved)
+        from .card_value import configure as configure_card_value
+        configure_card_value(config,args,model)
+        from .action_value import configure as configure_action_value
+        configure_action_value(config,args,model)
+        from .scene_value import configure as configure_scene
+        configure_scene(config,args,model)
+        from .multi_horizon import configure as configure_horizons
+        configure_horizons(config,args,model)
+        direct_planning=config.get('gold_planning',{}).get('direct',False)
+        if config.get('gold_planning') and not direct_planning:
             planner = GoldPlanner(model, pool.meta, PlanningConfig(**config['gold_planning']), args.device)
-        optimizer = make_optimizer(model, config, saved["optimizer"] if saved else None)
+        optimizer = make_optimizer(model, config, migrate_optimizer(saved["optimizer"] if saved else None,model))
         def inference_model():
             if rollout_device == args.device: return model
             copy = make_model(model.specification()).to(rollout_device)
@@ -267,15 +295,24 @@ def main():
                 "rollout_host_transfer": "packed" if config['packed_host_transfer'] else "separate",
                 "parameters": sum(p.numel() for p in model.parameters())}, indent=2))
         checkpoint()
-        for _ in range(args.iterations):
+        remaining_batches=args.iterations;stream_seeds=None
+        while remaining_batches:
             iteration_started = time.monotonic()
             if args.device == "cuda": torch.cuda.reset_peak_memory_stats()
-            seeds = [(config["seed"] + episodes + i) & 0xffffffff for i in range(config["games_per_iteration"])]
+            seeds = stream_seeds or [(config["seed"] + episodes + i) & 0xffffffff for i in range(config["games_per_iteration"])]
+            if config.get('streaming'):stream_seeds=seeds
             probabilities = league_weights(league,config.get('external_opponent_fraction',.4))
             tracks, games, performance = pool.collect(actor, opponents, seeds, config["options"], rollout_device,
                 learner_seats=8 if iteration == 0 and len(league) == 1 else config["learner_seats"],
                 first_place_bonus=config['first_place_bonus'],
-                planning_states=config.get('gold_planning',{}).get('states',0),
+                planning_states=config.get('gold_planning',{}).get('states',0) if not direct_planning else 0,
+                direct_planning=config['gold_planning'] if direct_planning else None,
+                stage_feedback=config.get('stage_feedback'),
+                counterfactual=config.get('counterfactual'),
+                streaming=config.get('streaming'),
+                card_value=config.get('card_value'),
+                scene_value=config.get('scene_value'),
+                multi_horizon=config.get('multi_horizon'),
                 hero_pool=config.get('hero_pool'),
                 packed_host_transfer=config['packed_host_transfer'],
                 opponent_weights=probabilities, seat_offset=episodes, progress=lambda row: print(json.dumps(row),flush=True),
@@ -288,26 +325,60 @@ def main():
                 planning_labels,planning_metrics,planning_traces=planner.plan(pool.planning_examples)
             optimization_started = time.monotonic()
             from .training_performance import optimized_update
-            metrics = optimized_update(ppo_update, model, optimizer, tracks, config, args.device)
+            metrics = optimized_update(ppo_update, model, optimizer, tracks, config, args.device) if tracks else dict(samples=0,optimizer_steps=0)
             if args.device == "cuda": torch.cuda.synchronize()
             metrics["optimization_seconds"] = time.monotonic()-optimization_started
+            if config.get('counterfactual'):
+                from .counterfactual import teach as teach_branches
+                teaching=optimized_update(teach_branches,model,optimizer,pool.branch_labels,config,args.device)
+                metrics['counterfactual']=dict(performance['counterfactual'],teaching=teaching)
+                config['counterfactual_updates']=config.get('counterfactual_updates',0)+teaching['updates']
+                (output/f'counterfactual-{iteration+1:06d}.json').write_text(json.dumps(dict(
+                    iteration=iteration+1,config=config['counterfactual'],metrics=metrics['counterfactual'],
+                    comparisons=pool.branch_reports),ensure_ascii=False,indent=2)+'\n')
+            if config.get('card_value'):
+                from .card_value import teach as teach_card_value
+                teaching=optimized_update(teach_card_value,model,optimizer,pool.card_value_labels,config,args.device)
+                metrics['card_value']=dict(performance['card_value'],teaching=teaching)
+                config['card_value_updates']=config.get('card_value_updates',0)+teaching['updates']
+                (output/f'card-values-{iteration+1:06d}.json').write_text(json.dumps(dict(
+                    iteration=iteration+1,config=config['card_value'],metrics=metrics['card_value'],
+                    comparisons=pool.card_value_reports),ensure_ascii=False,indent=2)+'\n')
+            if config.get('stage_feedback'):
+                (output/f'stage-evaluations-{iteration+1:06d}.json').write_text(json.dumps(dict(
+                    iteration=iteration+1,config=config['stage_feedback'],evaluations=pool.stage_evaluations),indent=2)+'\n')
+            if direct_planning:
+                (output/f'card-evaluations-{iteration+1:06d}.json').write_text(json.dumps(dict(
+                    iteration=iteration+1,value_unit='expected_future_stage_and_final_placement_reward' if config.get('stage_feedback') else 'expected_final_placement_reward',
+                    comparisons=pool.card_evaluations),ensure_ascii=False,indent=2)+'\n')
+                config['gold_planning_updates']=config.get('gold_planning_updates',0)+metrics['optimizer_steps']
+                metrics['gold_planning']=dict(performance['direct_planning'],training_mode='search_policy_value',
+                                             policy_samples=metrics['search_policy_samples'],updates=metrics['optimizer_steps'])
+                (output/f'gold-planning-{iteration+1:06d}.json').write_text(json.dumps(dict(iteration=iteration+1,metrics=metrics['gold_planning']),indent=2)+'\n')
             if planner:
                 teaching=optimized_update(teach,model,optimizer,planning_labels,config,args.device)
                 config['gold_planning_updates']=config.get('gold_planning_updates',0)+teaching['updates']
                 metrics['gold_planning']=dict(planning_metrics,teaching=teaching)
                 audit=dict(iteration=iteration+1,metrics=metrics['gold_planning'],routes=planning_traces,
                     comparisons=[dict(turn=x['row']['turn'],gold=x['row']['entities'][0]['details']['gold'],
-                        actions=[planner.types[a] for a in x['actions']],values=x['values'],target=x['target']) for x in planning_labels])
+                        actions=[planner.types[a] for a in x['actions']],sample_counts=x['sample_counts'],values=x['values'],target=x['target']) for x in planning_labels])
                 (output/f'gold-planning-{iteration+1:06d}.json').write_text(json.dumps(audit,indent=2)+'\n')
             counts = Counter(c for game in games for c in game['controllers'] if c >= 0)
             opponent_sampling = [dict(generation=e['generation'],external=e.get('external',False),
                 depth=e.get('model_spec',{}).get('policy_depth'),probability=float(probabilities[i]),seats=counts[i]) for i,e in enumerate(league)]
             episodes += len(games); iteration += 1
             update_league_scores(league,games)
-            league.append(league_entry(model,iteration))
-            league = prune_league(league,config["league_size"])
+            batch_done=performance.get('streaming_done',True)
+            if batch_done:
+                league.append(league_entry(model,iteration))
+                league = prune_league(league,config["league_size"])
+                remaining_batches-=1;stream_seeds=None
+                if config.get('streaming'):pool.streaming_state=None
             actor = inference_model()
-            opponents = [] if args.sampling_processes > 1 else frozen_models(league, model.specification(), rollout_device)
+            if batch_done:opponents = [] if args.sampling_processes > 1 else frozen_models(league, model.specification(), rollout_device)
+            if config.get('streaming'):
+                config['streaming_updates']=config.get('streaming_updates',0)+metrics['optimizer_steps']
+                config['unfinished_games_at_checkpoint']=performance['streaming_active_games']
             total_seconds = time.monotonic()-iteration_started
             row = {"iteration": iteration, "iteration_seconds": total_seconds,
                    "end_to_end_actions_per_second": performance["environment_actions"]/total_seconds,

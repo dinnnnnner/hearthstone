@@ -108,7 +108,14 @@ export class RecruitSearchEnv {
   private steps = 0;
   private ended = false;
   private legal?: Map<number, Parameters<typeof actSeason>[1]>;
-  constructor(entities: (Entity | null)[], readonly decisions: number, readonly featureBudget = 64) {
+  constructor(entities: (Entity | null)[], readonly decisions: number, readonly featureBudget = 64, source?: RecruitSearchEnv) {
+    if (source) {
+      this.root = source.root;
+      this.state = structuredClone(source.state);
+      this.entropy = source.entropy; this.serial = source.serial;
+      this.steps = source.steps; this.ended = source.ended;
+      return;
+    }
     this.root = gameFromObservation(entities);
     enableAIActionLimits(this.root);
     if (!Number.isSafeInteger(decisions) || decisions < 0 || !Number.isFinite(featureBudget) || featureBudget < 1)
@@ -130,6 +137,24 @@ export class RecruitSearchEnv {
     this.entropy = seed; this.serial = 0; this.steps = 0; this.ended = false;
     this.state = structuredClone(this.root); this.legal = undefined;
     return this.view();
+  }
+  /** Clone the exact simulated state, including the sampled pool and generated IDs. */
+  private fork(seed?: number) {
+    const branch = new RecruitSearchEnv([], this.decisions, this.featureBudget, this);
+    if (seed !== undefined) branch.entropy = seed;
+    return branch;
+  }
+  planningStep(id: number, seeds?: number[]) {
+    if (!seeds) return [{ branch: this, view: this.step(id), sampled: false }];
+    // Probe once to detect real engine randomness. Deterministic transitions are
+    // retained; a stochastic probe is discarded before drawing the paired seeds.
+    const probe = this.fork(), entropy = probe.entropy;
+    const view = probe.step(id);
+    if (probe.entropy === entropy) return [{ branch: probe, view, sampled: false }];
+    return seeds.map(seed => {
+      const branch = this.fork(seed);
+      return { branch, view: branch.step(id), sampled: true };
+    });
   }
   legalActions() {
     if (this.ended || this.state.health <= 0) return new Map<number, Parameters<typeof actSeason>[1]>();

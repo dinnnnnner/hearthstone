@@ -1,0 +1,452 @@
+{
+  "receipt": {
+    "pid": 2322,
+    "startedUtc": "2026-09-16T02:03:55.029857+00:00",
+    "deadlineUtc": "2026-09-16T04:23:05.507669+00:00",
+    "remainingHours": 2.3195771699999996,
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-human-current-06cd2177/population_resume.py",
+      "--resumes",
+      "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-four-hour-20260914/population",
+      "--deadline-utc",
+      "2026-09-16T04:23:05.507669+00:00",
+      "--workers",
+      "8",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "8",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--device",
+      "cuda",
+      "--sequence-batch-size",
+      "32",
+      "--fused-adam",
+      "--training-graphs",
+      "--sampling-processes",
+      "4"
+    ],
+    "mps": true,
+    "samplingProcesses": 4,
+    "workersPerLearner": 8,
+    "gamesPerIteration": 8,
+    "precision": "fp32",
+    "goldPlanning": true,
+    "planningDirect": true,
+    "trainingMode": "search_policy_value",
+    "planningTrials": 12,
+    "candidatePolicy": "all-sales-zero-gold-v2",
+    "runtime": "/root/autodl-tmp/tavern-gold-sales-20260916",
+    "startingCheckpoints": [
+      {
+        "index": 0,
+        "episodes": 7938,
+        "iteration": 125,
+        "sha256": "50b5dcf30ba9a2a70ead4bf26c25ce8a1cda02201918f0d8ef526e34a7e4961b",
+        "bytes": 531643207
+      },
+      {
+        "index": 1,
+        "episodes": 8066,
+        "iteration": 127,
+        "sha256": "4401c3cbda579f1b9f0770a37b87f53ca034e7f224863905e5103256fc149cd8",
+        "bytes": 768352583
+      },
+      {
+        "index": 2,
+        "episodes": 7746,
+        "iteration": 122,
+        "sha256": "d4423209cddac782ba787539c5ab443f4683818f15199ce99ba803114f9a9177",
+        "bytes": 1715233346
+      }
+    ],
+    "priorJob": "/root/tavern-ops/20260915T235413-publish-4h/resume.json",
+    "publishedRelease": "20260915T235413-publish-4h-models",
+    "watchPid": 2329,
+    "mailPid": 2353
+  },
+  "verification": {
+    "utc": "2026-09-16T02:06:10.210978+00:00",
+    "stage": "running",
+    "pid": 2322,
+    "members": [
+      {
+        "depth": 64,
+        "pid": 2360,
+        "stage": "training",
+        "episodes": 7938,
+        "iteration": 125,
+        "planning": {
+          "direct": true,
+          "states": 32,
+          "trials": 12,
+          "depth": 32,
+          "temperature": 0.15,
+          "strength": 0.5,
+          "epochs": 2,
+          "min_gap": 0.02
+        },
+        "samplingReports": 4,
+        "actions": 1204,
+        "searchDecisions": 484,
+        "searchFallbacks": 0,
+        "policySamples": 0,
+        "trainerHash": "3672b8c7394d2bf130aeed8753a1e9a0c0b6e9a22c51df8b17d6bb4dc8e9d03d",
+        "lastCompletedMode": "ppo"
+      },
+      {
+        "depth": 256,
+        "pid": 2362,
+        "stage": "training",
+        "episodes": 8066,
+        "iteration": 127,
+        "planning": {
+          "direct": true,
+          "states": 32,
+          "trials": 12,
+          "depth": 32,
+          "temperature": 0.15,
+          "strength": 0.5,
+          "epochs": 2,
+          "min_gap": 0.02
+        },
+        "samplingReports": 4,
+        "actions": 1168,
+        "searchDecisions": 411,
+        "searchFallbacks": 0,
+        "policySamples": 0,
+        "trainerHash": "3672b8c7394d2bf130aeed8753a1e9a0c0b6e9a22c51df8b17d6bb4dc8e9d03d",
+        "lastCompletedMode": "ppo"
+      },
+      {
+        "depth": 1024,
+        "pid": 2389,
+        "stage": "training",
+        "episodes": 7746,
+        "iteration": 122,
+        "planning": {
+          "direct": true,
+          "states": 32,
+          "trials": 12,
+          "depth": 32,
+          "temperature": 0.15,
+          "strength": 0.5,
+          "epochs": 2,
+          "min_gap": 0.02
+        },
+        "samplingReports": 4,
+        "actions": 752,
+        "searchDecisions": 271,
+        "searchFallbacks": 0,
+        "policySamples": 0,
+        "trainerHash": "3672b8c7394d2bf130aeed8753a1e9a0c0b6e9a22c51df8b17d6bb4dc8e9d03d",
+        "lastCompletedMode": "ppo"
+      }
+    ],
+    "gpu": "78, 28016, 133.87",
+    "mail": {
+      "lastSent": "9bd46f5e8c8028fb84a9a043de7b55721c6360c0a052cd55ae880f072fc63532",
+      "snapshotUtc": "2026-09-16T02:03:56.188019+00:00",
+      "acceptedUtc": "2026-09-16T02:03:58.278864+00:00"
+    }
+  },
+  "functionalValidation": {
+    "stage": "passed",
+    "seconds": 118.28090228326619,
+    "rollout": {
+      "seconds": 116.6617639567703,
+      "environment_actions": 1843,
+      "actions_per_second": 15.797806731972049,
+      "action_counts": {
+        "power": 32,
+        "freeze": 59,
+        "buy": 156,
+        "refresh": 102,
+        "buySpell": 110,
+        "end": 116,
+        "play": 228,
+        "cast": 342,
+        "move": 390,
+        "discover": 68,
+        "sell": 138,
+        "activate": 34,
+        "darkGift": 21,
+        "upgrade": 24,
+        "reward": 7,
+        "buyTrinket": 16
+      },
+      "learner_action_counts": {
+        "buySpell": 2,
+        "refresh": 5,
+        "cast": 2,
+        "play": 6,
+        "end": 8,
+        "sell": 3,
+        "discover": 1,
+        "buy": 4,
+        "buyTrinket": 2,
+        "upgrade": 1
+      },
+      "first_place_bonus": 1.0,
+      "direct_planning": {
+        "calls": 29,
+        "seconds": 48.441608652472496,
+        "chance_nodes": 113,
+        "deterministic_steps": 367,
+        "evaluations": 11661,
+        "completed_routes": 1429,
+        "cutoff_routes": 0,
+        "max_live_branches": 84,
+        "decisions": 29,
+        "selected": {
+          "buySpell": 2,
+          "refresh": 5,
+          "play": 6,
+          "end": 8,
+          "sell": 3,
+          "buy": 4,
+          "upgrade": 1
+        },
+        "routes": [
+          {
+            "turn": 1,
+            "first": "buySpell",
+            "first_action": 22,
+            "sampled": true,
+            "actions": [
+              "buySpell",
+              "cast",
+              "play",
+              "refresh",
+              "freeze",
+              "end"
+            ],
+            "coins": [
+              3,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "value": 0.6093865036964417
+          },
+          {
+            "turn": 1,
+            "first": "refresh",
+            "first_action": 1,
+            "sampled": true,
+            "actions": [
+              "refresh",
+              "cast",
+              "play",
+              "end"
+            ],
+            "coins": [
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "value": 0.7825585007667542
+          },
+          {
+            "turn": 1,
+            "first": "play",
+            "first_action": 85,
+            "sampled": false,
+            "actions": [
+              "play",
+              "freeze",
+              "end"
+            ],
+            "coins": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "value": 0.5865298509597778
+          },
+          {
+            "turn": 1,
+            "first": "end",
+            "first_action": 0,
+            "sampled": false,
+            "actions": [
+              "end"
+            ],
+            "coins": [
+              0,
+              0
+            ],
+            "value": 0.5914861559867859
+          },
+          {
+            "turn": 2,
+            "first": "refresh",
+            "first_action": 1,
+            "sampled": true,
+            "actions": [
+              "refresh",
+              "buy",
+              "play",
+              "freeze",
+              "end"
+            ],
+            "coins": [
+              4,
+              3,
+              0,
+              0,
+              0,
+              0
+            ],
+            "value": 0.6216404438018799
+          },
+          {
+            "turn": 2,
+            "first": "buySpell",
+            "first_action": 22,
+            "sampled": true,
+            "actions": [
+              "buySpell",
+              "cast",
+              "discover",
+              "play",
+              "freeze",
+              "end"
+            ],
+            "coins": [
+              3,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "value": 0.5154353380203247
+          },
+          {
+            "turn": 2,
+            "first": "sell",
+            "first_action": 29,
+            "sampled": true,
+            "actions": [
+              "sell",
+              "cast",
+              "discover",
+              "play",
+              "freeze",
+              "end"
+            ],
+            "coins": [
+              0,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "value": 0.5110142230987549
+          },
+          {
+            "turn": 2,
+            "first": "refresh",
+            "first_action": 1,
+            "sampled": true,
+            "actions": [
+              "refresh",
+              "cast",
+              "discover",
+              "play",
+              "freeze",
+              "end"
+            ],
+            "coins": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "value": 0.5652050375938416
+          }
+        ],
+        "candidate_policy": "all-sales-zero-gold-v2",
+        "chance_policy": "first-random-transition-v1",
+        "trials": 12
+      },
+      "inference_seconds": 71.31198742799461,
+      "simulator_wait_seconds": 42.50166395306587,
+      "inference_batches": 1843,
+      "mean_inference_batch": 1.0,
+      "sampling_graphs": true,
+      "sampling_graph_count": 2,
+      "sampling_graph_replays": 3057,
+      "sampling_graph_capture_seconds": 0.0471985898911953
+    },
+    "update": {
+      "policy_loss": 2.889114022254944,
+      "value_loss": 1.9563806653022766,
+      "entropy": 1.028372585773468,
+      "approx_kl": 0.0,
+      "gradient_norm": 19.47565746307373,
+      "samples": 34,
+      "optimizer_steps": 2,
+      "kl_early_stop": false,
+      "sequence_chunks": 3,
+      "training_mode": "search_policy_value",
+      "search_policy_samples": 29,
+      "training_graphs": true,
+      "training_graph_count": 2,
+      "training_graph_replays": 4,
+      "training_graph_capture_seconds": 0.12628556601703167
+    },
+    "placements": [
+      8,
+      4,
+      2,
+      6,
+      5,
+      3,
+      7,
+      1
+    ]
+  },
+  "housekeeping": {
+    "backups": "/root/tavern-ops/20260916-gold-sales/recovery-checkpoints",
+    "removedOrphanRollouts": [
+      "/root/autodl-tmp/tavern-packed-features-20260915/population/member-0/training/.rollout-5udt586b",
+      "/root/autodl-tmp/tavern-packed-features-20260915/population/member-1/training/.rollout-sv7x9xzy",
+      "/root/autodl-tmp/tavern-packed-features-20260915/population/member-2/training/.rollout-rl7wygna"
+    ],
+    "diskFreeGiB": 5.462715148925781
+  },
+  "packageSha256": "6231d6731fa709c81536f65604d3df7a2cd6e9f9c26a1bcaf0be9daa62b87c0d",
+  "localChecks": {
+    "pythonTests": 26,
+    "typescriptTests": 14,
+    "typecheck": "passed"
+  },
+  "limitations": [
+    "First formal search-policy update was not yet complete at verification time.",
+    "No explicit forecast of future-turn income or investment payback.",
+    "One functional validation game is not a strength evaluation."
+  ]
+}

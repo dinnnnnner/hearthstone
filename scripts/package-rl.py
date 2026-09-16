@@ -8,6 +8,7 @@ import io
 ROOT = Path(__file__).resolve().parents[1]
 files = [ROOT / path for path in ["rl-dist/bridge.cjs", "rl-dist/build.json", "rl/README.md",
     "rl/requirements.txt", "rl/run.sh", "rl/deep256.sh", "docs/rules-coverage.json", "docs/rl-roadmap.md", "docs/rl-server.md", "docs/rl-v3.md", "docs/rl-campaign.md", "docs/rl-public-scouting.md", "docs/rl-deep64.md", "docs/rl-deep256.md"]]
+files += [ROOT / "rl-dist/scene-evaluation.cjs", ROOT / "rl-dist/scene-evaluation.json", ROOT / "scripts/build-scene-evaluation.mjs"]
 files += sorted((ROOT / "rl/python").rglob("*.py"))
 files += [ROOT / "rl/deep1024.sh", ROOT / "docs/rl-deep1024.md"]
 files += [ROOT / "docs/rl-opponent-diversity.md"]
@@ -18,6 +19,8 @@ files += [ROOT / "docs/rl-maintenance.md"]
 files += [ROOT / "docs/rl-recruit-search.md"]
 if (ROOT / "rl-dist/recruit-search.cjs").exists():
     files += [ROOT / "rl-dist/recruit-search.cjs"]
+if (ROOT / "rl-dist/stage-evaluation.cjs").exists():
+    files += [ROOT / "rl-dist/stage-evaluation.cjs"]
 files += [ROOT / "src/season/ai-hero-pool.json"]
 files += [ROOT / "docs/rl-video-extraction.md"]
 files += [ROOT / "docs/rl-video-extraction-validation-20260911.json"]
@@ -42,7 +45,7 @@ if deep1024_validation.exists(): files.append(deep1024_validation)
 # Include documentation linked from the package entry point. Keep dated records
 # already selected above; the full deployment archive stays in the source repo.
 files += [ROOT / "docs" / name for name in [
-    "rl-fresh-selfplay.md", "rl-fresh-selfplay-validation-20260915.json", "rl-gold-planning.md", "rl-gold-planning-validation-20260915.json", "rl-gold-planning-12-validation-20260915.json", "ai-freeze-close-deployment-20260915.md", "ai-freeze-close-deployment-20260915.json", "ai-action-limits.md", "ai-action-limits-validation-20260915.json", "ai-action-limits-deployment-20260915.md", "ai-action-limits-deployment-20260915.json", "rl-network.md", "rl-training.md", "rl-first-place-bonus.md", "rl-unused-gold-penalty.md",
+    "rl-fresh-selfplay.md", "rl-fresh-selfplay-validation-20260915.json", "rl-gold-planning.md", "rl-gold-planning-validation-20260915.json", "rl-gold-planning-12-validation-20260915.json", "ai-freeze-close-deployment-20260915.md", "ai-freeze-close-deployment-20260915.json", "ai-action-limits.md", "ai-action-limits-validation-20260915.json", "ai-action-limits-deployment-20260915.md", "ai-action-limits-deployment-20260915.json", "rl-network.md", "rl-training.md", "rl-card-value.md", "rl-action-value.md", "rl-scene-value.md", "rl-multi-horizon.md", "rl-first-place-bonus.md", "rl-unused-gold-penalty.md",
     "rl-blackwell-20260915.md", "tavern-operations.md", "rl-human-demonstrations.md", "rl-fresh-imitation-20260915.json",
     "neural-serving.md",
 ]]

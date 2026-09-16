@@ -13,9 +13,10 @@
     "dev:server": "tsx server/index.ts",
     "build:rl": "node scripts/build-rl.mjs",
     "build:search": "node scripts/build-recruit-search.mjs",
+    "build:scene": "node scripts/build-scene-evaluation.mjs",
     "test:search": "tsc -p rl/tsconfig.json && tsx --test rl/recruit-search.test.ts rl/gold-planning.test.ts && bash rl/run.sh test -p test_recruit_search.py",
     "test:rl": "tsc -p rl/tsconfig.json && tsx --test rl/environment.test.ts",
-    "package:rl": "npm run build:rl && npm run build:search && python3 scripts/package-rl.py",
+    "package:rl": "npm run build:rl && npm run build:search && npm run build:scene && python3 scripts/package-rl.py",
     "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts server/persistence.test.ts server/pairing.test.ts server/neural.test.ts server/demonstrations.test.ts"
   },
   "dependencies": {

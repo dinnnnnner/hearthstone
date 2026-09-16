@@ -1,0 +1,981 @@
+{
+  "deployment": {
+    "pid": 31653,
+    "startedUtc": "2026-09-16T04:11:14.607041+00:00",
+    "deadlineUtc": "2026-09-16T04:23:05.507669+00:00",
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-human-current-06cd2177/population_resume.py",
+      "--resumes",
+      "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-four-hour-20260914/population",
+      "--deadline-utc",
+      "2026-09-16T04:23:05.507669+00:00",
+      "--workers",
+      "8",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "8",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--device",
+      "cuda",
+      "--sequence-batch-size",
+      "32",
+      "--fused-adam",
+      "--training-graphs",
+      "--sampling-processes",
+      "4"
+    ],
+    "runtime": "/root/autodl-tmp/tavern-action-value-20260916",
+    "trainingMode": "soft_action_value",
+    "actionValueVersion": "soft-q-v1",
+    "actionValueTemperature": 0.2,
+    "streamTurns": 2,
+    "auxiliaryHeads": "combat-economy-v1",
+    "branchMinTrials": 4,
+    "branchMaxTrials": 12,
+    "branchHorizon": 2,
+    "branchTerminalFraction": 0.0,
+    "tierTempo": {
+      "turn": 8,
+      "tier4": 0.05,
+      "tier5": 0.025
+    },
+    "cardValueHead": "card-cash-v1",
+    "cardValueFraction": 0.25,
+    "cardValueCashGrid": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      12
+    ],
+    "samplingProcesses": 4,
+    "workersPerLearner": 8,
+    "gamesPerBatch": 8,
+    "precision": "fp32",
+    "mps": true,
+    "startingCheckpoints": [
+      {
+        "index": 0,
+        "episodes": 7947,
+        "iteration": 137,
+        "sha256": "a12f8a99d723e943eac6f542dde59154429c294a175a776c5e19066f1ee153f3",
+        "bytes": 531812615
+      },
+      {
+        "index": 1,
+        "episodes": 8077,
+        "iteration": 140,
+        "sha256": "b690789bda34b0033d2c8cfc38bf0c42437d58831714f0231f4582a155ba12cf",
+        "bytes": 768789703
+      },
+      {
+        "index": 2,
+        "episodes": 7762,
+        "iteration": 135,
+        "sha256": "bf5d9a086b5f81420b5631911460e1c4b2c66ef3dd7fefa90ac81edad25127bf",
+        "bytes": 1715670630
+      }
+    ],
+    "priorJob": "/root/tavern-ops/20260916-card-value/resume.json",
+    "publishedRelease": "20260915T235413-publish-4h-models",
+    "packageSha256": "8fccae44ddf58b77f916c13ded49e187bbf9a90da6432a839c59a7eb3060703f",
+    "watchPid": 31662,
+    "mailPid": 31686
+  },
+  "localValidation": {
+    "stage": "passed",
+    "unitTests": 39,
+    "completeGames": 6,
+    "iterations": 35,
+    "twoProcessResume": true,
+    "policyOnlyInference": true,
+    "branchUpdates": 35,
+    "cardUpdates": 7,
+    "packageSha256": "8fccae44ddf58b77f916c13ded49e187bbf9a90da6432a839c59a7eb3060703f"
+  },
+  "gpuValidation": [
+    {
+      "depth": 64,
+      "seconds": 7.890454052016139,
+      "update": {
+        "policy_loss": 0.0,
+        "value_loss": 0.004052866133861244,
+        "entropy": 1.09651380777359,
+        "approx_kl": 0.0,
+        "gradient_norm": 0.7803119421005249,
+        "auxiliary_loss": 1.148324966430664,
+        "samples": 150,
+        "optimizer_steps": 2,
+        "kl_early_stop": false,
+        "sequence_chunks": 16,
+        "training_mode": "soft_action_value",
+        "action_value_loss": 0.008535547647625208,
+        "training_graphs": true,
+        "training_graph_count": 2,
+        "training_graph_replays": 4,
+        "training_graph_capture_seconds": 0.15825321339070797
+      },
+      "branch_update": {
+        "updates": 1,
+        "states": 1,
+        "actions": 3,
+        "loss": 0.04297003895044327,
+        "training_mode": "action_value_regression",
+        "training_graphs": true,
+        "training_graph_count": 2,
+        "training_graph_replays": 2,
+        "training_graph_capture_seconds": 0.14358107931911945
+      }
+    },
+    {
+      "depth": 256,
+      "seconds": 10.174151349812746,
+      "update": {
+        "policy_loss": 0.0,
+        "value_loss": 0.006113010225817561,
+        "entropy": 1.0468867421150208,
+        "approx_kl": 0.0,
+        "gradient_norm": 1.1662384271621704,
+        "auxiliary_loss": 1.1379624009132385,
+        "samples": 142,
+        "optimizer_steps": 2,
+        "kl_early_stop": false,
+        "sequence_chunks": 16,
+        "training_mode": "soft_action_value",
+        "action_value_loss": 0.012251706328243017,
+        "training_graphs": true,
+        "training_graph_count": 2,
+        "training_graph_replays": 4,
+        "training_graph_capture_seconds": 0.6242257598787546
+      },
+      "branch_update": {
+        "updates": 1,
+        "states": 1,
+        "actions": 6,
+        "loss": 0.007846316322684288,
+        "training_mode": "action_value_regression",
+        "training_graphs": true,
+        "training_graph_count": 2,
+        "training_graph_replays": 2,
+        "training_graph_capture_seconds": 0.5545191168785095
+      }
+    },
+    {
+      "depth": 1024,
+      "seconds": 13.79982858709991,
+      "update": {
+        "policy_loss": 0.0,
+        "value_loss": 0.0019926090026274323,
+        "entropy": 1.1809524893760681,
+        "approx_kl": 0.0,
+        "gradient_norm": 0.8138302564620972,
+        "auxiliary_loss": 1.1594135165214539,
+        "samples": 139,
+        "optimizer_steps": 2,
+        "kl_early_stop": false,
+        "sequence_chunks": 16,
+        "training_mode": "soft_action_value",
+        "action_value_loss": 0.008975634817034006,
+        "training_graphs": true,
+        "training_graph_count": 2,
+        "training_graph_replays": 4,
+        "training_graph_capture_seconds": 2.0446305200457573
+      },
+      "branch_update": {
+        "updates": 1,
+        "states": 1,
+        "actions": 3,
+        "loss": 0.0069587212055921555,
+        "training_mode": "action_value_regression",
+        "training_graphs": true,
+        "training_graph_count": 2,
+        "training_graph_replays": 2,
+        "training_graph_capture_seconds": 2.1181782353669405
+      }
+    }
+  ],
+  "verification": {
+    "stage": "passed",
+    "checkedUtc": "2026-09-16T04:14:00.544308+00:00",
+    "members": [
+      {
+        "member": 0,
+        "depth": 64,
+        "episodes": 7947,
+        "iteration": 138,
+        "model_spec": {
+          "architecture": "entity-gru-resnet",
+          "hidden": 128,
+          "heads": 4,
+          "layers": 2,
+          "auxiliary_heads": "combat-economy-v1",
+          "card_value_head": "card-cash-v1",
+          "action_values": {
+            "version": "soft-q-v1",
+            "temperature": 0.2
+          },
+          "policy_depth": 64,
+          "value_depth": 64
+        },
+        "metrics": {
+          "iteration": 138,
+          "iteration_seconds": 71.03212662227452,
+          "end_to_end_actions_per_second": 7.6303501777748775,
+          "cuda_peak_allocated_mib": 2378.44873046875,
+          "episodes": 7947,
+          "seconds": 68.88141067139804,
+          "environment_actions": 542,
+          "actions_per_second": 7.868596109124943,
+          "inference_batches": 448,
+          "mean_inference_batch": 1.2098214285714286,
+          "sampling_processes": 4,
+          "sampling_workers": 8,
+          "parallel_inference_seconds_sum": 8.15810957737267,
+          "parallel_simulator_wait_seconds_sum": 3.4610687121748924,
+          "sampling_graphs": true,
+          "sampling_graph_capture_seconds": 2.078211061656475,
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 8,
+          "streaming_tracks": 32,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 4,
+            "labels": 4,
+            "branches": 240,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 240,
+            "environment_actions": 22095,
+            "seconds": 111.19934793189168,
+            "workers": 64,
+            "teaching": {
+              "updates": 1,
+              "states": 4,
+              "actions": 20,
+              "loss": 0.0531204491853714,
+              "training_mode": "action_value_regression",
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 2,
+              "training_graph_capture_seconds": 0.1494766976684332
+            }
+          },
+          "card_value": {
+            "probes": 0,
+            "labels": 0,
+            "branches": 0,
+            "seconds": 0.0,
+            "teaching": {
+              "updates": 0,
+              "cards": 0,
+              "training_graphs": true,
+              "training_graph_count": 0,
+              "training_graph_replays": 0,
+              "training_graph_capture_seconds": 0.0
+            }
+          },
+          "action_counts": {
+            "buySpell": 45,
+            "buy": 87,
+            "power": 10,
+            "end": 128,
+            "freeze": 80,
+            "refresh": 11,
+            "play": 86,
+            "cast": 51,
+            "discover": 8,
+            "sell": 9,
+            "activate": 1,
+            "move": 24,
+            "upgrade": 2
+          },
+          "learner_action_counts": {
+            "buySpell": 23,
+            "buy": 40,
+            "end": 64,
+            "freeze": 42,
+            "refresh": 5,
+            "play": 36,
+            "cast": 24,
+            "power": 8,
+            "activate": 1,
+            "discover": 4,
+            "move": 12,
+            "sell": 2,
+            "upgrade": 1
+          },
+          "policy_loss": 0.0,
+          "value_loss": 0.002607963979244232,
+          "entropy": 0.981402188539505,
+          "approx_kl": 0.0,
+          "gradient_norm": 0.5950336307287216,
+          "auxiliary_loss": 1.1441851258277893,
+          "samples": 262,
+          "optimizer_steps": 2,
+          "kl_early_stop": false,
+          "sequence_chunks": 32,
+          "training_mode": "soft_action_value",
+          "action_value_loss": 0.009899744298309088,
+          "training_graphs": true,
+          "training_graph_count": 2,
+          "training_graph_replays": 4,
+          "training_graph_capture_seconds": 0.33956695161759853,
+          "optimization_seconds": 1.6651531551033258,
+          "completed_games": 0,
+          "league_generations": [
+            0,
+            "external:b984f5dc52807397",
+            "external:80a4d2075bb94289",
+            "external:3cd67621572946c4",
+            "external:ebbed321733dfebb",
+            1,
+            2,
+            3,
+            123,
+            124,
+            125,
+            126
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 64,
+              "probability": 0.03893590613326804,
+              "seats": 0
+            },
+            {
+              "generation": "external:b984f5dc52807397",
+              "external": true,
+              "depth": 256,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:80a4d2075bb94289",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:3cd67621572946c4",
+              "external": true,
+              "depth": 256,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:ebbed321733dfebb",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 64,
+              "probability": 0.038694773773520375,
+              "seats": 0
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 64,
+              "probability": 0.03842324972407811,
+              "seats": 0
+            },
+            {
+              "generation": 3,
+              "external": false,
+              "depth": 64,
+              "probability": 0.038696125990757495,
+              "seats": 0
+            },
+            {
+              "generation": 123,
+              "external": false,
+              "depth": 64,
+              "probability": 0.0806833975029628,
+              "seats": 0
+            },
+            {
+              "generation": 124,
+              "external": false,
+              "depth": 64,
+              "probability": 0.09574062503926013,
+              "seats": 0
+            },
+            {
+              "generation": 125,
+              "external": false,
+              "depth": 64,
+              "probability": 0.18688176141512428,
+              "seats": 0
+            },
+            {
+              "generation": 126,
+              "external": false,
+              "depth": 64,
+              "probability": 0.08194416042102871,
+              "seats": 0
+            }
+          ],
+          "hero_counts": {}
+        }
+      },
+      {
+        "member": 1,
+        "depth": 256,
+        "episodes": 8077,
+        "iteration": 141,
+        "model_spec": {
+          "architecture": "entity-gru-resnet",
+          "hidden": 128,
+          "heads": 4,
+          "layers": 2,
+          "auxiliary_heads": "combat-economy-v1",
+          "card_value_head": "card-cash-v1",
+          "action_values": {
+            "version": "soft-q-v1",
+            "temperature": 0.2
+          },
+          "policy_depth": 256,
+          "value_depth": 256
+        },
+        "metrics": {
+          "iteration": 141,
+          "iteration_seconds": 80.51234479248524,
+          "end_to_end_actions_per_second": 7.054818754365918,
+          "cuda_peak_allocated_mib": 2941.78125,
+          "episodes": 8077,
+          "seconds": 77.52650792710483,
+          "environment_actions": 568,
+          "actions_per_second": 7.326526309350453,
+          "inference_batches": 457,
+          "mean_inference_batch": 1.2428884026258207,
+          "sampling_processes": 4,
+          "sampling_workers": 8,
+          "parallel_inference_seconds_sum": 8.329419698566198,
+          "parallel_simulator_wait_seconds_sum": 3.0373221710324287,
+          "sampling_graphs": true,
+          "sampling_graph_capture_seconds": 2.9182039592415094,
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 8,
+          "streaming_tracks": 32,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 4,
+            "labels": 4,
+            "branches": 80,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 80,
+            "environment_actions": 6375,
+            "seconds": 43.87244797125459,
+            "workers": 64,
+            "teaching": {
+              "updates": 1,
+              "states": 4,
+              "actions": 10,
+              "loss": 0.043782755732536316,
+              "training_mode": "action_value_regression",
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 2,
+              "training_graph_capture_seconds": 0.5231501143425703
+            }
+          },
+          "card_value": {
+            "probes": 1,
+            "labels": 1,
+            "branches": 108,
+            "seconds": 53.85880681313574,
+            "roots": 1,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 108,
+            "environment_actions": 9108,
+            "workers": 16,
+            "teaching": {
+              "updates": 1,
+              "cards": 1,
+              "loss": 0.4051157534122467,
+              "training_graphs": true,
+              "training_graph_count": 0,
+              "training_graph_replays": 0,
+              "training_graph_capture_seconds": 0.0
+            }
+          },
+          "action_counts": {
+            "buy": 75,
+            "end": 128,
+            "buySpell": 48,
+            "play": 79,
+            "freeze": 93,
+            "cast": 47,
+            "sell": 12,
+            "discover": 7,
+            "refresh": 40,
+            "upgrade": 11,
+            "power": 7,
+            "move": 21
+          },
+          "learner_action_counts": {
+            "buy": 38,
+            "buySpell": 24,
+            "end": 64,
+            "play": 39,
+            "cast": 23,
+            "freeze": 44,
+            "sell": 8,
+            "discover": 4,
+            "refresh": 20,
+            "upgrade": 7,
+            "move": 11,
+            "power": 4
+          },
+          "policy_loss": 0.0,
+          "value_loss": 0.0028345034224912524,
+          "entropy": 0.9986127316951752,
+          "approx_kl": 0.0,
+          "gradient_norm": 0.8896500766277313,
+          "auxiliary_loss": 1.1274086833000183,
+          "samples": 286,
+          "optimizer_steps": 2,
+          "kl_early_stop": false,
+          "sequence_chunks": 32,
+          "training_mode": "soft_action_value",
+          "action_value_loss": 0.009885807987302542,
+          "training_graphs": true,
+          "training_graph_count": 2,
+          "training_graph_replays": 4,
+          "training_graph_capture_seconds": 0.5958791095763445,
+          "optimization_seconds": 1.9990488402545452,
+          "completed_games": 0,
+          "league_generations": [
+            0,
+            "external:5dd294b2819dffa7",
+            "external:80a4d2075bb94289",
+            "external:32ffd25679c951d7",
+            "external:ebbed321733dfebb",
+            1,
+            2,
+            3,
+            125,
+            126,
+            127,
+            128
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 256,
+              "probability": 0.03839710894829199,
+              "seats": 0
+            },
+            {
+              "generation": "external:5dd294b2819dffa7",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:80a4d2075bb94289",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:32ffd25679c951d7",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:ebbed321733dfebb",
+              "external": true,
+              "depth": 1024,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 256,
+              "probability": 0.038549476383244914,
+              "seats": 0
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 256,
+              "probability": 0.03827714878622394,
+              "seats": 0
+            },
+            {
+              "generation": 3,
+              "external": false,
+              "depth": 256,
+              "probability": 0.03814438367863978,
+              "seats": 0
+            },
+            {
+              "generation": 125,
+              "external": false,
+              "depth": 256,
+              "probability": 0.10001946266375185,
+              "seats": 0
+            },
+            {
+              "generation": 126,
+              "external": false,
+              "depth": 256,
+              "probability": 0.0975988048251872,
+              "seats": 0
+            },
+            {
+              "generation": 127,
+              "external": false,
+              "depth": 256,
+              "probability": 0.15489804511723046,
+              "seats": 0
+            },
+            {
+              "generation": 128,
+              "external": false,
+              "depth": 256,
+              "probability": 0.09411556959742981,
+              "seats": 0
+            }
+          ],
+          "hero_counts": {}
+        }
+      },
+      {
+        "member": 2,
+        "depth": 1024,
+        "episodes": 7762,
+        "iteration": 136,
+        "model_spec": {
+          "architecture": "entity-gru-resnet",
+          "hidden": 128,
+          "heads": 4,
+          "layers": 2,
+          "auxiliary_heads": "combat-economy-v1",
+          "card_value_head": "card-cash-v1",
+          "action_values": {
+            "version": "soft-q-v1",
+            "temperature": 0.2
+          },
+          "policy_depth": 1024,
+          "value_depth": 1024
+        },
+        "metrics": {
+          "iteration": 136,
+          "iteration_seconds": 112.42942392081022,
+          "end_to_end_actions_per_second": 4.794118667544229,
+          "cuda_peak_allocated_mib": 3187.62744140625,
+          "episodes": 7762,
+          "seconds": 105.5051544252783,
+          "environment_actions": 539,
+          "actions_per_second": 5.108755140316247,
+          "inference_batches": 464,
+          "mean_inference_batch": 1.1616379310344827,
+          "sampling_processes": 4,
+          "sampling_workers": 8,
+          "parallel_inference_seconds_sum": 13.588453527539968,
+          "parallel_simulator_wait_seconds_sum": 3.4270997811108828,
+          "sampling_graphs": true,
+          "sampling_graph_capture_seconds": 6.2011888306587934,
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 8,
+          "streaming_tracks": 32,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 4,
+            "labels": 4,
+            "branches": 168,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 168,
+            "environment_actions": 14608,
+            "seconds": 105.44748887047172,
+            "workers": 64,
+            "teaching": {
+              "updates": 1,
+              "states": 4,
+              "actions": 16,
+              "loss": 0.011722112074494362,
+              "training_mode": "action_value_regression",
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 2,
+              "training_graph_capture_seconds": 2.099693125113845
+            }
+          },
+          "card_value": {
+            "probes": 2,
+            "labels": 1,
+            "branches": 216,
+            "seconds": 97.51392851024866,
+            "roots": 2,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 216,
+            "environment_actions": 14527,
+            "workers": 32,
+            "teaching": {
+              "updates": 1,
+              "cards": 1,
+              "loss": 0.09003742039203644,
+              "training_graphs": true,
+              "training_graph_count": 0,
+              "training_graph_replays": 0,
+              "training_graph_capture_seconds": 0.0
+            }
+          },
+          "action_counts": {
+            "buy": 57,
+            "end": 128,
+            "freeze": 67,
+            "refresh": 52,
+            "buySpell": 52,
+            "play": 65,
+            "cast": 49,
+            "upgrade": 12,
+            "move": 20,
+            "discover": 13,
+            "power": 10,
+            "sell": 14
+          },
+          "learner_action_counts": {
+            "buy": 25,
+            "end": 64,
+            "freeze": 30,
+            "buySpell": 27,
+            "refresh": 25,
+            "play": 31,
+            "cast": 26,
+            "upgrade": 8,
+            "power": 7,
+            "move": 10,
+            "sell": 5,
+            "discover": 4
+          },
+          "policy_loss": 0.0,
+          "value_loss": 0.0011603267048485577,
+          "entropy": 1.1429268717765808,
+          "approx_kl": 0.0,
+          "gradient_norm": 0.5728853344917297,
+          "auxiliary_loss": 1.1364967226982117,
+          "samples": 262,
+          "optimizer_steps": 2,
+          "kl_early_stop": false,
+          "sequence_chunks": 32,
+          "training_mode": "soft_action_value",
+          "action_value_loss": 0.0074650326278060675,
+          "training_graphs": true,
+          "training_graph_count": 2,
+          "training_graph_replays": 4,
+          "training_graph_capture_seconds": 2.08724095672369,
+          "optimization_seconds": 3.862997552379966,
+          "completed_games": 0,
+          "league_generations": [
+            0,
+            "external:5dd294b2819dffa7",
+            "external:b984f5dc52807397",
+            "external:32ffd25679c951d7",
+            "external:3cd67621572946c4",
+            1,
+            2,
+            3,
+            121,
+            122,
+            123,
+            124
+          ],
+          "opponent_sampling": [
+            {
+              "generation": 0,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.03864197096713091,
+              "seats": 0
+            },
+            {
+              "generation": "external:5dd294b2819dffa7",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:b984f5dc52807397",
+              "external": true,
+              "depth": 256,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:32ffd25679c951d7",
+              "external": true,
+              "depth": 64,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": "external:3cd67621572946c4",
+              "external": true,
+              "depth": 256,
+              "probability": 0.1,
+              "seats": 0
+            },
+            {
+              "generation": 1,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.0386412736540001,
+              "seats": 0
+            },
+            {
+              "generation": 2,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.03842132380630044,
+              "seats": 0
+            },
+            {
+              "generation": 3,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.03910437986302697,
+              "seats": 0
+            },
+            {
+              "generation": 121,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.09564796052348436,
+              "seats": 0
+            },
+            {
+              "generation": 122,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.14495163896539381,
+              "seats": 0
+            },
+            {
+              "generation": 123,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.13652743047050694,
+              "seats": 0
+            },
+            {
+              "generation": 124,
+              "external": false,
+              "depth": 1024,
+              "probability": 0.06806402175015647,
+              "seats": 0
+            }
+          ],
+          "hero_counts": {}
+        }
+      }
+    ],
+    "health": {
+      "utc": "2026-09-16T04:11:15.665089+00:00",
+      "stage": "running",
+      "coordinator_valid": true,
+      "members": [
+        {
+          "index": 0,
+          "stage": "mixing",
+          "pid": 31654,
+          "process_valid": true,
+          "start_ticks": 1457439552,
+          "cpu_seconds": 0.86,
+          "episodes": 7947,
+          "iteration": 137,
+          "activity_age_seconds": 1.0,
+          "sampler_reports": 0,
+          "sampled_actions": 0,
+          "completed_sampling_games": 0,
+          "log_error": false
+        },
+        {
+          "index": 1,
+          "stage": "mixing",
+          "pid": 31655,
+          "process_valid": true,
+          "start_ticks": 1457439557,
+          "cpu_seconds": 0.85,
+          "episodes": 8077,
+          "iteration": 140,
+          "activity_age_seconds": 0.9,
+          "sampler_reports": 0,
+          "sampled_actions": 0,
+          "completed_sampling_games": 0,
+          "log_error": false
+        },
+        {
+          "index": 2,
+          "stage": "mixing",
+          "pid": 31656,
+          "process_valid": true,
+          "start_ticks": 1457439568,
+          "cpu_seconds": 0.75,
+          "episodes": 7762,
+          "iteration": 135,
+          "activity_age_seconds": 0.8,
+          "sampler_reports": 0,
+          "sampled_actions": 0,
+          "completed_sampling_games": 0,
+          "log_error": false
+        }
+      ],
+      "memory_gib": 15.023124694824219,
+      "memory_fraction": 0.12519270579020184,
+      "oom_kill": 0,
+      "cpu_usage_usec": 121392026931,
+      "cpu_quota_cores": 25.0,
+      "disk_free_gib": 8.244850158691406,
+      "gpu": "0, 62, 37.40",
+      "issues": [],
+      "healthy": true,
+      "watch_pid": 31662,
+      "job_pid": 31653,
+      "interval_seconds": 300,
+      "next_check_utc": "2026-09-16T04:16:15.665089+00:00",
+      "watch_complete": false
+    },
+    "mail": {
+      "lastSent": "68d740363f00c8c3fbaefbac9308848469226f0a76be697060a3629f1479ee4b",
+      "snapshotUtc": "2026-09-16T04:11:15.665089+00:00",
+      "acceptedUtc": "2026-09-16T04:11:17.691587+00:00"
+    }
+  }
+}

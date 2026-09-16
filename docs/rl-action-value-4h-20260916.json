@@ -1,0 +1,169 @@
+{
+  "deployment": {
+    "pid": 39344,
+    "startedUtc": "2026-09-16T04:24:41.728335+00:00",
+    "deadlineUtc": "2026-09-16T08:24:41.728335+00:00",
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-ops/20260916-action-value-4h/population_resume.py",
+      "--resumes",
+      "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-four-hour-20260914/population",
+      "--deadline-utc",
+      "2026-09-16T08:24:41.728335+00:00",
+      "--workers",
+      "8",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "8",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--device",
+      "cuda",
+      "--sequence-batch-size",
+      "32",
+      "--fused-adam",
+      "--training-graphs",
+      "--sampling-processes",
+      "4"
+    ],
+    "runtime": "/root/autodl-tmp/tavern-action-value-20260916",
+    "trainingMode": "soft_action_value",
+    "actionValueVersion": "soft-q-v1",
+    "actionValueTemperature": 0.2,
+    "streamTurns": 2,
+    "auxiliaryHeads": "combat-economy-v1",
+    "branchMinTrials": 4,
+    "branchMaxTrials": 12,
+    "branchHorizon": 2,
+    "branchTerminalFraction": 0.0,
+    "tierTempo": {
+      "turn": 8,
+      "tier4": 0.05,
+      "tier5": 0.025
+    },
+    "cardValueHead": "card-cash-v1",
+    "cardValueFraction": 0.25,
+    "cardValueCashGrid": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      12
+    ],
+    "samplingProcesses": 4,
+    "workersPerLearner": 8,
+    "gamesPerBatch": 8,
+    "precision": "fp32",
+    "mps": true,
+    "startingCheckpoints": [
+      {
+        "index": 0,
+        "episodes": 7947,
+        "iteration": 140,
+        "sha256": "d2263cef72261ff2f08c8380bb313e2729a838d0af4d7e2ef8f4ba15bb1c5e1e",
+        "bytes": 532591175
+      },
+      {
+        "index": 1,
+        "episodes": 8077,
+        "iteration": 143,
+        "sha256": "af7c087f78d833f473374b4c3268d3a6c32aa5ffaaff37fbba2560e909b32e91",
+        "bytes": 769300551
+      },
+      {
+        "index": 2,
+        "episodes": 7762,
+        "iteration": 137,
+        "sha256": "7c4593df9ac5f2faf3976d98eb6f9ec6b108d4aa931da0ebbd52edd77ac5b8de",
+        "bytes": 1716181510
+      }
+    ],
+    "priorJob": "/root/tavern-ops/20260916-action-value/resume.json",
+    "publishedRelease": "20260915T235413-publish-4h-models",
+    "packageSha256": "8fccae44ddf58b77f916c13ded49e187bbf9a90da6432a839c59a7eb3060703f",
+    "durationHours": 4,
+    "watchPid": 39351,
+    "mailPid": 39375
+  },
+  "verification": {
+    "verified": true,
+    "health": {
+      "utc": "2026-09-16T04:25:31.903680+00:00",
+      "stage": "running",
+      "coordinator_valid": true,
+      "members": [
+        {
+          "index": 0,
+          "stage": "training",
+          "pid": 39382,
+          "process_valid": true,
+          "start_ticks": 1457521785,
+          "cpu_seconds": 5.78,
+          "episodes": 7947,
+          "iteration": 140,
+          "activity_age_seconds": 14.0,
+          "sampler_reports": 1,
+          "sampled_actions": 126,
+          "completed_sampling_games": 0,
+          "log_error": false
+        },
+        {
+          "index": 1,
+          "stage": "training",
+          "pid": 39384,
+          "process_valid": true,
+          "start_ticks": 1457521885,
+          "cpu_seconds": 7.92,
+          "episodes": 8077,
+          "iteration": 143,
+          "activity_age_seconds": 9.2,
+          "sampler_reports": 1,
+          "sampled_actions": 130,
+          "completed_sampling_games": 0,
+          "log_error": false
+        },
+        {
+          "index": 2,
+          "stage": "training",
+          "pid": 39409,
+          "process_valid": true,
+          "start_ticks": 1457522186,
+          "cpu_seconds": 15.28,
+          "episodes": 7762,
+          "iteration": 137,
+          "activity_age_seconds": 16.8,
+          "sampler_reports": 0,
+          "sampled_actions": 0,
+          "completed_sampling_games": 0,
+          "log_error": false
+        }
+      ],
+      "memory_gib": 50.940155029296875,
+      "memory_fraction": 0.42450129191080727,
+      "oom_kill": 0,
+      "cpu_usage_usec": 137175354864,
+      "cpu_quota_cores": 25.0,
+      "disk_free_gib": 5.429645538330078,
+      "gpu": "79, 21099, 122.18",
+      "issues": [],
+      "healthy": true
+    },
+    "mail": {
+      "lastSent": "ad45dec14af6cdea59d38a3bf03511408fd88805765bfdb17be861273930d655",
+      "snapshotUtc": "2026-09-16T04:24:42.784883+00:00",
+      "acceptedUtc": "2026-09-16T04:24:44.798498+00:00"
+    },
+    "deadlineUtc": "2026-09-16T08:24:41.728335+00:00"
+  }
+}

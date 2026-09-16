@@ -20,6 +20,7 @@ createInterface({ input: process.stdin, crlfDelay: Infinity }).on('line', line =
       case 'plan_open': planning = undefined; planning = new GoldPlanningBatch(m.roots, m.branches);
         result = { version: GOLD_PLANNING_VERSION, views: planning.views() }; break;
       case 'plan_step': if (!planning) throw Error('No planning batch'); result = planning.step(m.actions); break;
+      case 'plan_expand': if (!planning) throw Error('No planning batch'); result = planning.expand(m.actions); break;
       case 'release': planning = undefined; branch = undefined; result = { released: true }; break;
       case 'close': process.exit(0);
       default: throw Error('Unknown recruit-search command');

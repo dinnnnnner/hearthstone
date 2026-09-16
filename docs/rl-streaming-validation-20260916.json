@@ -1,0 +1,969 @@
+{
+  "deployment": {
+    "pid": 6117,
+    "startedUtc": "2026-09-16T03:25:25.359450+00:00",
+    "deadlineUtc": "2026-09-16T04:23:05.507669+00:00",
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-human-current-06cd2177/population_resume.py",
+      "--resumes",
+      "/root/tavern-four-hour-20260914/population/member-0/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-1/training/latest.pt",
+      "/root/tavern-four-hour-20260914/population/member-2/training/latest.pt",
+      "--output",
+      "/root/tavern-four-hour-20260914/population",
+      "--deadline-utc",
+      "2026-09-16T04:23:05.507669+00:00",
+      "--workers",
+      "8",
+      "--iterations-per-exchange",
+      "2",
+      "--games-per-iteration",
+      "8",
+      "--max-per-lineage",
+      "2",
+      "--external-fraction",
+      "0.4",
+      "--device",
+      "cuda",
+      "--sequence-batch-size",
+      "32",
+      "--fused-adam",
+      "--training-graphs",
+      "--sampling-processes",
+      "4"
+    ],
+    "runtime": "/root/autodl-tmp/tavern-streaming-20260916",
+    "trainingMode": "streaming_ppo_counterfactual",
+    "streamTurns": 2,
+    "auxiliaryHeads": "combat-economy-v1",
+    "branchMinTrials": 4,
+    "branchMaxTrials": 12,
+    "branchHorizon": 2,
+    "branchTerminalFraction": 0.0,
+    "tierTempo": {
+      "turn": 8,
+      "tier4": 0.05,
+      "tier5": 0.025
+    },
+    "samplingProcesses": 4,
+    "workersPerLearner": 8,
+    "gamesPerBatch": 8,
+    "precision": "fp32",
+    "mps": true,
+    "startingCheckpoints": [
+      {
+        "index": 0,
+        "episodes": 7946,
+        "iteration": 126,
+        "sha256": "b1e5546aa840e570355577315c9ddae0321f158d1b3e6d554c61bb466953781f",
+        "bytes": 531643719
+      },
+      {
+        "index": 1,
+        "episodes": 8074,
+        "iteration": 128,
+        "sha256": "93210e2b3bea3932dd4be147822fed9bd6185cc289bf59e4ee20d2eddfe9ee39",
+        "bytes": 768353095
+      },
+      {
+        "index": 2,
+        "episodes": 7762,
+        "iteration": 124,
+        "sha256": "a7c6f25308ef77bd97ff3f22be34ee1edfd974aa2cddac88d59c02eb6a5402ca",
+        "bytes": 1715234498
+      }
+    ],
+    "priorJob": "/root/tavern-ops/20260916-gold-sales/resume.json",
+    "publishedRelease": "20260915T235413-publish-4h-models",
+    "packageSha256": "459cfb24c5c0d9c6087cd71c33d4bbe62068fe24f9c685c3c02d982d4739e79a",
+    "watchPid": 6124,
+    "mailPid": 6148
+  },
+  "verification": {
+    "verified": true,
+    "utc": "2026-09-16T03:27:59.111213+00:00",
+    "members": [
+      {
+        "member": 0,
+        "iteration": 127,
+        "episodes": 7946,
+        "config": {
+          "turns": 2,
+          "auxiliary_coef": 0.1,
+          "tier_tempo": {
+            "turn": 8,
+            "tier4": 0.05,
+            "tier5": 0.025
+          }
+        },
+        "auxiliary": "combat-economy-v1",
+        "metrics": {
+          "iteration": 127,
+          "optimizer_steps": 2,
+          "auxiliary_loss": 1.1458891034126282,
+          "streaming_active_games": 8,
+          "counterfactual": {
+            "roots": 4,
+            "labels": 4,
+            "branches": 232,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 232,
+            "environment_actions": 22627,
+            "seconds": 116.1528375055641,
+            "workers": 64,
+            "teaching": {
+              "updates": 1,
+              "states": 4,
+              "loss": 1.2375915050506592,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.08488244749605656
+            }
+          },
+          "iteration_seconds": 73.87696231156588
+        }
+      },
+      {
+        "member": 1,
+        "iteration": 129,
+        "episodes": 8074,
+        "config": {
+          "turns": 2,
+          "auxiliary_coef": 0.1,
+          "tier_tempo": {
+            "turn": 8,
+            "tier4": 0.05,
+            "tier5": 0.025
+          }
+        },
+        "auxiliary": "combat-economy-v1",
+        "metrics": {
+          "iteration": 129,
+          "optimizer_steps": 2,
+          "auxiliary_loss": 1.136818528175354,
+          "streaming_active_games": 8,
+          "counterfactual": {
+            "roots": 4,
+            "labels": 4,
+            "branches": 192,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 192,
+            "environment_actions": 20001,
+            "seconds": 106.19469146803021,
+            "workers": 64,
+            "teaching": {
+              "updates": 1,
+              "states": 4,
+              "loss": 1.1306452751159668,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.24205488711595535
+            }
+          },
+          "iteration_seconds": 71.94780164398253
+        }
+      },
+      {
+        "member": 2,
+        "iteration": 125,
+        "episodes": 7762,
+        "config": {
+          "turns": 2,
+          "auxiliary_coef": 0.1,
+          "tier_tempo": {
+            "turn": 8,
+            "tier4": 0.05,
+            "tier5": 0.025
+          }
+        },
+        "auxiliary": "combat-economy-v1",
+        "metrics": {
+          "iteration": 125,
+          "optimizer_steps": 2,
+          "auxiliary_loss": 1.1399565935134888,
+          "streaming_active_games": 8,
+          "counterfactual": {
+            "roots": 4,
+            "labels": 3,
+            "branches": 164,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 164,
+            "environment_actions": 15623,
+            "seconds": 107.85092889331281,
+            "workers": 64,
+            "teaching": {
+              "updates": 1,
+              "states": 3,
+              "loss": 1.1681334972381592,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.9529742561280727
+            }
+          },
+          "iteration_seconds": 98.41101608797908
+        }
+      }
+    ]
+  },
+  "gpuCoreValidation": {
+    "stage": "passed",
+    "members": [
+      {
+        "member": 0,
+        "depth": 64,
+        "seconds": 108.2068651933223,
+        "source_episodes": 7946,
+        "config": {
+          "turns": 2,
+          "auxiliary_coef": 0.1
+        },
+        "branch_config": {
+          "roots": 1,
+          "trials": 12,
+          "min_trials": 4,
+          "candidates": 8,
+          "workers": 16,
+          "horizon": 2,
+          "terminal_fraction": 0.0,
+          "max_steps": 6000,
+          "temperature": 0.2,
+          "strength": 0.25,
+          "min_gap": 0.02,
+          "epochs": 1
+        },
+        "chunks": [
+          {
+            "performance": {
+              "seconds": 13.554588798433542,
+              "environment_actions": 147,
+              "actions_per_second": 10.845035742949893,
+              "action_counts": {
+                "buy": 24,
+                "buySpell": 10,
+                "freeze": 19,
+                "play": 25,
+                "power": 4,
+                "cast": 9,
+                "end": 32,
+                "sell": 2,
+                "refresh": 10,
+                "discover": 1,
+                "move": 11
+              },
+              "learner_action_counts": {
+                "buy": 2,
+                "buySpell": 2,
+                "play": 2,
+                "cast": 2,
+                "sell": 1,
+                "freeze": 3,
+                "end": 4
+              },
+              "first_place_bonus": 1.0,
+              "streaming_done": false,
+              "streaming_active_games": 2,
+              "streaming_tracks": 2,
+              "counterfactual": {
+                "roots": 1,
+                "labels": 0,
+                "branches": 36,
+                "cutoffs": 0,
+                "terminal_outcomes": 0,
+                "bootstrap_outcomes": 36,
+                "environment_actions": 1940,
+                "seconds": 9.899842059239745,
+                "workers": 16
+              },
+              "inference_seconds": 1.5403450205922127,
+              "simulator_wait_seconds": 0.7365177311003208,
+              "inference_batches": 84,
+              "mean_inference_batch": 1.75,
+              "sampling_graphs": true,
+              "sampling_graph_count": 4,
+              "sampling_graph_replays": 729,
+              "sampling_graph_capture_seconds": 0.07450133934617043
+            },
+            "ppo": {
+              "policy_loss": -0.009766995906829834,
+              "value_loss": 0.04490000568330288,
+              "entropy": 0.9428121447563171,
+              "approx_kl": 0.00045456551015377045,
+              "gradient_norm": 5.953812122344971,
+              "auxiliary_loss": 1.1375707387924194,
+              "samples": 16,
+              "optimizer_steps": 2,
+              "kl_early_stop": false,
+              "sequence_chunks": 2,
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 4,
+              "training_graph_capture_seconds": 0.186652647331357
+            },
+            "comparison_update": {
+              "updates": 0,
+              "states": 0,
+              "training_graphs": true,
+              "training_graph_count": 0,
+              "training_graph_replays": 0,
+              "training_graph_capture_seconds": 0.0
+            },
+            "comparison_trials": [
+              12
+            ],
+            "completed_games": 0
+          },
+          {
+            "performance": {
+              "seconds": 92.75395162776113,
+              "environment_actions": 329,
+              "actions_per_second": 3.5470186900536405,
+              "action_counts": {
+                "darkGift": 30,
+                "buy": 10,
+                "discover": 36,
+                "move": 100,
+                "play": 47,
+                "freeze": 21,
+                "refresh": 10,
+                "buySpell": 12,
+                "cast": 19,
+                "end": 32,
+                "sell": 6,
+                "power": 4,
+                "upgrade": 2
+              },
+              "learner_action_counts": {
+                "darkGift": 4,
+                "discover": 5,
+                "play": 9,
+                "refresh": 2,
+                "cast": 5,
+                "move": 11,
+                "buySpell": 1,
+                "end": 4,
+                "freeze": 3,
+                "buy": 2,
+                "sell": 1
+              },
+              "first_place_bonus": 1.0,
+              "streaming_done": false,
+              "streaming_active_games": 2,
+              "streaming_tracks": 2,
+              "counterfactual": {
+                "roots": 1,
+                "labels": 1,
+                "branches": 96,
+                "cutoffs": 0,
+                "terminal_outcomes": 0,
+                "bootstrap_outcomes": 96,
+                "environment_actions": 15815,
+                "seconds": 86.4948552493006,
+                "workers": 16
+              },
+              "inference_seconds": 2.4257353600114584,
+              "simulator_wait_seconds": 2.1446267627179623,
+              "inference_batches": 200,
+              "mean_inference_batch": 1.645,
+              "sampling_graphs": true,
+              "sampling_graph_count": 4,
+              "sampling_graph_replays": 4041,
+              "sampling_graph_capture_seconds": 0.06184716336429119
+            },
+            "ppo": {
+              "policy_loss": -0.005830202588640532,
+              "value_loss": 0.009336472838185728,
+              "entropy": 1.6947422623634338,
+              "approx_kl": 0.0011507823686804919,
+              "gradient_norm": 4.066104292869568,
+              "auxiliary_loss": 1.3256224393844604,
+              "samples": 47,
+              "optimizer_steps": 2,
+              "kl_early_stop": false,
+              "sequence_chunks": 4,
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 4,
+              "training_graph_capture_seconds": 0.15526888333261013
+            },
+            "comparison_update": {
+              "updates": 1,
+              "states": 1,
+              "loss": 1.9410004615783691,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.0576053112745285
+            },
+            "comparison_trials": [
+              12
+            ],
+            "completed_games": 0
+          }
+        ]
+      },
+      {
+        "member": 1,
+        "depth": 256,
+        "seconds": 81.19226374477148,
+        "source_episodes": 8074,
+        "config": {
+          "turns": 2,
+          "auxiliary_coef": 0.1
+        },
+        "branch_config": {
+          "roots": 1,
+          "trials": 12,
+          "min_trials": 4,
+          "candidates": 8,
+          "workers": 16,
+          "horizon": 2,
+          "terminal_fraction": 0.0,
+          "max_steps": 6000,
+          "temperature": 0.2,
+          "strength": 0.25,
+          "min_gap": 0.02,
+          "epochs": 1
+        },
+        "chunks": [
+          {
+            "performance": {
+              "seconds": 15.208456935361028,
+              "environment_actions": 160,
+              "actions_per_second": 10.520462442707494,
+              "action_counts": {
+                "refresh": 15,
+                "buySpell": 17,
+                "buy": 17,
+                "freeze": 21,
+                "cast": 13,
+                "power": 2,
+                "play": 24,
+                "end": 32,
+                "sell": 5,
+                "discover": 1,
+                "upgrade": 1,
+                "move": 12
+              },
+              "learner_action_counts": {
+                "buy": 2,
+                "buySpell": 2,
+                "play": 4,
+                "cast": 2,
+                "sell": 1,
+                "freeze": 3,
+                "end": 4,
+                "refresh": 1,
+                "move": 1
+              },
+              "first_place_bonus": 1.0,
+              "streaming_done": false,
+              "streaming_active_games": 2,
+              "streaming_tracks": 2,
+              "counterfactual": {
+                "roots": 1,
+                "labels": 1,
+                "branches": 36,
+                "cutoffs": 0,
+                "terminal_outcomes": 0,
+                "bootstrap_outcomes": 36,
+                "environment_actions": 2352,
+                "seconds": 11.596282852813601,
+                "workers": 16
+              },
+              "inference_seconds": 1.3168784901499748,
+              "simulator_wait_seconds": 0.8624707963317633,
+              "inference_batches": 102,
+              "mean_inference_batch": 1.5686274509803921,
+              "sampling_graphs": true,
+              "sampling_graph_count": 4,
+              "sampling_graph_replays": 869,
+              "sampling_graph_capture_seconds": 0.2136017419397831
+            },
+            "ppo": {
+              "policy_loss": -0.00495134601396785,
+              "value_loss": 0.013407320715487003,
+              "entropy": 0.8900372982025146,
+              "approx_kl": 0.0005211529904045609,
+              "gradient_norm": 3.6130993366241455,
+              "auxiliary_loss": 1.139430582523346,
+              "samples": 20,
+              "optimizer_steps": 2,
+              "kl_early_stop": false,
+              "sequence_chunks": 2,
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 4,
+              "training_graph_capture_seconds": 0.546061884611845
+            },
+            "comparison_update": {
+              "updates": 1,
+              "states": 1,
+              "loss": 0.7894541025161743,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.23155334405601025
+            },
+            "comparison_trials": [
+              12
+            ],
+            "completed_games": 0
+          },
+          {
+            "performance": {
+              "seconds": 62.924413496628404,
+              "environment_actions": 341,
+              "actions_per_second": 5.419200292081727,
+              "action_counts": {
+                "discover": 36,
+                "darkGift": 29,
+                "cast": 20,
+                "move": 95,
+                "sell": 12,
+                "play": 44,
+                "buySpell": 13,
+                "buy": 12,
+                "end": 32,
+                "freeze": 23,
+                "refresh": 16,
+                "power": 5,
+                "upgrade": 3,
+                "activate": 1
+              },
+              "learner_action_counts": {
+                "darkGift": 3,
+                "discover": 4,
+                "sell": 4,
+                "play": 4,
+                "buy": 2,
+                "buySpell": 2,
+                "move": 10,
+                "end": 4,
+                "cast": 2,
+                "refresh": 2,
+                "freeze": 2
+              },
+              "first_place_bonus": 1.0,
+              "streaming_done": false,
+              "streaming_active_games": 2,
+              "streaming_tracks": 2,
+              "counterfactual": {
+                "roots": 1,
+                "labels": 1,
+                "branches": 84,
+                "cutoffs": 0,
+                "terminal_outcomes": 0,
+                "bootstrap_outcomes": 84,
+                "environment_actions": 9789,
+                "seconds": 55.82374504953623,
+                "workers": 16
+              },
+              "inference_seconds": 3.032984657213092,
+              "simulator_wait_seconds": 2.25415500998497,
+              "inference_batches": 202,
+              "mean_inference_batch": 1.688118811881188,
+              "sampling_graphs": true,
+              "sampling_graph_count": 4,
+              "sampling_graph_replays": 2883,
+              "sampling_graph_capture_seconds": 0.30593080446124077
+            },
+            "ppo": {
+              "policy_loss": -0.0029898608306666574,
+              "value_loss": 0.0017368591506965458,
+              "entropy": 1.6558187007904053,
+              "approx_kl": 0.0012164595686138258,
+              "gradient_norm": 3.5950909852981567,
+              "auxiliary_loss": 1.2686610221862793,
+              "samples": 39,
+              "optimizer_steps": 2,
+              "kl_early_stop": false,
+              "sequence_chunks": 4,
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 4,
+              "training_graph_capture_seconds": 0.549946203827858
+            },
+            "comparison_update": {
+              "updates": 1,
+              "states": 1,
+              "loss": 1.6647064685821533,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.2514727432280779
+            },
+            "comparison_trials": [
+              12
+            ],
+            "completed_games": 0
+          }
+        ]
+      },
+      {
+        "member": 2,
+        "depth": 1024,
+        "seconds": 124.19083395786583,
+        "source_episodes": 7754,
+        "config": {
+          "turns": 2,
+          "auxiliary_coef": 0.1
+        },
+        "branch_config": {
+          "roots": 1,
+          "trials": 12,
+          "min_trials": 4,
+          "candidates": 8,
+          "workers": 16,
+          "horizon": 2,
+          "terminal_fraction": 0.0,
+          "max_steps": 6000,
+          "temperature": 0.2,
+          "strength": 0.25,
+          "min_gap": 0.02,
+          "epochs": 1
+        },
+        "chunks": [
+          {
+            "performance": {
+              "seconds": 17.38566912151873,
+              "environment_actions": 157,
+              "actions_per_second": 9.030426088442963,
+              "action_counts": {
+                "refresh": 18,
+                "buySpell": 18,
+                "buy": 14,
+                "freeze": 16,
+                "power": 2,
+                "cast": 22,
+                "play": 20,
+                "end": 32,
+                "upgrade": 3,
+                "sell": 3,
+                "discover": 1,
+                "activate": 1,
+                "move": 7
+              },
+              "learner_action_counts": {
+                "buySpell": 3,
+                "cast": 4,
+                "play": 4,
+                "freeze": 3,
+                "refresh": 2,
+                "end": 4,
+                "buy": 2,
+                "sell": 1,
+                "move": 1
+              },
+              "first_place_bonus": 1.0,
+              "streaming_done": false,
+              "streaming_active_games": 2,
+              "streaming_tracks": 2,
+              "counterfactual": {
+                "roots": 1,
+                "labels": 1,
+                "branches": 36,
+                "cutoffs": 0,
+                "terminal_outcomes": 0,
+                "bootstrap_outcomes": 36,
+                "environment_actions": 2139,
+                "seconds": 13.280976999551058,
+                "workers": 16
+              },
+              "inference_seconds": 1.9462099522352219,
+              "simulator_wait_seconds": 0.8090071380138397,
+              "inference_batches": 94,
+              "mean_inference_batch": 1.6702127659574468,
+              "sampling_graphs": true,
+              "sampling_graph_count": 4,
+              "sampling_graph_replays": 772,
+              "sampling_graph_capture_seconds": 0.6997294556349516
+            },
+            "ppo": {
+              "policy_loss": -0.0017768542361409345,
+              "value_loss": 0.0009054643742274493,
+              "entropy": 1.0273518562316895,
+              "approx_kl": 1.5745560328128683e-05,
+              "gradient_norm": 3.483082890510559,
+              "auxiliary_loss": 1.172600507736206,
+              "samples": 24,
+              "optimizer_steps": 2,
+              "kl_early_stop": false,
+              "sequence_chunks": 2,
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 4,
+              "training_graph_capture_seconds": 1.8358157183974981
+            },
+            "comparison_update": {
+              "updates": 1,
+              "states": 1,
+              "loss": 0.8038110733032227,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.8580000195652246
+            },
+            "comparison_trials": [
+              12
+            ],
+            "completed_games": 0
+          },
+          {
+            "performance": {
+              "seconds": 98.5543124973774,
+              "environment_actions": 285,
+              "actions_per_second": 2.8918064849529954,
+              "action_counts": {
+                "darkGift": 28,
+                "buy": 7,
+                "move": 46,
+                "discover": 33,
+                "upgrade": 3,
+                "buySpell": 17,
+                "cast": 29,
+                "refresh": 17,
+                "power": 3,
+                "play": 43,
+                "end": 32,
+                "activate": 3,
+                "sell": 6,
+                "freeze": 18
+              },
+              "learner_action_counts": {
+                "darkGift": 4,
+                "move": 5,
+                "discover": 4,
+                "cast": 3,
+                "end": 4,
+                "play": 8,
+                "buySpell": 1,
+                "freeze": 2,
+                "buy": 2
+              },
+              "first_place_bonus": 1.0,
+              "streaming_done": false,
+              "streaming_active_games": 2,
+              "streaming_tracks": 2,
+              "counterfactual": {
+                "roots": 1,
+                "labels": 1,
+                "branches": 96,
+                "cutoffs": 0,
+                "terminal_outcomes": 0,
+                "bootstrap_outcomes": 96,
+                "environment_actions": 14475,
+                "seconds": 91.2890028078109,
+                "workers": 16
+              },
+              "inference_seconds": 3.4897650815546513,
+              "simulator_wait_seconds": 2.0286698825657368,
+              "inference_batches": 169,
+              "mean_inference_batch": 1.6863905325443787,
+              "sampling_graphs": true,
+              "sampling_graph_count": 4,
+              "sampling_graph_replays": 3564,
+              "sampling_graph_capture_seconds": 0.7251371592283249
+            },
+            "ppo": {
+              "policy_loss": -0.00246209642091344,
+              "value_loss": 0.0008502062119077891,
+              "entropy": 1.746762990951538,
+              "approx_kl": 3.0343957295286828e-05,
+              "gradient_norm": 4.026071310043335,
+              "auxiliary_loss": 1.3302485346794128,
+              "samples": 33,
+              "optimizer_steps": 2,
+              "kl_early_stop": false,
+              "sequence_chunks": 3,
+              "training_graphs": true,
+              "training_graph_count": 2,
+              "training_graph_replays": 4,
+              "training_graph_capture_seconds": 1.7330481503158808
+            },
+            "comparison_update": {
+              "updates": 1,
+              "states": 1,
+              "loss": 1.9023441076278687,
+              "training_graphs": true,
+              "training_graph_count": 1,
+              "training_graph_replays": 1,
+              "training_graph_capture_seconds": 0.8694726936519146
+            },
+            "comparison_trials": [
+              12
+            ],
+            "completed_games": 0
+          }
+        ]
+      }
+    ]
+  },
+  "tempoValidation": {
+    "stage": "passed",
+    "unitTests": 30,
+    "unitCommand": "PYTHONPATH=rl/python:rl/tests .venv/bin/python -m unittest test_streaming test_counterfactual test_process_rollout test_recurrent",
+    "completeGames": 2,
+    "updates": 11,
+    "tierChecks": [
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 0,
+        "turn": 8,
+        "tier": 2,
+        "health": 25,
+        "reward": 0.0
+      },
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 1,
+        "turn": 8,
+        "tier": 2,
+        "health": 30,
+        "reward": 0.0
+      },
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 2,
+        "turn": 8,
+        "tier": 3,
+        "health": 30,
+        "reward": 0.0
+      },
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 3,
+        "turn": 8,
+        "tier": 2,
+        "health": 30,
+        "reward": 0.0
+      },
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 4,
+        "turn": 8,
+        "tier": 5,
+        "health": 30,
+        "reward": 0.07500000000000001
+      },
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 5,
+        "turn": 8,
+        "tier": 3,
+        "health": 28,
+        "reward": 0.0
+      },
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 6,
+        "turn": 8,
+        "tier": 1,
+        "health": 29,
+        "reward": 0.0
+      },
+      {
+        "seed": 42,
+        "learner": true,
+        "seat": 7,
+        "turn": 8,
+        "tier": 1,
+        "health": 58,
+        "reward": 0.0
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 0,
+        "turn": 8,
+        "tier": 4,
+        "health": 28,
+        "reward": 0.05
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 1,
+        "turn": 8,
+        "tier": 3,
+        "health": 30,
+        "reward": 0.0
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 2,
+        "turn": 8,
+        "tier": 3,
+        "health": 30,
+        "reward": 0.0
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 3,
+        "turn": 8,
+        "tier": 4,
+        "health": 22,
+        "reward": 0.05
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 4,
+        "turn": 8,
+        "tier": 3,
+        "health": 30,
+        "reward": 0.0
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 5,
+        "turn": 8,
+        "tier": 4,
+        "health": 30,
+        "reward": 0.05
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 6,
+        "turn": 8,
+        "tier": 4,
+        "health": 30,
+        "reward": 0.05
+      },
+      {
+        "seed": 43,
+        "learner": true,
+        "seat": 7,
+        "turn": 8,
+        "tier": 2,
+        "health": 30,
+        "reward": 0.0
+      }
+    ],
+    "branchCutoffs": 0,
+    "packageSha256": "459cfb24c5c0d9c6087cd71c33d4bbe62068fe24f9c685c3c02d982d4739e79a"
+  },
+  "caveats": [
+    "Core GPU probes preceded the tier-tempo delta; the delta passed local and server regression tests, complete CPU multiprocess games, and formal CUDA updates.",
+    "No strength improvement or turn-eight tier success rate has been established.",
+    "Training still has a 64-action per-seat turn limit; active game snapshots are not durable across shutdown."
+  ]
+}

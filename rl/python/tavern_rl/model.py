@@ -34,7 +34,7 @@ class ActorCritic(nn.Module):
         return {"observation_size": self.observation_size, "action_size": self.action_size, "hidden": self.hidden}
 
 
-def advantages(values, terminal_reward, gamma=1.0, gae_lambda=.95):
+def advantages(values, terminal_reward, gamma=1.0, gae_lambda=.95, bootstrap=0.):
     """One complete player's trajectory. Never concatenate opponents' decisions."""
     values = np.asarray(values, dtype=np.float32)
     rewards = np.asarray(terminal_reward, dtype=np.float32)
@@ -46,7 +46,7 @@ def advantages(values, terminal_reward, gamma=1.0, gae_lambda=.95):
     result = np.empty_like(values)
     last = 0.0
     for i in reversed(range(len(values))):
-        next_value = values[i + 1] if i + 1 < len(values) else 0.0
+        next_value = values[i + 1] if i + 1 < len(values) else bootstrap
         reward = rewards[i]
         delta = reward + gamma * next_value - values[i]
         last = float(delta + gamma * gae_lambda * last)
@@ -110,12 +110,33 @@ def ppo_update(model, optimizer, tracks, config, device):
 
 def make_model(specification):
     spec = dict(specification)
+    auxiliary=spec.pop('auxiliary_heads',None)
+    card_value=spec.pop('card_value_head',None)
+    action_values=spec.pop('action_values',None)
+    scene=spec.pop('scene_value_head',None)
+    horizons=spec.pop('multi_horizon',None)
     architecture = spec.pop('architecture', 'mlp')
-    if architecture == 'mlp': return ActorCritic(**spec)
-    if architecture == 'entity-gru':
+    if architecture == 'mlp': model=ActorCritic(**spec)
+    elif architecture == 'entity-gru':
         from .entity_model import EntityActorCritic
-        return EntityActorCritic(**spec)
-    if architecture == 'entity-gru-resnet':
+        model=EntityActorCritic(**spec)
+    elif architecture == 'entity-gru-resnet':
         from .deep_model import DeepEntityActorCritic
-        return DeepEntityActorCritic(**spec)
-    raise ValueError(f'Unknown architecture: {architecture}')
+        model=DeepEntityActorCritic(**spec)
+    else:raise ValueError(f'Unknown architecture: {architecture}')
+    if auxiliary:
+        from .streaming import enable_auxiliary
+        enable_auxiliary(model,auxiliary)
+    if card_value:
+        from .card_value import enable
+        enable(model,card_value)
+    if action_values:
+        from .action_value import enable
+        enable(model,action_values)
+    if scene:
+        from .scene_value import enable
+        enable(model,scene)
+    if horizons:
+        from .multi_horizon import enable
+        enable(model,horizons)
+    return model
