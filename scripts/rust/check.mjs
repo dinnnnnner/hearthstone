@@ -1,0 +1,10 @@
+import { execFileSync } from 'node:child_process';
+const run=(bin,args)=>execFileSync(bin,args,{stdio:'inherit'});
+run('node',['scripts/rust/build.mjs']);
+run('cargo',['fmt','--manifest-path','native/Cargo.toml','--all','--check']);
+run('cargo',['test','--manifest-path','native/Cargo.toml']);
+run('cargo',['clippy','--manifest-path','native/Cargo.toml','--all-targets','--','-D','warnings']);
+run('node',['scripts/rust/build-oracle.mjs']);
+run('node',['native/target/oracle.cjs']);
+run('python3',['scripts/rust/check-native.py']);
+run('node_modules/.bin/tsx',['scripts/rust/check-wasm.ts']);

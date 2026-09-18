@@ -1,0 +1,168 @@
+{
+  "scope": "Six audited keyword-only cards; no hero powers, trinkets, gifts, deathrattles, auras or deities.",
+  "validation": {
+    "cases": 10033,
+    "attack_traces": 49907,
+    "mismatches": 0,
+    "invalid_requests_rejected": 4,
+    "compared": [
+      "attack targets",
+      "pre/post death boards",
+      "reborn identities/stats/positions",
+      "survivors",
+      "damage",
+      "RNG state and draw count"
+    ]
+  },
+  "benchmark": {
+    "cases": 256,
+    "repetitions": 100,
+    "combats_per_round": 25600,
+    "rounds": 5,
+    "warmup_passes": 5,
+    "cpu_affinity": 0,
+    "measurements": {
+      "typescript": [
+        {
+          "ok": true,
+          "combats": 25600,
+          "seconds": 5.679680304,
+          "checksum": 446700,
+          "peak_rss_mib": 173.75390625,
+          "process_wall_seconds": 6.535626834000141,
+          "wait4_peak_rss_mib": 173.75390625
+        },
+        {
+          "ok": true,
+          "combats": 25600,
+          "seconds": 5.486705631,
+          "checksum": 446700,
+          "peak_rss_mib": 180.71875,
+          "process_wall_seconds": 6.338356938998913,
+          "wait4_peak_rss_mib": 180.71875
+        },
+        {
+          "ok": true,
+          "combats": 25600,
+          "seconds": 5.819405549,
+          "checksum": 446700,
+          "peak_rss_mib": 193.31640625,
+          "process_wall_seconds": 6.679418129002443,
+          "wait4_peak_rss_mib": 193.31640625
+        },
+        {
+          "ok": true,
+          "combats": 25600,
+          "seconds": 5.855677379,
+          "checksum": 446700,
+          "peak_rss_mib": 172.24609375,
+          "process_wall_seconds": 6.715210595000826,
+          "wait4_peak_rss_mib": 172.24609375
+        },
+        {
+          "ok": true,
+          "combats": 25600,
+          "seconds": 5.870809896,
+          "checksum": 446700,
+          "peak_rss_mib": 184.19140625,
+          "process_wall_seconds": 6.720196883998142,
+          "wait4_peak_rss_mib": 184.19140625
+        }
+      ],
+      "rust": [
+        {
+          "checksum": 446700,
+          "combats": 25600,
+          "ok": true,
+          "peak_rss_mib": 2.9921875,
+          "seconds": 0.013892407,
+          "process_wall_seconds": 0.016386731000238797,
+          "wait4_peak_rss_mib": 105.38671875
+        },
+        {
+          "checksum": 446700,
+          "combats": 25600,
+          "ok": true,
+          "peak_rss_mib": 2.984375,
+          "seconds": 0.01407932,
+          "process_wall_seconds": 0.016308293998008594,
+          "wait4_peak_rss_mib": 105.38671875
+        },
+        {
+          "checksum": 446700,
+          "combats": 25600,
+          "ok": true,
+          "peak_rss_mib": 2.953125,
+          "seconds": 0.01411731,
+          "process_wall_seconds": 0.01650458800213528,
+          "wait4_peak_rss_mib": 105.38671875
+        },
+        {
+          "checksum": 446700,
+          "combats": 25600,
+          "ok": true,
+          "peak_rss_mib": 3.0234375,
+          "seconds": 0.014248218,
+          "process_wall_seconds": 0.01651307700012694,
+          "wait4_peak_rss_mib": 105.38671875
+        },
+        {
+          "checksum": 446700,
+          "combats": 25600,
+          "ok": true,
+          "peak_rss_mib": 2.90625,
+          "seconds": 0.014148348,
+          "process_wall_seconds": 0.01656449200163479,
+          "wait4_peak_rss_mib": 105.38671875
+        }
+      ]
+    },
+    "summary": {
+      "typescript": {
+        "median_seconds": 5.819405549,
+        "combats_per_second": 4399.074748175795,
+        "median_process_wall_seconds": 6.679418129002443,
+        "median_peak_rss_mib": 180.71875
+      },
+      "rust": {
+        "median_seconds": 0.01411731,
+        "combats_per_second": 1813376.6277003197,
+        "median_process_wall_seconds": 0.01650458800213528,
+        "median_peak_rss_mib": 2.984375
+      }
+    },
+    "subset_speed_ratio": 412.2177347525839
+  },
+  "environment": {
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "node": "v20.19.2",
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "cpu": "Intel(R) Core(TM) Ultra 7 270K Plus"
+  },
+  "source_sha256": {
+    "src/season/engine.ts": "c020a911d70cf9dd8f83526f79a7823e09513a6003973e04e6087fc0b0e13212",
+    "src/engine.ts": "888dcd23805c3de537f82a5f66110ed7a855d8d0efe49e7f84f927af890a8056",
+    "src/simulation.ts": "03429506ec334926b8eff85ef19b838acd72030c75504c69f2ac2c568884177f",
+    "experiments/rust-combat/src/lib.rs": "c1f77c805a57ac5020e23a1993952e6463e0089865341adeb15834cc7946fd7d",
+    "experiments/rust-combat/src/main.rs": "8cacbdeb9a757b075bfa69a71f71aebf3850447eba1610b24de737e37b5d25d5",
+    "experiments/rust-combat/oracle.ts": "cf95077e1d23a8d1df78967b8a86532a1d1a3011a6e22715c243b09e5ebd8840",
+    "experiments/rust-combat/Cargo.lock": "928f6453b9feb511b73fad7fae48d4fa40ee4299b39caaf5f2a4f4e4eebc1655",
+    "experiments/rust-combat/check.py": "e315ca257e59f18ee01dcbeb1a820ab75214cdd140317b3282cefefd41d1d124",
+    "experiments/rust-combat/Cargo.toml": "d0f578f26bb4aabd44fb747ea46606f98daf4cea15d3731bbb987419f141d8be",
+    "experiments/rust-combat/build.mjs": "0713e6f8d5c80a2df7dd1dc1267abf956d38bb049a75959d76c6e0653049d565",
+    "experiments/rust-combat/tsconfig.json": "c2ee88c41c6bb94067864ae3b8c5d6220369f98066ea77691a4b0426865fa808"
+  },
+  "fixture_sha256": "08f82e210ea4d46929951e507504114232de844c91f5d1dbe0af6388db03a374",
+  "limitations": [
+    "Synthetic keyword-only fixtures, not a sample of full-season training games.",
+    "TS uses the complete production combat dispatcher; Rust implements only the audited subset.",
+    "Core timings exclude process startup, JSON parsing, case preparation, warmup and Python IPC.",
+    "RSS is post-exec /proc/self/status VmHWM, including parsing, prepared inputs and runtime; not per-game memory. wait4 RSS is retained separately because it can inherit the parent high water mark.",
+    "No GPU inference, optimizer updates or end-to-end self-play benchmark.",
+    "Results establish parity with current TS behavior, not correctness against the official game."
+  ],
+  "measured_at": "2026-09-18T06:09:58.296890+00:00",
+  "base_commit": "13078e067cd23f47719dfe998c9d338aa77c181b",
+  "scope_note": "Local isolated prototype. No production deployment, training process change or model replacement."
+}

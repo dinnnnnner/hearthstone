@@ -1,3 +1,5 @@
+import { loadConfiguredRustRules } from './rust-rules';
+import { RustGameRules } from '../src/rules/rust-game';
 import type { AIWatch } from "../src/ai-watch";
 import { equippedPowers } from "../src/season/powers";
 import { enableAIActionLimits } from '../src/ai-action-limits';
@@ -57,6 +59,7 @@ export type Seat = {
   battleId?: string;
 };
 export type Room = {
+  rustStream?: { rng: number; uidCounter: number };
   recordTraining?: boolean;
   code: string;
   host: string;
@@ -93,6 +96,28 @@ const score = (m: Minion) =>
 export const tokenHash = (token: string) =>
   createHash("sha256").update(token).digest("hex");
 export class Rooms {
+  private readonly rustKernel = loadConfiguredRustRules();
+  private native<T>(r: Room, run: (rules: RustGameRules) => T): T {
+    if (!this.rustKernel) throw Error('Rust rules backend is not configured');
+    const rules = new RustGameRules(this.rustKernel, r.rustStream?.rng ?? Math.floor(this.random() * 4294967296));
+    if (r.rustStream) rules.restore(r.rustStream);
+    const result = run(rules);
+    r.rustStream = rules.snapshot();
+    return result;
+  }
+  private createRuleGame(r: Room, hero: string, options: Parameters<typeof createSeason>[2]): Game {
+    return this.rustKernel ? this.native(r, rules => rules.create(hero, options)) : createSeason(hero, this.random, options);
+  }
+  private ruleTargets(s: Game, m: Minion, event: 'cast' | 'battlecry'): Minion[] {
+    return this.rustKernel ? this.rustKernel.call({ command: 'targets', state: s, minion: m, event }) : seasonTargets(s, m, event);
+  }
+  private ruleTrinketCost(s: Game, id: string): number {
+    return this.rustKernel ? this.rustKernel.call({ command: 'trinketCost', state: s, id }) : trinketCost(s, id);
+  }
+  private rulePrice(s: Game, m: Minion): { minionCost: number; minionUsesHealth: boolean; refreshPayment: { gold: number } } {
+    return this.rustKernel ? this.rustKernel.call({ command: 'prices', state: s, minion: m }) : { minionCost: minionCost(s, m), minionUsesHealth: minionUsesHealth(s, m), refreshPayment: { gold: refreshCost(s) } };
+  }
+
   protected usesAIActionLimits(p: Seat) { return p.bot; }
   guests = new Map<string, Guest>();
   rooms = new Map<string, Room>();
@@ -322,7 +347,7 @@ export class Rooms {
     r.tribes = [...required, ...rest.slice(0, 5 - required.length)];
     const deity = r.seats.some(p => ["s14_curator", "s14_lich", "s14_teron", "s14_nzoth"].includes(p.hero)) || this.random() < .5 ? "BGFYM_000" : "BGFYM_011";
     for (const [seatIndex, p] of r.seats.entries()) {
-      p.game = createSeason(p.hero, this.random, {
+      p.game = this.createRuleGame(r, p.hero, {
         tribes: r.tribes,
         deity,
         pool: Object.keys(r.pool).length ? r.pool : undefined,
@@ -415,7 +440,8 @@ export class Rooms {
     const opponent = r.seats.find((seat) => seat.id === opponentId);
     // Hero powers may inspect the paired warband inside the rules engine; it must
     // never become part of the player's serialized state or polling response.
-    const result = actSeason(p.game!, a, this.random, { opponentBoard: opponent?.game?.board || r.grave?.board || [] });
+    const context = { opponentBoard: opponent?.game?.board || r.grave?.board || [] };
+    const result = this.rustKernel ? this.native(r, rules => rules.act(p.game!, a, context)) : actSeason(p.game!, a, this.random, context);
     if (result.error) return result.error;
     p.game = result.state;
     r.pool = result.state.pool;
@@ -440,13 +466,13 @@ export class Rooms {
         a = {
           type: "discover",
           uid: [...s.discovery].sort((a, b) => score(b) - score(a))[0].uid,
-          ...(s.season?.discoveryKind === "choose" ? { target: seasonTargets(s, [...s.discovery].sort((a, b) => score(b) - score(a))[0], "cast")[0]?.uid } : {}),
+          ...(s.season?.discoveryKind === "choose" ? { target: this.ruleTargets(s, [...s.discovery].sort((a, b) => score(b) - score(a))[0], "cast")[0]?.uid } : {}),
         };
       else if (s.season!.trinketOffers.length) {
         const t = s
           .season!.trinketOffers.map((id) => TRINKETS.find((t) => t.id === id)!)
-          .filter((t) => trinketCost(s, t.id) <= s.gold)
-          .sort((a, b) => trinketCost(s, a.id) - trinketCost(s, b.id))[0];
+          .filter((t) => this.ruleTrinketCost(s, t.id) <= s.gold)
+          .sort((a, b) => this.ruleTrinketCost(s, a.id) - this.ruleTrinketCost(s, b.id))[0];
         if (t) a = { type: "buyTrinket", uid: t.id };
       }
       if (!a || this.apply(r, p, a)) break;
@@ -462,7 +488,7 @@ export class Rooms {
       for (let n = 0; n < 36; n++) {
         this.autoChoices(r, p);
         const s = p.game!;
-        const power = equippedPowers(s).map((id) => heroPowerState(s, id)).find((p) => !p.reason);
+        const power = equippedPowers(s).map((id) => this.rustKernel ? this.rustKernel.call<ReturnType<typeof heroPowerState>>({ command: "powerState", state: s, id }) : heroPowerState(s, id)).find((p) => !p.reason);
         if (s.phase === "over") break;
         let a: Action | undefined;
         const hand = s.hand.find(
@@ -472,8 +498,8 @@ export class Rooms {
         if (hand) {
           const spell = getDef(hand.id).kind === "spell";
           const ts = spell
-            ? seasonTargets(s, hand, "cast")
-            : targetsFor(s, hand);
+            ? this.ruleTargets(s, hand, "cast")
+            : this.rustKernel ? this.ruleTargets(s, hand, "battlecry") : targetsFor(s, hand);
           a = {
             type: spell ? "cast" : "play",
             uid: hand.uid,
@@ -496,7 +522,7 @@ export class Rooms {
           a = { type: "upgrade" };
         } else {
           const offer = [...s.shop]
-            .filter((m) => minionUsesHealth(s, m) || minionCost(s, m) <= s.gold)
+            .filter((m) => this.rulePrice(s, m).minionUsesHealth || this.rulePrice(s, m).minionCost <= s.gold)
             .sort((a, b) => score(b) - score(a))[0];
           if (offer && s.hand.length + s.rewards.length < 10) {
             if (s.board.length < 7) a = { type: "buy", uid: offer.uid };
@@ -507,7 +533,7 @@ export class Rooms {
             }
           }
           if (!a && s.rewards.length) a = { type: "reward" };
-          if (!a && !refreshed && s.gold >= refreshCost(s)) {
+          if (!a && !refreshed && s.gold >= (this.rustKernel ? this.rustKernel.call<{ gold: number }>({ command: "refreshPayment", state: s }).gold : refreshCost(s))) {
             refreshed = true;
             a = { type: "refresh" };
           }
@@ -582,7 +608,8 @@ export class Rooms {
       tier: p.game!.tier,
     };
     p.game!.pool = r.pool;
-    releasePlayerCards(p.game!);
+    if (this.rustKernel) p.game = this.native(r, rules => rules.releasePlayerCards(p.game!));
+    else releasePlayerCards(p.game!);
     r.pool = p.game!.pool;
     p.ended = true;
     p.continued = true;
@@ -609,7 +636,8 @@ export class Rooms {
     for (const p of this.living(r)) {
       this.autoChoices(r, p);
       p.game!.pool = r.pool;
-      endEffects(p.game!, this.random);
+      if (this.rustKernel) p.game = this.native(r, rules => rules.endEffects(p.game!));
+      else endEffects(p.game!, this.random);
       r.pool = p.game!.pool;
       if (p.game!.health <= 0) this.eliminate(r, p);
     }
@@ -631,9 +659,8 @@ export class Rooms {
       let enemy: Game;
       if (b) enemy = b.game!;
       else {
-        enemy = createSeason(
+        enemy = this.createRuleGame(r,
           r.grave?.hero || SEASON_HEROES.find((h) => h.id !== a.hero)!.id,
-          this.random,
           { tribes: r.tribes, pool: {} },
         );
         enemy.board = structuredClone(r.grave?.board || []).map((m) => ({
@@ -646,13 +673,14 @@ export class Rooms {
       a.game!.pool = r.pool;
       if (b) enemy.pool = r.pool;
       const aWarband = warbandLabel(a.game!.board), bWarband = warbandLabel(enemy.board);
-      const battle = seasonCombat(
-        a.game!,
-        enemy.board,
-        enemy.tier,
-        this.random,
-        enemy,
-      );
+      let battle: Battle;
+      if (this.rustKernel) {
+        const result = this.native(r, rules => rules.combat(a.game!, enemy));
+        a.game = result.state;
+        enemy = result.other;
+        if (b) b.game = enemy;
+        battle = result.battle;
+      } else battle = seasonCombat(a.game!, enemy.board, enemy.tier, this.random, enemy);
       r.pool = a.game!.pool;
       // Bound the replay payload while preserving the authoritative final result.
       if (battle.frames.length > 180)
@@ -794,7 +822,8 @@ export class Rooms {
     this.opponents(r);
     for (const p of this.living(r)) {
       p.game!.pool = r.pool;
-      advanceRecruit(p.game!, this.random);
+      if (this.rustKernel) p.game = this.native(r, rules => rules.advanceRecruit(p.game!));
+      else advanceRecruit(p.game!, this.random);
       p.battleId = undefined;
       r.pool = p.game!.pool;
       p.ended = false;

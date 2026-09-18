@@ -9,8 +9,19 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[3]
 
 class Simulator:
-    """One isolated Node process; communication is stdin/stdout, never HTTP."""
-    def __init__(self, bundle=None, timeout=120):
+    """Training environment using an explicitly selected Rust or TypeScript backend."""
+    def __init__(self, bundle=None, timeout=120, backend=None):
+        self.native = None
+        backend = backend or os.environ.get("TAVERN_RULES_BACKEND", "ts")
+        if backend not in ("ts", "rust"):
+            raise ValueError("TAVERN_RULES_BACKEND must be ts or rust")
+        if backend == "rust":
+            if bundle is not None:
+                raise ValueError("A JavaScript bundle cannot be used with the Rust backend")
+            from .native_rules import NativeSimulator
+            self.native = NativeSimulator()
+            self.meta = self.native.meta
+            return
         self.bundle = Path(bundle or os.environ.get("TAVERN_RL_BUNDLE", ROOT / "rl-dist/bridge.cjs")).resolve()
         if not self.bundle.is_file():
             raise FileNotFoundError(f"Build the simulator first: npm run build:rl ({self.bundle})")
@@ -28,6 +39,8 @@ class Simulator:
             raise
 
     def call(self, command, **kwargs):
+        if self.native is not None:
+            return self.native.call(command, **kwargs)
         if self.process.poll() is not None:
             raise RuntimeError("Simulator exited unexpectedly")
         payload = json.dumps({"command": command, **kwargs}, separators=(",", ":")).encode() + b"\n"
@@ -61,6 +74,9 @@ class Simulator:
         return self.call("step", action=int(action))
 
     def close(self):
+        if getattr(self, "native", None) is not None:
+            self.native.close()
+            return
         if hasattr(self, "process"):
             if self.process.stdin:
                 self.process.stdin.close()

@@ -1,0 +1,42 @@
+use crate::{Result,abilities,arr,catalog,def,has,num,primitives,stats,str_field,tribe,truth};
+use crate::combat::{Combat,Context,bump,mc,uid,kw,keyword};
+use serde_json::{Value,json};
+impl Combat {
+ pub fn preview(&mut self,c:&Context,id:&str,a:&Value)->Result<()>{let m=self.m(id).clone();let f=if truth(&a["noScale"]){a["amount"].as_f64().unwrap_or(1.)}else if truth(&m["golden"]){2.}else{1.};let source=a["key"].as_str().unwrap_or(def(str_field(&m,"id")?)?["sourceId"].as_str().unwrap_or(""));match source {
+ "BG36_099"|"BG36_110"=>self.deity(c.side,2.*f,2.*f),"BG36_113"=>self.deity(c.side,2.*f,f),"BG36_318"=>{let n=(1.+num(&self.games[c.side]["season"]["spellsCast"]))*f;self.deity(c.side,n,n);},
+ "BG36_106"|"BG36_108"=>{let (aa,hh)=if source=="BG36_106"{(4.*f,4.*f)}else{(f,3.*f)};self.gain(c,Some(id),id,aa,hh)?;self.deity(c.side,aa,hh);if source=="BG36_108"&&self.trinket(c.side,"402")>0.{for x in self.targets(c,id,&json!({"target":"adjacent"}))?{self.gain(c,Some(id),&x,aa,hh)?;}}},
+ "BG36_111"=>{for x in self.boards[c.side].clone(){self.gain(c,Some(id),&x,4.*f,3.*f)?;}self.deity(c.side,4.*f,3.*f);},
+ "BG36_114"=>{if let Some(x)=self.boards[c.side].first().cloned(){let n=(2.+self.count(c.side,"discarded"))*f;self.gain(c,Some(id),&x,n,n)?;}},
+ "BG36_102"=>{if c.event.as_deref()==Some(id){for _ in 0..f as usize{let mut enemies=self.board(1-c.side);enemies.retain(|m|num(&m["health"])>0.);enemies.sort_by(|a,b|num(&b["health"]).total_cmp(&num(&a["health"])));if let Some(t)=enemies.first(){self.damage(&uid(t),num(&m["attack"]),Some(id))?;}}}},
+ "BGFYM_005"=>{let n=bump(self.mm(id),"harbinger",1.)*f;self.deity(c.side,n,n);},
+ "BG36_360t9"=>{for _ in 0..2{let mut card=self.make("s14_BG36_360t9",false)?;card["extraAbilities"]=json!([]);card["attack"]=json!(num(&m["attack"])*f);card["health"]=json!(if mc(&m,"deathStatsHealth")!=0.{mc(&m,"deathStatsHealth")*f}else{num(&def(str_field(&m,"id")?)?["health"])*f});card["id"]=json!("s14_BG29_864t");self.summon_ctx(c,card,c.pos.unwrap_or(self.boards[c.side].len()))?;}},
+ "BG36_364"=>{if a["event"]=="shieldLost"{bump(self.mm(id),"hope",1.);self.remember(c.side,id,"hope",1.);}else{let n=(3.+mc(&m,"hope"))*f;for x in self.boards[c.side].clone(){self.gain(c,Some(id),&x,n,n)?;}}},
+ "BG36_849"=>{if a["event"]=="rally"{keyword(self.mm(id),"圣盾");}else{bump(self.mm(id),"immediateAttack",f-mc(&m,"immediateAttack"));}},
+ "BGFYM_000"=>{let targets:Vec<_>=self.boards[c.side].iter().filter(|x|*x!=id&&num(&self.m(x)["health"])>0.).cloned().collect();if !targets.is_empty(){let mut grants=vec![(0.,0.);targets.len()];for (stat,total) in [(0,num(&m["attack"])*f),(1,num(&m["health"])*f)]{for _ in 0..total.ceil().max(0.) as usize{let i=self.index(targets.len());if stat==0{grants[i].0+=1.;}else{grants[i].1+=1.;}}}for (x,(a,h)) in targets.into_iter().zip(grants){self.gain(c,Some(id),&x,a,h)?;}}},
+ "BGFYM_011"=>{for dead in self.dead_aberrations[c.side].clone().iter().take(2*f as usize){let mut card=self.copy(dead)?;card["health"]=json!(if mc(dead,"deathStatsHealth")!=0.{mc(dead,"deathStatsHealth")}else{num(&def(str_field(dead,"id")?)?["health"])});self.summon_ctx(c,card,c.pos.unwrap_or(self.boards[c.side].len()))?;}},
+ "BG31_149"=>{for _ in 0..f as usize{let keys:Vec<_>=["嘲讽","圣盾","复生","风怒","烈毒"].into_iter().filter(|k|!kw(self.m(id),k)).collect();if let Some(k)=self.pick(&keys){keyword(self.mm(id),k);}}},
+ "BG32_231"=>{let mut cards:Vec<_>=self.boards[c.side].iter().filter(|x|tribe(self.m(x),"海盗").unwrap_or(false)&&!truth(&self.m(x)["golden"])&&num(&def(self.m(x)["id"].as_str().unwrap()).unwrap()["tier"])<=4.).cloned().collect();self.shuffle(&mut cards);for x in cards.into_iter().take(f as usize){let before=self.m(&x).clone();let g=primitives::golden(before.clone())?;self.add(&x,num(&g["attack"])-num(&before["attack"]),num(&g["health"])-num(&before["health"]));self.mm(&x)["golden"]=json!(true);}},
+ "BGS_008"=>{let cards:Vec<_>=arr(&catalog().data["minionPool"]).iter().filter_map(|x|def(x.as_str().unwrap()).ok()).filter(|d|self.games[c.side]["pool"].get(d["id"].as_str().unwrap()).is_some()&&arr(&d["abilities"]).iter().any(|a|a["event"]=="death")).cloned().collect();for _ in 0..2*f as usize{if let Some(d)=self.pick(&cards){let m=self.make(str_field(&d,"id")?,false)?;self.summon_ctx(c,m,c.pos.unwrap_or(self.boards[c.side].len()))?;}}},
+ "BG31_148"=>{let mut keys=vec![];for x in self.board(c.side){for k in arr(&x["keywords"]){if !keys.contains(k){keys.push(k.clone());}}}let n=1.+keys.len() as f64;for x in self.boards[c.side].clone(){if x!=id{self.gain(c,Some(id),&x,3.*f*n,2.*f*n)?;}}},
+ "BGS_040"=>{let mut ids:Vec<_>=self.boards[c.side].iter().filter(|x|tribe(self.m(x),"龙").unwrap_or(false)).cloned().collect();self.shuffle(&mut ids);for x in ids.into_iter().take(3*f as usize){keyword(self.mm(&x),"圣盾");}},
+ "BG34_405"=>keyword(self.mm(id),"圣盾"),
+ "BG31_810"=>{if a["event"]=="playElemental"{bump(self.mm(id),"ultraviolet",1.);}else{let n=1.+mc(&m,"ultraviolet");for x in self.boards[c.side].clone(){if x!=id&&tribe(self.m(&x),"元素")?{self.gain(c,Some(id),&x,3.*f*n,2.*f*n)?;}}}},
+ "BG22_403"=>{let adjacent=self.targets(c,id,&json!({"target":"adjacent"}))?;let ts=if f==2.{adjacent}else{self.pick(&adjacent).into_iter().collect()};for x in ts{self.battlecry(c,&x)?;}},
+ "BG36_300"=>self.scale(c.side,"spell",f,f)?,"BG36_311"=>self.effect(c,id,&json!({"op":"randomSpell","event":a["event"]}))?,"BG36_312"=>self.effect(c,id,&json!({"op":"draw","tribe":"畸变怪","event":a["event"]}))?,"BG28_582"=>self.effect(c,id,&json!({"op":"generate","id":"BG20_GEM","amount":3,"event":a["event"]}))?,"BG35_882"=>self.effect(c,id,&json!({"op":"generate","id":"BG35_910","event":a["event"]}))?,
+ _=>return Err(format!("RUST_COMBAT_PREVIEW_INCOMPLETE: {source}"))
+ }Ok(())}
+ pub fn timewarp(&mut self,c:&Context,id:&str,a:&Value)->Result<()>{let m=self.m(id).clone();let f=if truth(&m["golden"]){2.}else{1.};let source=def(str_field(&m,"id")?)?["sourceId"].as_str().unwrap_or("");match source {
+ "BG34_Giant_042"=>{if let Some(i)=self.boards[c.side].iter().position(|x|x==id){if i>0{let left=self.m(&self.boards[c.side][i-1]).clone();let mut copy=self.copy(&left)?;if f==2.{copy=primitives::golden(copy)?;}copy["uid"]=json!(id);self.cards.insert(id.to_owned(),copy);}}},
+ "BG34_Giant_068"=>{let mut ids:Vec<_>=self.boards[c.side].iter().filter(|x|*x!=id&&!kw(self.m(x),"圣盾")).cloned().collect();self.shuffle(&mut ids);for x in ids.into_iter().take(f as usize){keyword(self.mm(&x),"圣盾");if let Some(m)=self.games[c.side]["board"].as_array_mut().unwrap().iter_mut().find(|m|m["uid"]==x){keyword(m,"圣盾");}}},
+ "BG34_Giant_069"=>{if bump(self.mm(id),"piperDamage",1.)<=3.{self.scale(c.side,"gem",f,0.)?;}},
+ "BG34_Giant_088"=>{if a["event"]=="end"{bump(self.mm(id),"promoGrowth",5.);}else{let n=(5.+mc(&m,"promoGrowth"))*f;for x in self.boards[c.side].clone(){self.gain(c,Some(id),&x,n,n)?;}}},
+ "BG34_Giant_208"=>{if bump(self.mm(id),"pagleKill",1.)==1.{for _ in 0..f as usize{self.recruit(c.side,|r|r.reward(None))?;}}},
+ "BG34_Giant_332"=>{if let Some(t)=&c.event{let key=format!("embalmer:{}",self.games[c.side]["turn"]);if bump(self.mm(id),&key,1.)<=f{keyword(self.mm(t),"复生");}}},
+ "BG34_Giant_370"=>{for _ in 0..f as usize{for x in self.boards[c.side].clone(){if abilities(self.m(&x))?.iter().any(|a|a["event"]=="death"){self.death(c,&x)?;}}}},
+ "BG34_Giant_599"=>{let ids:Vec<_>=self.boards[c.side].iter().filter(|x|*x!=id&&self.m(x)["id"]!=m["id"]&&abilities(self.m(x)).unwrap().iter().any(|a|a["event"]=="death")).take(2).cloned().collect();for _ in 0..f as usize{for x in &ids{let card=self.m(x).clone();for a in abilities(&card)?.iter().filter(|a|a["event"]=="death"){let copied=primitives::copy_ability(&card,a)?;if !self.m(id)["extraAbilities"].is_array(){self.mm(id)["extraAbilities"]=json!([]);}self.mm(id)["extraAbilities"].as_array_mut().unwrap().push(copied);}}}},
+ "BG34_Giant_618"=>{for _ in 0..5*f as usize{if self.boards[c.side].len()<7{let m=self.make("s14_BG_ICC_026t",false)?;self.summon_ctx(c,m,c.pos.unwrap_or(0))?;}else{self.scale(c.side,"undead",1.,0.)?;}}},
+ "BG34_Giant_777"=>{if let Some(t)=&c.event{if tribe(self.m(t),"元素")?{self.gain(c,Some(id),id,num(&self.m(t)["attack"])*f,num(&self.m(t)["health"])*f)?;}}},
+ "BG34_PreMadeChamp_004"=>{if a["event"]=="anySpell"{bump(self.mm(id),"jungleGrowth",1.);}else if let Some(t)=&c.event{let n=(1.+mc(&m,"jungleGrowth"))*f;self.gain(c,Some(id),t,4.*n,3.*n)?;}},
+ _=>return Err(format!("RUST_COMBAT_TIMEWARP_INCOMPLETE: {source}"))
+ }Ok(())}
+}
