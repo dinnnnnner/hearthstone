@@ -1,0 +1,1306 @@
+{
+  "timewarp": [
+    "BG34_Giant_008",
+    "BG34_Giant_015",
+    "BG34_Giant_021",
+    "BG34_Giant_024",
+    "BG34_Giant_027",
+    "BG34_Giant_032",
+    "BG34_Giant_034",
+    "BG34_Giant_038",
+    "BG34_Giant_042",
+    "BG34_Giant_064",
+    "BG34_Giant_065",
+    "BG34_Giant_067",
+    "BG34_Giant_068",
+    "BG34_Giant_069",
+    "BG34_Giant_072",
+    "BG34_Giant_082",
+    "BG34_Giant_088",
+    "BG34_Giant_102",
+    "BG34_Giant_105",
+    "BG34_Giant_120",
+    "BG34_Giant_204",
+    "BG34_Giant_205",
+    "BG34_Giant_208",
+    "BG34_Giant_210",
+    "BG34_Giant_211",
+    "BG34_Giant_302",
+    "BG34_Giant_304",
+    "BG34_Giant_305",
+    "BG34_Giant_306",
+    "BG34_Giant_310",
+    "BG34_Giant_311",
+    "BG34_Giant_313",
+    "BG34_Giant_317",
+    "BG34_Giant_319",
+    "BG34_Giant_321",
+    "BG34_Giant_323",
+    "BG34_Giant_327",
+    "BG34_Giant_332",
+    "BG34_Giant_335",
+    "BG34_Giant_336",
+    "BG34_Giant_362",
+    "BG34_Giant_370",
+    "BG34_Giant_376",
+    "BG34_Giant_582",
+    "BG34_Giant_590",
+    "BG34_Giant_599",
+    "BG34_Giant_602",
+    "BG34_Giant_603",
+    "BG34_Giant_608",
+    "BG34_Giant_609",
+    "BG34_Giant_610",
+    "BG34_Giant_618",
+    "BG34_Giant_619",
+    "BG34_Giant_656",
+    "BG34_Giant_678",
+    "BG34_Giant_686",
+    "BG34_Giant_687",
+    "BG34_Giant_777",
+    "BG34_PreMadeChamp_004",
+    "BG34_PreMadeChamp_013",
+    "BG34_PreMadeChamp_020",
+    "BG34_PreMadeChamp_032",
+    "BG34_PreMadeChamp_049",
+    "BG34_PreMadeChamp_065",
+    "BG34_PreMadeChamp_083",
+    "BG34_PreMadeChamp_200"
+  ],
+  "cards": [
+    {
+      "id": "BG34_Giant_008",
+      "name": "时空扭曲先知",
+      "tier": 3,
+      "attack": 8,
+      "health": 8,
+      "cost": 2,
+      "text": "每回合中，有两张酒馆法术的消耗减少（2）。（还剩2张！）",
+      "races": [
+        "DEMON",
+        "NAGA"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每回合中，有四张酒馆法术的消耗减少（2）。（还剩4张！）",
+      "goldenAttack": 16,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_015",
+      "name": "时空扭曲钩尾",
+      "tier": 5,
+      "attack": 6,
+      "health": 12,
+      "cost": 2,
+      "text": "每当你施放一个酒馆法术，使你的随从获得+2/+2。",
+      "races": [
+        "DRAGON",
+        "PIRATE"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当你施放一个酒馆法术，使你的随从获得+2/+2，触发两次。",
+      "goldenAttack": 12,
+      "goldenHealth": 24
+    },
+    {
+      "id": "BG34_Giant_021",
+      "name": "时空扭曲希尔梵",
+      "tier": 5,
+      "attack": 7,
+      "health": 10,
+      "cost": 2,
+      "text": "在你的回合结束时，使相邻的随从获得+8/+8。每有一个友方金色随从，重复一次。",
+      "races": [
+        "PIRATE"
+      ],
+      "mechanics": [
+        "END_OF_TURN_TRIGGER"
+      ],
+      "goldenText": "在你的回合结束时，使相邻的随从获得+16/+16。每有一个友方金色随从，重复一次。",
+      "goldenAttack": 14,
+      "goldenHealth": 20
+    },
+    {
+      "id": "BG34_Giant_024",
+      "name": "时空扭曲黏冻大肚怪",
+      "tier": 3,
+      "attack": 5,
+      "health": 6,
+      "cost": 2,
+      "text": "在一个友方随从复生后，使你的随从永久获得+2/+2。",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在一个友方随从复生后，使你的随从永久获得+4/+4。",
+      "goldenAttack": 10,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_027",
+      "name": "时空扭曲帝国之手",
+      "tier": 3,
+      "attack": 8,
+      "health": 8,
+      "cost": 2,
+      "text": "每当一个友方随从受到攻击时，使其永久获得+8攻击力。",
+      "races": [],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当一个友方随从受到攻击时，使其永久获得+16攻击力。",
+      "goldenAttack": 16,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_032",
+      "name": "时空扭曲诺米",
+      "tier": 5,
+      "attack": 10,
+      "health": 10,
+      "cost": 2,
+      "text": "在你使用一张元素牌后，使酒馆中的随从在本局对战中获得+4/+3。",
+      "races": [],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你使用一张元素牌后，使酒馆中的随从在本局对战中获得+8/+6。",
+      "goldenAttack": 20,
+      "goldenHealth": 20
+    },
+    {
+      "id": "BG34_Giant_034",
+      "name": "时空扭曲恶鬼",
+      "tier": 5,
+      "attack": 10,
+      "health": 6,
+      "cost": 2,
+      "text": "亡语：在本局对战中，你的酒馆法术使随从额外获得+2/+2。",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "DEATHRATTLE"
+      ],
+      "goldenText": "亡语：在本局对战中，你的酒馆法术使随从额外获得+4/+4。",
+      "goldenAttack": 20,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_038",
+      "name": "时空扭曲伊莉斯",
+      "tier": 3,
+      "attack": 6,
+      "health": 7,
+      "cost": 2,
+      "text": "在你刷新5次后，使酒馆中等级最高的随从变为金色。（还剩5次！）",
+      "races": [],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你刷新5次后，使酒馆中等级最高的两个随从变为金色。（还剩5次！）",
+      "goldenAttack": 12,
+      "goldenHealth": 14
+    },
+    {
+      "id": "BG34_Giant_042",
+      "name": "时空扭曲变色龙",
+      "tier": 5,
+      "attack": 6,
+      "health": 15,
+      "cost": 2,
+      "text": "战斗开始时：变形成为本随从左边的随从的复制。",
+      "races": [
+        "BEAST"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "战斗开始时：变形成为本随从左边的随从的金色复制。",
+      "goldenAttack": 12,
+      "goldenHealth": 30
+    },
+    {
+      "id": "BG34_Giant_064",
+      "name": "时空扭曲雏龙走私商",
+      "tier": 3,
+      "attack": 3,
+      "health": 8,
+      "cost": 2,
+      "text": "每当一个友方随从获得攻击力，使其获得+3生命值。",
+      "races": [],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当一个友方随从获得攻击力，使其获得+6生命值。",
+      "goldenAttack": 6,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_065",
+      "name": "时空扭曲低保真飞龙",
+      "tier": 3,
+      "attack": 10,
+      "health": 10,
+      "cost": 2,
+      "text": "在你的回合结束时，使你攻击力低于本随从的随从获得+2攻击力。然后依此法检定并获得生命值。",
+      "races": [
+        "DRAGON"
+      ],
+      "mechanics": [
+        "END_OF_TURN_TRIGGER"
+      ],
+      "goldenText": "在你的回合结束时，使你攻击力低于本随从的随从获得+4攻击力。然后依此法检定并获得生命值。",
+      "goldenAttack": 20,
+      "goldenHealth": 20
+    },
+    {
+      "id": "BG34_Giant_067",
+      "name": "时空扭曲商贩元素",
+      "tier": 3,
+      "attack": 8,
+      "health": 8,
+      "cost": 2,
+      "text": "在你的回合结束时，获取一张商贩元素。",
+      "races": [
+        "ELEMENTAL"
+      ],
+      "mechanics": [
+        "END_OF_TURN_TRIGGER"
+      ],
+      "goldenText": "在你的回合结束时，获取2张商贩元素。",
+      "goldenAttack": 16,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_068",
+      "name": "时空扭曲齿械保镖",
+      "tier": 3,
+      "attack": 5,
+      "health": 10,
+      "cost": 2,
+      "text": "圣盾。进击：使一个不同的友方随从永久获得圣盾。",
+      "races": [
+        "MECHANICAL"
+      ],
+      "mechanics": [
+        "BACON_RALLY",
+        "DIVINE_SHIELD"
+      ],
+      "goldenText": "圣盾。进击：使2个不同的友方随从永久获得圣盾。",
+      "goldenAttack": 10,
+      "goldenHealth": 20
+    },
+    {
+      "id": "BG34_Giant_069",
+      "name": "时空扭曲吹笛人",
+      "tier": 3,
+      "attack": 2,
+      "health": 8,
+      "cost": 2,
+      "text": "每当本随从受到伤害，在本局对战中，你的鲜血宝石使随从额外获得+1攻击力。（每场战斗限3次。）3每当本随从受到伤害，在本局对战中，你的鲜血宝石使随从额外获得+1攻击力。（还剩3次！）",
+      "races": [
+        "QUILBOAR"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当本随从受到伤害，在本局对战中，你的鲜血宝石使随从额外获得+2攻击力。（每场战斗限3次。）3每当本随从受到伤害，在本局对战中，你的鲜血宝石使随从额外获得+2攻击力。（还剩3次！）",
+      "goldenAttack": 4,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_072",
+      "name": "时空扭曲弹跳鱼",
+      "tier": 3,
+      "attack": 5,
+      "health": 6,
+      "cost": 2,
+      "text": "在你出售一个等级2的随从后，随机获取一张等级1的随从牌。",
+      "races": [
+        "MURLOC"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你出售一个等级2的随从后，随机获取两张等级1的随从牌。",
+      "goldenAttack": 10,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_082",
+      "name": "时空扭曲回收师",
+      "tier": 3,
+      "attack": 2,
+      "health": 7,
+      "cost": 2,
+      "text": "复仇（4）：你的铸币上限提高（1）枚。",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "AVENGE"
+      ],
+      "goldenText": "复仇（4）：你的铸币上限提高（2）枚。",
+      "goldenAttack": 4,
+      "goldenHealth": 14
+    },
+    {
+      "id": "BG34_Giant_088",
+      "name": "时空扭曲增强幼龙",
+      "tier": 5,
+      "attack": 6,
+      "health": 6,
+      "cost": 2,
+      "text": "战斗开始时：使你的随从获得+5/+5。在你的回合结束时，提升此效果。",
+      "races": [
+        "DRAGON"
+      ],
+      "mechanics": [
+        "START_OF_COMBAT",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "战斗开始时：使你的随从获得+10/+10。在你的回合结束时，提升此效果。",
+      "goldenAttack": 12,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_102",
+      "name": "时空扭曲狂棍野猪人",
+      "tier": 5,
+      "attack": 7,
+      "health": 14,
+      "cost": 2,
+      "text": "风怒。进击：本随从对你的所有其他随从各使用2张永久的鲜血宝石。",
+      "races": [
+        "QUILBOAR"
+      ],
+      "mechanics": [
+        "BACON_RALLY",
+        "WINDFURY"
+      ],
+      "goldenText": "风怒。进击：本随从对你的所有其他随从各使用4张永久的鲜血宝石。",
+      "goldenAttack": 14,
+      "goldenHealth": 28
+    },
+    {
+      "id": "BG34_Giant_105",
+      "name": "时空扭曲套索牛仔",
+      "tier": 5,
+      "attack": 7,
+      "health": 5,
+      "cost": 2,
+      "text": "在你对本随从使用一张鲜血宝石后，施放鲜血宝石弹幕。",
+      "races": [
+        "QUILBOAR"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你对本随从使用一张鲜血宝石后，施放鲜血宝石弹幕，触发两次。",
+      "goldenAttack": 14,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_120",
+      "name": "时空扭曲解译者",
+      "tier": 5,
+      "attack": 6,
+      "health": 8,
+      "cost": 2,
+      "text": "每当你使用或磁力吸附一个机械时，使你的机械获得+3/+3。",
+      "races": [
+        "MECHANICAL"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当你使用或磁力吸附一个机械时，使你的机械获得+6/+6。",
+      "goldenAttack": 12,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_204",
+      "name": "时空扭曲匪贼",
+      "tier": 3,
+      "attack": 4,
+      "health": 3,
+      "cost": 2,
+      "text": "嘲讽。复生。亡语：获取一张酒馆币。",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "DEATHRATTLE",
+        "REBORN",
+        "TAUNT"
+      ],
+      "goldenText": "嘲讽。复生。亡语：获取2张酒馆币。",
+      "goldenAttack": 8,
+      "goldenHealth": 6
+    },
+    {
+      "id": "BG34_Giant_205",
+      "name": "时空扭曲娜拉",
+      "tier": 5,
+      "attack": 12,
+      "health": 12,
+      "cost": 2,
+      "text": "每当你施放一个法术，使每个类型的各一个友方随从获得+4/+3。",
+      "races": [],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当你施放一个法术，使每个类型的各一个友方随从获得+8/+6。",
+      "goldenAttack": 24,
+      "goldenHealth": 24
+    },
+    {
+      "id": "BG34_Giant_208",
+      "name": "时空扭曲帕格",
+      "tier": 3,
+      "attack": 8,
+      "health": 6,
+      "cost": 2,
+      "text": "每场战斗一次：当本随从攻击并消灭一个随从时，获取一份三连奖励。",
+      "races": [
+        "PIRATE"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每场战斗一次：当本随从攻击并消灭一个随从时，获取2份三连奖励。",
+      "goldenAttack": 16,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_210",
+      "name": "时空扭曲滩头指挥官",
+      "tier": 3,
+      "attack": 5,
+      "health": 5,
+      "cost": 2,
+      "text": "塑造法术：每有一个友方纳迦，使一个随从获得+2/+2。",
+      "races": [
+        "NAGA"
+      ],
+      "mechanics": [
+        "BACON_SPELLCRAFT_ID",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "塑造法术：每有一个友方纳迦，使一个随从获得+4/+4。",
+      "goldenAttack": 10,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_211",
+      "name": "时空扭曲帕什玛",
+      "tier": 3,
+      "attack": 9,
+      "health": 10,
+      "cost": 2,
+      "text": "复仇（3）：随机获取塑造法术的法术牌和酒馆法术牌各一张。",
+      "races": [
+        "NAGA"
+      ],
+      "mechanics": [
+        "AVENGE"
+      ],
+      "goldenText": "复仇（3）：随机获取塑造法术的法术牌和酒馆法术牌各2张。",
+      "goldenAttack": 18,
+      "goldenHealth": 20
+    },
+    {
+      "id": "BG34_Giant_302",
+      "name": "时空扭曲旋翼机",
+      "tier": 3,
+      "attack": 4,
+      "health": 6,
+      "cost": 2,
+      "text": "圣盾。复仇（3）：随机获取一张机械牌。",
+      "races": [
+        "MECHANICAL"
+      ],
+      "mechanics": [
+        "AVENGE",
+        "DIVINE_SHIELD"
+      ],
+      "goldenText": "圣盾。复仇（3）：随机获取2张机械牌。",
+      "goldenAttack": 8,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_304",
+      "name": "时空扭曲工兵",
+      "tier": 3,
+      "attack": 10,
+      "health": 6,
+      "cost": 2,
+      "text": "嘲讽。亡语：获取一张恶鳞套餐。",
+      "races": [
+        "NAGA"
+      ],
+      "mechanics": [
+        "DEATHRATTLE",
+        "TAUNT"
+      ],
+      "goldenText": "嘲讽。亡语：获取2张恶鳞套餐。",
+      "goldenAttack": 20,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_305",
+      "name": "时空扭曲地卜师",
+      "tier": 3,
+      "attack": 2,
+      "health": 9,
+      "cost": 2,
+      "text": "复仇（5）：获取一张鲜血宝石。在本局对战中，你的鲜血宝石使随从额外获得+1/+1。",
+      "races": [
+        "QUILBOAR"
+      ],
+      "mechanics": [
+        "AVENGE"
+      ],
+      "goldenText": "复仇（5）：获取一张鲜血宝石。在本局对战中，你的鲜血宝石使随从额外获得+2/+2。",
+      "goldenAttack": 4,
+      "goldenHealth": 18
+    },
+    {
+      "id": "BG34_Giant_306",
+      "name": "时空扭曲爵士乐手",
+      "tier": 3,
+      "attack": 5,
+      "health": 3,
+      "cost": 2,
+      "text": "亡语：在本局对战中，你的鲜血宝石会额外获得+2生命值。",
+      "races": [
+        "QUILBOAR"
+      ],
+      "mechanics": [
+        "DEATHRATTLE"
+      ],
+      "goldenText": "亡语：在本局对战中，你的鲜血宝石会额外获得+4生命值。",
+      "goldenAttack": 10,
+      "goldenHealth": 6
+    },
+    {
+      "id": "BG34_Giant_310",
+      "name": "时空扭曲哀歌者",
+      "tier": 3,
+      "attack": 3,
+      "health": 5,
+      "cost": 2,
+      "text": "在你的回合结束时，使你手牌中和场上的随从获得+2/+1。",
+      "races": [
+        "MURLOC"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你的回合结束时，使你手牌中和场上的随从获得+4/+2。",
+      "goldenAttack": 6,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_311",
+      "name": "时空扭曲破坏魔",
+      "tier": 5,
+      "attack": 4,
+      "health": 2,
+      "cost": 2,
+      "text": "每当一个随从被吞食，本随从获得其属性值。",
+      "races": [
+        "DEMON"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当一个随从被吞食，本随从获得其双倍属性值。",
+      "goldenAttack": 8,
+      "goldenHealth": 4
+    },
+    {
+      "id": "BG34_Giant_313",
+      "name": "时空扭曲基尔加丹",
+      "tier": 5,
+      "attack": 7,
+      "health": 7,
+      "cost": 2,
+      "text": "每当酒馆刷新，酒馆额外提供两个具有+7/+7的恶魔。（每回合都会升级！）",
+      "races": [
+        "DEMON"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当酒馆刷新，酒馆额外提供两个具有+14/+14的恶魔。（每回合都会升级！）",
+      "goldenAttack": 14,
+      "goldenHealth": 14
+    },
+    {
+      "id": "BG34_Giant_317",
+      "name": "时空扭曲远行者",
+      "tier": 5,
+      "attack": 6,
+      "health": 12,
+      "cost": 2,
+      "text": "嘲讽。圣盾。在本随从获得属性值后，还会使你手牌中最左边的两张随从牌获得属性值。",
+      "races": [
+        "MURLOC"
+      ],
+      "mechanics": [
+        "DIVINE_SHIELD",
+        "TAUNT",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "嘲讽。圣盾。在本随从获得属性值后，还会使你手牌中最左边的两张随从牌获得双倍属性值。",
+      "goldenAttack": 12,
+      "goldenHealth": 24
+    },
+    {
+      "id": "BG34_Giant_319",
+      "name": "时空扭曲鱼人画家",
+      "tier": 5,
+      "attack": 4,
+      "health": 9,
+      "cost": 2,
+      "text": "在你的回合结束时，使相邻的随从获得+3/+2。在你使用一张等级3或以下的牌后提升此效果。",
+      "races": [
+        "MURLOC"
+      ],
+      "mechanics": [
+        "END_OF_TURN_TRIGGER",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你的回合结束时，使相邻的随从获得+6/+4。在你使用一张等级3或以下的牌后提升此效果。",
+      "goldenAttack": 8,
+      "goldenHealth": 18
+    },
+    {
+      "id": "BG34_Giant_321",
+      "name": "时空扭曲合唱鱼人",
+      "tier": 5,
+      "attack": 8,
+      "health": 8,
+      "cost": 2,
+      "text": "战斗开始时：使相邻的鱼人获得你手牌中所有随从牌的属性值。",
+      "races": [
+        "MURLOC"
+      ],
+      "mechanics": [
+        "START_OF_COMBAT",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "战斗开始时：使相邻的鱼人获得你手牌中所有随从牌的属性值，触发两次。",
+      "goldenAttack": 16,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_323",
+      "name": "时空扭曲秘书",
+      "tier": 5,
+      "attack": 5,
+      "health": 11,
+      "cost": 2,
+      "text": "在你施放2个塑造法术的法术后，随机获取一张酒馆法术牌。（还剩2个！）",
+      "races": [
+        "NAGA"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你施放2个塑造法术的法术后，随机获取两张酒馆法术牌。（还剩2个！）",
+      "goldenAttack": 10,
+      "goldenHealth": 22
+    },
+    {
+      "id": "BG34_Giant_327",
+      "name": "时空扭曲佩吉",
+      "tier": 5,
+      "attack": 9,
+      "health": 5,
+      "cost": 2,
+      "text": "每当一张卡牌被置入你的手牌，使你的海盗获得+1/+1。",
+      "races": [
+        "PIRATE"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当一张卡牌被置入你的手牌，使你的海盗获得+1/+1，触发两次。",
+      "goldenAttack": 18,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_332",
+      "name": "时空扭曲入殓师",
+      "tier": 3,
+      "attack": 10,
+      "health": 10,
+      "cost": 2,
+      "text": "每回合中，你召唤的一个随从获得复生。（还剩1个！）",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每回合中，你召唤的两个随从获得复生。（还剩2个！）",
+      "goldenAttack": 20,
+      "goldenHealth": 20
+    },
+    {
+      "id": "BG34_Giant_335",
+      "name": "时空扭曲西塔尔",
+      "tier": 5,
+      "attack": 8,
+      "health": 8,
+      "cost": 2,
+      "text": "在你使用没有类型的随从牌后，使每个类型的各一个友方随从获得+6/+6。",
+      "races": [
+        "ALL"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你使用没有类型的随从牌后，使每个类型的各一个友方随从获得+12/+12。",
+      "goldenAttack": 16,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_336",
+      "name": "时空扭曲融合怪",
+      "tier": 5,
+      "attack": 7,
+      "health": 9,
+      "cost": 2,
+      "text": "在你使用一张随从牌后，在本局对战中使酒馆中该类型的随从获得+4/+4。",
+      "races": [
+        "ALL"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你使用一张随从牌后，在本局对战中使酒馆中该类型的随从获得+4/+4，触发两次。",
+      "goldenAttack": 14,
+      "goldenHealth": 18
+    },
+    {
+      "id": "BG34_Giant_362",
+      "name": "时空扭曲戈德林",
+      "tier": 5,
+      "attack": 6,
+      "health": 6,
+      "cost": 2,
+      "text": "亡语：在本局对战中，你的野兽拥有+4/+4（无论它们在哪）。",
+      "races": [
+        "BEAST"
+      ],
+      "mechanics": [
+        "DEATHRATTLE"
+      ],
+      "goldenText": "亡语：在本局对战中，你的野兽拥有+8/+8（无论它们在哪）。",
+      "goldenAttack": 12,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_Giant_370",
+      "name": "时空扭曲陆行鸟",
+      "tier": 5,
+      "attack": 8,
+      "health": 4,
+      "cost": 2,
+      "text": "战斗开始时：触发所有友方亡语。",
+      "races": [
+        "BEAST"
+      ],
+      "mechanics": [
+        "START_OF_COMBAT",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "战斗开始时：触发所有友方亡语，触发两次。",
+      "goldenAttack": 16,
+      "goldenHealth": 8
+    },
+    {
+      "id": "BG34_Giant_376",
+      "name": "时空扭曲戴欧斯",
+      "tier": 5,
+      "attack": 6,
+      "health": 10,
+      "cost": 2,
+      "text": "你的战吼，亡语和进击会触发两次。",
+      "races": [],
+      "mechanics": [
+        "AURA"
+      ],
+      "goldenText": "你的战吼，亡语和进击会触发三次。",
+      "goldenAttack": 12,
+      "goldenHealth": 20
+    },
+    {
+      "id": "BG34_Giant_582",
+      "name": "时空扭曲孢子蝠",
+      "tier": 3,
+      "attack": 9,
+      "health": 2,
+      "cost": 2,
+      "text": "嘲讽。亡语：随机获取一张消耗为（2）或以上的酒馆法术牌。",
+      "races": [
+        "BEAST"
+      ],
+      "mechanics": [
+        "DEATHRATTLE",
+        "TAUNT"
+      ],
+      "goldenText": "嘲讽。亡语：随机获取2张消耗为（2）或以上的酒馆法术牌。",
+      "goldenAttack": 18,
+      "goldenHealth": 4
+    },
+    {
+      "id": "BG34_Giant_590",
+      "name": "时空扭曲烂肠",
+      "tier": 3,
+      "attack": 7,
+      "health": 3,
+      "cost": 2,
+      "text": "亡语：召唤并获取一个随机亡灵造物。",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "DEATHRATTLE"
+      ],
+      "goldenText": "亡语：召唤并获取2个随机亡灵造物。",
+      "goldenAttack": 14,
+      "goldenHealth": 6
+    },
+    {
+      "id": "BG34_Giant_599",
+      "name": "时空扭曲飓风机甲",
+      "tier": 5,
+      "attack": 7,
+      "health": 5,
+      "cost": 2,
+      "text": "战斗开始时：复制你最左边的两个亡语（其他飓风机甲的除外）。",
+      "races": [
+        "MECHANICAL"
+      ],
+      "mechanics": [
+        "START_OF_COMBAT",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "战斗开始时：复制你最左边的两个亡语，复制两次（其他飓风机甲的除外）。",
+      "goldenAttack": 14,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_602",
+      "name": "时空扭曲的雷",
+      "tier": 3,
+      "attack": 3,
+      "health": 5,
+      "cost": 2,
+      "text": "在你的回合开始时，获取你的英雄技能对应的伙伴。",
+      "races": [],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你的回合开始时，获取你的英雄技能对应的伙伴的2张复制。",
+      "goldenAttack": 6,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_603",
+      "name": "时空扭曲护灯人",
+      "tier": 3,
+      "attack": 7,
+      "health": 5,
+      "cost": 2,
+      "text": "在你的回合结束时，随机获取2张能使随从获得属性值的酒馆法术牌。",
+      "races": [],
+      "mechanics": [
+        "END_OF_TURN_TRIGGER"
+      ],
+      "goldenText": "在你的回合结束时，随机获取4张能使随从获得属性值的酒馆法术牌。",
+      "goldenAttack": 14,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_608",
+      "name": "时空扭曲小野猪",
+      "tier": 5,
+      "attack": 5,
+      "health": 5,
+      "cost": 2,
+      "text": "复生。亡语：本随从对你的所有野猪人各使用3张鲜血宝石。",
+      "races": [
+        "QUILBOAR"
+      ],
+      "mechanics": [
+        "DEATHRATTLE",
+        "REBORN"
+      ],
+      "goldenText": "复生。亡语：本随从对你的所有野猪人各使用6张鲜血宝石。",
+      "goldenAttack": 10,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_609",
+      "name": "时空扭曲食尸卡布拉",
+      "tier": 5,
+      "attack": 6,
+      "health": 15,
+      "cost": 2,
+      "text": "在你触发一个亡语后，使你的随从永久获得+3/+2。",
+      "races": [
+        "UNDEAD",
+        "BEAST"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你触发一个亡语后，使你的随从永久获得+6/+4。",
+      "goldenAttack": 12,
+      "goldenHealth": 30
+    },
+    {
+      "id": "BG34_Giant_610",
+      "name": "时空扭曲电荷金刚",
+      "tier": 5,
+      "attack": 9,
+      "health": 9,
+      "cost": 2,
+      "text": "在你施放2个酒馆法术后，为你的所有机械磁力吸附一个4/4的卫星。（还剩2个！）",
+      "races": [
+        "MECHANICAL"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你施放2个酒馆法术后，为你的所有机械磁力吸附一个4/4的卫星，触发两次。（还剩2个！）",
+      "goldenAttack": 18,
+      "goldenHealth": 18
+    },
+    {
+      "id": "BG34_Giant_618",
+      "name": "时空扭曲看管者",
+      "tier": 5,
+      "attack": 5,
+      "health": 5,
+      "cost": 2,
+      "text": "亡语：召唤五个1/1的骷髅。每有一个放不下的骷髅，使你的亡灵在本局对战中获得+1攻击力（无论它们在哪）。",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "DEATHRATTLE"
+      ],
+      "goldenText": "亡语：召唤十个1/1的骷髅。每有一个放不下的骷髅，使你的亡灵在本局对战中获得+1攻击力（无论它们在哪）。",
+      "goldenAttack": 10,
+      "goldenHealth": 10
+    },
+    {
+      "id": "BG34_Giant_619",
+      "name": "时空扭曲驼鹿",
+      "tier": 5,
+      "attack": 8,
+      "health": 2,
+      "cost": 2,
+      "text": "亡语：召唤并获取来自一个随机对手的战队的一个随从。",
+      "races": [
+        "BEAST"
+      ],
+      "mechanics": [
+        "DEATHRATTLE"
+      ],
+      "goldenText": "亡语：召唤并获取来自一个随机对手的战队的一个随从，触发两次。",
+      "goldenAttack": 16,
+      "goldenHealth": 4
+    },
+    {
+      "id": "BG34_Giant_656",
+      "name": "时空扭曲滑油机器人",
+      "tier": 5,
+      "attack": 6,
+      "health": 12,
+      "cost": 2,
+      "text": "圣盾。在一个友方随从失去圣盾后，使你的随从永久获得+3/+3。",
+      "races": [
+        "MECHANICAL"
+      ],
+      "mechanics": [
+        "DIVINE_SHIELD",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "圣盾。在一个友方随从失去圣盾后，使你的随从永久获得+6/+6。",
+      "goldenAttack": 12,
+      "goldenHealth": 24
+    },
+    {
+      "id": "BG34_Giant_678",
+      "name": "时空扭曲熔岩潜伏者",
+      "tier": 5,
+      "attack": 8,
+      "health": 9,
+      "cost": 2,
+      "text": "在你从手牌中对一个随从施放塑造法术的法术后，还会对本随从施放一张永久的复制。（每回合两次。）2在你从手牌中对一个随从施放塑造法术的法术后，还会对本随从施放一张永久的复制。（还剩2次！）",
+      "races": [
+        "NAGA"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你从手牌中对一个随从施放塑造法术的法术后，还会对本随从施放2张永久的复制。（每回合两次。）2在你从手牌中对一个随从施放塑造法术的法术后，还会对本随从施放2张永久的复制。（还剩2次！）",
+      "goldenAttack": 16,
+      "goldenHealth": 18
+    },
+    {
+      "id": "BG34_Giant_686",
+      "name": "时空扭曲旋流",
+      "tier": 5,
+      "attack": 9,
+      "health": 9,
+      "cost": 2,
+      "text": "在本局对战中，你的元素使随从额外获得+3/+3。",
+      "races": [
+        "ELEMENTAL"
+      ],
+      "mechanics": [
+        "AURA"
+      ],
+      "goldenText": "在本局对战中，你的元素使随从额外获得+6/+6。",
+      "goldenAttack": 18,
+      "goldenHealth": 18
+    },
+    {
+      "id": "BG34_Giant_687",
+      "name": "时空扭曲巢穴群居虫",
+      "tier": 5,
+      "attack": 7,
+      "health": 7,
+      "cost": 2,
+      "text": "战吼，亡语，进击：在本局对战中，你的甲虫拥有+2/+2。召唤一只2/2的甲虫。",
+      "races": [
+        "BEAST"
+      ],
+      "mechanics": [
+        "BATTLECRY",
+        "BACON_RALLY",
+        "DEATHRATTLE"
+      ],
+      "goldenText": "战吼，亡语，进击：在本局对战中，你的甲虫拥有+4/+4。召唤两只2/2的甲虫。",
+      "goldenAttack": 14,
+      "goldenHealth": 14
+    },
+    {
+      "id": "BG34_Giant_777",
+      "name": "时空扭曲巨怪",
+      "tier": 5,
+      "attack": 9,
+      "health": 11,
+      "cost": 2,
+      "text": "嘲讽。在你购买一个元素后，获得其属性值。",
+      "races": [
+        "ELEMENTAL"
+      ],
+      "mechanics": [
+        "TAUNT",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "嘲讽。在你购买一个元素后，获得其双倍属性值。",
+      "goldenAttack": 18,
+      "goldenHealth": 22
+    },
+    {
+      "id": "BG34_PreMadeChamp_004",
+      "name": "时空扭曲丛林狮王",
+      "tier": 5,
+      "attack": 8,
+      "health": 12,
+      "cost": 2,
+      "text": "潜行。在你召唤一只野兽后，使其获得+4/+3。在你施放一个法术后提升。",
+      "races": [
+        "BEAST"
+      ],
+      "mechanics": [
+        "STEALTH",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "潜行。在你召唤一只野兽后，使其获得+8/+6。在你施放一个法术后提升。",
+      "goldenAttack": 16,
+      "goldenHealth": 24
+    },
+    {
+      "id": "BG34_PreMadeChamp_013",
+      "name": "时空扭曲小鬼渗透者",
+      "tier": 5,
+      "attack": 13,
+      "health": 7,
+      "cost": 2,
+      "text": "在你花掉8枚铸币后，使酒馆中的随从在本局对战中获得+3/+3。（还剩8枚！）",
+      "races": [
+        "DEMON"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你花掉8枚铸币后，使酒馆中的随从在本局对战中获得+6/+6。（还剩8枚！）",
+      "goldenAttack": 26,
+      "goldenHealth": 14
+    },
+    {
+      "id": "BG34_PreMadeChamp_020",
+      "name": "时空扭曲暮喉龙",
+      "tier": 5,
+      "attack": 6,
+      "health": 14,
+      "cost": 2,
+      "text": "复仇（1）：使你的龙获得+6/+4。",
+      "races": [
+        "DRAGON"
+      ],
+      "mechanics": [
+        "AVENGE"
+      ],
+      "goldenText": "复仇（1）：使你的龙获得+12/+8。",
+      "goldenAttack": 12,
+      "goldenHealth": 28
+    },
+    {
+      "id": "BG34_PreMadeChamp_032",
+      "name": "时空扭曲基材元素",
+      "tier": 5,
+      "attack": 8,
+      "health": 8,
+      "cost": 2,
+      "text": "圣盾。在你的回合结束时，获取一张寒热骤变。",
+      "races": [
+        "ELEMENTAL"
+      ],
+      "mechanics": [
+        "DIVINE_SHIELD",
+        "END_OF_TURN_TRIGGER"
+      ],
+      "goldenText": "圣盾。在你的回合结束时，获取2张寒热骤变。",
+      "goldenAttack": 16,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_PreMadeChamp_049",
+      "name": "时空扭曲惊涛鱼人",
+      "tier": 5,
+      "attack": 6,
+      "health": 14,
+      "cost": 2,
+      "text": "在你使用一张鱼人牌后，使你手牌中和场上的随从获得+2/+2。",
+      "races": [
+        "MURLOC"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你使用一张鱼人牌后，使你手牌中和场上的随从获得+4/+4。",
+      "goldenAttack": 12,
+      "goldenHealth": 28
+    },
+    {
+      "id": "BG34_PreMadeChamp_065",
+      "name": "时空扭曲劫掠者",
+      "tier": 5,
+      "attack": 14,
+      "health": 6,
+      "cost": 2,
+      "text": "在你使用一张等级4或以上的牌后，使你的海盗获得+3/+2。",
+      "races": [
+        "PIRATE"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你使用一张等级4或以上的牌后，使你的海盗获得+3/+2，触发两次。",
+      "goldenAttack": 28,
+      "goldenHealth": 12
+    },
+    {
+      "id": "BG34_PreMadeChamp_083",
+      "name": "时空扭曲阿努巴拉克",
+      "tier": 5,
+      "attack": 12,
+      "health": 8,
+      "cost": 2,
+      "text": "在你使用一张亡灵牌后，在本局对战中，你的亡灵额外拥有+3攻击力。",
+      "races": [
+        "UNDEAD"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你使用一张亡灵牌后，在本局对战中，你的亡灵额外拥有+6攻击力。",
+      "goldenAttack": 24,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_PreMadeChamp_200",
+      "name": "时空扭曲百夫长",
+      "tier": 5,
+      "attack": 8,
+      "health": 8,
+      "cost": 2,
+      "text": "在你施放一个酒馆法术后，额外获取它的一张复制。（每回合限3次。）3在你施放一个酒馆法术后，额外获取它的一张复制。（还剩3次！）",
+      "races": [
+        "DRAGON"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "在你施放一个酒馆法术后，额外获取它的2张复制。（每回合限3次。）3在你施放一个酒馆法术后，额外获取它的2张复制。（还剩3次！）",
+      "goldenAttack": 16,
+      "goldenHealth": 16
+    },
+    {
+      "id": "BG34_Giant_314",
+      "name": "时空扭曲诗心龙",
+      "tier": 5,
+      "attack": 6,
+      "health": 7,
+      "cost": 1,
+      "text": "圣盾。你的所有龙均可永久保留战斗阶段获得的额外关键词和属性值。",
+      "races": [
+        "DRAGON"
+      ],
+      "mechanics": [
+        "DIVINE_SHIELD",
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "圣盾。你的所有龙均可永久保留战斗阶段获得的额外关键词和双倍属性值。",
+      "goldenAttack": 12,
+      "goldenHealth": 14
+    },
+    {
+      "id": "TB_BaconShop_HERO_33_Buddy",
+      "name": "混合体",
+      "tier": 3,
+      "attack": 4,
+      "health": 4,
+      "cost": 0,
+      "text": "每当你的融合怪获得属性值时，本随从也会获得。",
+      "races": [
+        "ALL"
+      ],
+      "mechanics": [
+        "TRIGGER_VISUAL"
+      ],
+      "goldenText": "每当你的融合怪获得属性值时，本随从会获得双倍。",
+      "goldenAttack": 8,
+      "goldenHealth": 8
+    }
+  ]
+}

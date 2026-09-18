@@ -91,7 +91,7 @@ export class SelfPlayEnv {
     this.truncated = false; this.legalCache = undefined; this.tape = []; this.replays = [];
     this.store = this.createStore();
     this.scoped(() => {
-      const required = new Set<string>();
+      const required = new Set<string>(["畸变怪"]);
       const heroes: string[] = [];
       for (let i = 0; i < 8; i++) {
         const available = SEASON_HEROES.filter(h => !heroes.includes(h.id) && (!HERO_TRIBES[h.id] || required.has(HERO_TRIBES[h.id]) || required.size < 5));

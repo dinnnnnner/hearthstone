@@ -1,13 +1,13 @@
 import type { Game } from "../src/engine";
 import { previousScoutRounds, type ScoutRound } from "../src/scouting";
 
-export const WARBAND_TYPES = ["野兽", "机械", "鱼人", "恶魔", "龙", "元素", "纳迦", "海盗", "野猪人", "亡灵", "空场", "无种族", "混合"];
+export const WARBAND_TYPES = ["野兽", "机械", "鱼人", "恶魔", "龙", "元素", "畸变怪", "海盗", "野猪人", "亡灵", "空场", "无种族", "混合"];
 
 export function publicScouting(s: Game, rounds: ScoutRound[] | undefined) {
   return previousScoutRounds(rounds, s.turn).map(r => {
     const match = /^(\d+)(.+)$/.exec(r.warband);
     const type = match ? match[2] : r.warband;
-    if (!WARBAND_TYPES.includes(type)) throw Error(`Unknown public warband: ${r.warband}`);
+    if (!WARBAND_TYPES.includes(type) && type !== "纳迦") throw Error(`Unknown public warband: ${r.warband}`);
     const battle = r.battle;
     // Self-play names are unique. A non-ghost name absent from opponents is our own seat.
     const opponent = battle && s.opponents.find(o => o.name === battle.opponent);

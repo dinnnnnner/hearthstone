@@ -1,10 +1,25 @@
 {
   "season": 14,
-  "patch": "36.4.2",
-  "build": "251332",
-  "date": "2026-09-08",
-  "source": "https://api.hearthstonejson.com/v1/251332/zhCN/cards.json",
-  "sha256": "81b3a31ad21278d88d315087fa0fbe81569bf982d15dc880071c5ca6b606f9e3",
-  "poolDefinition": "isBattlegroundsPoolMinion, non-Duos, Tier 1–6",
-  "trinketPoolVerified": false
+  "patch": "36.6.1-preview",
+  "build": "251952",
+  "date": "2026-09-18",
+  "source": "https://api.hearthstonejson.com/v1/251952/zhCN/cards.json",
+  "sha256": "d90375dd0143b621fb493e592dd60cdd3255aaf58e8a7019fc6c9a1962d27ee3",
+  "baseBuild": "251332",
+  "baseSource": "https://api.hearthstonejson.com/v1/251332/zhCN/cards.json",
+  "baseSha256": "81b3a31ad21278d88d315087fa0fbe81569bf982d15dc880071c5ca6b606f9e3",
+  "liveCardUpdates": [
+    "BG28_583",
+    "BG36_372"
+  ],
+  "rulesSources": {
+    "patch": "https://news.blizzard.com/en-us/article/24294373/36-6-patch-notes",
+    "livePool": "https://us.forums.blizzard.com/en/hearthstone/t/366-highlights-known-issues/153567/1",
+    "bans": "https://us.forums.blizzard.com/en/hearthstone/t/bans-what-and-where/151289",
+    "scheduled": "https://hearthstone.blizzard.com/en-us/news/24302091/aberrations-join-battlegrounds-at-blizzcon"
+  },
+  "poolDefinition": "Explicit 36.6.1 announcement pool; preview enabled by user before official launch; non-Duos, Tier 1–6",
+  "trinketPoolVerified": false,
+  "preview": true,
+  "scheduledRelease": "2026-09-22"
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
-    "test": "tsx --test src/engine.test.ts src/ai-action-limits.test.ts src/season/engine.test.ts src/season/ai-hero-pool.test.ts src/scouting.test.ts src/practice.test.ts src/ranking.test.ts src/table/presentation.test.ts",
+    "test": "tsx --test src/engine.test.ts src/ai-action-limits.test.ts src/ai-watch.test.ts src/season/engine.test.ts src/season/trinkets.test.ts src/season/current-rules.test.ts src/season/preview.test.ts src/season/ai-hero-pool.test.ts src/scouting.test.ts src/practice.test.ts src/ranking.test.ts src/table/presentation.test.ts",
     "test:e2e": "playwright test",
     "build:site": "TAVERN_BASE=/tavern/ npm run build && python3 scripts/package-site.py",
     "build:server": "node scripts/build-server.mjs",
@@ -17,7 +17,7 @@
     "test:search": "tsc -p rl/tsconfig.json && tsx --test rl/recruit-search.test.ts rl/gold-planning.test.ts && bash rl/run.sh test -p test_recruit_search.py",
     "test:rl": "tsc -p rl/tsconfig.json && tsx --test rl/environment.test.ts",
     "package:rl": "npm run build:rl && npm run build:search && npm run build:scene && python3 scripts/package-rl.py",
-    "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts server/persistence.test.ts server/pairing.test.ts server/neural.test.ts server/demonstrations.test.ts"
+    "test:server": "npm run build:server && tsx --test server/rooms.test.ts server/http.test.ts server/persistence.test.ts server/pairing.test.ts server/neural.test.ts server/spectator.test.ts server/judgment.test.ts rl/basic-evaluation.test.ts server/demonstrations.test.ts"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

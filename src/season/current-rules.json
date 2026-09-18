@@ -1,0 +1,46 @@
+{
+  "season": 14,
+  "patch": "36.6.1-preview",
+  "build": "251952",
+  "baseBuild": "251332",
+  "asOf": "2026-09-18",
+  "released": "2026-09-15",
+  "liveCardUpdates": [
+    "BG28_583",
+    "BG36_372"
+  ],
+  "bannedMinions": [
+    "BGS_121"
+  ],
+  "bannedGifts": [
+    "BG36_MidGameEffect_000t4"
+  ],
+  "scheduledPatch": "36.6.1",
+  "scheduledRelease": "2026-09-22",
+  "sources": {
+    "patch": "https://news.blizzard.com/en-us/article/24294373/36-6-patch-notes",
+    "livePool": "https://us.forums.blizzard.com/en/hearthstone/t/366-highlights-known-issues/153567/1",
+    "bans": "https://us.forums.blizzard.com/en/hearthstone/t/bans-what-and-where/151289",
+    "scheduled": "https://hearthstone.blizzard.com/en-us/news/24302091/aberrations-join-battlegrounds-at-blizzcon"
+  },
+  "preview": true,
+  "requiredTribes": [
+    "畸变怪"
+  ],
+  "retiredTribes": [
+    "纳迦"
+  ],
+  "heroBans": [
+    "BG22_HERO_007",
+    "BG23_HERO_304",
+    "BG23_HERO_306",
+    "BG34_HERO_004",
+    "BG34_HERO_000"
+  ],
+  "deityRestrictedHeroes": [
+    "s14_curator",
+    "s14_lich",
+    "s14_teron",
+    "s14_nzoth"
+  ]
+}

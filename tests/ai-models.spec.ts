@@ -13,7 +13,7 @@ test('choose each AI model, keep it on reconnect, and share the choice in friend
     return response.json();
   };
   const options = (await api('/models')).models;
-  expect(options.slice(0, 3).map((m: { label: string }) => m.label)).toEqual(['64 层模型', '256 层模型', '1024 层模型']);
+  expect(options.slice(0, 3).map((m: { id: string }) => m.id)).toEqual(['deep64-1480', 'deep256-1164', 'deep1024-612']);
   expect(new Set(options.map((m: { id: string }) => m.id)).size).toBe(options.length);
   try {
     await page.goto(path);

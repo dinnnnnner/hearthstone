@@ -1,8 +1,7 @@
 // Serving projection for the 780-episode v3 policy. Keep independent of new training schemas.
-import { ALL_CARDS } from "../src/data";
+import frozenSchema from "./neural-legacy-schema.json" with { type: "json" };
 import { type Game, type Minion, heroPowerState } from "../src/engine";
-import { SEASON_HEROES, GIFTS } from "../src/season/catalog";
-import { TRINKETS, minionCost, spellCost, refreshPayment } from "../src/season/engine";
+import { minionCost, spellCost, refreshPayment } from "../src/season/engine";
 import { equippedPowers, powerProgress } from "../src/season/powers";
 import { assertActionBounds } from "../rl/actions";
 
@@ -12,7 +11,7 @@ export const ZONES = ["global", "board", "shop", "spellShop", "hand", "discovery
 export const SIZES = [1, 7, 16, 7, 10, 4, 7, 7, 2, 4, 4, 4];
 export const OFFSETS = SIZES.map((_, i) => SIZES.slice(0, i).reduce((a, b) => a + b, 0));
 export const ENTITY_COUNT = SIZES.reduce((a, b) => a + b, 0);
-export const IDS = [...new Set([...ALL_CARDS.map(c => c.id), ...SEASON_HEROES.map(h => h.id), ...TRINKETS.map(t => t.id), ...GIFTS.map(g => g.id)])].sort();
+export const IDS = frozenSchema.ids;
 const idMap = new Map(IDS.map((id, index) => [id, index + 1]));
 const identity = (id: string) => {
   const result = idMap.get(id);
@@ -22,18 +21,9 @@ const identity = (id: string) => {
 type Detail = Record<string, unknown>;
 export interface Entity { id: number; zone: number; position: number; details: Detail }
 
-// Static rule descriptions are supplied once in metadata, without artwork or names.
-export const DEFINITIONS: Record<string, Detail> = {};
-for (const c of ALL_CARDS) DEFINITIONS[identity(c.id)] = {
-  kind: c.kind || "minion", tier: c.tier, attack: c.attack, health: c.health,
-  cost: c.cost, effect: c.effect, spellSchool: c.spellSchool, mechanics: c.mechanics, token: c.token, tribe: c.tribe, races: c.races, keywords: c.keywords,
-  magnetic: c.magnetic, activateCost: c.activateCost, abilities: c.abilities || [],
-  goldenAttack: c.goldenAttack, goldenHealth: c.goldenHealth,
-};
-for (const h of SEASON_HEROES) DEFINITIONS[identity(h.id)] = { kind: "hero", cost: h.cost, passive: h.passive };
-for (const t of TRINKETS) DEFINITIONS[identity(t.id)] = { kind: "trinket" };
-for (const g of GIFTS) DEFINITIONS[identity(g.id)] = { kind: "gift" };
-export const ENTITY_SCHEMA = { version: 2, ids: IDS, definitions: DEFINITIONS, zones: ZONES, sizes: SIZES, offsets: OFFSETS, count: ENTITY_COUNT };
+// Freeze identities and definitions together: checkpoints were trained with these exact values.
+export const DEFINITIONS: Record<string, Detail> = frozenSchema.definitions;
+export const ENTITY_SCHEMA = frozenSchema;
 
 /** Full dynamic own-card effects, with instance links converted to visible slot indices. */
 function cardDetails(m: Minion, ref: (uid: string) => number, historical = false): Detail {

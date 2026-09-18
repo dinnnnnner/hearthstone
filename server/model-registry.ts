@@ -11,7 +11,8 @@ export function configuredModels(path: string, maxKbps: number): NeuralModel[] {
     if (!model || !/^[a-z0-9-]{1,80}$/.test(model.id) || typeof model.label !== 'string' ||
         !model.label || model.label.length > 80 || !/^[a-f0-9]{64}$/.test(model.checkpointSha256) ||
         !Number.isInteger(model.episodes) || model.episodes < 0 ||
-        (model.search !== undefined && typeof model.search !== 'boolean') || (model.search && model.profile !== 'scouting-v4'))
+        (model.search !== undefined && typeof model.search !== 'boolean') ||
+        (model.search && !['scouting-v4', 'trinkets-v5'].includes(model.profile)))
       throw Error('Invalid inference model configuration');
     const profile = inferenceProfile(model.profile);
     const infer = httpInference(model.url, { compress: true, budget });

@@ -1,0 +1,1855 @@
+{
+  "BG30_MagicItem_301": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_303": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_310": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG30_MagicItem_402": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_403": {
+    "types": []
+  },
+  "BG30_MagicItem_406": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_407": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_410": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_410t2": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_411": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_414": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_414t": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_416": {
+    "types": []
+  },
+  "BG30_MagicItem_418": {
+    "types": [
+      "龙",
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_419": {
+    "types": []
+  },
+  "BG30_MagicItem_420": {
+    "types": []
+  },
+  "BG30_MagicItem_420t": {
+    "types": []
+  },
+  "BG30_MagicItem_422": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_422t": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_423": {
+    "types": []
+  },
+  "BG30_MagicItem_425": {
+    "types": []
+  },
+  "BG30_MagicItem_426": {
+    "types": []
+  },
+  "BG30_MagicItem_426t": {
+    "types": []
+  },
+  "BG30_MagicItem_427": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG30_MagicItem_427t": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG30_MagicItem_429": {
+    "types": [
+      "恶魔",
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_430": {
+    "types": []
+  },
+  "BG30_MagicItem_431": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_432": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_432t": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_433": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_433t": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_434": {
+    "types": []
+  },
+  "BG30_MagicItem_435": {
+    "types": []
+  },
+  "BG30_MagicItem_437": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_438t": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_439": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_440": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_441": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_442": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_540": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG30_MagicItem_541": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG30_MagicItem_542": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_543": {
+    "types": []
+  },
+  "BG30_MagicItem_544": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_544t": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_545": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_546": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_547": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_547t": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_548": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_555": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_700": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_701": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG30_MagicItem_702": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_703": {
+    "types": []
+  },
+  "BG30_MagicItem_705": {
+    "types": []
+  },
+  "BG30_MagicItem_706": {
+    "types": []
+  },
+  "BG30_MagicItem_707": {
+    "types": []
+  },
+  "BG30_MagicItem_709": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_709t": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_710": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_711": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_713": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_714": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_777": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG30_MagicItem_801": {
+    "types": []
+  },
+  "BG30_MagicItem_803": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_804": {
+    "types": []
+  },
+  "BG30_MagicItem_821": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_821t2": {
+    "types": [
+      "野兽",
+      "机械",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_822": {
+    "types": [
+      "鱼人",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_822t2": {
+    "types": [
+      "鱼人",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_825": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_828": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_841": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG30_MagicItem_843t": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_847": {
+    "types": []
+  },
+  "BG30_MagicItem_864": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG30_MagicItem_868": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG30_MagicItem_869": {
+    "types": [
+      "恶魔",
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_876": {
+    "types": []
+  },
+  "BG30_MagicItem_879": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG30_MagicItem_879t": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG30_MagicItem_880": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_880t": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_886": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_888": {
+    "types": []
+  },
+  "BG30_MagicItem_891": {
+    "types": []
+  },
+  "BG30_MagicItem_900": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_900t": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_902": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_910": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_914": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_914t": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_916": {
+    "types": [
+      "龙",
+      "鱼人"
+    ]
+  },
+  "BG30_MagicItem_917": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_918": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_919": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_920": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_MagicItem_921": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_923": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_924": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_924t": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_925": {
+    "types": [
+      "海盗",
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_930": {
+    "types": []
+  },
+  "BG30_MagicItem_931": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG30_MagicItem_942": {
+    "types": [
+      "恶魔",
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_943": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_944": {
+    "types": []
+  },
+  "BG30_MagicItem_951": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_952": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_962": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_970": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_970t": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_971": {
+    "types": []
+  },
+  "BG30_MagicItem_972": {
+    "types": []
+  },
+  "BG30_MagicItem_973": {
+    "types": []
+  },
+  "BG30_MagicItem_978": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_979": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_981": {
+    "types": []
+  },
+  "BG30_MagicItem_982": {
+    "types": [
+      "龙",
+      "鱼人",
+      "海盗",
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_984": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_984t": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG30_MagicItem_986": {
+    "types": []
+  },
+  "BG30_MagicItem_987": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG30_MagicItem_988": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_988t": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG30_MagicItem_989": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_989t": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG30_MagicItem_991": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG30_MagicItem_992": {
+    "types": [
+      "恶魔",
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_992t": {
+    "types": [
+      "恶魔",
+      "元素"
+    ]
+  },
+  "BG30_MagicItem_993": {
+    "types": []
+  },
+  "BG30_MagicItem_994": {
+    "types": []
+  },
+  "BG30_MagicItem_995": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG30_MagicItem_996": {
+    "types": []
+  },
+  "BG30_MagicItem_998": {
+    "types": []
+  },
+  "BG30_MagicItem_999": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG30_Trinket_1st": {
+    "types": []
+  },
+  "BG30_Trinket_2nd": {
+    "types": []
+  },
+  "BG31_MagicItem_903": {
+    "types": []
+  },
+  "BG32_MagicItem_111": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_170": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_171": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_172": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_179": {
+    "types": [
+      "机械",
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_200": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG32_MagicItem_204": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_205": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_230": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_231": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_231t": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_232": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_270": {
+    "types": []
+  },
+  "BG32_MagicItem_270t": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_271": {
+    "types": []
+  },
+  "BG32_MagicItem_274": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG32_MagicItem_276": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_278": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_279": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG32_MagicItem_280": {
+    "types": []
+  },
+  "BG32_MagicItem_281": {
+    "types": []
+  },
+  "BG32_MagicItem_282": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_283": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_284": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG32_MagicItem_286": {
+    "types": []
+  },
+  "BG32_MagicItem_300": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_301": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_304": {
+    "types": []
+  },
+  "BG32_MagicItem_306": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG32_MagicItem_350": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_360": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_361": {
+    "types": []
+  },
+  "BG32_MagicItem_361t": {
+    "types": []
+  },
+  "BG32_MagicItem_362": {
+    "types": []
+  },
+  "BG32_MagicItem_362t": {
+    "types": []
+  },
+  "BG32_MagicItem_363": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG32_MagicItem_364": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG32_MagicItem_365": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG32_MagicItem_366": {
+    "types": []
+  },
+  "BG32_MagicItem_367": {
+    "types": []
+  },
+  "BG32_MagicItem_400": {
+    "types": []
+  },
+  "BG32_MagicItem_415": {
+    "types": [
+      "龙",
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_416": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG32_MagicItem_417": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG32_MagicItem_419": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG32_MagicItem_428": {
+    "types": []
+  },
+  "BG32_MagicItem_700": {
+    "types": []
+  },
+  "BG32_MagicItem_801": {
+    "types": []
+  },
+  "BG32_MagicItem_801t": {
+    "types": [
+      "海盗",
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_802": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_802t": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_803": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG32_MagicItem_804": {
+    "types": []
+  },
+  "BG32_MagicItem_806": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_807": {
+    "types": []
+  },
+  "BG32_MagicItem_808": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG32_MagicItem_808t": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG32_MagicItem_809": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG32_MagicItem_817": {
+    "types": []
+  },
+  "BG32_MagicItem_820": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_821": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_822": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_823": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_824": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_830": {
+    "types": [
+      "恶魔",
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_831": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_832": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_832t": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_844": {
+    "types": []
+  },
+  "BG32_MagicItem_858": {
+    "types": []
+  },
+  "BG32_MagicItem_860": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG32_MagicItem_860t": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG32_MagicItem_862": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_862t": {
+    "types": []
+  },
+  "BG32_MagicItem_864": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_864t": {
+    "types": [
+      "野兽",
+      "亡灵"
+    ]
+  },
+  "BG32_MagicItem_887": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_888": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG32_MagicItem_890": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_891": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_892": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_893": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_894": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_901": {
+    "types": []
+  },
+  "BG32_MagicItem_902": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_904": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG32_MagicItem_906": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG32_MagicItem_907": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG32_MagicItem_920": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_922": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_925": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_926": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_930": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_931": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_932": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_933": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_934": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG32_MagicItem_935": {
+    "types": []
+  },
+  "BG32_MagicItem_944": {
+    "types": []
+  },
+  "BG32_MagicItem_950": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_951": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_953": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_954": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_957": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG32_MagicItem_960": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG32_MagicItem_998": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_150": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG35_MagicItem_151": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG35_MagicItem_151t": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG35_MagicItem_152": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG35_MagicItem_154": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG35_MagicItem_155": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG35_MagicItem_156": {
+    "types": [
+      "恶魔",
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_300": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_300t": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_301": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_302": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_303": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_305": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_306": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG35_MagicItem_309": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_310": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG35_MagicItem_430": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG35_MagicItem_431t": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG35_MagicItem_432": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG35_MagicItem_433": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG35_MagicItem_434": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG35_MagicItem_435": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG35_MagicItem_700": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG35_MagicItem_701": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG35_MagicItem_702": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG35_MagicItem_710": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG35_MagicItem_711": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG35_MagicItem_712": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG35_MagicItem_713": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG35_MagicItem_714": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG35_MagicItem_731": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG35_MagicItem_732": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG35_MagicItem_733": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG35_MagicItem_740": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_741": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_742": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_743": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG35_MagicItem_750": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_752": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_753": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_754": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_755": {
+    "types": [
+      "龙",
+      "鱼人"
+    ]
+  },
+  "BG35_MagicItem_801": {
+    "types": []
+  },
+  "BG35_MagicItem_803": {
+    "types": []
+  },
+  "BG35_MagicItem_803t": {
+    "types": []
+  },
+  "BG35_MagicItem_812": {
+    "types": []
+  },
+  "BG35_MagicItem_814": {
+    "types": []
+  },
+  "BG35_MagicItem_815": {
+    "types": []
+  },
+  "BG35_MagicItem_816": {
+    "types": []
+  },
+  "BG35_MagicItem_816t": {
+    "types": []
+  },
+  "BG35_MagicItem_817": {
+    "types": []
+  },
+  "BG35_MagicItem_818": {
+    "types": []
+  },
+  "BG35_MagicItem_820": {
+    "types": []
+  },
+  "BG35_MagicItem_821": {
+    "types": []
+  },
+  "BG35_MagicItem_821t": {
+    "types": []
+  },
+  "BG35_MagicItem_823": {
+    "types": []
+  },
+  "BG35_MagicItem_823t": {
+    "types": []
+  },
+  "BG35_MagicItem_834": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG35_MagicItem_838": {
+    "types": []
+  },
+  "BG35_MagicItem_840": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG35_MagicItem_840t": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG35_MagicItem_842": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG35_MagicItem_848t": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG35_MagicItem_849": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG35_MagicItem_850": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_850t": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_851": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_852": {
+    "types": [
+      "恶魔",
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_861": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_862": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_863": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG35_MagicItem_870": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG35_MagicItem_871": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG35_MagicItem_872": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG35_MagicItem_890": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG35_MagicItem_920": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG35_MagicItem_921": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG35_MagicItem_922": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG35_MagicItem_923": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG35_MagicItem_924": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG35_MagicItem_925": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG35_MagicItem_930": {
+    "types": []
+  },
+  "BG35_MagicItem_931": {
+    "types": []
+  },
+  "BG35_MagicItem_931t": {
+    "types": []
+  },
+  "BG36_MagicItem_200": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG36_MagicItem_201": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG36_MagicItem_202": {
+    "types": [
+      "龙",
+      "鱼人"
+    ]
+  },
+  "BG36_MagicItem_203": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG36_MagicItem_204": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG36_MagicItem_205": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG36_MagicItem_206": {
+    "types": []
+  },
+  "BG36_MagicItem_208": {
+    "types": []
+  },
+  "BG36_MagicItem_211": {
+    "types": []
+  },
+  "BG36_MagicItem_212": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG36_MagicItem_213": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG36_MagicItem_214": {
+    "types": [
+      "龙",
+      "野猪人"
+    ]
+  },
+  "BG36_MagicItem_215": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG36_MagicItem_216": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG36_MagicItem_217": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG36_MagicItem_220": {
+    "types": []
+  },
+  "BG36_MagicItem_300": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG36_MagicItem_301": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG36_MagicItem_302": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG36_MagicItem_302t": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG36_MagicItem_303": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG36_MagicItem_303t": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG36_MagicItem_305": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG36_MagicItem_307": {
+    "types": [
+      "野猪人",
+      "纳迦"
+    ]
+  },
+  "BG36_MagicItem_308": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG36_MagicItem_309": {
+    "types": []
+  },
+  "BG36_MagicItem_361": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG36_MagicItem_362": {
+    "types": [
+      "纳迦"
+    ]
+  },
+  "BG36_MagicItem_363": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG36_MagicItem_370": {
+    "types": []
+  },
+  "BG36_MagicItem_371": {
+    "types": []
+  },
+  "BG36_MagicItem_372": {
+    "types": []
+  },
+  "BG36_MagicItem_373": {
+    "types": []
+  },
+  "BG36_MagicItem_380": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG36_MagicItem_390": {
+    "types": [
+      "元素"
+    ]
+  },
+  "BG36_MagicItem_400": {
+    "types": []
+  },
+  "BG36_MagicItem_402": {
+    "types": []
+  },
+  "BG36_MagicItem_403": {
+    "types": []
+  },
+  "BG36_MagicItem_403t": {
+    "types": []
+  },
+  "BG36_MagicItem_404": {
+    "types": []
+  },
+  "BG36_MagicItem_404t": {
+    "types": []
+  },
+  "BG36_MagicItem_406": {
+    "types": []
+  },
+  "BG36_MagicItem_407": {
+    "types": [
+      "龙"
+    ]
+  },
+  "BG36_MagicItem_408": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG36_MagicItem_409": {
+    "types": [
+      "野猪人"
+    ]
+  },
+  "BG36_MagicItem_410": {
+    "types": [
+      "亡灵"
+    ]
+  },
+  "BG36_MagicItem_411": {
+    "types": []
+  },
+  "BG36_MagicItem_412": {
+    "types": []
+  },
+  "BG36_MagicItem_412t2": {
+    "types": []
+  },
+  "BG36_MagicItem_414": {
+    "types": []
+  },
+  "BG36_MagicItem_416": {
+    "types": []
+  },
+  "BG36_MagicItem_417": {
+    "types": []
+  },
+  "BG36_MagicItem_418": {
+    "types": []
+  },
+  "BG36_MagicItem_423": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG36_MagicItem_423t": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG36_MagicItem_424": {
+    "types": [
+      "海盗"
+    ]
+  },
+  "BG36_MagicItem_430": {
+    "types": []
+  },
+  "BG36_MagicItem_450": {
+    "types": [
+      "野兽"
+    ]
+  },
+  "BG36_MagicItem_600": {
+    "types": []
+  },
+  "BG36_MagicItem_602": {
+    "types": []
+  },
+  "BG36_MagicItem_606": {
+    "types": []
+  },
+  "BG36_MagicItem_609": {
+    "types": []
+  },
+  "BG36_MagicItem_610": {
+    "types": []
+  },
+  "BG36_MagicItem_611": {
+    "types": []
+  },
+  "BG36_MagicItem_800": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG36_MagicItem_801": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG36_MagicItem_810": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG36_MagicItem_810t": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG36_MagicItem_811": {
+    "types": []
+  },
+  "BG36_MagicItem_812": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG36_MagicItem_820": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG36_MagicItem_830": {
+    "types": [
+      "恶魔"
+    ]
+  },
+  "BG36_MagicItem_831": {
+    "types": [
+      "恶魔",
+      "野猪人"
+    ]
+  },
+  "BG36_MagicItem_840": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG36_MagicItem_841": {
+    "types": [
+      "机械"
+    ]
+  },
+  "BG36_MagicItem_850": {
+    "types": [
+      "鱼人"
+    ]
+  },
+  "BG36_MagicItem_852": {
+    "types": []
+  }
+}

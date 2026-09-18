@@ -3,7 +3,11 @@ import json,subprocess,concurrent.futures
 from pathlib import Path
 s=json.loads(Path('src/season/snapshot.json').read_text())
 ids={c['id'] for group in ['minions','spells','heroes','gifts'] for c in s[group]}
-ids.update(c['id'] for c in s['trinkets'] if c['id'].startswith('BG36_'))
+ids.update(json.loads(Path('src/season/trinket-pool.json').read_text())['ids'])
+ids.update(c['id'] for c in json.loads(Path('src/season/trinket-dependencies.json').read_text())['cards'])
+ids.update(json.loads(Path('src/season/tier-seven-pool.json').read_text()))
+ids.update(['BGFYM_000','BGFYM_011','BGFYM_002t'])
+ids.update(c['id'] for c in s['related'] if c['id'].startswith('BGS_Treasures_') or 'MagicItem_' in c['id'])
 Path('public/art').mkdir(exist_ok=True);Path('public/cards').mkdir(exist_ok=True)
 def fetch(job):
  id,kind=job;folder='art' if kind=='orig' else 'cards';p=Path(f'public/{folder}/{id}.png')

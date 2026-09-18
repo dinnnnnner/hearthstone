@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Rooms, OFFLINE_GRACE_MS, type Room, type Seat } from "./rooms";
 import { makeMinion } from "../src/engine";
-import { equipPowers } from "../src/season/powers";
+import { equipPowers, hasPower } from "../src/season/powers";
 import { warbandLabel } from "../src/scouting";
 function setup(n = 2, mode: Room["mode"] = "timed") {
   let now = 100000,
@@ -175,7 +175,8 @@ test("bots recruit through legal actions, pool survives rounds, duplicate reques
   service.start(guests[0]);
   assert.equal(room.seats.filter((p) => p.bot).length, 7);
   assert.ok(
-    room.seats.filter((p) => p.bot).every((p) => p.game!.board.length > 0),
+    room.seats.filter((p) => p.bot).every((p) => hasPower(p.game!, "afk") || p.game!.board.length > 0),
+    "Bots recruit on turn one unless their hero is AFK",
   );
   const p = room.seats[0],
     offer = p.game!.shop[0];

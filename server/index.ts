@@ -5,8 +5,9 @@ import {
 } from "node:http";
 import { readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
-import { Rooms } from "./rooms";
+import { Rooms, judgmentVersion } from "./rooms";
 import { NeuralRooms, httpInference } from "./neural";
+import { evaluateTavern } from './judgment';
 import { multiModelRooms } from "./model-registry";
 import { SnapshotWriter } from "./persistence";
 import { Demonstrations } from "./demonstrations";
@@ -196,15 +197,30 @@ const server = createServer(async (req, res) => {
       return;
     }
     const data = await body(req);
+    if (path === '/judgment') {
+      if (typeof data.version !== 'string') throw Error('缺少局面版本');
+      if (store instanceof NeuralRooms) reply(res, 200, await store.judgment(guest, data.version), req);
+      else {
+        const { r, p } = store.member(guest);
+        if (r.kind !== 'ai' || r.stage !== 'recruit' || p.bot || p.ended || !p.game || p.game.health <= 0 ||
+          data.version !== judgmentVersion(r, p)) throw Error('局面已更新或不在人机招募阶段');
+        reply(res, 200, { version: data.version, evaluation: evaluateTavern(p.game),
+          policyError: '当前使用脚本人机，没有模型动作概率。' }, req);
+      }
+      return;
+    }
     // Finalize an elimination before leave/rematch mutates its seat or room.
     demonstrations?.observe(store);
     switch (path) {
       case "/create":
-        if (!["friends", "ai"].includes(data.kind)) throw Error("无效房间类型");
+        if (!["friends", "ai", "spectate"].includes(data.kind)) throw Error("无效房间类型");
         if (data.recordTraining !== undefined && typeof data.recordTraining !== 'boolean') throw Error('无效录制设置');
         if (data.recordTraining && (!demonstrations || data.kind !== 'ai')) throw Error('实战录制仅适用于已开启录制服务的人机对局');
         store.create(guest, data.kind, String(data.hero || "s14_lich"), data.mode, data.heroSelection, data.modelId);
         if (data.recordTraining) { const { r } = store.member(guest); r.recordTraining = true; store.touch(r); }
+        break;
+      case "/watch":
+        store.watchControl(guest, data.command, data.decisionId, data.turn);
         break;
       case "/join":
         if (typeof data.code !== "string" || !/^[A-Z2-9]{6}$/i.test(data.code))

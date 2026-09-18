@@ -1,3 +1,6 @@
+import { JudgmentPanel } from './JudgmentPanel';
+import { WatchPanel } from "./WatchPanel";
+import type { AIWatch } from "../ai-watch";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Countdown, type RoomClock } from "./Countdown";
 import { HeroDraft } from "./HeroDraft";
@@ -36,6 +39,9 @@ function readIdentity(): Identity | null {
 export interface NetworkGame {
   game: Game;
   locked: boolean;
+  watch?: AIWatch;
+  watchControls?: ReactNode;
+  judgmentPanel?: ReactNode;
   status: ReactNode;
   clock?: RoomClock;
   place?: number;
@@ -258,7 +264,7 @@ export default function OnlineApp() {
           setConnectionError("连接中断，正在重连。房间进度保留。");
         }
       } finally {
-        if (!cancelled) timer = setTimeout(poll, 1000);
+        if (!cancelled) timer = setTimeout(poll, last.current?.room?.watch ? 500 : 1000);
       }
     };
     void poll();
@@ -268,6 +274,7 @@ export default function OnlineApp() {
     };
   }, [identity?.token]);
   function send(action: Action) {
+    if (room?.watch) return false;
     if (action.type === "continue" && state?.game && state.game.health <= 0) {
       changeView("hall");
       return true;
@@ -285,8 +292,8 @@ export default function OnlineApp() {
   }
   const status = room ? (
     <>
-      {`${room.kind === "ai" ? "人机对局" : `好友房 ${room.code}`} · 第 ${room.turn} 回合${me?.ended && room.stage === "recruit" ? " · 等待其他玩家" : me?.continued && room.stage === "combat" ? " · 等待下一回合" : ""}`}
-      <span>{room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式"}</span>
+      {`${room.kind === "spectate" ? "AI 观战" : room.kind === "ai" ? "人机对局" : `好友房 ${room.code}`} · 第 ${room.turn} 回合${me?.ended && room.stage === "recruit" ? " · 等待其他玩家" : me?.continued && room.stage === "combat" ? " · 等待下一回合" : ""}`}
+      <span>{room.watch ? room.watch.paused ? " · 已暂停" : " · 自动播放" : room.mode === "training" ? " · 训练模式 · 不限时" : " · 烧绳模式"}</span>
       {room.recordTraining && <span> · 本局操作录制已开启</span>}
       <span>{room.aiModel ? ` · ${room.aiModel.label}` : ""}{room.aiStatus === "fallback" ? " · 本轮使用脚本人机，模型恢复后重试" : ""}</span>
       <Countdown
@@ -310,7 +317,13 @@ export default function OnlineApp() {
         <App
           network={{
             game: state.game,
-            locked:
+            judgmentPanel: room.kind === 'ai' && <JudgmentPanel key={room.code} game={state.game}
+              version={state.judgmentVersion} token={identity!.token}
+              active={room.stage === 'recruit' && !me?.ended && state.game.health > 0} />,
+            watch: room.watch,
+            watchControls: room.watch && <WatchPanel watch={room.watch} game={state.game} stage={room.stage} pending={pending}
+              command={name => void command("/watch", { command: name, decisionId: room.watch?.decision?.id, turn: room.turn })} />,
+            locked: room.watch ? true :
               room.stage === "recruit"
                 ? !!me?.ended
                 : room.stage === "combat"
@@ -566,7 +579,7 @@ export default function OnlineApp() {
                     {room.stage === "finished" ? "查看本局结果" : "返回对局"}
                     <ArrowRight size={18} />
                   </button>
-                  {room.stage === "finished" && room.host === identity.id && (
+                  {room.stage === "finished" && !room.watch && room.host === identity.id && (
                     <button
                       className="online-secondary"
                       disabled={pending}
@@ -660,6 +673,13 @@ export default function OnlineApp() {
               </label>
             </fieldset>
             <div className="match-modes">
+              <button className="match-tile" disabled={pending || !resources.ready || !selectedModel?.available || selectedModel.id === "script" || !!modelsError}
+                onClick={async () => { if (await command("/create", { kind: "spectate", hero, modelId })) changeView("game"); }}>
+                <span className="match-icon"><UserRound size={35} /></span>
+                <small>AI VIEW</small><h2>AI 观战</h2>
+                <p>看所选模型完成一局。<br />查看 AI 对每项操作的偏好，支持暂停和逐步观看。</p>
+                <strong>开始观战<ArrowRight size={18} /></strong>
+              </button>
               <button
                 className="match-tile"
                 disabled={pending || !resources.ready || !selectedModel?.available || !!modelsError}

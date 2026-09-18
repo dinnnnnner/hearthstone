@@ -4,6 +4,20 @@ const b = (event: string, attack: number, health: number, target = "self", tribe
 const choice = (id: string, target?: string, tribe?: string) => [a("choice", "choose", { id, target, tribe })];
 // Each entry is backed by an explicit engine operation; missing entries stay out of the shop.
 export const expandedMinions: Record<string, Ability[]> = {
+  BG28_583: [a("gemPlayed", "roogug")],
+  BG36_372: [a("aura", "lowHeroHealth", { amount: 15, attack: 15, health: 15 })],
+  BG25_034: [a("battlecry", "golden", { target: "selected", tier: 6 })],
+  BG26_149: [a("aura", "repeatMagnetize")],
+  BG27_016: [a("battlecry", "scale", { key: "shop", attack: 8, health: 8 }), a("death", "scale", { key: "shop", attack: 8, health: 8 })],
+  BG27_017: [a("rally", "ravager")],
+  BG27_514: [a("spellcraft", "zarjiraCraft")],
+  BG31_999: [a("combat", "salvage"), a("death", "salvageSummon")],
+  BG34_145: [a("end", "ownStatsHand")],
+  BG34_319: [a("battlecry", "draw", { tier: 6 }), a("death", "draw", { tier: 6 }), a("rally", "draw", { tier: 6 })],
+  BG34_320: [a("rally", "buff", { target: "menagerie", attack: 15, health: 15, permanent: true })],
+  BG34_322: [a("summonCombat", "kodoStats")],
+  BG34_950: [a("buyMinion", "stoneSlab")],
+  BG36_333: [a("rally", "jailbird")],
   BG25_806: [a("death", "randomBeastSix")],
   BG26_175: [a("aura", "elementalWildcard")],
   BG27_556: [a("combat", "pendingHandMurloc")],
@@ -117,6 +131,15 @@ export const expandedMinions: Record<string, Ability[]> = {
   BGS_126: [a("aura", "overkillAdjacent")],
 };
 export const expandedSpells: Record<string, Ability[]> = {
+  BG35_MagicItem_812t: [a("cast", "trinketPrize", { amount: 3 })],
+  BG35_MagicItem_817t: [a("cast", "trinketCopy", { target: "selected", tier: 3 })],
+  BG30_MagicItem_416t: [a("cast", "trinketEvolve", { target: "selected" })],
+  BG35_MagicItem_755t: [a("cast", "battlecryShop")],
+  BG35_MagicItem_306t: [a("cast", "trinketDestroyUndead", { target: "selected", tribe: "亡灵" })],
+  BG35_MagicItem_733t: [a("cast", "trinketDestroyUndead", { target: "selected", tribe: "亡灵", amount: 2 })],
+  BG35_MagicItem_872t: [a("cast", "buff", { target: "selected", tribe: "野兽", attack: 2, health: 2, keyword: "复生" })],
+  BG27_514t: [a("cast", "copyShop", { target: "selected" })],
+  BG36_MagicItem_208t: [a("cast", "deathrattle", { target: "selected" })],
   BG28_571: [a("cast", "gold", { amount: 1 }), a("aura", "healthCost")],
   BG28_573: [a("cast", "combatEffect", { key: "enemyOne" })],
   BG28_601: [a("cast", "murlocPair")],

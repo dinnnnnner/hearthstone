@@ -61,6 +61,7 @@ import {
   cardText,
 } from "./data";
 import {
+  SEASON_META,
   SEASON_CATALOG,
   SEASON_CARDS,
   SEASON_HEROES,
@@ -72,6 +73,7 @@ import {
   refreshCost,
   refreshPayment,
   minionCost,
+  minionUsesHealth,
   spellCost,
   spellUsesHealth,
 } from "./season/engine";
@@ -101,7 +103,7 @@ const load = (): Game => {
     const x = JSON.parse(localStorage.getItem(SAVE_KEY) || "null");
     if (
       x?.version === 1 &&
-      (x.season?.patch === "36.4.2" ||
+      (["36.4.2", "36.6", SEASON_META.patch].includes(x.season?.patch) ||
         CARDS.every((c) => typeof x.pool?.[c.id] === "number"))
     )
       return x;
@@ -263,22 +265,23 @@ function App({
   onLobby?: () => void;
 }) {
   const { mode, setMode, mobile } = usePlayMode();
-  const [tableMode, setTableMode] = useState(() => {
+  const [preferredTableMode, setTableMode] = useState(() => {
     try {
       return localStorage.getItem("bobs-tavern-presentation") !== "panels";
     } catch {
       return true;
     }
   });
+  const tableMode = !!network?.watch || preferredTableMode;
   const [battleSpeed, setBattleSpeed] = useState(1);
   useEffect(() => {
     try {
       localStorage.setItem(
         "bobs-tavern-presentation",
-        tableMode ? "table" : "panels",
+        preferredTableMode ? "table" : "panels",
       );
     } catch {}
-  }, [tableMode]);
+  }, [preferredTableMode]);
   const [mobileSeason, setMobileSeason] = useState(false);
   const [localGame, setGame] = useState<Game>(load);
   const game = network?.game || localGame;
@@ -428,7 +431,7 @@ function App({
     if (network) {
       if (network.locked) {
         playTableSound("error", sound);
-        setToast("已提交，正在等待其他玩家。");
+        setToast(network.watch ? "正在观看 AI，可以使用暂停和下一步。" : "已提交，正在等待其他玩家。");
         return false;
       }
       const sent = network.send(action);
@@ -465,7 +468,7 @@ function App({
         zone !== "board" &&
         !(
           game.season &&
-          ["shop", "spellshop"].includes(zone) &&
+          ["shop", "spellshop", "hand"].includes(zone) &&
           ["cast", "power", "activate"].includes(targeting.type)
         )
       ) {
@@ -677,7 +680,7 @@ function App({
             </button>
             <span className="version-pill">
               <span />
-              {game.season ? "S14 · 36.4.2" : "经典精选"}
+              {game.season ? `S${SEASON_META.season} · ${game.season.patch}` : "经典精选"}
             </span>
             <button
               className="icon-button"
@@ -735,6 +738,7 @@ function App({
               <Plus size={17} /> 新对局
             </button>
           </div>
+          {page === "tavern" && network?.judgmentPanel}
           {page === "tavern" ? (
             tableMode ? (
               <GameTable
@@ -742,6 +746,8 @@ function App({
                 lobby={onLobby}
                 roomStatus={network?.status}
                 locked={network?.locked}
+                watch={network?.watch}
+                watchControls={network?.watchControls}
                 game={game}
                 dispatch={dispatch}
                 selection={selection}
@@ -1563,8 +1569,9 @@ function App({
         <div className="target-banner">
           <WandSparkles size={18} />
           <span>
-            选择友方随从作为
-            {targeting.type === "power" ? "英雄技能" : "随从技能"}目标
+            {game.season && ((targeting.type === "activate" && game.board.some(m => m.uid === targeting.uid && getDef(m.id).abilities?.some(a => a.target === "selectedHand"))) || (targeting.type === "power" && heroPowerState(game, targeting.powerId).targets.some(m => game.hand.includes(m))))
+              ? "选择一张手牌作为技能目标"
+              : `选择友方随从作为${targeting.type === "power" ? "英雄技能" : "随从技能"}目标`}
           </span>
           {targeting.type === "play" &&
             (getDef(game.hand.find((m) => m.uid === targeting.uid)!.id)
@@ -1631,22 +1638,22 @@ function App({
                         dispatch({ type: "buySpell", uid: selection.m.uid })
                       }
                     >
-                      购买法术 {spellUsesHealth(selection.m) ? "消耗生命 " : <Coin small />}
+                      购买法术 {spellUsesHealth(selection.m, game) ? "消耗生命 " : <Coin small />}
                       {spellCost(game, selection.m)}
                     </button>
                   ) : selection.zone === "shop" ? (
                     <button
                       className="button primary"
                       disabled={
-                        game.gold <
-                          (game.season ? minionCost(game, selection.m) : 3) ||
+                        (!(game.season && minionUsesHealth(game, selection.m)) && game.gold <
+                          (game.season ? minionCost(game, selection.m) : 3)) ||
                         game.hand.length + game.rewards.length >= 10
                       }
                       onClick={() =>
                         dispatch({ type: "buy", uid: selection.m.uid })
                       }
                     >
-                      招募随从 <Coin small />
+                      招募随从 {game.season && minionUsesHealth(game, selection.m) ? "生命 " : <Coin small />}
                       {game.season ? minionCost(game, selection.m) : 3}
                     </button>
                   ) : selection.zone === "hand" ? (
@@ -1749,7 +1756,7 @@ function App({
                 setNewHero("s14_lich");
               }}
             >
-              第14赛季 · 36.4.2
+              第{SEASON_META.season}赛季 · {SEASON_META.patch}
             </button>
             <button
               className={!newSeason ? "active" : ""}
@@ -1781,7 +1788,7 @@ function App({
           </div>
           <div className="modal-bottom">
             <span>
-              {newSeason ? "第14赛季 · 36.4.2" : "经典精选"} · 7位AI对手 ·
+              {newSeason ? `第${SEASON_META.season}赛季 · ${SEASON_META.patch}` : "经典精选"} · 7位AI对手 ·
               无回合时限
             </span>
             <button className="button primary" onClick={start}>
@@ -1884,7 +1891,7 @@ function App({
           <div className="settings-note">
             规则档案：
             {game.season
-              ? `第14赛季36.4.2，${SEASON_CARDS.length}种可玩随从、${SEASON_HEROES.length}名可玩英雄。`
+              ? `第${SEASON_META.season}赛季${SEASON_META.patch}，${SEASON_CARDS.length}种可玩随从、${SEASON_HEROES.length}名可玩英雄。`
               : "经典精选，32种随从、8名英雄。"}
             <br />
             对手使用简化招募策略。当前赛季已接入黑暗之赐、部分饰品、发动与酒馆法术。
@@ -1940,7 +1947,7 @@ function App({
           <div className="help-note">
             <strong>关于这个练习场</strong>
             <p>
-              当前赛季模式锁定36.4.2数据。已实现的随从、法术、饰品与黑暗之赐参与练习，其他当前卡牌在图鉴中标记为待实现。10种族每局随机开放5种。AI共用有限随从池，每回合也会互相交战、扣除护甲与生命，战况可在对手信息中查看。AI仍采用简化招募，尚无完整AI技能、上锁宝箱与鱼饵机制。经典模式仍可在新对局中选择。
+              当前赛季模式按{SEASON_META.date}核对的{SEASON_META.patch}卡池开放。已实现的随从、法术、饰品与黑暗之赐参与练习，其他当前卡牌在图鉴中标记为待实现。每局开放5种随从类型，其中畸变怪必定出现。AI共用有限随从池，每回合也会互相交战、扣除护甲与生命，战况可在对手信息中查看。AI仍采用简化招募，尚无完整AI技能、上锁宝箱与鱼饵机制。经典模式仍可在新对局中选择。
             </p>
             <a
               href="https://hearthstone.blizzard.com/en-gb/news/23156373/introducing-hearthstone-battlegrounds"
@@ -1996,7 +2003,7 @@ function App({
           </button>
         </Modal>
       )}
-      {!!game.season?.trinketOffers.length && !game.discovery.length && (
+      {!network?.watch && !!game.season?.trinketOffers.length && !game.discovery.length && (
         <Modal
           title={`${game.turn === 6 ? "小型" : "大型"}饰品，选一件带走`}
           subtitle={`第${game.turn}回合 · 当前${game.gold}金币 · 选择后持续生效`}
@@ -2005,7 +2012,7 @@ function App({
           <SeasonTrinkets game={game} dispatch={dispatch} />
         </Modal>
       )}
-      {game.discovery.length > 0 && (
+      {!network?.watch && game.discovery.length > 0 && (
         <Modal
           title={
             game.season?.discoveryKind === "choose" ? "抉择，选择一项效果" : game.season?.discoveryKind === "darkGift"
@@ -2187,7 +2194,7 @@ function App({
           </button>
         </Modal>
       )}
-      <PowerChoices game={game} dispatch={dispatch} />
+      {!network?.watch && <PowerChoices game={game} dispatch={dispatch} />}
     </div>
   );
 }

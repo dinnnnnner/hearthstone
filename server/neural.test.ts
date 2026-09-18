@@ -8,10 +8,12 @@ import { createServer } from 'node:http';
 import { gzipSync, gunzipSync } from 'node:zlib';
 import { makeMinion } from '../src/engine';
 import { publicAIActionLimits } from '../src/ai-action-limits';
+import { createSeason } from '../src/season/engine';
+import { ENTITY_SCHEMA as currentEntitySchema } from '../rl/entities';
 
 function setup(infer: Infer) {
   let seed = 42;
-  const store = new NeuralRooms(infer, Date.now, () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32));
+  const store = new NeuralRooms(infer, Date.now, () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32), "trinkets-v5");
   const guest = store.auth(store.guest('测试').token);
   const room = store.create(guest, 'friends', 's14_lich', 'training', 'free');
   store.start(guest);
@@ -40,8 +42,8 @@ test('rope expiry starts combat and discards a still-pending search response', a
     calls++; await gate;
     return { rows: [{ action: 2, memory: body.rows[0].memory.map((n: number) => n + 1) }] };
   };
-  const store = new NeuralRooms(infer, () => now, () => .3, 'scouting-v4', [
-    { id: 'search', label: 'search', profile: 'scouting-v4', search: true, infer },
+  const store = new NeuralRooms(infer, () => now, () => .3, 'trinkets-v5', [
+    { id: 'search', label: 'search', profile: 'trinkets-v5', search: true, infer },
   ]);
   try {
     const guest = store.auth(store.guest('rope-search').token);
@@ -67,8 +69,8 @@ test('64-layer search mode can act beyond 96 decisions and sends only the public
     assert.ok(row.legal.includes(1), 'resource-backed refresh stays legal beyond the old action cap');
     return { rows: [{ action: count < 110 ? 1 : 0, memory: row.memory.map((n: number) => n + 1) }] };
   };
-  const store = new NeuralRooms(infer, Date.now, () => .3, 'scouting-v4', [
-    { id: 'deep64-search', label: '64 搜索', profile: 'scouting-v4', search: true, infer },
+  const store = new NeuralRooms(infer, Date.now, () => .3, 'trinkets-v5', [
+    { id: 'deep64-search', label: '64 搜索', profile: 'trinkets-v5', search: true, infer },
   ]);
   try {
     const guest = store.auth(store.guest('search-test').token);
@@ -90,8 +92,8 @@ test('search bots cannot endlessly freeze and unfreeze an unchanged shop', async
     const row = body.rows[0], action = row.legal.includes(2) ? 2 : 0; choices.push(action);
     return { rows: [{ action, memory: row.memory }] };
   };
-  const store = new NeuralRooms(infer, Date.now, () => .3, 'scouting-v4', [
-    { id: 'search', label: 'search', profile: 'scouting-v4', search: true, infer },
+  const store = new NeuralRooms(infer, Date.now, () => .3, 'trinkets-v5', [
+    { id: 'search', label: 'search', profile: 'trinkets-v5', search: true, infer },
   ]);
   try {
     const guest = store.auth(store.guest('freeze-loop').token);
@@ -114,8 +116,8 @@ for (const search of [false, true]) test(`${search ? 'search' : 'ordinary'} bots
     const action = move ?? (row.legal.includes(2) ? 2 : 0);
     return { rows: [{ action, memory: row.memory }] };
   };
-  const store = new NeuralRooms(infer, Date.now, () => .3, 'scouting-v4', [
-    { id: 'limits', label: 'limits', profile: 'scouting-v4', search, infer },
+  const store = new NeuralRooms(infer, Date.now, () => .3, 'trinkets-v5', [
+    { id: 'limits', label: 'limits', profile: 'trinkets-v5', search, infer },
   ]);
   try {
     const guest = store.auth(store.guest('limits-test').token);
@@ -131,7 +133,7 @@ for (const search of [false, true]) test(`${search ? 'search' : 'ordinary'} bots
     assert.deepEqual(observed.at(-1), { freezes: 0, moves: 0 });
     assert.equal(publicAIActionLimits(bot.game!)!.freezeRemaining, 0);
     // Reconstruct the actual room save, without a neural-memory cache.
-    const restored = new NeuralRooms(endPolicy); restored.restore(store.dump());
+    const restored = new NeuralRooms(endPolicy, Date.now, Math.random, 'trinkets-v5'); restored.restore(store.dump());
     try {
       const loaded = restored.rooms.get(room.code)!.seats.find(p => p.id === bot.id)!;
       assert.equal(publicAIActionLimits(loaded.game!)!.moveRemaining, 0);
@@ -229,10 +231,11 @@ test('HTTP inference only permits loopback endpoints', () => {
 
 test('scouting profile preserves the legacy contract and sends completed public battles to the new model', async () => {
   assert.equal(inferenceProfile().contract, '1f3f636a3d358f038c0c7dff22a098c35e5d9c1a753adcb560e8a816dd3179ea');
-  assert.notEqual(inferenceProfile('scouting-v4').contract, inferenceProfile().contract);
+  assert.equal(inferenceProfile('scouting-v4').contract, '9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d');
+  assert.notEqual(inferenceProfile('trinkets-v5').contract, inferenceProfile().contract);
   assert.throws(() => inferenceProfile('invalid'), /Unknown inference profile/);
   const requests: any[] = [];
-  const store = new NeuralRooms(async (body: any) => { requests.push(body); return endPolicy(body); }, Date.now, () => .37, 'scouting-v4');
+  const store = new NeuralRooms(async (body: any) => { requests.push(body); return endPolicy(body); }, Date.now, () => .37, 'trinkets-v5');
   const guest = store.auth(store.guest('测试').token);
   const room = store.create(guest, 'ai', 's14_lich', 'training', 'free');
   try {
@@ -242,12 +245,13 @@ test('scouting profile preserves the legacy contract and sends completed public 
     store.action(guest, { type: 'continue' }, 'continue', 1);
     await until(() => requests.some(r => r.rows[0].entities[0].details.turn === 2));
     const request = requests.find(r => r.rows[0].entities[0].details.turn === 2);
-    assert.equal(request.contract, inferenceProfile('scouting-v4').contract);
+    assert.equal(request.contract, inferenceProfile('trinkets-v5').contract);
     const opponents = request.rows[0].entities.filter((e: any) => e?.zone === 7);
     assert.ok(opponents.every((e: any) => e.details.scouting[0].turn === 1));
     assert.ok(opponents.every((e: any) => !('board' in e.details) && !('hand' in e.details)));
   } finally { store.stop(); }
 });
+
 
 test('compressed inference preserves requests and replies and paces outbound bandwidth', async () => {
   const received: number[] = [];
@@ -282,11 +286,11 @@ test('rooms route to the selected frozen model and retain it across reload and r
   const seen = new Map<string, any[]>();
   const models = ['deep64', 'deep256', 'deep1024'].map((id, i) => {
     seen.set(id, []);
-    return { id, label: id, episodes: i + 1, profile: 'scouting-v4', checkpointSha256: String(i + 1).repeat(64),
+    return { id, label: id, episodes: i + 1, profile: 'trinkets-v5', checkpointSha256: String(i + 1).repeat(64),
       infer: async (body: any) => { seen.get(id)!.push(body); return endPolicy(body); } };
   });
-  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', models);
-  const restored = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', models);
+  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'trinkets-v5', models);
+  const restored = new NeuralRooms(endPolicy, Date.now, () => .37, 'trinkets-v5', models);
   try {
     for (const model of models) {
       const guest = store.auth(store.guest(model.id).token);
@@ -319,11 +323,11 @@ test('rooms route to the selected frozen model and retain it across reload and r
 test('one model outage falls back only its rooms and availability is refreshed', async () => {
   let online = true;
   const models = [
-    { id: 'offline', label: 'offline', profile: 'scouting-v4', health: async () => online,
+    { id: 'offline', label: 'offline', profile: 'trinkets-v5', health: async () => online,
       infer: async () => { throw Error('disconnected'); } },
-    { id: 'working', label: 'working', profile: 'scouting-v4', infer: endPolicy },
+    { id: 'working', label: 'working', profile: 'trinkets-v5', infer: endPolicy },
   ];
-  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', models);
+  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'trinkets-v5', models);
   try {
     await store.checkModels();
     for (const model of models) {
@@ -345,9 +349,9 @@ test('one model outage falls back only its rooms and availability is refreshed',
 
 test('restoring a room never silently replaces its checkpoint with another version', async () => {
   let calls = 0;
-  const model = { id: 'frozen', label: 'frozen', profile: 'scouting-v4', checkpointSha256: 'a'.repeat(64),
+  const model = { id: 'frozen', label: 'frozen', profile: 'trinkets-v5', checkpointSha256: 'a'.repeat(64),
     infer: async (body: any) => { calls++; return endPolicy(body); } };
-  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'scouting-v4', [model]);
+  const store = new NeuralRooms(endPolicy, Date.now, () => .37, 'trinkets-v5', [model]);
   try {
     const guest = store.auth(store.guest('frozen').token);
     const room = store.create(guest, 'friends', 's14_lich', 'training', 'free', model.id);
@@ -358,4 +362,19 @@ test('restoring a room never silently replaces its checkpoint with another versi
     assert.equal(calls, 0);
     assert.equal(room.aiStatus, 'fallback');
   } finally { store.stop(); }
+});
+
+test('frozen inference profiles retain card identities and reject new trinkets without misidentifying them', () => {
+  const game = createSeason('s14_lich', () => .37); game.shop = []; game.season!.spellShop = []; game.opponents = [];
+  const old = inferenceProfile(), scouting = inferenceProfile('scouting-v4'), current = inferenceProfile('trinkets-v5');
+  const legacyEntities = old.observe(game, 0, 64), scoutingEntities = scouting.observe(game, 0, 64);
+  assert.deepEqual(scoutingEntities.map(e => e?.id), legacyEntities.map(e => e?.id));
+  assert.deepEqual(JSON.parse(current.schema).entity_schema, JSON.parse(JSON.stringify(currentEntitySchema)));
+  assert.notEqual(current.contract, scouting.contract);
+  const id = 'BG30_MagicItem_406';
+  game.season!.trinketOffers = [id];
+  assert.throws(() => old.observe(game, 0, 64), /Unknown entity identity/);
+  assert.throws(() => scouting.observe(game, 0, 64), /Unknown entity identity/);
+  const offer = current.observe(game, 0, 64).find(e => e?.zone === 10)!;
+  assert.equal(currentEntitySchema.ids[offer.id - 1], id);
 });

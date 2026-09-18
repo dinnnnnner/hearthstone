@@ -1,8 +1,12 @@
+import { previewMinions, previewSpells } from "./preview-catalog";
 import snapshot from "./snapshot.json" with { type: "json" };
 import aiHeroPool from "./ai-hero-pool.json" with { type: "json" };
 import type { CardDef, Hero, Tribe, Keyword, Ability } from "../data";
 import { expandedMinions, expandedSpells } from "./expanded-catalog";
 import { expandedHeroKeys, expandedPassiveHeroes } from "./expanded-heroes";
+import { trinketMinions, trinketSpells } from "./trinket-card-effects";
+import trinketDependencies from "./trinket-dependencies.json" with { type: "json" };
+import currentRules from "./current-rules.json" with { type: "json" };
 export const SEASON_META = snapshot.meta;
 export const PREFIX = "s14_";
 const races: Record<string, Tribe> = {
@@ -16,6 +20,7 @@ const races: Record<string, Tribe> = {
   PIRATE: "海盗",
   QUILBOAR: "野猪人",
   UNDEAD: "亡灵",
+  ABERRATION: "畸变怪",
   ALL: "全部",
 };
 const keywords: Record<string, Keyword> = {
@@ -50,6 +55,7 @@ const stat = (event: string, key: string, attack: number, health: number) =>
 // Only explicitly implemented cards can enter the playable pool. The complete snapshot remains browsable.
 const effects: Record<string, Ability[]> = {
   ...expandedMinions,
+  ...trinketMinions,
   BG26_146: [b("end", 0, 1)],
   BG20_104: [A("rally", "gem", { target: "others" })],
   BG27_002: [spell("battlecry", "BG27_002t", 2)],
@@ -236,6 +242,7 @@ const effects: Record<string, Ability[]> = {
 };
 const spellEffects: Record<string, Ability[]> = {
   ...expandedSpells,
+  ...trinketSpells,
   EBG_Spell_037: [A("cast", "replacePower")],
   BG33_101: [A("cast", "discoverMinion", { tier: 1 })],
   BG28_882: [A("cast", "discoverMinion", { key: "DEATHRATTLE" })],
@@ -346,7 +353,7 @@ function convert(
   kind: CardDef["kind"] = "minion",
   token = false,
 ): CardDef {
-  const abilities = kind === "spell" ? spellEffects[c.id] : effects[c.id];
+  const abilities = kind === "spell" ? (previewSpells[c.id] ?? spellEffects[c.id]) : (previewMinions[c.id] ?? effects[c.id]);
   const ks = (c.mechanics || []).map((k) => keywords[k]).filter(Boolean);
   const goldenChoice = kind === "spell" ? relatedById.get(c.id.replace(/t(\d*)$/, "_Gt$1")) : undefined;
   return {
@@ -383,11 +390,13 @@ export const SEASON_SPELL_CATALOG: CardDef[] = snapshot.spells.map((c) =>
   convert(c, "spell"),
 );
 export const SEASON_SPELLS = SEASON_SPELL_CATALOG.filter((c) => c.playable);
-export const SEASON_RELATED: CardDef[] = snapshot.related.map((c) =>
+export const SEASON_RELATED: CardDef[] = [...snapshot.related, ...trinketDependencies.cards].map((c) =>
   convert(c, c.attack || c.health ? "minion" : "spell", true),
 );
 const heroKeys: Record<string, string> = {
   ...expandedHeroKeys,
+  BG36_HERO_000: "drestagath",
+  BG36_HERO_002: "kithix",
   TB_BaconShop_HERO_40: "finley",
   BG20_HERO_202: "nguyen",
   BG35_HERO_001: "genn",
@@ -411,7 +420,7 @@ const heroKeys: Record<string, string> = {
   TB_BaconShop_HERO_49: "millhouse",
   TB_BaconShop_HERO_78: "chenvaala",
 };
-export const SEASON_HEROES: Hero[] = snapshot.heroes
+export const SEASON_HERO_DEFINITIONS: Hero[] = [...snapshot.heroes, ...snapshot.retiredHeroes]
   .filter((h) => heroKeys[h.id])
   .map((h) => ({
     id: PREFIX + heroKeys[h.id],
@@ -435,12 +444,14 @@ export const SEASON_HEROES: Hero[] = snapshot.heroes
       "chenvaala",
     ].includes(heroKeys[h.id]),
   }));
+export const SEASON_HEROES = SEASON_HERO_DEFINITIONS.filter(h => !currentRules.heroBans.includes(h.art));
 export const AI_HERO_POOL = aiHeroPool;
 const aiHeroIds = new Set(aiHeroPool.heroes.map(h => h.id));
 export const AI_SEASON_HEROES = SEASON_HEROES.filter(h => aiHeroIds.has(h.id));
 if (aiHeroIds.size !== aiHeroPool.heroes.length || AI_SEASON_HEROES.length !== aiHeroIds.size || aiHeroIds.size < 8)
   throw new Error("AI hero pool must contain at least eight distinct implemented heroes");
 export const HERO_TRIBES: Record<string, Tribe> = {
+  s14_drestagath: "畸变怪",
   s14_millificent: "机械",
   s14_hoggarr: "海盗",
   s14_alexstrasza: "龙",
@@ -459,12 +470,13 @@ export const ALL_TRIBES: Tribe[] = [
   "元素",
   "机械",
   "鱼人",
-  "纳迦",
+  "畸变怪",
   "海盗",
   "野猪人",
   "亡灵",
 ];
 export const GIFT_IDS = [
+  "78", "88", "89", "90",
   "13",
   "73",
   "74",
@@ -488,5 +500,5 @@ export const GIFT_IDS = [
   "4",
 ];
 export const GIFTS = RAW_GIFTS.filter((g) =>
-  GIFT_IDS.some((n) => g.id === "BG36_MidGameEffect_000t" + n),
+  GIFT_IDS.some((n) => g.id === "BG36_MidGameEffect_000t" + n) && !currentRules.bannedGifts.includes(g.id),
 );

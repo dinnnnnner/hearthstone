@@ -10,6 +10,7 @@ import { equipPowers } from "../src/season/powers";
 import { TRINKETS, advanceRecruit } from "../src/season/engine";
 import { SHOP_SIZE } from "../src/data";
 import chromieReplay from "./fixtures/chromie-spells.json";
+import chromieState from "./fixtures/chromie-spells-state.json";
 
 test("both policy inputs include two public scout rounds and ranking armor without current or private data", () => {
   const env = new SelfPlayEnv(); env.reset(10);
@@ -233,10 +234,11 @@ test("Chromie's full spell tavern is observable and every slot remains actionabl
 });
 
 test("recorded GPU self-play failure replays through the expanded spell shop", () => {
-  // This historical action tape predates AI action quotas. Preserve its original rules.
+  // Recovered from the historical tape at HEAD before the trinket expansion, just before
+  // the final action. Replaying earlier random offers now produces different cards.
   const env = new SelfPlayEnv({ ...chromieReplay.options, aiActionLimits: false });
-  let state = env.reset(chromieReplay.seed);
-  for (const action of chromieReplay.actions) state = env.step(action);
+  env.restore(chromieState as unknown as ReturnType<SelfPlayEnv["snapshot"]>);
+  const state = env.step(chromieReplay.actions.at(-1)!);
   assert.equal(env.actor, chromieReplay.expected.actor);
   assert.equal(env.room.turn, chromieReplay.expected.turn);
   assert.equal(env.rng.state, chromieReplay.expected.rng);

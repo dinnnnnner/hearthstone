@@ -1,26 +1,45 @@
 {
-  "patch": "36.4.2",
-  "build": "251332",
+  "patch": "36.6.1-preview",
+  "build": "251952",
+  "preview": true,
+  "scheduledRelease": "2026-09-22",
+  "verifiedAsOf": "2026-09-18",
+  "bannedMinions": [
+    "BGS_121"
+  ],
   "scope": "Solo Tier 1–6 recruit pool; no Duos. Implementation coverage is not proof of exact official event ordering.",
   "minions": {
-    "implemented": 234,
-    "total": 234
+    "implemented": 242,
+    "total": 242
   },
   "tavernSpells": {
-    "implemented": 67,
-    "total": 67
+    "implemented": 66,
+    "total": 66
   },
   "heroes": {
     "implemented": 89,
-    "total": 116
+    "total": 113
   },
   "darkGifts": {
-    "implemented": 21,
-    "snapshotTotal": 43
+    "implemented": 20,
+    "snapshotTotal": 43,
+    "banned": [
+      "BG36_MidGameEffect_000t4"
+    ]
   },
   "trinkets": {
-    "implemented": 23,
-    "officialPoolVerified": false
+    "implemented": 237,
+    "officialPoolVerified": false,
+    "deferred": [
+      {
+        "id": "BG30_MagicItem_555",
+        "reason": "Hidden trigger conditions and probabilities not verified"
+      }
+    ],
+    "dependencyLimitations": [
+      "Timewarped Lei currently generates the Curator's Buddy only and is excluded for other Hero Powers."
+    ],
+    "details": "docs/trinkets.md"
   },
   "missingHeroes": [
     {
@@ -47,11 +66,6 @@
       "id": "BG22_HERO_001",
       "name": "布鲁坎",
       "power": "选择一个元素。战斗开始时：唤起选择的元素。"
-    },
-    {
-      "id": "BG22_HERO_007",
-      "name": "艾萨拉女王",
-      "power": "当你的战队总计达到30点攻击力时，开启纳迦远征。"
     },
     {
       "id": "BG22_HERO_201",
@@ -104,16 +118,6 @@
       "power": "解锁等级2的异虫。每个回合，消耗的铸币都会减少（1）枚。被动：开局时拥有一个2/2的幼虫。"
     },
     {
-      "id": "BG34_HERO_000",
-      "name": "无限巨龙姆诺兹多",
-      "power": "在第8回合，前往大型时空扭曲。（还剩7回合！）"
-    },
-    {
-      "id": "BG34_HERO_004",
-      "name": "米罗克",
-      "power": "在第5回合，前往小型时空扭曲。（还剩4回合！）"
-    },
-    {
       "id": "BG36_HERO_101",
       "name": "特莱斯塔斯，寄生之魂",
       "power": "对战开始时，发现一张具有黑暗之赐的等级5的随从牌。该随从牌会在第7回合解锁。（还剩6回合！）"
@@ -156,7 +160,7 @@
     {
       "id": "TB_BaconShop_HERO_94",
       "name": "提克特斯",
-      "power": "每4个回合，发现一个暗月奖品。（还剩3回合！）"
+      "power": "每4个回合，发现一个暗月奖品。（还剩4回合！）"
     }
   ],
   "missingDarkGifts": [

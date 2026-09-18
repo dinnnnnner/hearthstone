@@ -1,3 +1,5 @@
+import { PolicyProbability } from "./PolicyProbability";
+import { choiceProbability, type AIWatch } from "../ai-watch";
 import { equippedPowers } from "../season/powers";
 import { rankingHealth, opponentRankingHealth } from "../ranking";
 import { RivalDetails } from "./RivalDetails";
@@ -53,13 +55,15 @@ import {
 } from "../engine";
 import {
   minionCost,
+  minionUsesHealth,
   refreshCost,
   refreshPayment,
   seasonTargets,
   spellCost,
   spellUsesHealth,
-  TRINKETS,
+  trinketText,
 } from "../season/engine";
+import { RAW_TRINKETS, SEASON_META } from "../season/catalog";
 import { GiftNote, CardSource } from "../season/Panels";
 import { basePath } from "../paths";
 import { BoardDecoration } from "./BoardDecoration";
@@ -84,6 +88,8 @@ type Props = {
   lobby?: () => void;
   roomStatus?: import("react").ReactNode;
   locked?: boolean;
+  watch?: AIWatch;
+  watchControls?: ReactNode;
   game: Game;
   dispatch: (a: Action) => boolean;
   selection: Selection | null;
@@ -115,11 +121,13 @@ function Piece({
   m,
   selected = false,
   combat = false,
+  probability,
   ...events
 }: {
   m: Minion;
   selected?: boolean;
   combat?: boolean;
+  probability?: ReactNode;
   onClick?: () => void;
   onDoubleClick?: () => void;
   onPointerDown?: (e: PointerEvent<HTMLButtonElement>) => void;
@@ -137,6 +145,7 @@ function Piece({
       data-target={m.uid}
       aria-label={`${d.name}，${m.attack}攻击，${m.health}生命，${cardText(m)}，当前关键词：${[...m.keywords, ...(m.rebornNext ? ["复生"] : [])].join("、") || "无"}`}
     >
+      {probability && <span className="piece-policy">{probability}</span>}
       <KeywordEffects m={m} />
       <span className="piece-frame">
         <img src={art(m.id)} alt="" draggable={false} />
@@ -172,6 +181,8 @@ function Piece({
 export function GameTable(p: Props) {
   const { game, dispatch, selection, choose, close, targeting, frame } = p;
   const payment = refreshPayment(game);
+  const probability = (type: Action['type'], uid?: string, label?: string, powerId?: string) => p.watch && game.phase === 'recruit'
+    ? <PolicyProbability decision={p.watch.decision} type={type} uid={uid} label={label} powerId={powerId} /> : null;
   const hero = heroOf(game),
     combat = game.phase === "combat",
     finished = combat && frame === (game.battle?.frames.length || 0) - 1,
@@ -270,7 +281,7 @@ export function GameTable(p: Props) {
     m: Minion,
     zone: Zone,
   ) {
-    if (!recruit || targeting || e.button !== 0) return;
+    if (p.watch || !recruit || targeting || e.button !== 0) return;
     dragRef.current = {
       m,
       zone,
@@ -382,10 +393,11 @@ export function GameTable(p: Props) {
         key={m.uid}
         m={displayed.get(m.uid) || m}
         combat={combat}
+        probability={p.watch && recruit ? zone === 'shop' ? probability('buy',m.uid,'买 ') : <>{probability('sell',m.uid,'卖 ')}{probability('move',m.uid,'换位 ')}{choiceProbability(p.watch.decision,'activate',m.uid)?.legal && probability('activate',m.uid,'技能 ')}</> : undefined}
         selected={selection?.m.uid === m.uid || (targeting && zone === "board")}
         onClick={() => choosePiece(m, zone)}
         onDoubleClick={() => {
-          if (!recruit || targeting) return;
+          if (p.watch || !recruit || targeting) return;
           if (zone === "shop") dispatch({ type: "buy", uid: m.uid });
           else if (zone === "hand") p.play(m);
         }}
@@ -427,7 +439,7 @@ export function GameTable(p: Props) {
     <div
       data-playing={p.playing}
       style={{ "--motion-speed": p.speed } as CSSProperties}
-      className={`game-table ${combat ? "combat-table" : ""} ${drag?.moving ? "dragging-table" : ""}`}
+      className={`game-table ${p.watch ? "watch-table" : ""} ${combat ? "combat-table" : ""} ${drag?.moving ? "dragging-table" : ""}`}
     >
       <header className="table-header">
         <div className="table-brand">
@@ -440,7 +452,7 @@ export function GameTable(p: Props) {
           )}
           <span>
             鲍勃的酒馆
-            <small>{game.season ? "第14赛季 · 36.4.2" : "经典精选"}</small>
+            <small>{game.season ? `第${SEASON_META.season}赛季 · ${game.season.patch}` : "经典精选"}</small>
           </span>
         </div>
         <div className="table-header-center">
@@ -479,6 +491,7 @@ export function GameTable(p: Props) {
           </button>
         </nav>
       </header>
+      {p.watchControls}
       <MatchTribes game={game} />
       <div className="table-game">
         <aside className="opponent-rail" aria-label="对局英雄">
@@ -559,7 +572,7 @@ export function GameTable(p: Props) {
                   className="tavern-control upgrade-control"
                   onClick={() => dispatch({ type: "upgrade" })}
                   disabled={
-                    !recruit || game.tier === 6 || game.gold < game.upgrade
+                    !!p.watch || !recruit || game.tier === 6 || game.gold < game.upgrade
                   }
                   aria-label={`升级酒馆，${game.upgrade}金币`}
                 >
@@ -568,13 +581,14 @@ export function GameTable(p: Props) {
                   </span>
                   <Crown />
                   <span>{game.tier === 6 ? "满级酒馆" : "升级"}</span>
+                  {probability("upgrade")}
                 </button>
                 <div className="right-bob-controls">
                   <button
                     className={`tavern-control ${payment.health ? "health-refresh-control" : ""}`}
                     onClick={() => dispatch({ type: "refresh" })}
                     disabled={
-                      !recruit ||
+                      !!p.watch || !recruit ||
                       game.gold < (game.season ? refreshCost(game) : 1)
                     }
                     aria-label="刷新酒馆"
@@ -585,16 +599,18 @@ export function GameTable(p: Props) {
                     </span>
                     <RotateCw />
                     <span>{payment.health ? `刷新 · ${payment.remaining}次` : "刷新"}</span>
+                    {probability("refresh")}
                   </button>
                   <button
                     className={`tavern-control freeze-control ${game.frozen ? "active" : ""}`}
                     onClick={() => dispatch({ type: "freeze" })}
-                    disabled={!recruit}
+                    disabled={!!p.watch || !recruit}
                     aria-label={game.frozen ? "解冻酒馆" : "冻结酒馆"}
                   >
                     <span className="control-cost">0</span>
                     <Snowflake />
                     <span>{game.frozen ? "解冻" : "冻结"}</span>
+                    {probability("freeze")}
                   </button>
                 </div>
               </div>
@@ -627,9 +643,10 @@ export function GameTable(p: Props) {
                     aria-label={`酒馆法术：${getDef(m.id).name}`}
                   >
                     <img src={art(m.id)} alt="" />
-                    <b>{spellUsesHealth(m) ? "♥" : ""}{spellCost(game, m)}</b>
+                    <b>{spellUsesHealth(m, game) ? "♥" : ""}{spellCost(game, m)}</b>
                     <span>{getDef(m.id).name}</span>
                     <small>酒馆法术</small>
+                    {probability("buySpell",m.uid,"买 ")}
                   </button>
                 ))}
             </div>
@@ -684,8 +701,8 @@ export function GameTable(p: Props) {
             )}
             <div className="player-hero-area" data-dropzone="hero">
               <div className="trinket-coins">
-                {[0, 1].map((i) => {
-                  const t = TRINKETS.find(
+                {Array.from({ length: Math.max(2, game.season?.trinkets.length || 0) }, (_, i) => i).map((i) => {
+                  const t = RAW_TRINKETS.find(
                     (t) => t.id === game.season?.trinkets[i],
                   );
                   return (
@@ -694,7 +711,7 @@ export function GameTable(p: Props) {
                       onClick={p.season}
                       title={
                         t
-                          ? `${t.name}：${t.text}`
+                          ? `${t.name}：${trinketText(game, t.id, i)}`
                           : `第${i === 0 ? 6 : 9}回合选择饰品`
                       }
                       aria-label={t?.name || `${i === 0 ? "小型" : "大型"}饰品`}
@@ -731,7 +748,7 @@ export function GameTable(p: Props) {
               <button key={id}
                 className={`hero-power-orb ${powerState.used ? "used" : ""}`}
                 onClick={() => p.power(id)}
-                disabled={!recruit || powerState.used}
+                disabled={!!p.watch || !recruit || powerState.used}
                 aria-label={
                   powerState.used
                     ? `${powerState.status}英雄技能`
@@ -744,6 +761,7 @@ export function GameTable(p: Props) {
                 </span>
                 <b>{powerHero.passive ? "∞" : powerState.cost}</b>
                 <small>{powerState.used ? powerState.status : powerHero.power}</small>
+                {probability("power",undefined,undefined,id)}
                 {!powerState.used && powerState.status && !powerHero.passive && <span className="hero-power-status">{powerState.status}</span>}
               </button>
             ); })}
@@ -760,7 +778,7 @@ export function GameTable(p: Props) {
               </strong>
               <small>
                 {recruit
-                  ? p.roomStatus
+                  ? p.watch ? "AI 观战" : p.roomStatus
                     ? "限时招募"
                     : "不限时练习"
                   : finished
@@ -773,21 +791,22 @@ export function GameTable(p: Props) {
               onClick={() => dispatch({ type: combat ? "continue" : "end" })}
               disabled={p.locked || (combat ? !finished : !recruit)}
             >
-              {p.locked
+              {p.watch ? <span>{combat ? "观看战斗" : "结束招募"}</span> : p.locked
                 ? "等待其他玩家"
                 : combat
                   ? finished
                     ? "返回酒馆"
                     : "交战中"
                   : "结束招募"}
-              {combat ? <Swords size={17} /> : <ArrowRight size={17} />}
+              {!p.watch && (combat ? <Swords size={17} /> : <ArrowRight size={17} />)}
+              {probability("end")}
             </button>
             {game.season && !combat && (
               <button
                 className="dark-discovery-orb"
                 onClick={() => dispatch({ type: "darkGift" })}
                 disabled={
-                  !recruit ||
+                  !!p.watch || !recruit ||
                   game.turn < 3 ||
                   game.gold < 3 ||
                   game.season.giftsUsed >= 3 ||
@@ -800,6 +819,7 @@ export function GameTable(p: Props) {
                 </span>
                 <b>3</b>
                 <small>黑暗发现</small>
+                {probability("darkGift")}
                 <em>
                   {game.turn < 3
                     ? "第3回合解锁"
@@ -846,6 +866,7 @@ export function GameTable(p: Props) {
                     } as CSSProperties
                   }
                 >
+                  {p.watch && <span className="hand-policy">{probability(getDef(m.id).kind === "spell" ? "cast" : "play",m.uid,"出 ")}</span>}
                   <button
                     data-hand-id={m.uid}
                     className={`hand-card-button ${m.golden ? "golden-hand" : ""}`}
@@ -960,7 +981,7 @@ export function GameTable(p: Props) {
                       onClick={primary}
                       disabled={
                         selection.zone === "hand" ? (selection.m.lockedUntil || 0) > game.turn || (selection.m.lockedTier || 0) > game.tier :
-                        ((!spellUsesHealth(selection.m) && game.gold < cost) ||
+                        ((!(selection.zone === "shop" ? minionUsesHealth(game, selection.m) : spellUsesHealth(selection.m, game)) && game.gold < cost) ||
                           game.hand.length + game.rewards.length >= 10)
                       }
                     >
@@ -973,7 +994,7 @@ export function GameTable(p: Props) {
                           : "招募随从"}
                       {cost > 0 && (
                         <>
-                          {spellUsesHealth(selection.m) ? <Heart size={13} /> : <Coins size={13} />}
+                          {(selection.zone === "shop" ? minionUsesHealth(game, selection.m) : spellUsesHealth(selection.m, game)) ? <Heart size={13} /> : <Coins size={13} />}
                           {cost}
                         </>
                       )}

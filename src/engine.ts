@@ -18,8 +18,10 @@ import {
   SHOP_SIZE,
   UPGRADE_COST,
   type Keyword,
+  type Tribe,
 } from "./data";
 export interface Minion {
+  discardGroup?: string;
   counters?: Record<string, number>;
   lockedUntil?: number;
   lockedTier?: number;
@@ -27,6 +29,8 @@ export interface Minion {
   magneticCount?: number;
   learnedSpell?: string;
   remembered?: string[];
+  storedMinions?: Minion[];
+  extraTribes?: Tribe[];
   gift?: string;
   giftTurn?: number;
   activated?: boolean;

@@ -1,7 +1,8 @@
+import type { AIWatch } from "../src/ai-watch";
 import { equippedPowers } from "../src/season/powers";
 import { enableAIActionLimits } from '../src/ai-action-limits';
 import { recordScoutRound, warbandLabel, previousScoutRounds } from "../src/scouting";
-import { gameRankingHealth, absorbArmor } from "../src/ranking";
+import { gameRankingHealth, damageSeasonHero } from "../src/ranking";
 import { createPairingCycle, cyclePairings, type PairingCycle } from "./pairing";
 import { randomBytes, createHash, randomInt } from "node:crypto";
 import {
@@ -13,8 +14,10 @@ import {
   releasePlayerCards,
   seasonTargets,
   minionCost,
+  minionUsesHealth,
   refreshCost,
   TRINKETS,
+  trinketCost,
 } from "../src/season/engine";
 import { SEASON_HEROES, AI_SEASON_HEROES, ALL_TRIBES, HERO_TRIBES } from "../src/season/catalog";
 import { getDef, type Tribe } from "../src/data";
@@ -27,6 +30,9 @@ import {
   type Minion,
   type Battle,
 } from "../src/engine";
+export function judgmentVersion(r: Room, p: Seat) {
+  return `${r.code}:${r.turn}:${p.rev}:${r.judgmentRev || 0}:${r.stage}:${p.ended}`;
+}
 export type Guest = {
   id: string;
   name: string;
@@ -54,7 +60,8 @@ export type Room = {
   recordTraining?: boolean;
   code: string;
   host: string;
-  kind: "friends" | "ai";
+  kind: "friends" | "ai" | "spectate";
+  watch?: AIWatch;
   mode: "timed" | "training";
   heroSelection: "free" | "draft";
   aiModel?: AIModel;
@@ -75,6 +82,7 @@ export type Room = {
   lastPairings?: { turn: number; pairs: [string, string | null][] };
   lastEliminations?: { turn: number; victims: string[]; killers: Record<string, string> };
   gameRev?: number;
+  judgmentRev?: number;
   storageRev?: number;
 };
 export type AIModel = { id: string; label: string; episodes?: number; checkpointSha256?: string };
@@ -160,8 +168,12 @@ export class Rooms {
     const { available: _, ...model } = option;
     return model;
   }
-  create(g: Guest, kind: "friends" | "ai", hero: string, mode: Room["mode"] = "timed", heroSelection: Room["heroSelection"] = "free", modelId?: string) {
+  create(g: Guest, kind: Room["kind"], hero: string, mode: Room["mode"] = "timed", heroSelection: Room["heroSelection"] = "free", modelId?: string) {
     const aiModel = this.selectModel(modelId);
+    if (kind === "spectate") {
+      if (aiModel.id === "script") throw Error("AI 观战需要可用的训练模型");
+      mode = "training"; heroSelection = "free";
+    }
     if (mode !== "timed" && mode !== "training") throw Error("无效对局模式");
     if (heroSelection !== "free" && heroSelection !== "draft") throw Error("无效英雄选择方式");
     if (g.room && this.rooms.has(g.room)) throw Error("请先离开当前房间");
@@ -192,11 +204,16 @@ export class Rooms {
       deadline: 0,
       updated: this.now(),
     };
+    if (kind === "spectate") {
+      r.watch = { paused: true, step: false, nextAt: 0 };
+      r.seats[0].bot = true;
+      r.seats[0].name = "观战 AI";
+    }
     if (heroSelection === "draft") this.dealHeroes(r, r.seats[0]);
     this.rooms.set(code, r);
     g.room = code;
     this.touch(r);
-    if (kind === "ai" && heroSelection === "free") this.start(g);
+    if ((kind === "ai" || kind === "spectate") && heroSelection === "free") this.start(g);
     return r;
   }
   availableHeroes(r: Room) {
@@ -206,8 +223,11 @@ export class Rooms {
   dealHeroes(r: Room, p: Seat) {
     const available = this.availableHeroes(r);
     if (available.length < 4) throw Error("英雄池不足，请稍后重试");
-    p.heroOffers = Array.from({ length: 4 }, () =>
-      available.splice(Math.floor(this.random() * available.length), 1)[0].id);
+    const featured = available.filter(h => ['s14_drestagath', 's14_kithix'].includes(h.id));
+    const first = featured[Math.floor(this.random() * featured.length)];
+    if (first) available.splice(available.indexOf(first), 1);
+    p.heroOffers = [...(first ? [first.id] : []), ...Array.from({ length: first ? 3 : 4 }, () =>
+      available.splice(Math.floor(this.random() * available.length), 1)[0].id)];
   }
   refreshHero(g: Guest, slot: number, expectedHero: string) {
     const { r, p } = this.member(g);
@@ -246,6 +266,7 @@ export class Rooms {
     if (r.heroSelection === "draft" && !p.heroOffers?.includes(hero)) throw Error("请选择四个候选中的英雄");
     if (r.seats.some((s) => s.id !== p.id && s.hero === hero))
       throw Error("该英雄已被选择");
+    if (new Set(['畸变怪', HERO_TRIBES[hero], ...r.seats.filter(s => s !== p).map(s => HERO_TRIBES[s.hero])].filter(Boolean)).size > 5) throw Error('所选英雄需要超过五种随从类型，请更换英雄');
     p.hero = hero;
     p.ready = false;
     this.touch(r);
@@ -275,7 +296,10 @@ export class Rooms {
     );
     for (const p of r.seats) p.heroOffers = undefined;
     while (r.seats.length < 8) {
-      const h = unused.splice(Math.floor(this.random() * unused.length), 1)[0];
+      const types = new Set(['畸变怪', ...r.seats.map(s => HERO_TRIBES[s.hero])].filter(Boolean));
+      const eligible = unused.filter(h => !HERO_TRIBES[h.id] || types.has(HERO_TRIBES[h.id]) || types.size < 5);
+      const selected = eligible[Math.floor(this.random() * eligible.length)];
+      const h = unused.splice(unused.indexOf(selected), 1)[0];
       r.seats.push({
         id: "bot-" + this.identity.hex(6),
         name: `酒馆人机 ${r.seats.length + 1}`,
@@ -289,16 +313,18 @@ export class Rooms {
       });
     }
     // Include the selected heroes' required races, then fill to five randomly.
-    const required = [...new Set(r.seats.map((s) => HERO_TRIBES[s.hero]).filter(Boolean))];
+    const required = [...new Set(["畸变怪" as Tribe, ...r.seats.map((s) => HERO_TRIBES[s.hero]).filter(Boolean)])];
     const rest = ALL_TRIBES.filter((t) => !required.includes(t));
     for (let i = rest.length - 1; i > 0; i--) {
       const j = Math.floor(this.random() * (i + 1));
       [rest[i], rest[j]] = [rest[j], rest[i]];
     }
     r.tribes = [...required, ...rest.slice(0, 5 - required.length)];
+    const deity = r.seats.some(p => ["s14_curator", "s14_lich", "s14_teron", "s14_nzoth"].includes(p.hero)) || this.random() < .5 ? "BGFYM_000" : "BGFYM_011";
     for (const [seatIndex, p] of r.seats.entries()) {
       p.game = createSeason(p.hero, this.random, {
         tribes: r.tribes,
+        deity,
         pool: Object.keys(r.pool).length ? r.pool : undefined,
       });
       p.game.seatIndex = seatIndex;
@@ -327,6 +353,7 @@ export class Rooms {
     this.opponents(r);
   }
   opponents(r: Room) {
+    r.judgmentRev = (r.judgmentRev || 0) + 1;
     r.gameRev = (r.gameRev || 0) + 1;
     for (const p of r.seats) {
       if (!p.game) continue;
@@ -418,8 +445,8 @@ export class Rooms {
       else if (s.season!.trinketOffers.length) {
         const t = s
           .season!.trinketOffers.map((id) => TRINKETS.find((t) => t.id === id)!)
-          .filter((t) => t.cost <= s.gold)
-          .sort((a, b) => a.cost - b.cost)[0];
+          .filter((t) => trinketCost(s, t.id) <= s.gold)
+          .sort((a, b) => trinketCost(s, a.id) - trinketCost(s, b.id))[0];
         if (t) a = { type: "buyTrinket", uid: t.id };
       }
       if (!a || this.apply(r, p, a)) break;
@@ -469,7 +496,7 @@ export class Rooms {
           a = { type: "upgrade" };
         } else {
           const offer = [...s.shop]
-            .filter((m) => minionCost(s, m) <= s.gold)
+            .filter((m) => minionUsesHealth(s, m) || minionCost(s, m) <= s.gold)
             .sort((a, b) => score(b) - score(a))[0];
           if (offer && s.hand.length + s.rewards.length < 10) {
             if (s.board.length < 7) a = { type: "buy", uid: offer.uid };
@@ -495,6 +522,7 @@ export class Rooms {
   }
   action(g: Guest, action: Action, requestId: string, turn: number) {
     const { r, p } = this.member(g);
+    if (r.watch) throw Error("观战模式不能替 AI 操作，请使用观战控制");
     if (p.requests.includes(requestId)) return;
     if (!p.game || p.left || p.game.health <= 0)
       throw Error("你已淘汰或对局尚未开始");
@@ -522,6 +550,24 @@ export class Rooms {
     }
     p.requests.push(requestId);
     if (p.requests.length > 32) p.requests.shift();
+  }
+  watchControl(g: Guest, command: unknown, decisionId?: unknown, turn?: unknown) {
+    const { r, p } = this.member(g), watch = r.watch;
+    if (!watch || r.host !== g.id) throw Error("当前不在 AI 观战中");
+    if (!["play", "pause", "step", "next"].includes(String(command))) throw Error("无效观战操作");
+    if (command === "next") {
+      if (r.stage !== "combat" || turn !== r.turn) throw Error("战斗阶段已更新");
+      watch.decision = undefined; watch.step = false;
+      this.next(r);
+    } else if (command === "step") {
+      if (r.stage !== "recruit" || !watch.decision || watch.decision.id !== decisionId || p.ended)
+        throw Error("AI 决策已更新，请等待最新概率");
+      watch.paused = true; watch.step = true;
+    } else {
+      watch.paused = command === "pause"; watch.step = false;
+      if (command === "play") { watch.error = undefined; watch.nextAt = this.now() + 2000; }
+    }
+    this.touch(r); this.bots(r);
   }
   living(r: Room) {
     return r.seats.filter((p) => p.game && p.game.health > 0 && !p.left);
@@ -681,7 +727,7 @@ export class Rooms {
       const loser =
         battle.result === "loss" ? a : battle.result === "win" ? b : undefined;
       if (loser) {
-        loser.game!.health -= absorbArmor(loser.game!.season!, battle.damage);
+        damageSeasonHero(loser.game!, battle.damage);
         if (loser.game!.health <= 0) {
           dead.push(loser);
           const winner = loser === a ? b : a;
@@ -708,15 +754,18 @@ export class Rooms {
     for (const p of r.seats)
       if (p.game?.battle?.opponent === "幽灵阵容")
         p.game.opponents[p.game.nextOpponent].name = "幽灵阵容";
+    if (r.watch) { r.watch.decision = undefined; r.watch.step = false; }
     const frames = Math.max(
       ...r.seats.map((p) => p.game?.battle?.frames.length || 0),
     );
     r.deadline = r.mode === "training" ? 0 :
       this.now() + Math.max(15000, Math.min(120000, frames * 820 + 5000));
+    if (r.watch) r.watch.nextAt = this.now() + Math.max(15000, Math.min(120000, frames * 820 + 5000));
     this.touch(r);
     if (!this.living(r).length) this.next(r);
   }
   next(r: Room) {
+    if (r.watch) { r.watch.decision = undefined; r.watch.step = false; }
     if (this.checkFinish(r)) {
       this.touch(r);
       return;
@@ -765,6 +814,7 @@ export class Rooms {
   leave(g: Guest) {
     const { r, p } = this.member(g);
     g.room = undefined;
+    if (r.watch) { this.rooms.delete(r.code); this.touch(); return; }
     if (r.stage === "waiting") {
       r.seats = r.seats.filter((s) => s.id !== p.id);
     } else {
@@ -795,6 +845,7 @@ export class Rooms {
   }
   rematch(g: Guest) {
     const { r } = this.member(g);
+    if (r.watch) throw Error("请退出观战后重新开始");
     if (r.host !== g.id || r.stage !== "finished")
       throw Error("请等待房主在对局结束后再开");
     r.seats = r.seats
@@ -832,7 +883,7 @@ export class Rooms {
       const lastHumanSeen = Math.max(
         0,
         ...r.seats
-          .filter((s) => !s.bot && !s.left)
+          .filter((s) => (!s.bot || !!r.watch && s.id === r.host) && !s.left)
           .map((s) => guestsById.get(s.id)?.seen || 0),
       );
       if (
@@ -846,6 +897,7 @@ export class Rooms {
         this.touch();
         continue;
       }
+      if (r.watch && !r.watch.paused && r.stage === "combat" && this.now() >= r.watch.nextAt) this.next(r);
       if (r.deadline > 0 && r.mode !== "training") {
         if (r.stage === "recruit" && this.now() >= r.deadline) this.fight(r);
         else if (r.stage === "combat" && this.now() >= r.deadline) this.next(r);
@@ -880,6 +932,7 @@ export class Rooms {
         room: null,
         game: null,
         gameVersion: "none",
+        judgmentVersion: "none",
         battleId: undefined as string | undefined,
       };
     }
@@ -898,6 +951,7 @@ export class Rooms {
       seq: this.seq,
       version: `${r.code}:${r.rev}:${p.rev}`,
       gameVersion: `${r.code}:${p.rev}:${r.gameRev || 0}`,
+      judgmentVersion: judgmentVersion(r, p),
       battleId: p.battleId,
       guest: { id: g.id, name: g.name },
       room: {
@@ -908,6 +962,7 @@ export class Rooms {
         heroSelection: r.heroSelection,
         aiModel: r.aiModel,
         aiStatus: r.aiStatus,
+        watch: r.watch,
         recordTraining: !!r.recordTraining,
         heroOffers: r.stage === "waiting" ? p.heroOffers : undefined,
         stage: r.stage,
@@ -952,6 +1007,7 @@ export class Rooms {
     this.roomSnapshots = new WeakMap();
     for (const r of this.rooms.values()) {
       r.mode = r.mode === "training" ? "training" : "timed";
+      if (r.watch) { r.watch = { paused: true, step: false, nextAt: 0 }; r.mode = "training"; }
       if (!r.aiModel) {
         const { available: _, ...model } = this.modelOptions()[0];
         r.aiModel = model;

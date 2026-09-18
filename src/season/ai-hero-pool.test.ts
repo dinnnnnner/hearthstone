@@ -13,8 +13,8 @@ function check(heroes: string[], human: string) {
   assert.equal(new Set([...heroes, human]).size, 8);
   assert.ok(heroes.every(h => allowed.has(h)));
 }
-test("one shared pool contains 15 implemented heroes compatible with five tribes", () => {
-  assert.equal(allowed.size, 15);
+test("one shared pool contains 14 implemented heroes compatible with five tribes", () => {
+  assert.equal(allowed.size, 14);
   assert.deepEqual(new Set(AI_SEASON_HEROES.map(h => h.id)), allowed);
   assert.ok(new Set(AI_SEASON_HEROES.map(h => HERO_TRIBES[h.id]).filter(Boolean)).size <= 5);
 });

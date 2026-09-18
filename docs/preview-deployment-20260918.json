@@ -1,0 +1,149 @@
+{
+  "release_id": "20260918T041713Z-36.6.1-preview",
+  "site": "/var/www/playroom/releases/20260918T041713Z-36.6.1-preview",
+  "server": "/opt/bobs-tavern/releases/20260918T041713Z-36.6.1-preview",
+  "previous_site": "/var/www/playroom/releases/20260916-ai-watch",
+  "previous_server": "/opt/bobs-tavern/releases/20260917-basic-feedback",
+  "registry_sha256": "024c68893a8df697ed57b6db211ed4cd6c6c83763bd1c372d5802a4f99f64c02",
+  "site_manifest_sha256": "fb5d6f4699dad17cd4bde16a31e88770389057a952bb9483ddda595b8ebf25d9",
+  "server_sha256": "b6c90941df19bb28369b0dcf89b5c2121fc68179909bb0d7afd463e1f361ad51",
+  "uploaded_files": 912,
+  "patch": "36.6.1-preview",
+  "url": "https://8.153.150.101/tavern/",
+  "deployed_at": "2026-09-18T04:18:32Z",
+  "source_commit": "ee7d6aee6343c4b5e8ccea225188ca44a350999d",
+  "source_tree": "working tree, includes requested preview changes",
+  "model_registry_preserved": true,
+  "models_retrained": false,
+  "sector_pid_before": 119165,
+  "sector_pid_after": 119165,
+  "local_validation": {
+    "engine": 198,
+    "server": 81,
+    "rl": 14,
+    "search": 14,
+    "season_browser": 7,
+    "total": 314,
+    "production_build": true
+  },
+  "public_smoke": {
+    "version": "S14 · 36.6.1-preview",
+    "patch": "36.6.1-preview",
+    "tribes": [
+      "畸变怪",
+      "元素",
+      "机械",
+      "亡灵",
+      "龙"
+    ],
+    "deity": {
+      "id": "BGFYM_000",
+      "attack": 1,
+      "health": 1,
+      "golden": false
+    },
+    "seats": 8,
+    "darkGiftLockedTurnOne": true,
+    "pageErrors": []
+  },
+  "eight_player_api": {
+    "eightHumanSeats": true,
+    "sharedDeity": "BGFYM_000",
+    "patch": "36.6.1-preview",
+    "synchronizedCombat": true,
+    "pairedFramesMatch": true
+  },
+  "browser_validation": {
+    "status": "passed",
+    "log": "/tmp/preview-deploy-browser-public.log",
+    "command": "SITE_BASE_URL=https://8.153.150.101 CHECK_SECTOR=1 TEST_BASE_URL=https://8.153.150.101 TAVERN_TEST_PATH=/tavern/ npx playwright test tests/site.spec.ts tests/online.spec.ts --workers=1 --timeout=180000 --grep-invert 'eight guest browsers'",
+    "initial_attempt": "Default 30-second browser timeout expired during first asset preload. Rerun allows 180 seconds. Eight-seat synchronization separately verified through the public API.",
+    "passed": 6,
+    "duration": "See browser log; first attempt timeout resolved without product changes."
+  },
+  "limitations": [
+    "Existing scouting-v4 AI checkpoints do not understand new preview card identities. Normal matches fall back to scripted play when this occurs; AI spectator matches pause.",
+    "First cold browser preload fetched 1055 resources and the AI gameplay test completed in about 45 seconds."
+  ],
+  "rollback": {
+    "frontend": "scripts/rollback-site.py using this frontend release directory",
+    "backend": "Restore previous_server symlink and this server release previous.service, then daemon-reload and restart bobs-tavern.",
+    "state_backup": "/var/lib/bobs-tavern/deployment-backups/20260918T041713Z-36.6.1-preview.json"
+  },
+  "source_commit_note": "Base commit only; deployed bundle also contains the uncommitted working tree changes.",
+  "final_health": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "recording": {
+      "enabled": true,
+      "episodes": 0,
+      "decisions": 0,
+      "completed": 0,
+      "rejected": 0,
+      "errors": 0,
+      "bytes": 11863963
+    },
+    "ai": {
+      "mode": "fallback",
+      "decisions": 1,
+      "errors": 2,
+      "fallbackRounds": 4,
+      "lastError": "Unknown entity identity s14_BG36_098 for scouting-v4; use a trinkets-v5 checkpoint",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 2,
+        "rawRequestBytes": 6909,
+        "requestBytes": 2048,
+        "responseBytes": 2751,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1480",
+          "decisions": 1,
+          "errors": 1,
+          "fallbackRounds": 2,
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "decisions": 0,
+          "errors": 1,
+          "fallbackRounds": 2,
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep64-search-2568",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-search-2140",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-search-1284",
+          "decisions": 0,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "verified_at": "2026-09-18T04:24:07.061663+00:00"
+}

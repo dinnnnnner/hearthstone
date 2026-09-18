@@ -393,7 +393,7 @@
   stroke-width: 2.1;
   filter: drop-shadow(0 2px 1px #362142);
 }
-.tavern-control > span:last-child {
+.tavern-control > span:not(.control-cost):not(.policy-probability) {
   font-size: 10px;
   font-weight: 600;
 }
@@ -1856,7 +1856,7 @@
     width: 22px;
     height: 22px;
   }
-  .tavern-control > span:last-child {
+  .tavern-control > span:not(.control-cost):not(.policy-probability) {
     font-size: 8px;
   }
   .control-cost {
@@ -2216,7 +2216,7 @@
     width: 18px;
     height: 18px;
   }
-  .tavern-control > span:last-child {
+  .tavern-control > span:not(.control-cost):not(.policy-probability) {
     font-size: 7px;
     line-height: 8px;
   }
@@ -2799,7 +2799,7 @@
   .tavern-control > svg {
     width: 20px;
   }
-  .tavern-control > span:last-child {
+  .tavern-control > span:not(.control-cost):not(.policy-probability) {
     font-size: 7px;
   }
   .control-cost {

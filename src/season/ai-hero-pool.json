@@ -11,22 +11,77 @@
     "https://www.hsbattlegrounds.help/en/meta-digest/2026-04-18-issue-1",
     "https://www.hsbattlegrounds.help/en/tavern-pool/heroes/tier-list"
   ],
-  "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练仍使用冻结的36.4.2规则；名单内等概率采样，不按历史选用率加权。",
+  "note": "公开历史选用率中的已实现英雄子集，不是当前赛季实时榜或完整前十。完整当前榜暂不可读取。训练使用当前固定规则版本；名单内等概率采样，不按历史选用率加权。 36.6.1 提前体验中移除禁用的希尔瓦娜斯。",
   "heroes": [
-    {"id": "s14_genn", "name": "吉恩，狼人国王", "historical_pick_rate": 0.590},
-    {"id": "s14_marin", "name": "经理马林", "historical_pick_rate": 0.464},
-    {"id": "s14_buttons", "name": "扣子", "historical_pick_rate": 0.438},
-    {"id": "s14_clockwork", "name": "钟表先生克劳沃斯", "historical_pick_rate": 0.424},
-    {"id": "s14_brann", "name": "恐龙大师布莱恩", "historical_pick_rate": 0.406},
-    {"id": "s14_afk", "name": "挂机的阿凯", "historical_pick_rate": 0.379},
-    {"id": "s14_sylvanas", "name": "希尔瓦娜斯·风行者", "historical_pick_rate": 0.377},
-    {"id": "s14_chenvaala", "name": "齐恩瓦拉", "historical_pick_rate": 0.376},
-    {"id": "s14_shudderwock", "name": "沙德沃克", "historical_pick_rate": 0.367},
-    {"id": "s14_lich", "name": "巫妖王", "historical_pick_rate": 0.364},
-    {"id": "s14_teron", "name": "塔隆·血魔", "historical_pick_rate": 0.353},
-    {"id": "s14_yogg", "name": "尤格-萨隆", "historical_pick_rate": 0.269},
-    {"id": "s14_patchwerk", "name": "帕奇维克", "historical_pick_rate": 0.266},
-    {"id": "s14_millificent", "name": "米尔菲丝·法力风暴", "historical_pick_rate": 0.256},
-    {"id": "s14_vanndar", "name": "范达尔·雷矛", "historical_pick_rate": 0.253}
+    {
+      "id": "s14_genn",
+      "name": "吉恩，狼人国王",
+      "historical_pick_rate": 0.59
+    },
+    {
+      "id": "s14_marin",
+      "name": "经理马林",
+      "historical_pick_rate": 0.464
+    },
+    {
+      "id": "s14_buttons",
+      "name": "扣子",
+      "historical_pick_rate": 0.438
+    },
+    {
+      "id": "s14_clockwork",
+      "name": "钟表先生克劳沃斯",
+      "historical_pick_rate": 0.424
+    },
+    {
+      "id": "s14_brann",
+      "name": "恐龙大师布莱恩",
+      "historical_pick_rate": 0.406
+    },
+    {
+      "id": "s14_afk",
+      "name": "挂机的阿凯",
+      "historical_pick_rate": 0.379
+    },
+    {
+      "id": "s14_chenvaala",
+      "name": "齐恩瓦拉",
+      "historical_pick_rate": 0.376
+    },
+    {
+      "id": "s14_shudderwock",
+      "name": "沙德沃克",
+      "historical_pick_rate": 0.367
+    },
+    {
+      "id": "s14_lich",
+      "name": "巫妖王",
+      "historical_pick_rate": 0.364
+    },
+    {
+      "id": "s14_teron",
+      "name": "塔隆·血魔",
+      "historical_pick_rate": 0.353
+    },
+    {
+      "id": "s14_yogg",
+      "name": "尤格-萨隆",
+      "historical_pick_rate": 0.269
+    },
+    {
+      "id": "s14_patchwerk",
+      "name": "帕奇维克",
+      "historical_pick_rate": 0.266
+    },
+    {
+      "id": "s14_millificent",
+      "name": "米尔菲丝·法力风暴",
+      "historical_pick_rate": 0.256
+    },
+    {
+      "id": "s14_vanndar",
+      "name": "范达尔·雷矛",
+      "historical_pick_rate": 0.253
+    }
   ]
 }

@@ -14,7 +14,7 @@ export const ZONES = ["global", "board", "shop", "spellShop", "hand", "discovery
 export const SIZES = [1, 7, 16, 7, 10, 4, 7, 7, 2, 4, 4, 4];
 export const OFFSETS = SIZES.map((_, i) => SIZES.slice(0, i).reduce((a, b) => a + b, 0));
 export const ENTITY_COUNT = SIZES.reduce((a, b) => a + b, 0);
-export const IDS = [...new Set([...ALL_CARDS.map(c => c.id), ...SEASON_HEROES.map(h => h.id), ...TRINKETS.map(t => t.id), ...GIFTS.map(g => g.id)])].sort();
+export const IDS = [...new Set([...ALL_CARDS.map(c => c.id), ...SEASON_HEROES.map(h => h.id), ...TRINKETS.map(t => t.id), ...GIFTS.map(g => g.id), "s14_trinket"])].sort();
 const idMap = new Map(IDS.map((id, index) => [id, index + 1]));
 const identity = (id: string) => {
   const result = idMap.get(id);
@@ -35,11 +35,13 @@ for (const c of ALL_CARDS) DEFINITIONS[identity(c.id)] = {
 for (const h of SEASON_HEROES) DEFINITIONS[identity(h.id)] = { kind: "hero", cost: h.cost, passive: h.passive };
 for (const t of TRINKETS) DEFINITIONS[identity(t.id)] = { kind: "trinket" };
 for (const g of GIFTS) DEFINITIONS[identity(g.id)] = { kind: "gift" };
+DEFINITIONS[identity("s14_trinket")] = { kind: "hero", cost: 0, passive: true };
 export const ENTITY_SCHEMA = { version: 3, ids: IDS, definitions: DEFINITIONS, zones: ZONES, sizes: SIZES, offsets: OFFSETS, count: ENTITY_COUNT };
 
 /** Full dynamic own-card effects, with instance links converted to visible slot indices. */
 function cardDetails(m: Minion, ref: (uid: string) => number, historical = false): Detail {
   const d: Detail = {
+    discardGroup: m.discardGroup,
     attack: m.attack, health: m.health, golden: m.golden, keywords: m.keywords,
     lockedUntil: m.lockedUntil, lockedTier: m.lockedTier, bothChoices: m.bothChoices,
     magneticCount: m.magneticCount, learnedSpell: m.learnedSpell, gift: m.gift,
@@ -70,6 +72,9 @@ export function observeEntities(s: Game, decisions: number, budget: number): (En
     scouting: publicScouting(s, s.scouting),
     upgrade: s.upgrade, frozen: s.frozen, powerUsed: s.powerUsed, triples: s.triples, purchases: s.purchases,
     refreshes: s.refreshes, rewards: s.rewards, pogo: s.pogo, decisions, budget,
+    extraTrinkets: st.trinkets.slice(SIZES[11]),
+    trinketData: Object.fromEntries(Object.entries(st.trinketData || {}).map(([key, data]) => [key, { turn: data.turn, type: data.type, card: data.card }])),
+    deity: st.deity, trinketPower: st.trinketPower, kiriSlot: st.kiriSlot,
     tribes: st.tribes, freeRefresh: st.freeRefresh, refreshPayment: refreshPayment(s),
     nextGold: st.nextGold, maxGold: st.maxGold, giftsUsed: st.giftsUsed,
     giftUsedTurn: st.giftUsedTurn, discoveryKind: st.discoveryKind,
@@ -112,6 +117,6 @@ export function observeEntities(s: Game, decisions: number, budget: number): (En
   });
   st.powerChoice?.offers.forEach((id, i) => put(9, i, identity(id), {}));
   st.trinketOffers.forEach((id, i) => put(10, i, identity(id), {}));
-  st.trinkets.forEach((id, i) => put(11, i, identity(id), {}));
+  st.trinkets.slice(0, SIZES[11]).forEach((id, i) => put(11, i, identity(id), {}));
   return result;
 }

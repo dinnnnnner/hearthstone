@@ -8,7 +8,7 @@ import {
   type Game,
   type Action,
 } from "../engine";
-import { getDef, POOL_COPIES } from "../data";
+import { cardText, getDef, POOL_COPIES } from "../data";
 import { nguyenPowerEligible } from "./powers";
 import {
   SEASON_CARDS,
@@ -77,14 +77,14 @@ function next(s: Game) {
   return apply(apply(s, { type: "end" }), { type: "continue" });
 }
 test("pinned pool excludes retired and Duos cards, each lobby activates five races", () => {
-  assert.equal(SEASON_CATALOG.length, 234);
+  assert.equal(SEASON_CATALOG.length, 242);
   assert.equal(
     SEASON_CATALOG.find((d) => d.sourceId === "BG26_174")!.health,
     2,
   );
   assert.equal(
-    SEASON_CATALOG.find((d) => d.sourceId === "BG36_509")!.attack,
-    5,
+    SEASON_CATALOG.find((d) => d.sourceId === "BG36_110")!.attack,
+    2,
   );
   const s = createGame("s14_lich", rng);
   assert.equal(s.season!.tribes.length, 5);
@@ -257,6 +257,71 @@ test("Dark Gift turn eligibility, tier progression, spending, and usage limits",
   assert.deepEqual(giftTierRange(9), [4, 5, 6]);
   assert.deepEqual(giftTierRange(12), [5, 6]);
 });
+test("Dark Gift rejects both opening turns without spending gold or consuming a use", () => {
+  for (const turn of [1, 2]) {
+    const s = fixture();
+    s.turn = turn;
+    s.gold = 10;
+    const before = structuredClone(s);
+    const result = act(s, { type: "darkGift" }, rng);
+    assert.match(result.error!, /第3回合/);
+    assert.deepEqual(result.state, before);
+    assert.deepEqual(s, before);
+  }
+});
+
+test("a Dark Gift discovery triples with two ordinary copies and retains its gift", () => {
+  let s = fixture();
+  s.turn = 3;
+  s.gold = 10;
+  s = apply(s, { type: "darkGift" });
+  const gifted = s.discovery[0];
+  assert.ok(gifted.gift);
+  const id = getDef(gifted.id).sourceId!;
+  add(s, id, "board");
+  add(s, id, "hand");
+  s = apply(s, { type: "discover", uid: gifted.uid });
+  const golden = s.hand.find((m) => m.id === gifted.id && m.golden)!;
+  assert.ok(golden);
+  assert.equal(golden.gift, gifted.gift);
+  assert.equal(golden.giftTurn, 3);
+  assert.equal(golden.copies[golden.id], 3);
+  assert.equal(s.board.filter((m) => m.id === gifted.id).length, 0);
+  assert.equal(s.hand.filter((m) => m.id === gifted.id).length, 1);
+  const d = getDef(gifted.id);
+  assert.equal(golden.attack, d.goldenAttack! + gifted.attack - d.attack);
+  assert.equal(golden.health, d.goldenHealth! + gifted.health - d.health);
+  assert.ok(gifted.keywords.every((k) => golden.keywords.includes(k)));
+  s = apply(s, { type: "play", uid: golden.uid });
+  assert.deepEqual(s.rewards, [s.tier + 1]);
+});
+
+test("buying a third ordinary copy triples a gifted minion in hand or on board and keeps its effect", () => {
+  for (const zone of ["hand", "board"] as const) {
+    let s = fixture();
+    s.turn = 3;
+    s.gold = 10;
+    const gifted = add(s, "BG25_001", zone);
+    gifted.gift = "BG36_MidGameEffect_000t51";
+    gifted.giftTurn = 3;
+    gifted.attack += 2;
+    gifted.health += 4;
+    add(s, "BG25_001", "hand");
+    const third = add(s, "BG25_001", "shop");
+    s = apply(s, { type: "buy", uid: third.uid });
+    const golden = s.hand.find((m) => m.id === gifted.id && m.golden)!;
+    assert.ok(golden);
+    assert.equal(golden.gift, gifted.gift);
+    assert.equal(golden.giftTurn, 3);
+    assert.equal(golden.copies[golden.id], 3);
+    s = apply(s, { type: "play", uid: golden.uid });
+    const before = structuredClone(s.board.find((m) => m.uid === golden.uid)!);
+    s = apply(s, { type: "end" });
+    const after = s.board.find((m) => m.uid === golden.uid)!;
+    assert.equal(after.attack, before.attack + 1);
+    assert.equal(after.health, before.health + 2);
+  }
+});
 test("Dark Gifts honor Battlecry and poison restrictions", () => {
   const s = fixture();
   s.turn = 5;
@@ -350,7 +415,7 @@ test("Spitescale Special respects the hand limit and does not require remaining 
   assert.equal(s.hand.filter((m) => getDef(m.id).spellSchool === "SPELLCRAFT").length, 2);
   assert.ok(s.logs.some((line) => line.includes("手牌已满")));
 });
-test("Spitescale Special appears in the tavern only when Naga are present", () => {
+test("Spitescale Special is retired from preview taverns, including old Naga lobbies", () => {
   for (const naga of [false, true]) {
     let s = createSeason("s14_lich", seed(22), {
       tribes: ["野兽", "恶魔", "龙", "机械", naga ? "纳迦" : "亡灵"],
@@ -365,7 +430,7 @@ test("Spitescale Special appears in the tavern only when Naga are present", () =
       s = result.state;
       seen ||= s.season!.spellShop.some((m) => m.id === PREFIX + "BG28_606");
     }
-    assert.equal(seen, naga);
+    assert.equal(seen, false);
   }
 });
 test("Soul Rewinder rewinds hero damage and buffs health using current values", () => {
@@ -1050,18 +1115,16 @@ test("Nguyen only offers locked and scheduled powers when they can trigger this 
 });
 
 test("Nguyen's chosen start-of-turn power triggers immediately without replaying the old power", () => {
-  let s = fixture("s14_nguyen");
-  s.season!.powerChoice!.offers = [PREFIX + "vashj", PREFIX + "george"];
-  const before = s.hand.length;
-  s = apply(s, { type: "choosePower", uid: PREFIX + "vashj" });
-  assert.equal(s.hand.length, before + 1);
-  s = JSON.parse(JSON.stringify(s));
-  advanceRecruit(s, rng);
-  assert.equal(s.hand.length, before + 1, "old Vashj power does not trigger before the next choice");
+  let s = fixture("s14_nguyen"); s.turn = 3;
+  s.season!.powerChoice!.offers = [PREFIX + "yogg", PREFIX + "george"];
+  const before = s.season!.spellsCast;
+  s = apply(s, { type: "choosePower", uid: PREFIX + "yogg" });
+  assert.equal(s.season!.spellsCast, before + 1);
+  s = JSON.parse(JSON.stringify(s)); advanceRecruit(s, rng);
+  assert.equal(s.season!.spellsCast, before + 1);
   s.season!.powerChoice!.offers = [PREFIX + "george", PREFIX + "reno"];
   s = apply(s, { type: "choosePower", uid: PREFIX + "george" });
-  assert.equal(s.hand.length, before + 1);
-  assertPool(s);
+  assert.equal(s.season!.spellsCast, before + 1); assertPool(s);
 });
 
 test("Genn discovers twice on turn four; choices survive restore and cannot duplicate", () => {
@@ -1388,7 +1451,7 @@ test("Leeroy kills the minion that dealt lethal damage", () => {
 });
 
 test("every pinned pool minion and tavern spell has executable rules", () => {
-  assert.equal(SEASON_CARDS.length, 234); assert.equal(SEASON_SPELLS.length, 67);
+  assert.equal(SEASON_CARDS.length, 242); assert.equal(SEASON_SPELLS.length, 66);
   for (const d of SEASON_CARDS) {
     let s = fixture(); s.tier = 6; s.gold = 50; s.health = 200;
     add(s, "BG25_001", "board"); const minion = add(s, d.sourceId!);
@@ -1618,6 +1681,74 @@ test("Treasure Parrot does not count damage blocked by Divine Shield", () => {
   seasonCombat(s, [enemy], 1, rng);
   assert.equal(parrot.counters.parrotDamage, 34);
   assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG28_830").length, 0);
+});
+
+test("Treasure Parrot counts full attack and retaliation damage against low-health minions", () => {
+  for (const golden of [false, true]) for (const parrotAttacks of [false, true]) {
+    const s = fixture(), opponent = fixture();
+    const parrot = add(s, "BG36_763", "board", golden);
+    parrot.attack = 20;
+    parrot.counters = { parrotDamage: 15 };
+    const enemy = add(opponent, "BG25_001", "board");
+    enemy.attack = 100;
+    enemy.health = 1;
+    enemy.keywords = [];
+    seasonCombat(s, opponent.board, opponent.tier, () => parrotAttacks ? 0 : 0.99, opponent);
+    assert.equal(parrot.counters.parrotDamage, 35);
+    assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG28_830").length, golden ? 2 : 1);
+    assertPool(s);
+    assertPool(opponent);
+  }
+});
+
+test("Treasure Parrot does not count health removed by Venomous as damage", () => {
+  const s = fixture(), parrot = add(s, "BG36_763", "board");
+  parrot.attack = 1;
+  parrot.keywords = ["烈毒"];
+  parrot.counters = { parrotDamage: 30 };
+  const enemy = makeMinion(PREFIX + "BG25_001");
+  enemy.attack = enemy.health = 100;
+  enemy.keywords = [];
+  seasonCombat(s, [enemy], 1, rng);
+  assert.equal(parrot.counters.parrotDamage, 31);
+  assert.equal(s.hand.filter((m) => m.id === PREFIX + "BG28_830").length, 0);
+});
+
+test("Treasure Parrot text shows remaining damage and completion for both versions", () => {
+  for (const golden of [false, true]) {
+    const parrot = makeMinion(PREFIX + "BG36_763", golden);
+    assert.match(cardText(parrot), /还剩35点/);
+    parrot.counters = { parrotDamage: 20 };
+    assert.match(cardText(parrot), /还剩15点/);
+    parrot.counters.parrotDamage = 40;
+    assert.match(cardText(parrot), /已完成/);
+    assert.doesNotMatch(cardText(parrot), /还剩/);
+  }
+});
+
+test("Treasure Parrot's Golden Touch grants a discovery when its golden shop minion is played", () => {
+  let s = fixture();
+  s.tier = 4;
+  s.gold = 10;
+  const parrot = add(s, "BG36_763", "board");
+  parrot.counters = { parrotDamage: 34 };
+  const enemy = makeMinion(PREFIX + "BG25_001");
+  enemy.attack = enemy.health = 100;
+  enemy.keywords = [];
+  seasonCombat(s, [enemy], 1, rng);
+  const touch = s.hand.find((m) => m.id === PREFIX + "BG28_830")!;
+  assert.ok(touch);
+  const shopBefore = structuredClone(s.shop);
+  s = apply(s, { type: "cast", uid: touch.uid });
+  const golden = s.shop.find((m) => m.golden)!;
+  const original = shopBefore.find((m) => m.uid === golden.uid)!;
+  assert.deepEqual(golden.copies, original.copies);
+  assert.equal(s.rewards.length, 0);
+  s = apply(s, { type: "buy", uid: golden.uid });
+  assert.equal(s.rewards.length, 0);
+  s = apply(s, { type: "play", uid: golden.uid, target: seasonTargets(s, golden)[0]?.uid });
+  assert.deepEqual(s.rewards, [5]);
+  assert.equal(s.board.find((m) => m.uid === golden.uid)!.reward, false);
 });
 
 // Gem Confiscation uses adjacent minions in the target's own row.

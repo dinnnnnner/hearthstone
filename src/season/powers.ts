@@ -1,16 +1,16 @@
 import type { Game } from "../engine";
-import { PREFIX, SEASON_HEROES } from "./catalog";
+import { PREFIX, SEASON_HEROES, SEASON_HERO_DEFINITIONS, RAW_TRINKETS } from "./catalog";
 
 export interface PowerProgress { uses: number; turnUses: number; elementalsPlayed: number }
 export interface PowerChoice {
-  mode: "finley" | "nguyen" | "genn" | "replace";
+  mode: "finley" | "nguyen" | "genn" | "replace" | "additional";
   offers: string[];
   selected: string[];
 }
 export const equippedPowers = (s: Game): string[] => s.season?.powers || [s.hero];
 export const hasPower = (s: Game, key: string) => equippedPowers(s).includes(PREFIX + key);
 export const powerDefinition = (s: Game, id = equippedPowers(s)[0]) =>
-  SEASON_HEROES.find((h) => h.id === id)!;
+  id === 's14_trinket' ? { ...SEASON_HEROES[0], id, name: '饰品技能', power: RAW_TRINKETS.find(t => t.id === s.season?.trinketPower)?.name || '饰品', text: RAW_TRINKETS.find(t => t.id === s.season?.trinketPower)?.text || '', cost: 0, passive: true, art: s.season?.trinketPower || SEASON_HEROES[0].art } : SEASON_HERO_DEFINITIONS.find((h) => h.id === id)!;
 
 // Nguyen holds a power for one turn. Keep this policy separate from permanent
 // replacements. Official removals and project rules are documented alongside it.

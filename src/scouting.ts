@@ -9,7 +9,7 @@ export interface ScoutRound {
 export function warbandLabel(board: Minion[]): string {
   if (!board.length) return "空场";
   const counts = new Map<string, number>();
-  const tribes = ["野兽", "机械", "鱼人", "恶魔", "龙", "元素", "纳迦", "海盗", "野猪人", "亡灵"];
+  const tribes = ["野兽", "机械", "鱼人", "恶魔", "龙", "元素", "畸变怪", "纳迦", "海盗", "野猪人", "亡灵"];
   for (const m of board) {
     const d = getDef(m.id), races = d.races?.length ? d.races : [d.tribe];
     for (const race of new Set(races.includes("全部") ? tribes : races)) {

@@ -16,7 +16,7 @@ type Episode = { id: string; gameId: string; room: Room; seat: Seat; steps: numb
   decisions: number; previous: number; endedTurn: number; invalid: Set<string>; finished: boolean };
 /** Append-only, pseudonymous human demonstrations. No online learning or bot trajectories. */
 export class Demonstrations {
-  readonly profile = inferenceProfile('scouting-v4');
+  readonly profile = inferenceProfile('trinkets-v5');
   readonly stats = { enabled: true, episodes: 0, decisions: 0, completed: 0, rejected: 0, errors: 0, bytes: 0 };
   private episodes = new Map<Seat, Episode>();
   private games = new WeakMap<Room, string>();

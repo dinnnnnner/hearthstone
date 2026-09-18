@@ -1,7 +1,7 @@
 /** A disposable, own-turn simulator reconstructed only from the policy's public input. */
 import { type Game, type Minion, type Opponent } from '../src/engine';
 import { actSeason, endEffects, type SeasonState } from '../src/season/engine';
-import { SEASON_CARDS } from '../src/season/catalog';
+import { SEASON_CARDS, SEASON_META } from '../src/season/catalog';
 import { POOL_COPIES } from '../src/data';
 import { withSimulation } from '../src/simulation';
 import { ACTIONS, candidates } from './actions';
@@ -12,10 +12,10 @@ import { AI_ACTION_LIMITS, enableAIActionLimits } from '../src/ai-action-limits'
 export const SEARCH_VERSION = 'own-recruit-freeze-close-v3';
 type Details = Record<string, any>;
 const take = (source: Details, keys: string[]) => Object.fromEntries(keys.filter(k => source[k] !== undefined).map(k => [k, structuredClone(source[k])]));
-const cardFields = ['attack', 'health', 'golden', 'keywords', 'lockedUntil', 'lockedTier', 'bothChoices', 'magneticCount',
+const cardFields = ['discardGroup', 'attack', 'health', 'golden', 'keywords', 'lockedUntil', 'lockedTier', 'bothChoices', 'magneticCount',
   'learnedSpell', 'gift', 'giftTurn', 'activated', 'temporary', 'extraAbilities', 'expires', 'tempSpell', 'gems', 'reward', 'rebornNext', 'counters'];
 const gameFields = ['turn', 'tier', 'gold', 'health', 'upgrade', 'frozen', 'powerUsed', 'triples', 'purchases', 'refreshes', 'rewards', 'pogo', 'seatIndex'];
-const seasonFields = ['armor', 'spellArmor', 'tribes', 'freeRefresh', 'nextGold', 'maxGold', 'giftsUsed', 'giftUsedTurn',
+const seasonFields = ['trinketData', 'deity', 'trinketPower', 'kiriSlot', 'armor', 'spellArmor', 'tribes', 'freeRefresh', 'nextGold', 'maxGold', 'giftsUsed', 'giftUsedTurn',
   'discoveryKind', 'trinketDone', 'buffs', 'fodder', 'spellDiscount', 'healthRefreshes', 'healthRefreshUses', 'playedTurn',
   'goldenPlayed', 'spellsCast', 'lastSpell', 'battlecries', 'deaths', 'trinketBuys', 'counters', 'combatEffects',
   'goldSpentTurn', 'boughtTurn', 'lastDead', 'cookieTribes', 'powerCycle', 'nozdormuRefreshTurn'];
@@ -51,8 +51,8 @@ export function gameFromObservation(input: (Entity | null)[]): Game {
   const opponents: Opponent[] = zone(7).map((e, i) => ({ ...take(e.details, ['seatIndex', 'health', 'armor', 'spellArmor', 'tier']),
     name: name((e.details as Details).seatIndex ?? i), hero: id(e), board: [], scouting: scouts(e.details.scouting as any[]),
   } as unknown as Opponent));
-  const st = { ...take(g, seasonFields), patch: '36.4.2', spellShop: cards(3), initialPool: {}, pendingDiscoveries: [],
-    trinkets: zone(11).map(id), trinketOffers: zone(10).map(id), powers: zone(8).map(id),
+  const st = { ...take(g, seasonFields), patch: SEASON_META.patch, spellShop: cards(3), initialPool: {}, pendingDiscoveries: [],
+    trinkets: [...zone(11).map(id), ...(g.extraTrinkets || [])], trinketOffers: zone(10).map(id), powers: zone(8).map(id),
     powerProgress: Object.fromEntries(zone(8).map(e => [id(e), take(e.details, ['uses', 'turnUses', 'elementalsPlayed'])])),
     lastEnemy: cards(6), frozenMinions: g.frozenMinions?.map(ref).filter(Boolean),
     heroMarks: Object.fromEntries(Object.entries(g.heroMarks || {}).flatMap(([key, value]) => {

@@ -19,8 +19,9 @@ import {
   SEASON_HEROES,
   SEASON_HERO_CATALOG,
   RAW_GIFTS,
+  RAW_TRINKETS,
 } from "./catalog";
-import { TRINKETS, giftTierRange, spellCost, spellUsesHealth } from "./engine";
+import { TRINKETS, giftTierRange, spellCost, spellUsesHealth, trinketCost, trinketText } from "./engine";
 import assets from "./assets.json" with { type: "json" };
 export function SeasonBar({
   game,
@@ -41,12 +42,13 @@ export function SeasonBar({
           <span className="season-kicker">
             SEASON 14 · PATCH {SEASON_META.patch}
           </span>
-          <h2>达拉然的黑暗之赐</h2>
+          <h2>畸变怪来袭 · 提前体验</h2>
           <p>本局种族：{st.tribes.join(" · ")}</p>
+          {st.deity && <p>神明：{getDef("s14_" + st.deity.id).name} {st.deity.golden ? "金色 · " : ""}{st.deity.attack}/{st.deity.health} · 每场战斗死亡3个友方畸变怪后唤醒</p>}
         </div>
         <span className="season-verified">
           <CheckCircle2 size={12} />
-          9月3日平衡补丁
+          36.6.1 提前体验
         </span>
       </div>
       <div className="season-tools">
@@ -87,20 +89,20 @@ export function SeasonBar({
           </button>
         </div>
         <div className="trinket-slots">
-          {[0, 1].map((i) => {
-            const t = TRINKETS.find((t) => t.id === st.trinkets[i]);
+          {Array.from({ length: Math.max(2, st.trinkets.length) }, (_, i) => i).map((i) => {
+            const t = RAW_TRINKETS.find((t) => t.id === st.trinkets[i]);
             return (
               <div
                 className={`trinket-slot ${t ? "filled" : ""}`}
                 key={i}
-                title={t?.text || `第${i === 0 ? 6 : 9}回合选择饰品`}
+                title={t ? trinketText(game, t.id, i) : `第${i === 0 ? 6 : 9}回合选择饰品`}
               >
                 {t ? <img src={art(t.id)} alt="" /> : <Gem size={18} />}
                 <div>
                   <strong>
                     {t?.name || `${i === 0 ? "小型" : "大型"}饰品`}
                   </strong>
-                  <span>{t ? t.text : `第${i === 0 ? 6 : 9}回合选择`}</span>
+                  <span>{t ? trinketText(game, t.id, i) : `第${i === 0 ? 6 : 9}回合选择`}</span>
                 </div>
               </div>
             );
@@ -146,9 +148,9 @@ export function SpellShelf({
               <button
                 className="small-button"
                 onClick={() => dispatch({ type: "buySpell", uid: m.uid })}
-                disabled={game.phase !== "recruit" || (!spellUsesHealth(m) && game.gold < cost)}
+                disabled={game.phase !== "recruit" || (!spellUsesHealth(m, game) && game.gold < cost)}
               >
-                购买 {spellUsesHealth(m) ? "生命 " : <Coins size={12} />}
+                购买 {spellUsesHealth(m, game) ? "生命 " : <Coins size={12} />}
                 {cost}
               </button>
             </div>
@@ -183,23 +185,25 @@ export function SeasonTrinkets({
   return (
     <div className="trinket-options">
       {game.season!.trinketOffers.map((id) => {
-        const t = TRINKETS.find((t) => t.id === id)!;
+        const t = TRINKETS.find((t) => t.id === id);
+        if (!t) return null;
+        const cost = trinketCost(game, id);
         return (
           <button
             key={id}
             className="trinket-option"
             onClick={() => dispatch({ type: "buyTrinket", uid: id })}
-            disabled={game.gold < t.cost}
+            disabled={game.gold < cost}
           >
             <span
               className="trinket-option-art"
               style={{ backgroundImage: `url(${art(id)})` }}
             />
             <strong>{t.name}</strong>
-            <p>{t.text}</p>
+            <p>{trinketText(game, t.id)}</p>
             <span className="trinket-price">
               <Coins size={14} />
-              {t.cost} 金币
+              {cost} 金币
             </span>
           </button>
         );
@@ -234,7 +238,7 @@ export function CardSource({ m }: { m: Minion }) {
               src={art(m.id)}
               alt={`${d.name}原始插画`}
             />
-            <p>该卡的中文完整渲染暂不可用，使用原始插画与36.4.2数据排版。</p>
+            <p>该卡的中文完整渲染暂不可用，使用原始插画与{SEASON_META.patch}数据排版。</p>
           </>
         )}
         <a
@@ -254,7 +258,7 @@ export function CoverageNote() {
     <div className="coverage-note">
       <Shield size={16} />
       <span>
-        36.4.2资料已收录{SEASON_CATALOG.length}种随从，其中{SEASON_CARDS.length}
+        {SEASON_META.patch}资料已收录{SEASON_CATALOG.length}种随从，其中{SEASON_CARDS.length}
         种已实现技能并可进入练习池。另有{SEASON_SPELLS.length}
         种可购买酒馆法术，以及{SEASON_HEROES.length}/{SEASON_HERO_CATALOG.length}位可用英雄。其余英雄尚未开放；黑暗之赐与饰品仍使用已实现的候选池。
       </span>

@@ -1,5 +1,5 @@
 import type { Battle, Game, Minion, Opponent } from "./engine";
-import { absorbArmor } from "./ranking";
+import { absorbArmor, damageSeasonHero } from "./ranking";
 import { recordScoutRound, warbandLabel } from "./scouting";
 import { roundRobinPairings } from "../server/pairing";
 
@@ -27,7 +27,7 @@ export function practiceBattles(
   if (others.length === 1) pairs.push([others[0], ghost]);
   const battles = pairs.map(([a, b]) => ({ a, b, battle: fight(a, b) }));
   const hurt = (o: Opponent | null, damage: number) => {
-    if (!o) s.health -= s.season ? absorbArmor(s.season, damage) : damage;
+    if (!o) damageSeasonHero(s, damage);
     else if (s.season) {
       const armor = { armor: o.armor || 0, spellArmor: o.spellArmor };
       o.health -= absorbArmor(armor, damage);

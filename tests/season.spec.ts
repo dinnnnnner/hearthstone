@@ -44,7 +44,7 @@ test("current mode, original card art, catalogue coverage, and persistence", asy
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
-  await expect(page.locator(".version-pill")).toContainText("36.4.2");
+  await expect(page.locator(".version-pill")).toContainText("36.6.1-preview");
   await expect(page.locator(".armor-badge")).toContainText("14");
   await expect(page.locator(".season-bar")).toContainText("黑暗发现");
   await expect(page.locator(".spell-offer")).toHaveCount(1);
@@ -58,7 +58,7 @@ test("current mode, original card art, catalogue coverage, and persistence", asy
   await page.reload();
   await expect(page.locator(".power-button")).toContainText("本回合已使用");
   await page.getByRole("button", { name: "随从图鉴", exact: true }).click();
-  await expect(page.locator(".coverage-note")).toContainText("234");
+  await expect(page.locator(".coverage-note")).toContainText("242");
   await page.getByPlaceholder("搜索随从或技能").fill("美味龙虾");
   await expect(page.locator(".collection-item")).toHaveCount(2);
   await page.getByRole("button", { name: /^美味龙虾，/ }).click();
@@ -74,7 +74,7 @@ test("current mode, original card art, catalogue coverage, and persistence", asy
   await page.getByRole("button", { name: "关闭", exact: true }).click();
   await page.getByPlaceholder("搜索随从或技能").fill("");
   await page.getByRole("button", { name: /酒馆法术 ·/ }).click();
-  await expect(page.locator(".collection-item")).toHaveCount(67);
+  await expect(page.locator(".collection-item")).toHaveCount(66);
   expect(errors).toEqual([]);
 });
 test("Activate skill targeting changes stats and disables repeat use", async ({
@@ -164,4 +164,19 @@ test("mobile current-season UI has no overflow and can switch back to classic", 
   await page.getByRole("button", { name: /进入酒馆/ }).click();
   await expect(page.locator(".season-bar")).toHaveCount(0);
   await expect(page.locator(".version-pill")).toContainText("经典精选");
+});
+
+test('preview discard activation accepts a hand target and displays the deity', async ({ page }) => {
+  const s = fixture(); add(s, 'BG36_099'); s.hand.push(makeMinion('s14_BG36_303'));
+  await setGame(page, s);
+  await expect(page.locator('.season-bar')).toContainText('提前体验');
+  await expect(page.locator('.season-bar')).toContainText('神明：');
+  await page.locator('.occupied .minion-card').first().click();
+  await page.getByRole('button', { name: /发动技能/ }).click();
+  await expect(page.locator('.target-banner')).toContainText('手牌');
+  await page.locator('.hand-cards .spell-card').click();
+  await expect(page.locator('.hand-cards .spell-card')).toHaveCount(0);
+  await expect(page.locator('.season-bar')).toContainText('3/3');
+  const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)!), key);
+  expect(saved.season.maxGold).toBe(12);
 });

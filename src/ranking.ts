@@ -15,3 +15,13 @@ export function absorbArmor(state: { armor: number; spellArmor?: number }, damag
   state.spellArmor = Math.max(0, (state.spellArmor || 0) - absorbed);
   return damage - absorbed;
 }
+
+export function damageSeasonHero(game: Game, damage: number) {
+  const season = game.season;
+  if (!season) { game.health -= damage; return; }
+  if (season.counters?.iceBlock && damage >= game.health + season.armor) {
+    season.counters.iceBlock = 0;
+    return;
+  }
+  game.health -= absorbArmor(season, damage);
+}

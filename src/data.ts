@@ -3,7 +3,7 @@ import {
   SEASON_CATALOG,
   SEASON_RELATED,
   SEASON_SPELL_CATALOG,
-  SEASON_HEROES,
+  SEASON_HERO_DEFINITIONS,
 } from "./season/catalog";
 export type Tribe =
   | "野兽"
@@ -13,6 +13,7 @@ export type Tribe =
   | "龙"
   | "元素"
   | "纳迦"
+  | "畸变怪"
   | "海盗"
   | "野猪人"
   | "亡灵"
@@ -21,6 +22,8 @@ export type Tribe =
 export type Keyword =
   "嘲讽" | "圣盾" | "复生" | "剧毒" | "风怒" | "烈毒" | "潜行";
 export interface Ability {
+  threshold?: number;
+  trinket?: boolean;
   event: string;
   op: string;
   attack?: number;
@@ -598,7 +601,7 @@ export const CLASSIC_HEROES: Hero[] = [
     art: "TB_BaconShop_HERO_30",
   },
 ];
-export const HEROES: Hero[] = [...CLASSIC_HEROES, ...SEASON_HEROES];
+export const HEROES: Hero[] = [...CLASSIC_HEROES, ...SEASON_HERO_DEFINITIONS];
 export const originalArt = (id: string) =>
   id.startsWith("s14_")
     ? assetUrl("art/" + id.slice(4) + ".png")
@@ -649,12 +652,17 @@ const GOLDEN_TEXT: Record<string, string> = {
   coiler: "亡语：随机召唤四个亡语随从。",
   overseer: "战吼：使一个友方恶魔获得+4/+4。",
 };
-export function cardText(m: { id: string; golden: boolean; lockedUntil?: number; lockedTier?: number; learnedSpell?: string }) {
+export function cardText(m: { id: string; golden: boolean; lockedUntil?: number; lockedTier?: number; learnedSpell?: string; counters?: Record<string, number> }) {
   const d = getDef(m.id);
   if (d.season) {
     const lock = m.lockedUntil ? `第${m.lockedUntil}回合解锁。` : m.lockedTier ? `酒馆${m.lockedTier}星解锁。` : "";
     if (m.learnedSpell) return lock + `战吼：施放${getDef(m.learnedSpell).name}。本随从无法三连。`;
-    return lock + (m.golden ? d.goldenText || d.text : d.text);
+    let text = m.golden ? d.goldenText || d.text : d.text;
+    if (d.sourceId === "BG36_763") {
+      const remaining = Math.max(0, 35 - (m.counters?.parrotDamage || 0));
+      text = text.replace(/（还剩\d+点！）/, remaining ? `（还剩${remaining}点！）` : "（已完成！）");
+    }
+    return lock + text;
   }
   return (m.golden && d.effect && GOLDEN_TEXT[d.effect]) || d.text;
 }
