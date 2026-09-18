@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import random
+import signal
 import time
 import hashlib
 from collections import Counter
@@ -35,9 +36,9 @@ def atomic_checkpoint(path, payload):
     os.replace(temporary, path)
 
 
-def load_checkpoint(path, meta, device="cpu", allow_legacy=False):
+def load_checkpoint(path, meta, device="cpu", allow_legacy=False, *, model=None, mmap=False):
     # Checkpoints include optimizer and RNG state. Load only your own trusted files.
-    saved = torch.load(path, map_location="cpu", weights_only=False)
+    saved = torch.load(path, map_location="cpu", weights_only=False, mmap=mmap)
     legacy = (allow_legacy and meta.get('legacyV2SourceHash') is not None
               and saved['meta'].get('sourceHash') == meta['legacyV2SourceHash']
               and saved['meta'].get('schema') == 'tavern-selfplay-v2'
@@ -51,7 +52,10 @@ def load_checkpoint(path, meta, device="cpu", allow_legacy=False):
             raise ValueError(f"Checkpoint incompatible with simulator: {key}")
     if saved['meta'].get('actions') != meta.get('actions'):
         raise ValueError('Checkpoint action definitions differ')
-    model = make_model(saved["model_spec"]).to(device)
+    if model is None:
+        model = make_model(saved["model_spec"]).to(device)
+    elif model.specification() != saved["model_spec"]:
+        raise ValueError("Resident sampler model specification changed")
     model.load_state_dict(saved["model"])
     return saved, model
 
@@ -103,6 +107,7 @@ def parser():
     p = argparse.ArgumentParser(description="Eight-seat neural self-play PPO; no online game server or scripted bots")
     p.add_argument("--output", default="rl/runs/selfplay")
     p.add_argument("--resume", type=Path)
+    p.add_argument('--warm-start', type=Path, help='New basic-feedback run retaining old core weights, without old auxiliary heads or optimizer')
     p.add_argument("--first-place-bonus", type=validate_bonus,
                    help="Additional PPO reward for placement 1; omitted preserves saved value, legacy default 0")
     p.add_argument("--hero-pool", type=Path, help="JSON whitelist for all eight seats; saved in checkpoints and retained on resume")
@@ -117,10 +122,14 @@ def parser():
     p.add_argument("--learner-seats", type=int, default=4)
     p.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
     p.add_argument("--seed", type=int, default=42)
-    p.add_argument("--architecture", choices=['entity-gru','entity-gru-resnet','mlp'],
+    p.add_argument("--architecture", choices=['entity-gru','entity-gru-resnet','entity-gru-ledger','entity-gru-moe','mlp'],
                    help='New runs default to entity-gru; resume restores the saved architecture')
+    p.add_argument('--moe-experts', type=int, help='New MoE run: 2..16 dense experts, default 4')
+    p.add_argument('--moe-width', type=int, help='New MoE run: expert intermediate width, default 2*hidden')
+    p.add_argument('--moe-balance-coef', type=float, help='MoE batch routing balance loss coefficient, default .01')
     p.add_argument("--policy-depth", type=int, help='Dense layers in policy residual tower; default 64 for entity-gru-resnet')
     p.add_argument("--value-depth", type=int, help='Dense layers in value residual tower; default 64 for entity-gru-resnet')
+    p.add_argument('--tower-width', type=int, help='Independent residual tower width for a new run; defaults to hidden size')
     p.add_argument("--heads", type=int, default=4)
     p.add_argument("--layers", type=int, default=2)
     p.add_argument("--sequence-length", type=int, default=16)
@@ -130,6 +139,8 @@ def parser():
     p.add_argument("--hidden", type=int, default=128)
     p.add_argument("--max-actions", type=int, default=64)
     p.add_argument("--max-steps", type=int, default=30000)
+    p.add_argument('--ai-action-limits',action=argparse.BooleanOptionalAction,default=None,
+                   help='Enable the simulator AI action limits; omitted preserves resume settings')
     p.add_argument("--epochs", type=int, default=4)
     p.add_argument("--batch-size", type=int, default=256)
     p.add_argument("--learning-rate", type=float, help='Default 3e-5 for entity-gru-resnet, 3e-4 for other new runs')
@@ -153,20 +164,26 @@ def parser():
         help='Replace PPO action selection training with unified action-return regression')
     p.add_argument('--scene-value',action=argparse.BooleanOptionalAction,default=None,help='Train combat benchmark heads from direct simulation')
     p.add_argument('--multi-horizon',action=argparse.BooleanOptionalAction,default=None,help='Compare 1/3/5-turn outcomes against turn-matched references')
+    from .basic_feedback import add_arguments as basic_arguments
+    basic_arguments(p)
     return p
 
 
 def validate_resume_architecture(args, specification):
     expected = dict(architecture=specification.get('architecture', 'mlp'),
-                    policy_depth=specification.get('policy_depth'), value_depth=specification.get('value_depth'))
+                    policy_depth=specification.get('policy_depth'), value_depth=specification.get('value_depth'),
+                    tower_width=specification.get('tower_width'),
+                    moe_experts=specification.get('experts'), moe_width=specification.get('expert_width'))
     for key, saved in expected.items():
-        requested = getattr(args, key)
+        requested = getattr(args, key, None)
         if requested is not None and requested != saved:
             raise ValueError(f'Resume restores checkpoint {key}={saved}; requested {requested} requires a new run')
 
 
 def main():
     args = parser().parse_args()
+    if args.warm_start and (args.resume or args.basic_feedback is not True):
+        raise ValueError('--warm-start requires --basic-feedback and a new run, not --resume')
     if min(args.iterations, args.games_per_iteration, args.workers, args.threads, args.epochs, args.batch_size) < 1 or args.league_size < 2 or not 1 <= args.learner_seats <= 8:
         raise ValueError("Invalid training sizes")
     if min(args.sequence_length,args.sequence_batch_size,args.heads,args.layers) < 1 or args.burn_in < 0:
@@ -175,8 +192,13 @@ def main():
         if depth is not None:
             from .deep_model import validate_depth
             validate_depth(depth)
-    if not args.resume and args.architecture != 'entity-gru-resnet' and any(d is not None for d in (args.policy_depth, args.value_depth)):
+    if args.tower_width is not None and args.tower_width < 1:
+        raise ValueError('Tower width must be positive')
+    if not args.resume and args.architecture != 'entity-gru-resnet' and any(d is not None for d in (args.policy_depth, args.value_depth, args.tower_width)):
         raise ValueError('Residual depths require --architecture entity-gru-resnet')
+    if not args.resume and args.architecture != 'entity-gru-moe' and any(
+            v is not None for v in (args.moe_experts, args.moe_width, args.moe_balance_coef)):
+        raise ValueError('MoE options require --architecture entity-gru-moe')
     if args.learning_rate is not None and (not np.isfinite(args.learning_rate) or not 0 < args.learning_rate < 1):
         raise ValueError('Invalid learning rate')
     if args.resume and args.anchors: raise ValueError("Resume restores its frozen league; do not add anchors during resume")
@@ -202,6 +224,10 @@ def main():
     from .training_performance import make_pool
     pool = make_pool(args, output)
     planner = None
+    previous_sigterm = None
+    if getattr(args,'persistent_samplers',False):
+        from .process_rollout import interrupted
+        previous_sigterm = signal.signal(signal.SIGTERM,interrupted)
     try:
         state = pool.simulators[0].reset(args.seed & 0xffffffff)
         config = {"gamma": 1.0, "gae_lambda": .95, "clip": .2, "value_coef": .5, "entropy_coef": .01,
@@ -229,7 +255,25 @@ def main():
                 architecture=architecture,entity_schema=pool.meta['entitySchema'],actions=pool.meta['actions'],hidden=args.hidden,heads=args.heads,layers=args.layers)
             if architecture == 'entity-gru-resnet':
                 spec.update(policy_depth=args.policy_depth or 64, value_depth=args.value_depth or 64)
-            model = make_model(spec).to(args.device)
+                if args.tower_width is not None:spec['tower_width'] = args.tower_width
+            if architecture == 'entity-gru-moe':
+                if args.moe_experts is not None: spec['experts'] = args.moe_experts
+                if args.moe_width is not None: spec['expert_width'] = args.moe_width
+            if args.warm_start:
+                from .warm_start import plain_ppo_model
+                # Validate simulator compatibility using the existing checkpoint loader.
+                source, old_model = load_checkpoint(args.warm_start, pool.meta, 'cpu', mmap=True)
+                del old_model
+                model, provenance = plain_ppo_model(source)
+                del source
+                validate_resume_architecture(args, model.specification())
+                model = model.to(args.device)
+                provenance['path'] = str(args.warm_start.resolve())
+                config['warm_start'] = provenance
+                if args.learning_rate is None and model.specification().get('architecture') == 'entity-gru-resnet':
+                    config['learning_rate'] = 3e-5
+            else:
+                model = make_model(spec).to(args.device)
             league = [league_entry(model,0,anchor=True)]
             for path in args.anchors:
                 _, anchor = load_checkpoint(path,pool.meta,args.device,allow_legacy=True)
@@ -242,24 +286,42 @@ def main():
         if config.get('hero_pool') is not None:
             validate_hero_pool(config['hero_pool'], pool.meta)
             options_for_seed(config['options'], config['hero_pool'], config['seed'])
-        from .training_performance import apply_overrides, make_optimizer
+        from .training_performance import apply_overrides, make_optimizer, reserve_game_seeds
         apply_overrides(config, args)
+        if args.ai_action_limits is not None:
+            config['options']['aiActionLimits'] = args.ai_action_limits
         from .gold_planning import configure, PlanningConfig, GoldPlanner, teach
-        configure(config, args)
-        from .stage_feedback import configure as configure_stages
-        configure_stages(config)
-        from .counterfactual import configure as configure_branches
-        configure_branches(config,args)
         from .streaming import configure as configure_streaming,migrate_optimizer
-        configure_streaming(config,args,model,saved)
-        from .card_value import configure as configure_card_value
-        configure_card_value(config,args,model)
-        from .action_value import configure as configure_action_value
-        configure_action_value(config,args,model)
-        from .scene_value import configure as configure_scene
-        configure_scene(config,args,model)
-        from .multi_horizon import configure as configure_horizons
-        configure_horizons(config,args,model)
+        from .basic_feedback import configure as configure_basic, enabled as basic_enabled
+        if getattr(model,'ledger',False):
+            if any(getattr(args,'basic_feedback_'+name,None) is not None for name in ('scale','coefficient','weights')):
+                raise ValueError('Basic-feedback parameters do not apply to the ledger architecture')
+            from .ledger_training import configure as configure_ledger
+            configure_ledger(config,args,model,pool.meta)
+            if getattr(model,'moe',False):
+                from .moe_training import configure as configure_moe
+                configure_moe(config,args,model)
+        elif basic_enabled(config, args):
+            # An explicit new objective must not inherit TAVERN_* auxiliary modes.
+            configure_basic(config,args,model,pool.meta)
+        else:
+            configure_basic(config,args,model,pool.meta)
+            configure(config, args)
+            from .stage_feedback import configure as configure_stages
+            configure_stages(config)
+            from .counterfactual import configure as configure_branches
+            configure_branches(config,args)
+            configure_streaming(config,args,model,saved)
+            from .card_value import configure as configure_card_value
+            configure_card_value(config,args,model)
+            from .action_value import configure as configure_action_value
+            configure_action_value(config,args,model)
+            from .scene_value import configure as configure_scene
+            configure_scene(config,args,model)
+            from .multi_horizon import configure as configure_horizons
+            configure_horizons(config,args,model)
+        if not getattr(model,'moe',False) and (config.get('moe') or args.moe_balance_coef is not None):
+            raise ValueError('MoE training settings require a MoE model')
         direct_planning=config.get('gold_planning',{}).get('direct',False)
         if config.get('gold_planning') and not direct_planning:
             planner = GoldPlanner(model, pool.meta, PlanningConfig(**config['gold_planning']), args.device)
@@ -299,7 +361,7 @@ def main():
         while remaining_batches:
             iteration_started = time.monotonic()
             if args.device == "cuda": torch.cuda.reset_peak_memory_stats()
-            seeds = stream_seeds or [(config["seed"] + episodes + i) & 0xffffffff for i in range(config["games_per_iteration"])]
+            seeds = stream_seeds or reserve_game_seeds(config, episodes)
             if config.get('streaming'):stream_seeds=seeds
             probabilities = league_weights(league,config.get('external_opponent_fraction',.4))
             tracks, games, performance = pool.collect(actor, opponents, seeds, config["options"], rollout_device,
@@ -313,6 +375,7 @@ def main():
                 card_value=config.get('card_value'),
                 scene_value=config.get('scene_value'),
                 multi_horizon=config.get('multi_horizon'),
+                basic_feedback=config.get('basic_feedback'),
                 hero_pool=config.get('hero_pool'),
                 packed_host_transfer=config['packed_host_transfer'],
                 opponent_weights=probabilities, seat_offset=episodes, progress=lambda row: print(json.dumps(row),flush=True),
@@ -379,6 +442,9 @@ def main():
             if config.get('streaming'):
                 config['streaming_updates']=config.get('streaming_updates',0)+metrics['optimizer_steps']
                 config['unfinished_games_at_checkpoint']=performance['streaming_active_games']
+            checkpoint_started = time.monotonic()
+            checkpoint()
+            metrics["checkpoint_seconds"] = time.monotonic()-checkpoint_started
             total_seconds = time.monotonic()-iteration_started
             row = {"iteration": iteration, "iteration_seconds": total_seconds,
                    "end_to_end_actions_per_second": performance["environment_actions"]/total_seconds,
@@ -388,13 +454,17 @@ def main():
             if config.get('hero_pool') is not None:
                 row['hero_counts'] = dict(Counter(h for game in games for h in game['heroes']))
             with (output / "metrics.jsonl").open("a") as file: file.write(json.dumps(row) + "\n")
-            checkpoint()
             print(json.dumps(row), flush=True)
         print(f"Checkpoint: {output / 'latest.pt'}", flush=True)
     finally:
-        if planner: planner.close()
-        pool.close()
-        lock.close()
+        try:
+            if planner: planner.close()
+        finally:
+            try:
+                pool.close()
+            finally:
+                if previous_sigterm is not None:signal.signal(signal.SIGTERM,previous_sigterm)
+                lock.close()
 
 if __name__ == "__main__":
     main()

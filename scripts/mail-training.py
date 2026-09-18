@@ -20,21 +20,66 @@ def snapshot_key(row):
     return hashlib.sha256(f"{row['job_pid']}:{row['utc']}".encode()).hexdigest()
 
 
-def should_send(row, state, mode):
-    return (snapshot_key(row) != state.get('lastSent') and
-            (mode == 'all' or not row['healthy'] or row.get('watch_complete')))
+def should_send(row, state, mode, minimum_seconds=0, now=None):
+    if snapshot_key(row) == state.get('lastSent'):
+        return False
+    if mode != 'all' and row['healthy'] and not row.get('watch_complete'):
+        return False
+    changed_alert = not row['healthy'] and (state.get('lastHealthy', True) or row.get('issues',[]) != state.get('lastIssues',[]))
+    if not state.get('acceptedUtc') or row.get('watch_complete') or changed_alert:
+        return True
+    now = now or dt.datetime.now(dt.timezone.utc)
+    return (now-dt.datetime.fromisoformat(state['acceptedUtc'])).total_seconds() >= minimum_seconds
+
+
+def load_snapshot(config, job_path, job):
+    if config.get('format') != 'supervised-basic':
+        row = read_json(job_path.parent / 'health/latest.json')
+        if row['job_pid'] != job['pid']:
+            raise ValueError('Health snapshot belongs to a different training job')
+        return row
+    state = read_json(job_path.parent / 'status.json')
+    if state['pid'] != config['supervisorPid'] or Path(state['job']).resolve() != job_path.resolve():
+        raise ValueError('Supervisor snapshot belongs to a different training job')
+    completed = state['stage'] == 'stopped'
+    timestamp = state.get('finished') or state.get('updated') or state['started']
+    issues = list(state.get('warnings', [])) + list(state.get('failures', []))
+    if state.get('error'):issues.append('Supervisor exception; inspect its log')
+    if not completed:
+        now = dt.datetime.now(dt.timezone.utc)
+        if (now-dt.datetime.fromisoformat(timestamp)).total_seconds() > 90:
+            issues.append('巡检状态超过 90 秒未更新')
+            timestamp = now.isoformat()
+        try:
+            fields = Path(f'/proc/{state["pid"]}/stat').read_text().rsplit(') ',1)[1].split()
+            valid = fields[0] != 'Z' and fields[19] == str(config['supervisorBirth'])
+        except OSError:valid = False
+        if not valid:issues.append('训练巡检进程已退出或身份不匹配')
+    resource = state.get('resources', {})
+    row = dict(job_pid=state['pid'],utc=timestamp,stage=state['stage'],watch_complete=completed,
+               healthy=not issues and state.get('reason') not in ('health_stop','supervisor_exception'),issues=issues,
+               episode_label='新评分续训累计',members=[])
+    for member in state.get('members', []):
+        if 'episodes' in member and 'iteration' in member:
+            row['members'].append(dict(depth=member['depth'],episodes=member['episodes'],iteration=member['iteration'],
+                                       stage='已结束' if member.get('finished') else state['stage']))
+    for source,target in [('cpu_percent','cpu_percent_since_previous_check'),('ram_gib','memory_gib'),('disk_free_gib','disk_free_gib')]:
+        if source in resource:row[target]=resource[source]
+    if 'gpu_percent' in resource:
+        row['gpu'] = f"{resource['gpu_percent']}, {resource['vram_used_mib']}, {resource.get('gpu_power_w','?')}"
+    return row
 
 
 def message(config, row, job):
     checked = dt.datetime.fromisoformat(row['utc']).astimezone(dt.timezone(dt.timedelta(hours=8)))
-    deadline = dt.datetime.fromisoformat(job['deadlineUtc']).astimezone(checked.tzinfo)
+    deadline = dt.datetime.fromisoformat(job['deadlineUtc']).astimezone(checked.tzinfo) if job.get('deadlineUtc') else None
     status = '异常' if not row['healthy'] else '已结束' if row.get('watch_complete') else '正常'
     lines = [f'巡检时间：{checked:%Y-%m-%d %H:%M:%S} 北京时间',
              f'巡检结果：{status}', f'训练状态：{row["stage"]}',
-             f'计划截止：{deadline:%Y-%m-%d %H:%M:%S} 北京时间', '']
+             f'计划截止：{deadline:%Y-%m-%d %H:%M:%S} 北京时间' if deadline else '持续训练，无预设停止时间', '']
     for member in row.get('members', []):
-        depth = {0: 64, 1: 256, 2: 1024}.get(member['index'], '?')
-        lines.append(f'{depth} 层：累计 {member["episodes"]} 局，更新 {member["iteration"]} 次，阶段 {member["stage"]}')
+        depth = member.get('depth', {0: 64, 1: 256, 2: 1024}.get(member.get('index'), '?'))
+        lines.append(f'{depth} 层：{row.get("episode_label","累计")} {member["episodes"]} 局，更新 {member["iteration"]} 次，阶段 {member["stage"]}')
     if 'cpu_percent_since_previous_check' in row:
         lines.append(f'CPU 配额利用率：{row["cpu_percent_since_previous_check"]:.1f}%')
     if 'gpu' in row:
@@ -86,6 +131,7 @@ def main():
     config = read_json(args.config)
     if config['mode'] not in ('all', 'alerts'):
         p.error('mode must be all or alerts')
+    if config.get('minimumSeconds',0)<0:p.error('minimumSeconds must be nonnegative')
     job_path = Path(config['job'])
     job = read_json(job_path)
     output = Path(config['output'])
@@ -95,17 +141,16 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         while True:
             try:
-                row = read_json(job_path.parent / 'health/latest.json')
-                if row['job_pid'] != job['pid']:
-                    raise ValueError('Health snapshot belongs to a different training job')
+                row = load_snapshot(config, job_path, job)
                 msg = message(config, row, job)
                 if args.preview:
                     print(msg.as_string())
                     return
                 state = read_json(state_path) if state_path.exists() else {}
-                if should_send(row, state, config['mode']):
+                if should_send(row, state, config['mode'], config.get('minimumSeconds',0)):
                     deliver(config, msg)
                     state.update(lastSent=snapshot_key(row), snapshotUtc=row['utc'],
+                                 lastHealthy=row['healthy'],lastIssues=row.get('issues',[]),
                                  acceptedUtc=dt.datetime.now(dt.timezone.utc).isoformat())
                     tmp = state_path.with_suffix('.next')
                     tmp.write_text(json.dumps(state, indent=2) + '\n')

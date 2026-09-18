@@ -1,5 +1,6 @@
 """Parallel on-policy rollout processes with disjoint seeds and a fixed checkpoint."""
 import argparse
+from contextlib import contextmanager, ExitStack
 import gc
 import json
 import os
@@ -27,6 +28,20 @@ def write_json(path, value):
     temporary.replace(path)
 
 
+@contextmanager
+def rollout_storage(checkpoint):
+    """Keep the immutable checkpoint on disk; optionally exchange trajectories in RAM."""
+    scratch = os.environ.get('TAVERN_ROLLOUT_SCRATCH')
+    with ExitStack() as stack:
+        directory = Path(stack.enter_context(tempfile.TemporaryDirectory(
+            prefix='.rollout-', dir=scratch or checkpoint.parent)))
+        pinned = Path(stack.enter_context(tempfile.TemporaryDirectory(
+            prefix='.policy-', dir=checkpoint.parent))) if scratch else directory
+        snapshot = pinned/'checkpoint.pt'
+        os.link(checkpoint, snapshot)
+        yield directory, snapshot
+
+
 def shards(seeds, workers, processes):
     if not seeds or not 1 <= processes <= workers:
         raise ValueError('Need seeds and 1 <= processes <= workers')
@@ -45,13 +60,21 @@ def prepare_descriptor_limit(workers):
 
 
 class ProcessSimulationPool:
-    def __init__(self, workers, processes, checkpoint):
+    def __init__(self, workers, processes, checkpoint, persistent=False, inference=None):
         shards([0],workers,processes)
         self.worker_count,self.processes,self.checkpoint=workers,processes,Path(checkpoint)
+        if inference is not None and not persistent:raise ValueError("Central inference requires resident samplers")
+        self.inference_options=inference;self.inference=None
+        self.resident = None
+        if persistent:
+            from .persistent_rollout import ResidentProcesses
+            self.resident = ResidentProcesses()
         self.simulators=[Simulator()]
         self.meta=self.simulators[0].meta
 
     def close(self):
+        if self.resident is not None:self.resident.close()
+        if self.inference is not None:self.inference.close();self.inference=None
         for simulator in self.simulators: simulator.close()
 
     def collect(self,current,opponents,seeds,options,device,**kwargs):
@@ -69,28 +92,44 @@ class ProcessSimulationPool:
         progress=kwargs.pop('progress',None)
         if hasattr(kwargs.get('opponent_weights'),'tolist'):kwargs['opponent_weights']=kwargs['opponent_weights'].tolist()
         if not self.checkpoint.is_file():raise FileNotFoundError(self.checkpoint)
-        started=time.monotonic();active=[];tracks=[];games=[];metrics=[];results={}
-        temporary=tempfile.TemporaryDirectory(prefix='.rollout-',dir=self.checkpoint.parent)
+        started=time.monotonic();active=[];tracks=[];games=[];metrics=[];results={};succeeded=False
+        temporary=rollout_storage(self.checkpoint)
+        directory,snapshot=temporary.__enter__()
         previous=signal.signal(signal.SIGTERM,interrupted)
         try:
-            directory=Path(temporary.name)
-            # Pin the immutable inode even if a future caller replaces latest.pt.
-            snapshot=directory/'checkpoint.pt';os.link(self.checkpoint,snapshot)
-            job=dict(checkpoint=str(snapshot),seeds=seeds,options=options,device=str(device),kwargs=kwargs)
+            # The snapshot stays on the checkpoint filesystem even with RAM scratch.
+            job=dict(checkpoint=str(snapshot),seeds=seeds,options=options,device=str(device),kwargs=kwargs,
+                     reset_stream=not bool(getattr(self,'streaming_state',None)))
+            if self.inference_options is not None:
+                if any(kwargs.get(key) for key in ('direct_planning','planning_states','stage_feedback')):
+                    raise ValueError('Central inference currently supports recurrent rollout and branch teaching')
+                if self.inference is None:
+                    from .inference_client import SharedInference
+                    self.inference=SharedInference(**self.inference_options,clients=self.processes+1)
+                job['inference']=self.inference.load(snapshot,job['reset_stream'],device)
             (directory/'job.json').write_text(json.dumps(job))
-            if kwargs.get('streaming') and getattr(self,'streaming_state',None):
+            if self.resident is None and kwargs.get('streaming') and getattr(self,'streaming_state',None):
                 for index,state in self.streaming_state.items():torch.save(state,directory/f'{index}.resume.pt')
             for index,(start,end,workers) in enumerate(shards(seeds,self.worker_count,self.processes)):
                 command=[sys.executable,'-u','-m','tavern_rl.process_rollout','--job',str(directory/'job.json'),
                          '--index',str(index),'--start',str(start),'--end',str(end),'--workers',str(workers)]
-                with (directory/f'{index}.log').open('w') as log:
-                    process=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+                if self.resident is not None:
+                    process=self.resident.submit(index,workers,directory/'job.json',start,end)
+                else:
+                    with (directory/f'{index}.log').open('w') as log:
+                        process=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
                 active.append(process)
             pending=set(range(len(active)));last=started
             while pending:
+                if self.inference is not None and self.inference.process.poll() is not None:
+                    raise RuntimeError('Inference service exited: '+(Path(self.inference.directory.name)/'service.log').read_text()[-3000:])
                 for index in list(pending):
                     code=active[index].poll()
-                    if code is None:continue
+                    if self.resident is not None:
+                        if code is not None:
+                            raise RuntimeError(f'Resident sampler {index} exited {code}: '+self.resident.log_tail(index))
+                        if not (directory/f'{index}.pt').exists():continue
+                    elif code is None:continue
                     if code:
                         raise RuntimeError(f'Rollout process {index} exited {code}: '+(directory/f'{index}.log').read_text()[-3000:])
                     result=torch.load(directory/f'{index}.pt',map_location='cpu',weights_only=False)
@@ -128,12 +167,18 @@ class ProcessSimulationPool:
             batches=sum(m['inference_batches'] for m in metrics)
             performance=dict(seconds=elapsed,environment_actions=actions,actions_per_second=actions/elapsed,
                 inference_batches=batches,mean_inference_batch=sum(m['mean_inference_batch']*m['inference_batches'] for m in metrics)/max(1,batches),
-                sampling_processes=len(active),sampling_workers=self.worker_count,
+                sampling_processes=len(active),sampling_workers=self.worker_count,persistent_samplers=self.resident is not None,
                 parallel_inference_seconds_sum=sum(m['inference_seconds'] for m in metrics),
                 parallel_simulator_wait_seconds_sum=sum(m['simulator_wait_seconds'] for m in metrics),
                 sampling_graphs=all(m.get('sampling_graphs',False) for m in metrics),
                 sampling_graph_capture_seconds=sum(m.get('sampling_graph_capture_seconds',0.) for m in metrics),
                 first_place_bonus=kwargs.get('first_place_bonus',0.))
+            if self.resident is not None:
+                versions={m.get('policy_iteration') for m in metrics}
+                if len(versions)!=1:raise RuntimeError('Samplers used different policy versions')
+                performance.update(sampler_policy_iteration=versions.pop(),
+                    sampler_pids=[m['worker_pid'] for m in metrics],
+                    parallel_policy_load_seconds_sum=sum(m.get('policy_load_seconds',0.) for m in metrics))
             from collections import Counter
             if kwargs.get('streaming'):
                 self.streaming_state=stream_states
@@ -142,7 +187,7 @@ class ProcessSimulationPool:
                     raise RuntimeError('Streaming sampler duplicated or replaced a game')
                 self.stream_completed_seeds.update(completed)
                 performance.update(streaming_done=all(state['done'] for state in self.streaming_state.values()),
-                    streaming_active_games=sum(len(state['active']) for state in self.streaming_state.values()),
+                    streaming_active_games=sum(state.get('active_count',len(state.get('active',[]))) for state in self.streaming_state.values()),
                     streaming_tracks=len(tracks),tier_tempo_checks=[row for m in metrics for row in m.get('tier_tempo_checks',[])])
                 if performance['streaming_done'] and self.stream_completed_seeds!=set(seeds):raise RuntimeError('Streaming sampler lost games')
             if kwargs.get('counterfactual'):
@@ -155,6 +200,10 @@ class ProcessSimulationPool:
                 performance['card_value']=dict(combined)
             if kwargs.get('stage_feedback'):
                 performance['stage_feedback']=dict(milestones=len(self.stage_evaluations),**kwargs['stage_feedback'])
+            if kwargs.get('basic_feedback'):
+                keys=('states','seconds','trajectories','positive_steps','negative_steps','feedback_sum','terminal_correction_sum')
+                performance['basic_feedback']={key:sum(m['basic_feedback'][key] for m in metrics) for key in keys}
+                performance['basic_feedback']['coefficient']=kwargs['basic_feedback']['coefficient']
             for key in ('action_counts', 'learner_action_counts'):
                 combined = Counter()
                 for metric in metrics: combined.update(metric.get(key, {}))
@@ -168,8 +217,19 @@ class ProcessSimulationPool:
                         combined[key]+=search.get(key,0)
                 performance['direct_planning']=dict(combined,selected=dict(selected),routes=routes[:24],max_live_branches=peak,
                     trials=kwargs['direct_planning']['trials'],chance_policy='first-random-transition-v1',candidate_policy='all-sales-zero-gold-v2')
+            if self.inference is not None:
+                stats=self.inference.metrics()
+                performance.update(central_inference=stats,parallel_feature_pack_seconds_sum=sum(m.get('feature_pack_seconds',0.) for m in metrics),
+                    sampling_graphs=bool(stats['sampling_graph_replays']),
+                    sampling_graph_capture_seconds=stats['sampling_graph_capture_seconds'])
+            succeeded=True
             return tracks,games,performance
         finally:
+            if self.resident is not None:
+                if not succeeded:
+                    self.resident.close()
+                    if self.inference is not None:self.inference.close();self.inference=None
+                active=[]
             for process in active:
                 if process.poll() is None:
                     try:os.killpg(process.pid,signal.SIGTERM)
@@ -181,7 +241,7 @@ class ProcessSimulationPool:
                     try:os.killpg(process.pid,signal.SIGKILL)
                     except ProcessLookupError:pass
                     process.wait()
-            temporary.cleanup()
+            temporary.__exit__(None,None,None)
             signal.signal(signal.SIGTERM,previous)
 
 

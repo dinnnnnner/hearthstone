@@ -6,6 +6,12 @@ from .model import advantages
 
 
 def recurrent_update(model, optimizer, tracks, config, device):
+    ledger_mode = bool(getattr(model,'ledger',False))
+    if ledger_mode != bool(config.get('ledger')):raise ValueError('Ledger model/training settings differ')
+    ledger_stats = []
+    moe_mode = bool(getattr(model,'moe',False))
+    if moe_mode != bool(config.get('moe')):raise ValueError('MoE model/training settings differ')
+    moe_stats = []
     search_mode=bool(config.get('gold_planning',{}).get('direct'))
     q_mode=bool(config.get('action_value'))
     if q_mode != hasattr(model,'action_value_type') or (q_mode and search_mode):
@@ -30,7 +36,9 @@ def recurrent_update(model, optimizer, tracks, config, device):
             end = min(start+length,len(records)); initial = max(0,start-burn)
             aux=reward.get('auxiliary',[None]*len(records)) if isinstance(reward,dict) else [None]*len(records)
             if len(aux)!=len(records):raise ValueError('Auxiliary outcomes differ from trajectory length')
-            chunks.append((records[initial:start], records[start:end], records[initial][5], adv[start:end], returns[start:end],aux[start:end]))
+            ledger = reward.get('ledger') if ledger_mode and isinstance(reward,dict) else [None]*len(records)
+            if ledger is None or len(ledger)!=len(records):raise ValueError('Missing or misaligned ledger targets')
+            chunks.append((records[initial:start], records[start:end], records[initial][5], adv[start:end], returns[start:end],aux[start:end],ledger[start:end]))
     if not chunks: raise RuntimeError('No complete recurrent trajectories')
     center, spread = float(np.mean(all_adv)), float(np.std(all_adv)) + 1e-8
     stats, stopped = [], False
@@ -54,12 +62,13 @@ def recurrent_update(model, optimizer, tracks, config, device):
                         memory = torch.where(valid[:,None],updated,memory)
             sequence_length = max(len(item[1]) for item in batch)
             observations, masks, actions, old_logs, advs, targets, previous, valid = [], [], [], [], [], [], [], []
-            teachers=[];auxiliary=[]
+            teachers=[];auxiliary=[];ledger_labels=[]
             for item in batch:
                 for t in range(sequence_length):
                     live = t < len(item[1]); valid.append(live)
                     teachers.append(item[1][t][7] if search_mode and live else None)
                     auxiliary.append(item[5][t] if live else None)
+                    ledger_labels.append(item[6][t] if live else None)
                     if live:
                         record = item[1][t]
                         observations.append(record[0]); masks.append(record[1]); actions.append(record[2]); old_logs.append(record[3])
@@ -120,6 +129,17 @@ def recurrent_update(model, optimizer, tracks, config, device):
                 numeric=torch.tensor([[a['damage'],*a['resources']] for a in labels],dtype=predictions.dtype,device=device)
                 auxiliary_loss=nn.functional.cross_entropy(predictions[:,:3],combat)+nn.functional.smooth_l1_loss(predictions[:,3:],numeric)
                 loss=loss+config['streaming']['auxiliary_coef']*auxiliary_loss
+            if ledger_mode:
+                from .ledger_training import supervision_loss
+                ledger_loss, report = supervision_loss(model,encoded.flatten(0,1),torch.stack(states,1).flatten(0,1),ledger_labels,config['ledger'])
+                loss = loss + ledger_loss
+                ledger_stats.append(report)
+            if moe_mode:
+                from .moe_training import regularization
+                moe_loss, report = regularization(model,encoded.flatten(0,1)[take],
+                    torch.stack(states,1).flatten(0,1)[take],config['moe'])
+                loss = loss + moe_loss
+                moe_stats.append(report)
             if not search_mode and not q_mode:loss=loss-config['entropy_coef']*entropy
             if not torch.isfinite(loss): raise RuntimeError('Non-finite recurrent training loss')
             optimizer.zero_grad(set_to_none=True); loss.backward()
@@ -129,6 +149,8 @@ def recurrent_update(model, optimizer, tracks, config, device):
         if stopped: break
     if not stats: raise RuntimeError('Recurrent training performed no optimizer updates')
     return dict(zip(['policy_loss','value_loss','entropy','approx_kl','gradient_norm','auxiliary_loss'],np.mean(stats,axis=0).tolist())) | {
+        **({'ledger':{key:float(np.mean([r[key] for r in ledger_stats])) for key in ledger_stats[0]}} if ledger_stats else {}),
+        **({'moe':{key:float(np.mean([r[key] for r in moe_stats])) for key in moe_stats[0]}} if moe_stats else {}),
         'samples':len(all_adv),'optimizer_steps':len(stats),'kl_early_stop':stopped,'sequence_chunks':len(chunks),
         **({'training_mode':'soft_action_value','action_value_loss':float(np.mean(stats,axis=0)[0]),'policy_loss':0.} if q_mode else {}),
         **({'training_mode':'search_policy_value','search_policy_samples':supervised} if search_mode else {})}

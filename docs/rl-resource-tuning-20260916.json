@@ -1,0 +1,3575 @@
+{
+  "resources": {
+    "cpu_quota_cores": 25,
+    "memory_limit_gib": 120,
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "gpu_memory_mib": 97887
+  },
+  "resident_comparison": {
+    "rows": [
+      {
+        "mode": "fresh",
+        "round": 0,
+        "member": "member-2",
+        "seconds": 30.32520948909223,
+        "performance": {
+          "seconds": 13.357011158019304,
+          "environment_actions": 105,
+          "actions_per_second": 7.861040075343497,
+          "action_counts": {
+            "refresh": 9,
+            "buy": 19,
+            "end": 32,
+            "buySpell": 4,
+            "play": 9,
+            "cast": 5,
+            "freeze": 15,
+            "power": 4,
+            "sell": 5,
+            "upgrade": 1,
+            "move": 2
+          },
+          "learner_action_counts": {
+            "refresh": 5,
+            "buy": 12,
+            "end": 16,
+            "play": 4,
+            "power": 1,
+            "sell": 4,
+            "freeze": 8
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 28,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 28,
+            "environment_actions": 542,
+            "seconds": 6.620053919032216,
+            "scene_battles": 348,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 3.2078489251434803,
+          "simulator_wait_seconds": 0.8265254311263561,
+          "inference_batches": 93,
+          "mean_inference_batch": 1.1290322580645162,
+          "sampling_graphs": true,
+          "sampling_graph_count": 12,
+          "sampling_graph_replays": 421,
+          "sampling_graph_capture_seconds": 1.6083406154066324
+        }
+      },
+      {
+        "mode": "fresh",
+        "round": 0,
+        "member": "member-0",
+        "seconds": 59.34758421033621,
+        "performance": {
+          "seconds": 51.75593308918178,
+          "environment_actions": 159,
+          "actions_per_second": 3.072111553394731,
+          "action_counts": {
+            "buy": 16,
+            "buySpell": 10,
+            "refresh": 15,
+            "discover": 11,
+            "end": 32,
+            "upgrade": 7,
+            "power": 3,
+            "sell": 16,
+            "play": 19,
+            "freeze": 10,
+            "cast": 7,
+            "choosePower": 2,
+            "darkGift": 5,
+            "move": 5,
+            "activate": 1
+          },
+          "learner_action_counts": {
+            "refresh": 5,
+            "buySpell": 6,
+            "buy": 4,
+            "end": 16,
+            "upgrade": 2,
+            "play": 5,
+            "freeze": 4,
+            "cast": 4,
+            "sell": 6,
+            "darkGift": 3,
+            "discover": 4
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 28,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 28,
+            "environment_actions": 6054,
+            "seconds": 45.166711553931236,
+            "scene_battles": 348,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 0,
+            "horizon_3_roots": 1,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 2.352544443681836,
+          "simulator_wait_seconds": 1.134754590690136,
+          "inference_batches": 140,
+          "mean_inference_batch": 1.1357142857142857,
+          "sampling_graphs": true,
+          "sampling_graph_count": 10,
+          "sampling_graph_replays": 2530,
+          "sampling_graph_capture_seconds": 0.42648831009864807
+        }
+      },
+      {
+        "mode": "fresh",
+        "round": 0,
+        "member": "member-1",
+        "seconds": 98.88657209835947,
+        "performance": {
+          "seconds": 89.2449006754905,
+          "environment_actions": 407,
+          "actions_per_second": 4.56048465424283,
+          "action_counts": {
+            "cast": 28,
+            "buy": 46,
+            "play": 63,
+            "sell": 51,
+            "refresh": 22,
+            "move": 92,
+            "buySpell": 20,
+            "upgrade": 13,
+            "end": 32,
+            "darkGift": 7,
+            "discover": 13,
+            "power": 4,
+            "freeze": 9,
+            "buyTrinket": 2,
+            "activate": 5
+          },
+          "learner_action_counts": {
+            "cast": 15,
+            "buy": 26,
+            "play": 31,
+            "sell": 31,
+            "refresh": 11,
+            "move": 51,
+            "end": 16,
+            "upgrade": 7,
+            "darkGift": 4,
+            "discover": 9,
+            "buySpell": 7,
+            "power": 1,
+            "activate": 4,
+            "freeze": 3
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 0,
+              "turn": 8,
+              "tier": 3,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 1,
+              "turn": 8,
+              "tier": 3,
+              "health": 7,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 2,
+              "turn": 8,
+              "tier": 2,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 3,
+              "turn": 8,
+              "tier": 3,
+              "health": 5,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 4,
+              "turn": 8,
+              "tier": 2,
+              "health": 21,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 5,
+              "turn": 8,
+              "tier": 3,
+              "health": 1,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 6,
+              "turn": 8,
+              "tier": 3,
+              "health": 52,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 7,
+              "turn": 8,
+              "tier": 3,
+              "health": 20,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 0,
+              "turn": 8,
+              "tier": 2,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 1,
+              "turn": 8,
+              "tier": 2,
+              "health": 15,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 2,
+              "turn": 8,
+              "tier": 3,
+              "health": 21,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 3,
+              "turn": 8,
+              "tier": 2,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 4,
+              "turn": 8,
+              "tier": 6,
+              "health": 12,
+              "reward": 0.07500000000000001
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 5,
+              "turn": 8,
+              "tier": 3,
+              "health": 16,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 6,
+              "turn": 8,
+              "tier": 3,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 7,
+              "turn": 8,
+              "tier": 3,
+              "health": 11,
+              "reward": 0.0
+            }
+          ],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 19,
+            "bootstrap_outcomes": 13,
+            "environment_actions": 8337,
+            "seconds": 74.63878469914198,
+            "scene_battles": 168,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 0,
+            "horizon_3_roots": 1,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 6.757720364257693,
+          "simulator_wait_seconds": 4.368648214265704,
+          "inference_batches": 355,
+          "mean_inference_batch": 1.1464788732394366,
+          "sampling_graphs": true,
+          "sampling_graph_count": 12,
+          "sampling_graph_replays": 5149,
+          "sampling_graph_capture_seconds": 1.0824995823204517
+        }
+      },
+      {
+        "mode": "fresh",
+        "round": 1,
+        "member": "member-0",
+        "seconds": 32.913096802309155,
+        "performance": {
+          "seconds": 25.354105792939663,
+          "environment_actions": 313,
+          "actions_per_second": 12.345140568402963,
+          "action_counts": {
+            "buySpell": 13,
+            "upgrade": 10,
+            "play": 52,
+            "darkGift": 13,
+            "buy": 28,
+            "discover": 19,
+            "refresh": 25,
+            "cast": 19,
+            "move": 36,
+            "sell": 33,
+            "end": 32,
+            "power": 5,
+            "freeze": 11,
+            "buyTrinket": 16,
+            "activate": 1
+          },
+          "learner_action_counts": {
+            "darkGift": 10,
+            "buy": 11,
+            "play": 21,
+            "discover": 13,
+            "upgrade": 6,
+            "sell": 15,
+            "end": 16,
+            "buySpell": 4,
+            "cast": 6,
+            "freeze": 8,
+            "refresh": 6,
+            "move": 9,
+            "buyTrinket": 8,
+            "power": 1
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 32,
+            "environment_actions": 1656,
+            "seconds": 14.793156538158655,
+            "scene_battles": 396,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 4.852354444563389,
+          "simulator_wait_seconds": 2.533662900328636,
+          "inference_batches": 276,
+          "mean_inference_batch": 1.1340579710144927,
+          "sampling_graphs": true,
+          "sampling_graph_count": 10,
+          "sampling_graph_replays": 903,
+          "sampling_graph_capture_seconds": 0.44152989611029625
+        }
+      },
+      {
+        "mode": "fresh",
+        "round": 1,
+        "member": "member-2",
+        "seconds": 38.40894751623273,
+        "performance": {
+          "seconds": 21.16050502844155,
+          "environment_actions": 263,
+          "actions_per_second": 12.428814891067358,
+          "action_counts": {
+            "buySpell": 14,
+            "power": 9,
+            "discover": 24,
+            "move": 23,
+            "buy": 20,
+            "refresh": 21,
+            "darkGift": 13,
+            "play": 48,
+            "sell": 21,
+            "freeze": 13,
+            "upgrade": 6,
+            "end": 32,
+            "cast": 14,
+            "choosePower": 4,
+            "activate": 1
+          },
+          "learner_action_counts": {
+            "buySpell": 8,
+            "refresh": 16,
+            "power": 5,
+            "darkGift": 6,
+            "play": 27,
+            "buy": 9,
+            "discover": 12,
+            "end": 16,
+            "sell": 11,
+            "move": 12,
+            "freeze": 6,
+            "choosePower": 4,
+            "cast": 7,
+            "upgrade": 4
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 32,
+            "environment_actions": 1088,
+            "seconds": 10.510184006765485,
+            "scene_battles": 396,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 5.253688206896186,
+          "simulator_wait_seconds": 2.001364780589938,
+          "inference_batches": 206,
+          "mean_inference_batch": 1.2766990291262137,
+          "sampling_graphs": true,
+          "sampling_graph_count": 11,
+          "sampling_graph_replays": 809,
+          "sampling_graph_capture_seconds": 1.700565081089735
+        }
+      },
+      {
+        "mode": "fresh",
+        "round": 1,
+        "member": "member-1",
+        "seconds": 40.79911230504513,
+        "performance": {
+          "seconds": 31.085115676745772,
+          "environment_actions": 448,
+          "actions_per_second": 14.41204223457791,
+          "action_counts": {
+            "buyTrinket": 16,
+            "move": 103,
+            "darkGift": 8,
+            "buy": 45,
+            "play": 67,
+            "buySpell": 16,
+            "end": 30,
+            "discover": 24,
+            "activate": 6,
+            "sell": 66,
+            "cast": 28,
+            "refresh": 18,
+            "upgrade": 7,
+            "power": 5,
+            "reward": 3,
+            "freeze": 6
+          },
+          "learner_action_counts": {
+            "buyTrinket": 8,
+            "move": 58,
+            "darkGift": 4,
+            "buy": 27,
+            "play": 45,
+            "end": 15,
+            "buySpell": 10,
+            "discover": 13,
+            "activate": 5,
+            "sell": 44,
+            "refresh": 9,
+            "upgrade": 5,
+            "cast": 13,
+            "reward": 3,
+            "power": 2,
+            "freeze": 4
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 23,
+            "bootstrap_outcomes": 9,
+            "environment_actions": 1357,
+            "seconds": 14.171400386840105,
+            "scene_battles": 120,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 7.940078243613243,
+          "simulator_wait_seconds": 5.5181595813483,
+          "inference_batches": 367,
+          "mean_inference_batch": 1.220708446866485,
+          "sampling_graphs": true,
+          "sampling_graph_count": 10,
+          "sampling_graph_replays": 967,
+          "sampling_graph_capture_seconds": 0.6257736664265394
+        }
+      },
+      {
+        "mode": "resident",
+        "round": 0,
+        "member": "member-2",
+        "seconds": 27.86394151672721,
+        "performance": {
+          "seconds": 13.382078828290105,
+          "environment_actions": 105,
+          "actions_per_second": 7.846314563476262,
+          "action_counts": {
+            "refresh": 9,
+            "buy": 19,
+            "end": 32,
+            "buySpell": 4,
+            "play": 9,
+            "cast": 5,
+            "freeze": 15,
+            "power": 4,
+            "sell": 5,
+            "upgrade": 1,
+            "move": 2
+          },
+          "learner_action_counts": {
+            "refresh": 5,
+            "buy": 12,
+            "end": 16,
+            "play": 4,
+            "power": 1,
+            "sell": 4,
+            "freeze": 8
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 28,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 28,
+            "environment_actions": 542,
+            "seconds": 6.660409323871136,
+            "scene_battles": 348,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 3.3553744722157717,
+          "simulator_wait_seconds": 0.7536764219403267,
+          "inference_batches": 93,
+          "mean_inference_batch": 1.1290322580645162,
+          "sampling_graphs": true,
+          "sampling_graph_count": 12,
+          "sampling_graph_replays": 421,
+          "sampling_graph_capture_seconds": 1.6482098791748285,
+          "policy_load_seconds": 12.964525248855352
+        }
+      },
+      {
+        "mode": "resident",
+        "round": 0,
+        "member": "member-0",
+        "seconds": 55.68359240330756,
+        "performance": {
+          "seconds": 49.463631719350815,
+          "environment_actions": 159,
+          "actions_per_second": 3.21448293368635,
+          "action_counts": {
+            "buy": 16,
+            "buySpell": 10,
+            "refresh": 15,
+            "discover": 11,
+            "end": 32,
+            "upgrade": 7,
+            "power": 3,
+            "sell": 16,
+            "play": 19,
+            "freeze": 10,
+            "cast": 7,
+            "choosePower": 2,
+            "darkGift": 5,
+            "move": 5,
+            "activate": 1
+          },
+          "learner_action_counts": {
+            "refresh": 5,
+            "buySpell": 6,
+            "buy": 4,
+            "end": 16,
+            "upgrade": 2,
+            "play": 5,
+            "freeze": 4,
+            "cast": 4,
+            "sell": 6,
+            "darkGift": 3,
+            "discover": 4
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 28,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 28,
+            "environment_actions": 6054,
+            "seconds": 43.103184601292014,
+            "scene_battles": 348,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 0,
+            "horizon_3_roots": 1,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 2.1951745990663767,
+          "simulator_wait_seconds": 1.0179536566138268,
+          "inference_batches": 140,
+          "mean_inference_batch": 1.1357142857142857,
+          "sampling_graphs": true,
+          "sampling_graph_count": 10,
+          "sampling_graph_replays": 2530,
+          "sampling_graph_capture_seconds": 0.34872068278491497,
+          "policy_load_seconds": 4.7020538449287415
+        }
+      },
+      {
+        "mode": "resident",
+        "round": 0,
+        "member": "member-1",
+        "seconds": 97.56992776878178,
+        "performance": {
+          "seconds": 89.83928377367556,
+          "environment_actions": 407,
+          "actions_per_second": 4.530312163054643,
+          "action_counts": {
+            "cast": 28,
+            "buy": 46,
+            "play": 63,
+            "sell": 51,
+            "refresh": 22,
+            "move": 92,
+            "buySpell": 20,
+            "upgrade": 13,
+            "end": 32,
+            "darkGift": 7,
+            "discover": 13,
+            "power": 4,
+            "freeze": 9,
+            "buyTrinket": 2,
+            "activate": 5
+          },
+          "learner_action_counts": {
+            "cast": 15,
+            "buy": 26,
+            "play": 31,
+            "sell": 31,
+            "refresh": 11,
+            "move": 51,
+            "end": 16,
+            "upgrade": 7,
+            "darkGift": 4,
+            "discover": 9,
+            "buySpell": 7,
+            "power": 1,
+            "activate": 4,
+            "freeze": 3
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 0,
+              "turn": 8,
+              "tier": 3,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 1,
+              "turn": 8,
+              "tier": 3,
+              "health": 7,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 2,
+              "turn": 8,
+              "tier": 2,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 3,
+              "turn": 8,
+              "tier": 3,
+              "health": 5,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 4,
+              "turn": 8,
+              "tier": 2,
+              "health": 21,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": false,
+              "seat": 5,
+              "turn": 8,
+              "tier": 3,
+              "health": 1,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 6,
+              "turn": 8,
+              "tier": 3,
+              "health": 52,
+              "reward": 0.0
+            },
+            {
+              "seed": 8152,
+              "learner": true,
+              "seat": 7,
+              "turn": 8,
+              "tier": 3,
+              "health": 20,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 0,
+              "turn": 8,
+              "tier": 2,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 1,
+              "turn": 8,
+              "tier": 2,
+              "health": 15,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 2,
+              "turn": 8,
+              "tier": 3,
+              "health": 21,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 3,
+              "turn": 8,
+              "tier": 2,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": false,
+              "seat": 4,
+              "turn": 8,
+              "tier": 6,
+              "health": 12,
+              "reward": 0.07500000000000001
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 5,
+              "turn": 8,
+              "tier": 3,
+              "health": 16,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 6,
+              "turn": 8,
+              "tier": 3,
+              "health": 30,
+              "reward": 0.0
+            },
+            {
+              "seed": 8151,
+              "learner": true,
+              "seat": 7,
+              "turn": 8,
+              "tier": 3,
+              "health": 11,
+              "reward": 0.0
+            }
+          ],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 19,
+            "bootstrap_outcomes": 13,
+            "environment_actions": 8337,
+            "seconds": 74.40889479219913,
+            "scene_battles": 168,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 0,
+            "horizon_3_roots": 1,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 7.13548282161355,
+          "simulator_wait_seconds": 4.777361664921045,
+          "inference_batches": 355,
+          "mean_inference_batch": 1.1464788732394366,
+          "sampling_graphs": true,
+          "sampling_graph_count": 12,
+          "sampling_graph_replays": 5149,
+          "sampling_graph_capture_seconds": 1.0516524016857147,
+          "policy_load_seconds": 6.094185249879956
+        }
+      },
+      {
+        "mode": "resident",
+        "round": 1,
+        "member": "member-2",
+        "seconds": 23.487282436341047,
+        "performance": {
+          "seconds": 20.31311546638608,
+          "environment_actions": 263,
+          "actions_per_second": 12.947300006008902,
+          "action_counts": {
+            "buySpell": 14,
+            "power": 9,
+            "discover": 24,
+            "move": 23,
+            "buy": 20,
+            "refresh": 21,
+            "darkGift": 13,
+            "play": 48,
+            "sell": 21,
+            "freeze": 13,
+            "upgrade": 6,
+            "end": 32,
+            "cast": 14,
+            "choosePower": 4,
+            "activate": 1
+          },
+          "learner_action_counts": {
+            "buySpell": 8,
+            "refresh": 16,
+            "power": 5,
+            "darkGift": 6,
+            "play": 27,
+            "buy": 9,
+            "discover": 12,
+            "end": 16,
+            "sell": 11,
+            "move": 12,
+            "freeze": 6,
+            "choosePower": 4,
+            "cast": 7,
+            "upgrade": 4
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 32,
+            "environment_actions": 1088,
+            "seconds": 11.021876016631722,
+            "scene_battles": 396,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 4.881156304851174,
+          "simulator_wait_seconds": 1.8777934033423662,
+          "inference_batches": 206,
+          "mean_inference_batch": 1.2766990291262137,
+          "sampling_graphs": true,
+          "sampling_graph_count": 11,
+          "sampling_graph_replays": 809,
+          "sampling_graph_capture_seconds": 1.522477364167571,
+          "policy_load_seconds": 3.060567829757929
+        }
+      },
+      {
+        "mode": "resident",
+        "round": 1,
+        "member": "member-0",
+        "seconds": 23.52503452077508,
+        "performance": {
+          "seconds": 22.477221183478832,
+          "environment_actions": 313,
+          "actions_per_second": 13.925208879025522,
+          "action_counts": {
+            "buySpell": 13,
+            "upgrade": 10,
+            "play": 52,
+            "darkGift": 13,
+            "buy": 28,
+            "discover": 19,
+            "refresh": 25,
+            "cast": 19,
+            "move": 36,
+            "sell": 33,
+            "end": 32,
+            "power": 5,
+            "freeze": 11,
+            "buyTrinket": 16,
+            "activate": 1
+          },
+          "learner_action_counts": {
+            "darkGift": 10,
+            "buy": 11,
+            "play": 21,
+            "discover": 13,
+            "upgrade": 6,
+            "sell": 15,
+            "end": 16,
+            "buySpell": 4,
+            "cast": 6,
+            "freeze": 8,
+            "refresh": 6,
+            "move": 9,
+            "buyTrinket": 8,
+            "power": 1
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 0,
+            "bootstrap_outcomes": 32,
+            "environment_actions": 1656,
+            "seconds": 13.53862563893199,
+            "scene_battles": 396,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 3.913442427292466,
+          "simulator_wait_seconds": 2.383113481104374,
+          "inference_batches": 276,
+          "mean_inference_batch": 1.1340579710144927,
+          "sampling_graphs": true,
+          "sampling_graph_count": 10,
+          "sampling_graph_replays": 903,
+          "sampling_graph_capture_seconds": 0.3833024688065052,
+          "policy_load_seconds": 0.8831840213388205
+        }
+      },
+      {
+        "mode": "resident",
+        "round": 1,
+        "member": "member-1",
+        "seconds": 31.241655442863703,
+        "performance": {
+          "seconds": 29.717365073040128,
+          "environment_actions": 448,
+          "actions_per_second": 15.075360783127769,
+          "action_counts": {
+            "buyTrinket": 16,
+            "move": 103,
+            "darkGift": 8,
+            "buy": 45,
+            "play": 67,
+            "buySpell": 16,
+            "end": 30,
+            "discover": 24,
+            "activate": 6,
+            "sell": 66,
+            "cast": 28,
+            "refresh": 18,
+            "upgrade": 7,
+            "power": 5,
+            "reward": 3,
+            "freeze": 6
+          },
+          "learner_action_counts": {
+            "buyTrinket": 8,
+            "move": 58,
+            "darkGift": 4,
+            "buy": 27,
+            "play": 45,
+            "end": 15,
+            "buySpell": 10,
+            "discover": 13,
+            "activate": 5,
+            "sell": 44,
+            "refresh": 9,
+            "upgrade": 5,
+            "cast": 13,
+            "reward": 3,
+            "power": 2,
+            "freeze": 4
+          },
+          "first_place_bonus": 1.0,
+          "streaming_done": false,
+          "streaming_active_games": 2,
+          "streaming_tracks": 8,
+          "tier_tempo_checks": [],
+          "counterfactual": {
+            "roots": 1,
+            "labels": 1,
+            "branches": 32,
+            "cutoffs": 0,
+            "terminal_outcomes": 23,
+            "bootstrap_outcomes": 9,
+            "environment_actions": 1357,
+            "seconds": 14.282789548859,
+            "scene_battles": 120,
+            "scene_roots": 1,
+            "reference_missing": 0,
+            "horizon_1_roots": 1,
+            "horizon_3_roots": 0,
+            "horizon_5_roots": 0,
+            "workers": 16
+          },
+          "inference_seconds": 7.3179005309939384,
+          "simulator_wait_seconds": 5.089747780933976,
+          "inference_batches": 367,
+          "mean_inference_batch": 1.220708446866485,
+          "sampling_graphs": true,
+          "sampling_graph_count": 10,
+          "sampling_graph_replays": 967,
+          "sampling_graph_capture_seconds": 0.5938015896826982,
+          "policy_load_seconds": 1.256579589098692
+        }
+      }
+    ],
+    "completed": true,
+    "validation": {
+      "compared": 6,
+      "float_values": 369508,
+      "max_abs": 1.9073486328125e-06,
+      "differences": []
+    }
+  },
+  "resident_concurrency": {
+    "rounds": [
+      {
+        "round": 0,
+        "seconds": 106.06288244016469,
+        "real_actions": 2684,
+        "branch_actions": 59732,
+        "total_actions_per_second": 588.481083711938,
+        "cpu_cores": 19.563841612268163,
+        "peak_memory_gib": 63.34873580932617,
+        "peak_gpu_mib": 25935.0,
+        "mean_gpu_util": 68.92,
+        "policy_load_seconds": 99.1461097933352
+      },
+      {
+        "round": 1,
+        "seconds": 43.36002503708005,
+        "real_actions": 4096,
+        "branch_actions": 16404,
+        "total_actions_per_second": 472.7857048622339,
+        "cpu_cores": 20.565027862355883,
+        "peak_memory_gib": 67.03165817260742,
+        "peak_gpu_mib": 25935.0,
+        "mean_gpu_util": 56.05,
+        "policy_load_seconds": 21.277801111340523
+      }
+    ],
+    "completed": true,
+    "validation": {
+      "compared": 24,
+      "float_values": 1478032,
+      "max_abs": 1.9073486328125e-06,
+      "differences": []
+    }
+  },
+  "production": {
+    "started": 1789544376.6756446,
+    "samples": [
+      {
+        "seconds": 0.14820480719208717,
+        "memory_gib": 65.0537109375,
+        "gpu": [
+          87.0,
+          28459.0,
+          126.08
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 2.3405062798410654,
+        "memory_gib": 65.2971076965332,
+        "gpu": [
+          100.0,
+          28547.0,
+          139.09
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 4.529413916170597,
+        "memory_gib": 63.312652587890625,
+        "gpu": [
+          99.0,
+          28551.0,
+          127.36
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 6.7216350845992565,
+        "memory_gib": 63.216896057128906,
+        "gpu": [
+          90.0,
+          28551.0,
+          127.84
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 8.910635059699416,
+        "memory_gib": 63.83181381225586,
+        "gpu": [
+          89.0,
+          28683.0,
+          129.21
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 11.101567389443517,
+        "memory_gib": 64.2181625366211,
+        "gpu": [
+          100.0,
+          28683.0,
+          129.48
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 13.284471468999982,
+        "memory_gib": 64.463623046875,
+        "gpu": [
+          100.0,
+          28683.0,
+          135.24
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 15.466214390471578,
+        "memory_gib": 64.71143341064453,
+        "gpu": [
+          96.0,
+          28683.0,
+          133.89
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 17.665628926828504,
+        "memory_gib": 63.22150421142578,
+        "gpu": [
+          100.0,
+          28683.0,
+          136.09
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 19.84955465979874,
+        "memory_gib": 62.1071891784668,
+        "gpu": [
+          95.0,
+          28683.0,
+          122.94
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 22.03380255959928,
+        "memory_gib": 63.485984802246094,
+        "gpu": [
+          95.0,
+          32917.0,
+          144.57
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 24.21719559840858,
+        "memory_gib": 63.89186096191406,
+        "gpu": [
+          66.0,
+          29717.0,
+          119.92
+        ],
+        "iterations": [
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "seconds": 26.414464270696044,
+        "memory_gib": 63.92681121826172,
+        "gpu": [
+          90.0,
+          29717.0,
+          127.72
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 28.573493022471666,
+        "memory_gib": 63.98606872558594,
+        "gpu": [
+          96.0,
+          28915.0,
+          131.48
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 30.758413022384048,
+        "memory_gib": 64.15400314331055,
+        "gpu": [
+          92.0,
+          28925.0,
+          138.9
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 32.89524891041219,
+        "memory_gib": 65.38050079345703,
+        "gpu": [
+          91.0,
+          28929.0,
+          128.55
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 35.08000506646931,
+        "memory_gib": 66.82460403442383,
+        "gpu": [
+          68.0,
+          28929.0,
+          125.42
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 37.24920971877873,
+        "memory_gib": 65.31921005249023,
+        "gpu": [
+          79.0,
+          29275.0,
+          119.8
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 39.394592221826315,
+        "memory_gib": 66.05094909667969,
+        "gpu": [
+          92.0,
+          29855.0,
+          128.56
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 41.53479268401861,
+        "memory_gib": 66.43969345092773,
+        "gpu": [
+          93.0,
+          29913.0,
+          127.89
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 43.78387159854174,
+        "memory_gib": 66.80975723266602,
+        "gpu": [
+          74.0,
+          29915.0,
+          131.29
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 45.97739596106112,
+        "memory_gib": 67.05485534667969,
+        "gpu": [
+          86.0,
+          29915.0,
+          127.34
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 48.16923611611128,
+        "memory_gib": 65.83327865600586,
+        "gpu": [
+          98.0,
+          29915.0,
+          126.83
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 50.36631934531033,
+        "memory_gib": 64.67998886108398,
+        "gpu": [
+          70.0,
+          29915.0,
+          121.17
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 52.54957167990506,
+        "memory_gib": 64.61992263793945,
+        "gpu": [
+          88.0,
+          29917.0,
+          122.91
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 54.742454297840595,
+        "memory_gib": 62.8952751159668,
+        "gpu": [
+          81.0,
+          33809.0,
+          121.88
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 56.90286956354976,
+        "memory_gib": 63.474517822265625,
+        "gpu": [
+          71.0,
+          30763.0,
+          116.34
+        ],
+        "iterations": [
+          null,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 59.111164851114154,
+        "memory_gib": 62.98324966430664,
+        "gpu": [
+          95.0,
+          29813.0,
+          124.74
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 61.31219300813973,
+        "memory_gib": 63.006202697753906,
+        "gpu": [
+          77.0,
+          29819.0,
+          124.35
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 63.55685006082058,
+        "memory_gib": 62.962554931640625,
+        "gpu": [
+          62.0,
+          31241.0,
+          105.16
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 65.74606755562127,
+        "memory_gib": 65.50934600830078,
+        "gpu": [
+          46.0,
+          35367.0,
+          120.67
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 67.91882645897567,
+        "memory_gib": 66.59251022338867,
+        "gpu": [
+          47.0,
+          31689.0,
+          106.88
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 70.06342559307814,
+        "memory_gib": 67.52387619018555,
+        "gpu": [
+          60.0,
+          32315.0,
+          120.83
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 72.2521159928292,
+        "memory_gib": 68.12874984741211,
+        "gpu": [
+          88.0,
+          32355.0,
+          119.31
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 74.44390845298767,
+        "memory_gib": 69.46630096435547,
+        "gpu": [
+          49.0,
+          32375.0,
+          122.7
+        ],
+        "iterations": [
+          188,
+          196,
+          null
+        ]
+      },
+      {
+        "seconds": 76.59135661460459,
+        "memory_gib": 68.18722152709961,
+        "gpu": [
+          56.0,
+          32375.0,
+          115.15
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 78.80441183969378,
+        "memory_gib": 67.43976211547852,
+        "gpu": [
+          56.0,
+          32463.0,
+          116.67
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 80.99281058646739,
+        "memory_gib": 66.12570571899414,
+        "gpu": [
+          96.0,
+          31575.0,
+          130.68
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 83.183190792799,
+        "memory_gib": 66.14851760864258,
+        "gpu": [
+          100.0,
+          31577.0,
+          131.48
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 85.38080305606127,
+        "memory_gib": 66.1655387878418,
+        "gpu": [
+          100.0,
+          31589.0,
+          129.68
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 87.56905001215637,
+        "memory_gib": 67.2835464477539,
+        "gpu": [
+          61.0,
+          31589.0,
+          121.38
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 89.75804171152413,
+        "memory_gib": 68.86017227172852,
+        "gpu": [
+          29.0,
+          31593.0,
+          111.42
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 91.93990185298026,
+        "memory_gib": 70.0106201171875,
+        "gpu": [
+          91.0,
+          31893.0,
+          117.57
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 94.13262368366122,
+        "memory_gib": 69.90162658691406,
+        "gpu": [
+          88.0,
+          32123.0,
+          132.47
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 96.28990320116282,
+        "memory_gib": 68.45470809936523,
+        "gpu": [
+          91.0,
+          32317.0,
+          131.36
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 98.45258573442698,
+        "memory_gib": 69.08746719360352,
+        "gpu": [
+          97.0,
+          32317.0,
+          125.49
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 100.6371544636786,
+        "memory_gib": 68.42924499511719,
+        "gpu": [
+          79.0,
+          32383.0,
+          122.6
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 102.82411752641201,
+        "memory_gib": 69.07833099365234,
+        "gpu": [
+          80.0,
+          32449.0,
+          122.96
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 105.0238622110337,
+        "memory_gib": 69.8265151977539,
+        "gpu": [
+          81.0,
+          32473.0,
+          126.53
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 107.20830571092665,
+        "memory_gib": 70.38030624389648,
+        "gpu": [
+          71.0,
+          32473.0,
+          131.99
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 109.4063015114516,
+        "memory_gib": 69.76610565185547,
+        "gpu": [
+          83.0,
+          32475.0,
+          132.81
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 111.59337512776256,
+        "memory_gib": 69.44259262084961,
+        "gpu": [
+          82.0,
+          32475.0,
+          130.71
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 113.78189220279455,
+        "memory_gib": 69.76299285888672,
+        "gpu": [
+          86.0,
+          32475.0,
+          127.8
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 115.97996214590967,
+        "memory_gib": 69.85961151123047,
+        "gpu": [
+          98.0,
+          32475.0,
+          131.05
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 118.17041420377791,
+        "memory_gib": 70.07938766479492,
+        "gpu": [
+          83.0,
+          32477.0,
+          133.2
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 120.36264877952635,
+        "memory_gib": 70.07589340209961,
+        "gpu": [
+          100.0,
+          32477.0,
+          119.85
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 122.55271214805543,
+        "memory_gib": 68.81163787841797,
+        "gpu": [
+          87.0,
+          32477.0,
+          127.62
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 124.73487314395607,
+        "memory_gib": 68.76556015014648,
+        "gpu": [
+          88.0,
+          32477.0,
+          123.84
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 126.93466877937317,
+        "memory_gib": 68.81744384765625,
+        "gpu": [
+          96.0,
+          32477.0,
+          129.22
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 129.12725590355694,
+        "memory_gib": 68.84447860717773,
+        "gpu": [
+          92.0,
+          32477.0,
+          127.32
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 131.32780103944242,
+        "memory_gib": 68.87286376953125,
+        "gpu": [
+          55.0,
+          32477.0,
+          120.65
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 133.5813003797084,
+        "memory_gib": 66.47488403320312,
+        "gpu": [
+          89.0,
+          32479.0,
+          125.89
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 135.75286844745278,
+        "memory_gib": 66.60079956054688,
+        "gpu": [
+          66.0,
+          32567.0,
+          128.99
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 137.94180361554027,
+        "memory_gib": 67.15093994140625,
+        "gpu": [
+          77.0,
+          32561.0,
+          119.97
+        ],
+        "iterations": [
+          188,
+          196,
+          184
+        ]
+      },
+      {
+        "seconds": 140.15168521553278,
+        "memory_gib": 66.728759765625,
+        "gpu": [
+          57.0,
+          32561.0,
+          114.97
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 142.31447058357298,
+        "memory_gib": 66.70580291748047,
+        "gpu": [
+          92.0,
+          31581.0,
+          125.58
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 144.50988044403493,
+        "memory_gib": 66.77919387817383,
+        "gpu": [
+          97.0,
+          31581.0,
+          134.25
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 146.70666443556547,
+        "memory_gib": 67.0308723449707,
+        "gpu": [
+          94.0,
+          31589.0,
+          123.4
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 148.89049896784127,
+        "memory_gib": 68.1519546508789,
+        "gpu": [
+          81.0,
+          31597.0,
+          116.92
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 151.08498304337263,
+        "memory_gib": 69.97874450683594,
+        "gpu": [
+          67.0,
+          31597.0,
+          112.24
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 153.2707617841661,
+        "memory_gib": 69.2532844543457,
+        "gpu": [
+          75.0,
+          31763.0,
+          121.94
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 155.47217063233256,
+        "memory_gib": 69.61387634277344,
+        "gpu": [
+          95.0,
+          32115.0,
+          128.63
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 157.67337390966713,
+        "memory_gib": 69.37603759765625,
+        "gpu": [
+          94.0,
+          32187.0,
+          127.13
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 159.8634945563972,
+        "memory_gib": 69.63241577148438,
+        "gpu": [
+          37.0,
+          32189.0,
+          122.5
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 162.06603229045868,
+        "memory_gib": 68.90604400634766,
+        "gpu": [
+          55.0,
+          33109.0,
+          122.94
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 164.25783688016236,
+        "memory_gib": 69.46667098999023,
+        "gpu": [
+          78.0,
+          38119.0,
+          132.16
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 166.48373518325388,
+        "memory_gib": 69.64063262939453,
+        "gpu": [
+          41.0,
+          32093.0,
+          112.68
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 168.68943704292178,
+        "memory_gib": 68.53606033325195,
+        "gpu": [
+          39.0,
+          32223.0,
+          119.18
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 170.89409047923982,
+        "memory_gib": 69.4146957397461,
+        "gpu": [
+          60.0,
+          32223.0,
+          113.22
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 173.07810613885522,
+        "memory_gib": 69.15470886230469,
+        "gpu": [
+          82.0,
+          32853.0,
+          108.49
+        ],
+        "iterations": [
+          188,
+          197,
+          184
+        ]
+      },
+      {
+        "seconds": 175.26133107580245,
+        "memory_gib": 68.24417877197266,
+        "gpu": [
+          48.0,
+          32431.0,
+          126.12
+        ],
+        "iterations": [
+          188,
+          197,
+          185
+        ]
+      },
+      {
+        "seconds": 177.45225823111832,
+        "memory_gib": 68.29350280761719,
+        "gpu": [
+          62.0,
+          31839.0,
+          132.64
+        ],
+        "iterations": [
+          189,
+          197,
+          185
+        ]
+      }
+    ],
+    "members": [
+      {
+        "member": 0,
+        "rows": 2,
+        "latest": [
+          {
+            "iteration": 188,
+            "iteration_seconds": 110.64959508366883,
+            "end_to_end_actions_per_second": 3.705390875492805,
+            "cuda_peak_allocated_mib": 3283.744140625,
+            "episodes": 7979,
+            "seconds": 106.82324463687837,
+            "environment_actions": 410,
+            "actions_per_second": 3.8381159586914153,
+            "inference_batches": 354,
+            "mean_inference_batch": 1.1581920903954803,
+            "sampling_processes": 4,
+            "sampling_workers": 8,
+            "persistent_samplers": true,
+            "parallel_inference_seconds_sum": 9.616453483700752,
+            "parallel_simulator_wait_seconds_sum": 2.7526175435632467,
+            "sampling_graphs": true,
+            "sampling_graph_capture_seconds": 3.25327105820179,
+            "first_place_bonus": 1.0,
+            "sampler_policy_iteration": 187,
+            "sampler_pids": [
+              152804,
+              152805,
+              152806,
+              152807
+            ],
+            "parallel_policy_load_seconds_sum": 18.067431239411235,
+            "streaming_done": false,
+            "streaming_active_games": 8,
+            "streaming_tracks": 32,
+            "counterfactual": {
+              "roots": 4,
+              "labels": 4,
+              "branches": 188,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 188,
+              "environment_actions": 14932,
+              "seconds": 103.9368833117187,
+              "scene_battles": 2304,
+              "scene_roots": 4,
+              "reference_missing": 0,
+              "horizon_1_roots": 1,
+              "horizon_3_roots": 3,
+              "horizon_5_roots": 0,
+              "workers": 120,
+              "teaching": {
+                "updates": 1,
+                "states": 4,
+                "actions": 20,
+                "loss": 0.1561599224805832,
+                "training_mode": "action_value_regression",
+                "scene_loss": 1.4820469617843628,
+                "scene_states": 24,
+                "scene_actions": 20,
+                "economic_actions": 20,
+                "training_graphs": true,
+                "training_graph_count": 2,
+                "training_graph_replays": 2,
+                "training_graph_capture_seconds": 0.1401517055928707
+              }
+            },
+            "card_value": {
+              "roots": 3,
+              "labels": 1,
+              "branches": 324,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 324,
+              "environment_actions": 21690,
+              "seconds": 122.59971505962312,
+              "scene_battles": 0,
+              "scene_roots": 0,
+              "reference_missing": 0,
+              "horizon_1_roots": 0,
+              "horizon_3_roots": 0,
+              "horizon_5_roots": 0,
+              "workers": 96,
+              "probes": 3,
+              "teaching": {
+                "updates": 1,
+                "cards": 1,
+                "loss": 0.47537556290626526,
+                "training_graphs": true,
+                "training_graph_count": 0,
+                "training_graph_replays": 0,
+                "training_graph_capture_seconds": 0.0
+              }
+            },
+            "action_counts": {
+              "buySpell": 36,
+              "end": 128,
+              "buy": 49,
+              "refresh": 46,
+              "cast": 25,
+              "play": 39,
+              "freeze": 50,
+              "sell": 17,
+              "discover": 5,
+              "upgrade": 10,
+              "power": 3,
+              "move": 2
+            },
+            "learner_action_counts": {
+              "buySpell": 19,
+              "end": 64,
+              "buy": 20,
+              "refresh": 25,
+              "cast": 12,
+              "play": 14,
+              "freeze": 26,
+              "discover": 4,
+              "power": 1,
+              "sell": 11,
+              "upgrade": 4
+            },
+            "policy_loss": 0.0,
+            "value_loss": 0.004895997350104153,
+            "entropy": 1.2740556597709656,
+            "approx_kl": 0.0,
+            "gradient_norm": 1.257775604724884,
+            "auxiliary_loss": 1.2223162055015564,
+            "samples": 200,
+            "optimizer_steps": 2,
+            "kl_early_stop": false,
+            "sequence_chunks": 32,
+            "training_mode": "soft_action_value",
+            "action_value_loss": 0.005299862939864397,
+            "training_graphs": true,
+            "training_graph_count": 2,
+            "training_graph_replays": 4,
+            "training_graph_capture_seconds": 0.20123117603361607,
+            "optimization_seconds": 1.4778055530041456,
+            "checkpoint_seconds": 1.8504202794283628,
+            "completed_games": 0,
+            "league_generations": [
+              0,
+              "external:7d57601f2473a26f",
+              "external:5b60a5182ad67984",
+              "external:924938d4a12ae8f7",
+              "external:b88e41f0c38510bf",
+              1,
+              2,
+              3,
+              151,
+              161,
+              177,
+              186
+            ]
+          },
+          {
+            "iteration": 189,
+            "iteration_seconds": 118.87098471075296,
+            "end_to_end_actions_per_second": 6.385073715397106,
+            "cuda_peak_allocated_mib": 4559.16455078125,
+            "episodes": 7979,
+            "seconds": 115.27360144630075,
+            "environment_actions": 759,
+            "actions_per_second": 6.584334925577682,
+            "inference_batches": 669,
+            "mean_inference_batch": 1.1345291479820627,
+            "sampling_processes": 4,
+            "sampling_workers": 8,
+            "persistent_samplers": true,
+            "parallel_inference_seconds_sum": 10.844741659238935,
+            "parallel_simulator_wait_seconds_sum": 5.273450244218111,
+            "sampling_graphs": true,
+            "sampling_graph_capture_seconds": 2.4700991474092007,
+            "first_place_bonus": 1.0,
+            "sampler_policy_iteration": 188,
+            "sampler_pids": [
+              152804,
+              152805,
+              152806,
+              152807
+            ],
+            "parallel_policy_load_seconds_sum": 3.445139817893505,
+            "streaming_done": false,
+            "streaming_active_games": 8,
+            "streaming_tracks": 32,
+            "counterfactual": {
+              "roots": 4,
+              "labels": 4,
+              "branches": 324,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 324,
+              "environment_actions": 10797,
+              "seconds": 83.11311771906912,
+              "scene_battles": 3936,
+              "scene_roots": 4,
+              "reference_missing": 0,
+              "horizon_1_roots": 4,
+              "horizon_3_roots": 0,
+              "horizon_5_roots": 0,
+              "workers": 128,
+              "teaching": {
+                "updates": 1,
+                "states": 4,
+                "actions": 27,
+                "loss": 0.1590161919593811,
+                "training_mode": "action_value_regression",
+                "scene_loss": 1.4608005285263062,
+                "scene_states": 31,
+                "scene_actions": 27,
+                "economic_actions": 27,
+                "training_graphs": true,
+                "training_graph_count": 2,
+                "training_graph_replays": 2,
+                "training_graph_capture_seconds": 0.19699540361762047
+              }
+            },
+            "card_value": {
+              "probes": 1,
+              "labels": 1,
+              "branches": 96,
+              "seconds": 66.36432092823088,
+              "roots": 1,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 96,
+              "environment_actions": 11136,
+              "scene_battles": 0,
+              "scene_roots": 0,
+              "reference_missing": 0,
+              "horizon_1_roots": 0,
+              "horizon_3_roots": 0,
+              "horizon_5_roots": 0,
+              "workers": 32,
+              "teaching": {
+                "updates": 1,
+                "cards": 1,
+                "loss": 0.33843743801116943,
+                "training_graphs": true,
+                "training_graph_count": 0,
+                "training_graph_replays": 0,
+                "training_graph_capture_seconds": 0.0
+              }
+            },
+            "action_counts": {
+              "power": 11,
+              "darkGift": 35,
+              "refresh": 68,
+              "sell": 77,
+              "upgrade": 25,
+              "buy": 77,
+              "end": 128,
+              "play": 109,
+              "buySpell": 41,
+              "discover": 52,
+              "cast": 39,
+              "freeze": 49,
+              "move": 34,
+              "choosePower": 12,
+              "activate": 2
+            },
+            "learner_action_counts": {
+              "sell": 40,
+              "refresh": 32,
+              "end": 64,
+              "upgrade": 12,
+              "buy": 34,
+              "play": 49,
+              "darkGift": 20,
+              "freeze": 24,
+              "discover": 27,
+              "choosePower": 6,
+              "buySpell": 17,
+              "power": 5,
+              "move": 9,
+              "cast": 15
+            },
+            "policy_loss": 0.0,
+            "value_loss": 0.0017021844032569788,
+            "entropy": 1.6657954156398773,
+            "approx_kl": 0.0,
+            "gradient_norm": 0.928972102701664,
+            "auxiliary_loss": 1.2568515837192535,
+            "samples": 354,
+            "optimizer_steps": 4,
+            "kl_early_stop": false,
+            "sequence_chunks": 34,
+            "training_mode": "soft_action_value",
+            "action_value_loss": 0.004866365808993578,
+            "training_graphs": true,
+            "training_graph_count": 2,
+            "training_graph_replays": 4,
+            "training_graph_capture_seconds": 0.1882847175002098,
+            "optimization_seconds": 1.0656606294214725,
+            "checkpoint_seconds": 1.961703984066844,
+            "completed_games": 0,
+            "league_generations": [
+              0,
+              "external:7d57601f2473a26f",
+              "external:5b60a5182ad67984",
+              "external:924938d4a12ae8f7",
+              "external:b88e41f0c38510bf",
+              1,
+              2,
+              3,
+              151,
+              161,
+              177,
+              186
+            ]
+          }
+        ],
+        "checkpoint_mtime": 1789544552.1679618
+      },
+      {
+        "member": 1,
+        "rows": 2,
+        "latest": [
+          {
+            "iteration": 196,
+            "iteration_seconds": 75.20091712661088,
+            "end_to_end_actions_per_second": 5.877587892390108,
+            "cuda_peak_allocated_mib": 3390.70947265625,
+            "episodes": 8109,
+            "seconds": 69.19703942351043,
+            "environment_actions": 442,
+            "actions_per_second": 6.387556515168274,
+            "inference_batches": 370,
+            "mean_inference_batch": 1.1945945945945946,
+            "sampling_processes": 4,
+            "sampling_workers": 8,
+            "persistent_samplers": true,
+            "parallel_inference_seconds_sum": 10.2392071262002,
+            "parallel_simulator_wait_seconds_sum": 2.928338186815381,
+            "sampling_graphs": true,
+            "sampling_graph_capture_seconds": 3.520560869947076,
+            "first_place_bonus": 1.0,
+            "sampler_policy_iteration": 195,
+            "sampler_pids": [
+              152893,
+              152894,
+              152895,
+              152896
+            ],
+            "parallel_policy_load_seconds_sum": 26.72737132385373,
+            "streaming_done": false,
+            "streaming_active_games": 8,
+            "streaming_tracks": 32,
+            "counterfactual": {
+              "roots": 4,
+              "labels": 4,
+              "branches": 112,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 112,
+              "environment_actions": 5991,
+              "seconds": 57.297502329573035,
+              "scene_battles": 1392,
+              "scene_roots": 4,
+              "reference_missing": 0,
+              "horizon_1_roots": 2,
+              "horizon_3_roots": 1,
+              "horizon_5_roots": 1,
+              "workers": 112,
+              "teaching": {
+                "updates": 1,
+                "states": 4,
+                "actions": 13,
+                "loss": 0.15016034245491028,
+                "training_mode": "action_value_regression",
+                "scene_loss": 1.48203444480896,
+                "scene_states": 17,
+                "scene_actions": 13,
+                "economic_actions": 13,
+                "training_graphs": true,
+                "training_graph_count": 2,
+                "training_graph_replays": 2,
+                "training_graph_capture_seconds": 0.5117169804871082
+              }
+            },
+            "card_value": {
+              "roots": 2,
+              "labels": 2,
+              "branches": 216,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 216,
+              "environment_actions": 8684,
+              "seconds": 54.56982407532632,
+              "scene_battles": 0,
+              "scene_roots": 0,
+              "reference_missing": 0,
+              "horizon_1_roots": 0,
+              "horizon_3_roots": 0,
+              "horizon_5_roots": 0,
+              "workers": 64,
+              "probes": 2,
+              "teaching": {
+                "updates": 1,
+                "cards": 2,
+                "loss": 0.4437914788722992,
+                "training_graphs": true,
+                "training_graph_count": 0,
+                "training_graph_replays": 0,
+                "training_graph_capture_seconds": 0.0
+              }
+            },
+            "action_counts": {
+              "buySpell": 30,
+              "power": 5,
+              "end": 128,
+              "buy": 62,
+              "refresh": 49,
+              "play": 45,
+              "freeze": 56,
+              "cast": 25,
+              "sell": 22,
+              "upgrade": 14,
+              "discover": 4,
+              "move": 2
+            },
+            "learner_action_counts": {
+              "buySpell": 15,
+              "power": 1,
+              "end": 64,
+              "buy": 33,
+              "cast": 12,
+              "refresh": 23,
+              "freeze": 30,
+              "play": 24,
+              "sell": 11,
+              "upgrade": 7,
+              "discover": 2,
+              "move": 1
+            },
+            "policy_loss": 0.0,
+            "value_loss": 0.0012363058049231768,
+            "entropy": 1.2831380367279053,
+            "approx_kl": 0.0,
+            "gradient_norm": 0.32818175852298737,
+            "auxiliary_loss": 1.1367968320846558,
+            "samples": 223,
+            "optimizer_steps": 2,
+            "kl_early_stop": false,
+            "sequence_chunks": 32,
+            "training_mode": "soft_action_value",
+            "action_value_loss": 0.002675032475963235,
+            "training_graphs": true,
+            "training_graph_count": 2,
+            "training_graph_replays": 4,
+            "training_graph_capture_seconds": 0.5845307651907206,
+            "optimization_seconds": 2.035740878432989,
+            "checkpoint_seconds": 3.0109072513878345,
+            "completed_games": 0,
+            "league_generations": [
+              0,
+              "external:b5725446543aa39c",
+              "external:707e3388d10faa23",
+              "external:f2a134cedd642d3b",
+              "external:b88e41f0c38510bf",
+              1,
+              2,
+              3,
+              154,
+              165,
+              181,
+              192
+            ]
+          },
+          {
+            "iteration": 197,
+            "iteration_seconds": 113.32117810100317,
+            "end_to_end_actions_per_second": 5.982994629615469,
+            "cuda_peak_allocated_mib": 4667.76318359375,
+            "episodes": 8109,
+            "seconds": 107.76826490275562,
+            "environment_actions": 678,
+            "actions_per_second": 6.291276941424187,
+            "inference_batches": 585,
+            "mean_inference_batch": 1.158974358974359,
+            "sampling_processes": 4,
+            "sampling_workers": 8,
+            "persistent_samplers": true,
+            "parallel_inference_seconds_sum": 11.718270178884268,
+            "parallel_simulator_wait_seconds_sum": 5.651266662403941,
+            "sampling_graphs": true,
+            "sampling_graph_capture_seconds": 3.3949172999709845,
+            "first_place_bonus": 1.0,
+            "sampler_policy_iteration": 196,
+            "sampler_pids": [
+              152893,
+              152894,
+              152895,
+              152896
+            ],
+            "parallel_policy_load_seconds_sum": 5.0264659356325865,
+            "streaming_done": false,
+            "streaming_active_games": 8,
+            "streaming_tracks": 32,
+            "counterfactual": {
+              "roots": 4,
+              "labels": 4,
+              "branches": 328,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 328,
+              "environment_actions": 19496,
+              "seconds": 140.4706903230399,
+              "scene_battles": 3984,
+              "scene_roots": 4,
+              "reference_missing": 0,
+              "horizon_1_roots": 3,
+              "horizon_3_roots": 1,
+              "horizon_5_roots": 0,
+              "workers": 128,
+              "teaching": {
+                "updates": 1,
+                "states": 4,
+                "actions": 30,
+                "loss": 0.15545959770679474,
+                "training_mode": "action_value_regression",
+                "scene_loss": 1.4529510736465454,
+                "scene_states": 34,
+                "scene_actions": 30,
+                "economic_actions": 30,
+                "training_graphs": true,
+                "training_graph_count": 2,
+                "training_graph_replays": 2,
+                "training_graph_capture_seconds": 0.5030214209109545
+              }
+            },
+            "card_value": {
+              "probes": 0,
+              "labels": 0,
+              "branches": 0,
+              "seconds": 0.0,
+              "teaching": {
+                "updates": 0,
+                "cards": 0,
+                "training_graphs": true,
+                "training_graph_count": 0,
+                "training_graph_replays": 0,
+                "training_graph_capture_seconds": 0.0
+              }
+            },
+            "action_counts": {
+              "buySpell": 58,
+              "buy": 62,
+              "end": 128,
+              "play": 83,
+              "cast": 49,
+              "refresh": 65,
+              "upgrade": 31,
+              "darkGift": 27,
+              "discover": 41,
+              "freeze": 43,
+              "sell": 46,
+              "power": 11,
+              "move": 27,
+              "choosePower": 6,
+              "activate": 1
+            },
+            "learner_action_counts": {
+              "end": 64,
+              "refresh": 32,
+              "upgrade": 12,
+              "darkGift": 18,
+              "discover": 27,
+              "play": 36,
+              "power": 5,
+              "buy": 26,
+              "move": 23,
+              "freeze": 21,
+              "sell": 17,
+              "buySpell": 30,
+              "cast": 24,
+              "activate": 1,
+              "choosePower": 2
+            },
+            "policy_loss": 0.0,
+            "value_loss": 0.001140516353189014,
+            "entropy": 1.8591133654117584,
+            "approx_kl": 0.0,
+            "gradient_norm": 0.36285658180713654,
+            "auxiliary_loss": 1.099729835987091,
+            "samples": 338,
+            "optimizer_steps": 4,
+            "kl_early_stop": false,
+            "sequence_chunks": 36,
+            "training_mode": "soft_action_value",
+            "action_value_loss": 0.0027412319905124605,
+            "training_graphs": true,
+            "training_graph_count": 2,
+            "training_graph_replays": 4,
+            "training_graph_capture_seconds": 0.6172155160456896,
+            "optimization_seconds": 1.6325098872184753,
+            "checkpoint_seconds": 2.977488813921809,
+            "completed_games": 0,
+            "league_generations": [
+              0,
+              "external:b5725446543aa39c",
+              "external:707e3388d10faa23",
+              "external:f2a134cedd642d3b",
+              "external:b88e41f0c38510bf",
+              1,
+              2,
+              3,
+              154,
+              165,
+              181,
+              192
+            ]
+          }
+        ],
+        "checkpoint_mtime": 1789544514.9734468
+      },
+      {
+        "member": 2,
+        "rows": 2,
+        "latest": [
+          {
+            "iteration": 184,
+            "iteration_seconds": 113.97999946773052,
+            "end_to_end_actions_per_second": 3.7550447622275462,
+            "cuda_peak_allocated_mib": 4020.23388671875,
+            "episodes": 7786,
+            "seconds": 100.42038458026946,
+            "environment_actions": 428,
+            "actions_per_second": 4.26208286085466,
+            "inference_batches": 376,
+            "mean_inference_batch": 1.1382978723404256,
+            "sampling_processes": 4,
+            "sampling_workers": 8,
+            "persistent_samplers": true,
+            "parallel_inference_seconds_sum": 14.987136971205473,
+            "parallel_simulator_wait_seconds_sum": 3.5108838509768248,
+            "sampling_graphs": true,
+            "sampling_graph_capture_seconds": 5.144658014178276,
+            "first_place_bonus": 1.0,
+            "sampler_policy_iteration": 183,
+            "sampler_pids": [
+              153920,
+              153921,
+              153922,
+              153923
+            ],
+            "parallel_policy_load_seconds_sum": 52.141075536608696,
+            "streaming_done": false,
+            "streaming_active_games": 8,
+            "streaming_tracks": 32,
+            "counterfactual": {
+              "roots": 4,
+              "labels": 4,
+              "branches": 220,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 220,
+              "environment_actions": 4942,
+              "seconds": 46.307248076424,
+              "scene_battles": 2688,
+              "scene_roots": 4,
+              "reference_missing": 0,
+              "horizon_1_roots": 4,
+              "horizon_3_roots": 0,
+              "horizon_5_roots": 0,
+              "workers": 128,
+              "teaching": {
+                "updates": 1,
+                "states": 4,
+                "actions": 21,
+                "loss": 0.15618407726287842,
+                "training_mode": "action_value_regression",
+                "scene_loss": 1.5268595218658447,
+                "scene_states": 25,
+                "scene_actions": 21,
+                "economic_actions": 21,
+                "training_graphs": true,
+                "training_graph_count": 2,
+                "training_graph_replays": 2,
+                "training_graph_capture_seconds": 1.7396873496472836
+              }
+            },
+            "card_value": {
+              "probes": 2,
+              "labels": 0,
+              "branches": 216,
+              "seconds": 89.59455160982907,
+              "roots": 2,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 216,
+              "environment_actions": 12846,
+              "scene_battles": 0,
+              "scene_roots": 0,
+              "reference_missing": 0,
+              "horizon_1_roots": 0,
+              "horizon_3_roots": 0,
+              "horizon_5_roots": 0,
+              "workers": 64,
+              "teaching": {
+                "updates": 0,
+                "cards": 0,
+                "training_graphs": true,
+                "training_graph_count": 0,
+                "training_graph_replays": 0,
+                "training_graph_capture_seconds": 0.0
+              }
+            },
+            "action_counts": {
+              "buy": 67,
+              "power": 10,
+              "refresh": 38,
+              "end": 128,
+              "play": 49,
+              "freeze": 50,
+              "buySpell": 30,
+              "sell": 23,
+              "cast": 18,
+              "upgrade": 10,
+              "move": 4,
+              "discover": 1
+            },
+            "learner_action_counts": {
+              "buy": 39,
+              "power": 5,
+              "end": 64,
+              "refresh": 20,
+              "play": 24,
+              "freeze": 27,
+              "sell": 16,
+              "upgrade": 3,
+              "buySpell": 7,
+              "cast": 3
+            },
+            "policy_loss": 0.0,
+            "value_loss": 0.0013001447659917176,
+            "entropy": 1.2935353517532349,
+            "approx_kl": 0.0,
+            "gradient_norm": 0.5526241958141327,
+            "auxiliary_loss": 1.1421251893043518,
+            "samples": 208,
+            "optimizer_steps": 2,
+            "kl_early_stop": false,
+            "sequence_chunks": 32,
+            "training_mode": "soft_action_value",
+            "action_value_loss": 0.0029135800432413816,
+            "training_graphs": true,
+            "training_graph_count": 2,
+            "training_graph_replays": 4,
+            "training_graph_capture_seconds": 1.9768838454037905,
+            "optimization_seconds": 3.6837119590491056,
+            "checkpoint_seconds": 7.1875296626240015,
+            "completed_games": 0,
+            "league_generations": [
+              0,
+              "external:36110582b529c3aa",
+              "external:f2a134cedd642d3b",
+              "external:7d57601f2473a26f",
+              "external:924938d4a12ae8f7",
+              1,
+              2,
+              3,
+              124,
+              151,
+              172,
+              183
+            ]
+          },
+          {
+            "iteration": 185,
+            "iteration_seconds": 98.59955671615899,
+            "end_to_end_actions_per_second": 8.488881977527473,
+            "cuda_peak_allocated_mib": 5186.91943359375,
+            "episodes": 7786,
+            "seconds": 84.55900043807924,
+            "environment_actions": 837,
+            "actions_per_second": 9.898414073767551,
+            "inference_batches": 696,
+            "mean_inference_batch": 1.2025862068965518,
+            "sampling_processes": 4,
+            "sampling_workers": 8,
+            "persistent_samplers": true,
+            "parallel_inference_seconds_sum": 20.9066142719239,
+            "parallel_simulator_wait_seconds_sum": 6.499851388856769,
+            "sampling_graphs": true,
+            "sampling_graph_capture_seconds": 4.747355237603188,
+            "first_place_bonus": 1.0,
+            "sampler_policy_iteration": 184,
+            "sampler_pids": [
+              153920,
+              153921,
+              153922,
+              153923
+            ],
+            "parallel_policy_load_seconds_sum": 12.211161088198423,
+            "streaming_done": false,
+            "streaming_active_games": 8,
+            "streaming_tracks": 32,
+            "counterfactual": {
+              "roots": 4,
+              "labels": 4,
+              "branches": 280,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 280,
+              "environment_actions": 15799,
+              "seconds": 115.30340424366295,
+              "scene_battles": 3408,
+              "scene_roots": 4,
+              "reference_missing": 0,
+              "horizon_1_roots": 3,
+              "horizon_3_roots": 1,
+              "horizon_5_roots": 0,
+              "workers": 128,
+              "teaching": {
+                "updates": 1,
+                "states": 4,
+                "actions": 30,
+                "loss": 0.15796512365341187,
+                "training_mode": "action_value_regression",
+                "scene_loss": 1.4877493381500244,
+                "scene_states": 34,
+                "scene_actions": 30,
+                "economic_actions": 30,
+                "training_graphs": true,
+                "training_graph_count": 2,
+                "training_graph_replays": 2,
+                "training_graph_capture_seconds": 1.7602715380489826
+              }
+            },
+            "card_value": {
+              "probes": 1,
+              "labels": 0,
+              "branches": 108,
+              "seconds": 59.18655007518828,
+              "roots": 1,
+              "cutoffs": 0,
+              "terminal_outcomes": 0,
+              "bootstrap_outcomes": 108,
+              "environment_actions": 8418,
+              "scene_battles": 0,
+              "scene_roots": 0,
+              "reference_missing": 0,
+              "horizon_1_roots": 0,
+              "horizon_3_roots": 0,
+              "horizon_5_roots": 0,
+              "workers": 32,
+              "teaching": {
+                "updates": 0,
+                "cards": 0,
+                "training_graphs": true,
+                "training_graph_count": 0,
+                "training_graph_replays": 0,
+                "training_graph_capture_seconds": 0.0
+              }
+            },
+            "action_counts": {
+              "buy": 66,
+              "buySpell": 44,
+              "refresh": 72,
+              "end": 128,
+              "darkGift": 42,
+              "cast": 51,
+              "discover": 74,
+              "freeze": 58,
+              "play": 124,
+              "upgrade": 30,
+              "sell": 64,
+              "move": 55,
+              "choosePower": 12,
+              "power": 16,
+              "activate": 1
+            },
+            "learner_action_counts": {
+              "discover": 36,
+              "darkGift": 17,
+              "buy": 37,
+              "end": 64,
+              "buySpell": 22,
+              "play": 64,
+              "cast": 20,
+              "freeze": 35,
+              "refresh": 33,
+              "move": 22,
+              "upgrade": 19,
+              "sell": 33,
+              "power": 8,
+              "choosePower": 6
+            },
+            "policy_loss": 0.0,
+            "value_loss": 0.001372813043417409,
+            "entropy": 1.8182838261127472,
+            "approx_kl": 0.0,
+            "gradient_norm": 0.4786926656961441,
+            "auxiliary_loss": 1.1777384877204895,
+            "samples": 416,
+            "optimizer_steps": 4,
+            "kl_early_stop": false,
+            "sequence_chunks": 42,
+            "training_mode": "soft_action_value",
+            "action_value_loss": 0.005881612305529416,
+            "training_graphs": true,
+            "training_graph_count": 2,
+            "training_graph_replays": 4,
+            "training_graph_capture_seconds": 2.207199141383171,
+            "optimization_seconds": 4.760768748819828,
+            "checkpoint_seconds": 6.657645391300321,
+            "completed_games": 0,
+            "league_generations": [
+              0,
+              "external:36110582b529c3aa",
+              "external:f2a134cedd642d3b",
+              "external:7d57601f2473a26f",
+              "external:924938d4a12ae8f7",
+              1,
+              2,
+              3,
+              124,
+              151,
+              172,
+              183
+            ]
+          }
+        ],
+        "checkpoint_mtime": 1789544549.8240552
+      }
+    ],
+    "seconds": 177.4524099510163,
+    "cpu_cores": 15.667670164454009,
+    "peak_memory_gib": 70.38030624389648,
+    "peak_gpu_mib": 38119.0,
+    "mean_gpu_util": 79.53658536585365,
+    "verified_reuse_and_policy_versions": true,
+    "memory_events_before": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\n",
+    "memory_events_after": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\n",
+    "completed": true
+  },
+  "tests": {
+    "exit_code": 0,
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-m",
+      "unittest",
+      "test_persistent_rollout",
+      "test_process_rollout",
+      "test_training_performance",
+      "test_streaming",
+      "test_league",
+      "test_population",
+      "test_ppo",
+      "test_counterfactual",
+      "test_action_value",
+      "test_card_value",
+      "test_multi_horizon",
+      "test_scene_value",
+      "test_sampling_graphs",
+      "test_training_graphs",
+      "test_branch_mask",
+      "test_masked_sampling",
+      "test_rollout_transfer"
+    ],
+    "finished": 1789544167.4900246,
+    "passed_checks": 75,
+    "note": "73 checks passed in main suite; missing staged test_branch_mask was copied and its 2 CPU/CUDA checks passed separately. Original log preserved."
+  },
+  "deployment": {
+    "deployed": 1789544294.1260307,
+    "runtime": "/root/autodl-tmp/tavern-multi-horizon-20260916",
+    "changes": [
+      {
+        "path": "rl/python/tavern_rl/train.py",
+        "before": "710acd46061e778888c59916e28804df0bd53c42e312eb27f5fcc056d9b1e736",
+        "after": "0f35b23b637d87b9c0fad25264d6c7ca32241d702b1f9a22aaf8287448b8c215"
+      },
+      {
+        "path": "rl/python/tavern_rl/process_rollout.py",
+        "before": "7fd641e763ea9c7127c3eb73b7151ff0ab07a7edb04f55b657b0039e5d29f9b1",
+        "after": "5139fb16372601dfcadd092ca29577996624c1171da218f8ceb7f3198d822922"
+      },
+      {
+        "path": "rl/python/tavern_rl/training_performance.py",
+        "before": "c1faf15262ae11f175f3348743bb92f4e89868ef52adba1a9127d4817d465221",
+        "after": "c25574710ca771742c789be0bfc3943621a1a8e90ae59db0adba1dc8faeccf4a"
+      },
+      {
+        "path": "rl/python/tavern_rl/persistent_rollout.py",
+        "before": null,
+        "after": "a1f94fed4ee3f8e32f08bb143c664302e5fb69d99ca6f8b8067d05e632e0b2a6"
+      },
+      {
+        "path": "rl/tests/test_persistent_rollout.py",
+        "before": null,
+        "after": "50a7244ed2e20f016aeebe6b79ef0d8367aaec765ce58d87827f2e981bca42d2"
+      },
+      {
+        "path": "rl/tests/test_branch_mask.py",
+        "before": null,
+        "after": "07a94aecfd2ba5f9531fc24543950bc1f3b342f8092d4af57e38f408430c7c49"
+      }
+    ]
+  },
+  "services": {
+    "resume": 152729,
+    "watch": 152988,
+    "mail": 161160
+  },
+  "mail_latest_acceptance": {
+    "event": "smtp_accepted",
+    "lastSent": "e77bdcebb27d3e87d6714d23af8ecb26df7f3cd15763f67c61eaa1e43b95914e",
+    "snapshotUtc": "2026-09-16T07:43:52.250006+00:00",
+    "acceptedUtc": "2026-09-16T07:43:54.164714+00:00"
+  },
+  "deadline_utc": "2026-09-16T08:24:41.728335+00:00",
+  "concurrency_scan": {
+    "started": 1789542456.2178314,
+    "scope": "Controlled production stream snapshots: four paired branch trials, card-value probes disabled for every case; no optimizer updates",
+    "cases": [
+      {
+        "processes": 12,
+        "branch_workers": 16,
+        "seconds": 114.30008107423782,
+        "real_actions": 2684,
+        "branch_actions": 59732,
+        "total_actions_per_second": 546.0713536979982,
+        "cpu_cores": 18.01758458650973,
+        "throttled_fraction": 0.3359580052493438,
+        "peak_memory_gib": 60.86552429199219,
+        "mean_gpu_util": 67.27777777777777,
+        "peak_gpu_memory_mib": 25471.0
+      },
+      {
+        "processes": 12,
+        "branch_workers": 32,
+        "seconds": 109.06037573516369,
+        "real_actions": 2684,
+        "branch_actions": 59732,
+        "total_actions_per_second": 572.3068491123452,
+        "cpu_cores": 19.559631145780212,
+        "throttled_fraction": 0.44362969752520626,
+        "peak_memory_gib": 65.16741561889648,
+        "mean_gpu_util": 63.01923076923077,
+        "peak_gpu_memory_mib": 25921.0
+      },
+      {
+        "processes": 6,
+        "branch_workers": 32,
+        "seconds": 90.35248137079179,
+        "real_actions": 1342,
+        "branch_actions": 29866,
+        "total_actions_per_second": 345.4027994198353,
+        "cpu_cores": 11.22074914400456,
+        "throttled_fraction": 0.04756637168141593,
+        "peak_memory_gib": 46.077919006347656,
+        "mean_gpu_util": 52.04651162790697,
+        "peak_gpu_memory_mib": 12989.0
+      },
+      {
+        "processes": 6,
+        "branch_workers": 64,
+        "seconds": 91.4023625254631,
+        "real_actions": 1342,
+        "branch_actions": 29866,
+        "total_actions_per_second": 341.43537582309204,
+        "cpu_cores": 11.315476563440829,
+        "throttled_fraction": 0.05689277899343545,
+        "peak_memory_gib": 45.7288703918457,
+        "mean_gpu_util": 53.84090909090909,
+        "peak_gpu_memory_mib": 12993.0
+      }
+    ],
+    "skipped": [
+      {
+        "processes": 24,
+        "branch_workers": 16,
+        "reason": "Estimated memory including trainer exceeds safe budget",
+        "predicted_memory_gib": 111.48071670532227
+      }
+    ],
+    "completed": true,
+    "finished": 1789542863.848314
+  },
+  "training_batch_scan": {
+    "rows": [
+      {
+        "member": "member-0",
+        "depth": 64,
+        "batch": 32,
+        "seconds": 1.4308660477399826,
+        "samples_per_second": 164.93507576950068,
+        "peak_gpu_mib": 3330.060546875,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-0",
+        "depth": 64,
+        "batch": 64,
+        "seconds": 0.6871541570872068,
+        "samples_per_second": 343.44549554991517,
+        "peak_gpu_mib": 3455.23193359375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-0",
+        "depth": 64,
+        "batch": 128,
+        "seconds": 0.8000484369695187,
+        "samples_per_second": 294.98213994884844,
+        "peak_gpu_mib": 3583.23193359375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-0",
+        "depth": 64,
+        "batch": 32,
+        "seconds": 0.6524648014456034,
+        "samples_per_second": 361.70533563974266,
+        "peak_gpu_mib": 3711.23193359375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-1",
+        "depth": 256,
+        "batch": 32,
+        "seconds": 2.078448535874486,
+        "samples_per_second": 415.6946804730389,
+        "peak_gpu_mib": 5029.86962890625,
+        "finite": true,
+        "optimizer_steps": 4
+      },
+      {
+        "member": "member-1",
+        "depth": 256,
+        "batch": 64,
+        "seconds": 1.9564500339329243,
+        "samples_per_second": 441.61618493427966,
+        "peak_gpu_mib": 9230.3359375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-1",
+        "depth": 256,
+        "batch": 128,
+        "seconds": 1.8903685510158539,
+        "samples_per_second": 457.05373141956903,
+        "peak_gpu_mib": 9358.3359375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-1",
+        "depth": 256,
+        "batch": 32,
+        "seconds": 1.9753025323152542,
+        "samples_per_second": 437.4013528891216,
+        "peak_gpu_mib": 5413.86962890625,
+        "finite": true,
+        "optimizer_steps": 4
+      },
+      {
+        "member": "member-2",
+        "depth": 1024,
+        "batch": 32,
+        "seconds": 3.1907966639846563,
+        "samples_per_second": 62.68027112396459,
+        "peak_gpu_mib": 5040.9287109375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-2",
+        "depth": 1024,
+        "batch": 64,
+        "seconds": 2.8233901616185904,
+        "samples_per_second": 70.83682684696478,
+        "peak_gpu_mib": 5168.9287109375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-2",
+        "depth": 1024,
+        "batch": 128,
+        "seconds": 2.950287079438567,
+        "samples_per_second": 67.7900131800257,
+        "peak_gpu_mib": 5296.9287109375,
+        "finite": true,
+        "optimizer_steps": 2
+      },
+      {
+        "member": "member-2",
+        "depth": 1024,
+        "batch": 32,
+        "seconds": 2.9000155348330736,
+        "samples_per_second": 68.96514780618652,
+        "peak_gpu_mib": 5424.9287109375,
+        "finite": true,
+        "optimizer_steps": 2
+      }
+    ],
+    "scope": "Same frozen weights and collected streaming trajectories per model; test optimizer updates are discarded",
+    "completed": true
+  }
+}

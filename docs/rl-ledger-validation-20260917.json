@@ -1,0 +1,339 @@
+{
+  "date": "2026-09-17",
+  "scope": "Local CPU architecture, full-game training/resume, inference/search/UI validation. Not playing-strength or GPU validation; no remote deployment.",
+  "model_spec": {
+    "architecture": "entity-gru-ledger",
+    "hidden": 128,
+    "heads": 4,
+    "layers": 2,
+    "ledger_version": "minion-ledger-v1"
+  },
+  "config": {
+    "ledger": {
+      "version": "minion-ledger-v1",
+      "coefficients": {
+        "card": 0.1,
+        "economy": 0.05,
+        "combat": 0.1,
+        "future": 0.05
+      },
+      "implementation_hash": "79ed5fb17197fafefa2cafa8e990b4be54f7900005d8b0742909b2b2c77de95e",
+      "network_hash": "824d6455f17a392122f67a293c89185b929b23038f1790d898e5a2cc90ac07c3"
+    },
+    "gamma": 1.0,
+    "gae_lambda": 0.95,
+    "learning_rate": 0.0001,
+    "sequence_length": 16,
+    "burn_in": 8,
+    "sequence_batch_size": 16,
+    "options": {
+      "maxActionsPerTurn": 16,
+      "maxSteps": 30000,
+      "recordFrames": false,
+      "aiActionLimits": true
+    }
+  },
+  "checkpoint": "/tmp/tavern-ledger-v1-validation/latest.pt",
+  "checkpoint_sha256": "593ef7a13de9b634be6f5d5088432f03ff4d576a3e9ec20a829f759e1b1f14a2",
+  "export": "/tmp/tavern-ledger-v1-model.pt",
+  "export_sha256": "51d2042556b54ea108172535ca66225a3316e394c9ff63bf7f7debeffa6aa8da",
+  "trained_rules_hash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+  "simulator_source_hash": "eeb18693f226474c80c6cc31da8830d5ec1642551366d70456c7f5d85ccf33b1",
+  "environment_actions": 3038,
+  "learning_actions": 2278,
+  "optimizer_steps": 11,
+  "completed_games": 4,
+  "metrics": [
+    {
+      "iteration": 1,
+      "iteration_seconds": 20.576568899999984,
+      "end_to_end_actions_per_second": 74.84240970806368,
+      "cuda_peak_allocated_mib": null,
+      "episodes": 2,
+      "seconds": 8.878626558000178,
+      "environment_actions": 1540,
+      "actions_per_second": 173.45025043455252,
+      "action_counts": {
+        "refresh": 188,
+        "end": 273,
+        "buy": 126,
+        "power": 52,
+        "buySpell": 101,
+        "freeze": 78,
+        "play": 162,
+        "cast": 124,
+        "upgrade": 74,
+        "discover": 78,
+        "darkGift": 44,
+        "move": 58,
+        "sell": 128,
+        "buyTrinket": 32,
+        "activate": 17,
+        "reward": 4,
+        "choosePower": 1
+      },
+      "learner_action_counts": {
+        "refresh": 188,
+        "end": 273,
+        "buy": 126,
+        "power": 52,
+        "buySpell": 101,
+        "freeze": 78,
+        "play": 162,
+        "cast": 124,
+        "upgrade": 74,
+        "discover": 78,
+        "darkGift": 44,
+        "move": 58,
+        "sell": 128,
+        "buyTrinket": 32,
+        "activate": 17,
+        "reward": 4,
+        "choosePower": 1
+      },
+      "first_place_bonus": 0.0,
+      "inference_seconds": 4.481658100012282,
+      "simulator_wait_seconds": 4.005253073022686,
+      "inference_batches": 791,
+      "mean_inference_batch": 1.9469026548672566,
+      "policy_loss": 0.0021688719945294516,
+      "value_loss": 0.19445976721388952,
+      "entropy": 2.167040620531355,
+      "approx_kl": 0.005703970302982515,
+      "gradient_norm": 7.076015302113125,
+      "auxiliary_loss": 0.0,
+      "ledger": {
+        "card_loss": 0.7936979191643851,
+        "economy_loss": 0.5908194099153791,
+        "combat_loss": 1.0843716519219535,
+        "future_loss": 0.520197889634541,
+        "card_labels": 2037.0,
+        "combat_labels": 39.0,
+        "future_labels": 206.14285714285714
+      },
+      "samples": 1540,
+      "optimizer_steps": 7,
+      "kl_early_stop": false,
+      "sequence_chunks": 102,
+      "optimization_seconds": 11.531756934999066,
+      "checkpoint_seconds": 0.027774418000262813,
+      "completed_games": 2,
+      "league_generations": [
+        0,
+        1
+      ],
+      "opponent_sampling": [
+        {
+          "generation": 0,
+          "external": false,
+          "depth": null,
+          "probability": 1.0,
+          "seats": 0
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "iteration_seconds": 13.23341418200107,
+      "end_to_end_actions_per_second": 113.19830086157572,
+      "cuda_peak_allocated_mib": null,
+      "episodes": 4,
+      "seconds": 7.481482560000586,
+      "environment_actions": 1498,
+      "actions_per_second": 200.22769390775437,
+      "inference_batches": 1498,
+      "mean_inference_batch": 1.0,
+      "sampling_processes": 2,
+      "sampling_workers": 2,
+      "persistent_samplers": true,
+      "parallel_inference_seconds_sum": 5.269541694990039,
+      "parallel_simulator_wait_seconds_sum": 6.445314227026756,
+      "sampling_graphs": false,
+      "sampling_graph_capture_seconds": 0.0,
+      "first_place_bonus": 0.0,
+      "sampler_policy_iteration": 1,
+      "sampler_pids": [
+        26998,
+        26999
+      ],
+      "parallel_policy_load_seconds_sum": 0.2926495170013368,
+      "action_counts": {
+        "refresh": 177,
+        "buy": 114,
+        "end": 260,
+        "buySpell": 111,
+        "freeze": 59,
+        "play": 151,
+        "sell": 124,
+        "cast": 143,
+        "upgrade": 64,
+        "discover": 94,
+        "power": 33,
+        "darkGift": 45,
+        "move": 77,
+        "buyTrinket": 33,
+        "activate": 10,
+        "reward": 3
+      },
+      "learner_action_counts": {
+        "refresh": 78,
+        "buy": 59,
+        "end": 132,
+        "freeze": 27,
+        "play": 79,
+        "sell": 69,
+        "upgrade": 31,
+        "buySpell": 48,
+        "cast": 68,
+        "darkGift": 22,
+        "discover": 47,
+        "power": 13,
+        "move": 44,
+        "buyTrinket": 17,
+        "activate": 4
+      },
+      "policy_loss": 0.027993046678602695,
+      "value_loss": 0.1332886517047882,
+      "entropy": 2.2438082695007324,
+      "approx_kl": 0.006184013266425398,
+      "gradient_norm": 5.945455491542816,
+      "auxiliary_loss": 0.0,
+      "ledger": {
+        "card_loss": 0.7143489867448807,
+        "economy_loss": 0.5670582503080368,
+        "combat_loss": 1.0860657095909119,
+        "future_loss": 0.5056334137916565,
+        "card_labels": 1614.5,
+        "combat_labels": 33.0,
+        "future_labels": 176.75
+      },
+      "samples": 738,
+      "optimizer_steps": 4,
+      "kl_early_stop": false,
+      "sequence_chunks": 50,
+      "optimization_seconds": 5.710909067000102,
+      "checkpoint_seconds": 0.03969878899988544,
+      "completed_games": 2,
+      "league_generations": [
+        0,
+        1,
+        2
+      ],
+      "opponent_sampling": [
+        {
+          "generation": 0,
+          "external": false,
+          "depth": null,
+          "probability": 0.5,
+          "seats": 2
+        },
+        {
+          "generation": 1,
+          "external": false,
+          "depth": null,
+          "probability": 0.5,
+          "seats": 6
+        }
+      ]
+    }
+  ],
+  "benchmark": {
+    "device": "cpu",
+    "threads": 1,
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "scope": "One fixed opening observation, warm eager forward, policy only. Not strength, GPU throughput, or an end-to-end deployment benchmark.",
+    "models": [
+      {
+        "name": "ledger",
+        "parameters": 1477133,
+        "artifact_bytes": 6849493,
+        "latency": [
+          {
+            "batch": 1,
+            "median_ms": 2.59782500052097,
+            "samples": 10
+          },
+          {
+            "batch": 8,
+            "median_ms": 13.142636998964008,
+            "samples": 10
+          }
+        ]
+      },
+      {
+        "name": "deep1024-612",
+        "parameters": 35616510,
+        "artifact_bytes": 145873767,
+        "latency": [
+          {
+            "batch": 1,
+            "median_ms": 11.749104999580595,
+            "samples": 10
+          },
+          {
+            "batch": 8,
+            "median_ms": 30.91939400019328,
+            "samples": 10
+          }
+        ]
+      },
+      {
+        "name": "deep256-1164",
+        "parameters": 9860862,
+        "artifact_bytes": 40942311,
+        "latency": [
+          {
+            "batch": 1,
+            "median_ms": 3.924117499991553,
+            "samples": 10
+          },
+          {
+            "batch": 8,
+            "median_ms": 13.110315499943681,
+            "samples": 10
+          }
+        ]
+      },
+      {
+        "name": "deep64-1480",
+        "parameters": 3421950,
+        "artifact_bytes": 14737859,
+        "latency": [
+          {
+            "batch": 1,
+            "median_ms": 2.2237065004446777,
+            "samples": 10
+          },
+          {
+            "batch": 8,
+            "median_ms": 10.25301500067144,
+            "samples": 10
+          }
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "python": {
+      "run": 35,
+      "passed": 34,
+      "cuda_skipped": 1
+    },
+    "search": 10,
+    "typescript": 80,
+    "browser_real_model": 1,
+    "build": true
+  },
+  "implementation_sha256": {
+    "rl/python/tavern_rl/ledger_model.py": "59d20f4a40106bfc4db066dff13638ed5f69d744b51ec9aac088e2dc33f47265",
+    "rl/python/tavern_rl/ledger_training.py": "0e356b852509a50336164fbcd4fb4158089100b1ea3b77f72574d6a8a3c86f03",
+    "rl/python/tavern_rl/recurrent.py": "5a6da53cd7427cb4743fc8eff30985ec138d5d4c372674ac6d669f0f719230f5",
+    "rl/python/tavern_rl/rollout.py": "bdc5a43c19ab87df4c80015ecc57cfb550817a98657d1f808c39797671b1e4f9",
+    "rl/python/tavern_rl/train.py": "16ecfabd8ec45f3227c51c7b0656f550fef6d802c6d8e046a0b67f93aa80245e",
+    "rl/python/tavern_rl/model.py": "3417554ec59d21c081be8e1f7d9efea62c13f8a0be572391e794fa424575f527",
+    "rl/python/tavern_rl/serve.py": "0e57eafae6f486c6efda96b72d636fb275226f7cf2ad7965ae23b1c83f4f2f9b",
+    "rl/python/tavern_rl/recruit_search.py": "b379b8f9003540e0d7739a9a094449334385ebd699853512d82e4ff778600a13",
+    "scripts/export-inference.py": "66fd0a70c46715eacd5227fc3d71c55fd9ae3d52abf3c8739e052a78650425cd",
+    "rl/ledger-evaluation-bridge.ts": "3df01045d69944bdaadb168ada36df0954166833c5b373e924ecc7aca60bd852"
+  }
+}

@@ -133,7 +133,9 @@ class EntityActorCritic(nn.Module):
         return torch.zeros(batch, self.hidden, device=device)
 
     def encode(self, observations, device):
-        pack = pack_entities(observations, self.schema, device, definition_cache=self._definition_groups)
+        from .inference_features import HostEntityBatch
+        pack = observations.to(device) if isinstance(observations,HostEntityBatch) else pack_entities(
+            observations, self.schema, device, definition_cache=self._definition_groups)
         symbols = self.symbol(pack['strings'], device)
         groups = torch.zeros(len(pack['group_owners']), self.hidden, device=device)
         counts = torch.zeros(len(groups), 1, device=device)

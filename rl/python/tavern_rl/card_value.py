@@ -141,10 +141,14 @@ def evaluate(pool,models,device,branch_options,bonus,options,progress=None):
     labels=[]
     with torch.inference_mode():
         model=models[-1];model.eval()
-        obs=[prepare_entities(p['entities']) for p in probes];encoded=model.encode(obs,device)
-        memory=model.recurrent_step(encoded,torch.tensor(np.asarray([p['memory'] for p in probes]),device=device,dtype=torch.float32),
-            torch.tensor([p['previous'] for p in probes],device=device))
-        estimates=predictions(model,encoded,memory).cpu().tolist()
+        obs=[prepare_entities(p['entities']) for p in probes]
+        if getattr(model,'remote',False):
+            estimates=model.card_predictions(obs,[p['memory'] for p in probes],[p['previous'] for p in probes]).tolist()
+        else:
+            encoded=model.encode(obs,device)
+            memory=model.recurrent_step(encoded,torch.tensor(np.asarray([p['memory'] for p in probes]),device=device,dtype=torch.float32),
+                torch.tensor([p['previous'] for p in probes],device=device))
+            estimates=predictions(model,encoded,memory).cpu().tolist()
     for i,(probe,report) in enumerate(zip(probes,reports)):
         target=calibrate(report['outcomes'],probe['card_probe']['cash'],options['min_signal'])
         report.update(card=probe['card_probe'],calibration=target,predicted_gold=estimates[i][probe['card_probe']['slot']])

@@ -52,6 +52,10 @@ class Policy:
         search_ms = data.get('searchTimeMs')
         if search_ms is not None and (type(search_ms) is not int or not 0 <= search_ms <= 3000):
             raise ValueError('Invalid search time budget')
+        judgment = data.get('judgment',False)
+        if type(judgment) is not bool:raise ValueError('Invalid judgment request')
+        probabilities = data.get('probabilities', False)
+        if type(probabilities) is not bool:raise ValueError('Invalid probability request')
         run_search = use_search and search_ms != 0
         rows = data['rows']
         if not isinstance(rows, list) or not 1 <= len(rows) <= 8:
@@ -73,10 +77,16 @@ class Policy:
         if not ((previous >= 0) & (previous <= self.model.action_size)).all():
             raise ValueError('Invalid previous action')
         start = time.perf_counter()
-        dist, values, updated = self.model.act([prepare_entities(r['entities']) for r in rows], masks, memories, previous, with_value=run_search)
+        learned = None
+        if judgment and getattr(self.model,'ledger',False):
+            dist, values, updated, learned = self.model.explain([prepare_entities(r['entities']) for r in rows], masks, memories, previous)
+            if any(not torch.isfinite(value).all() for value in learned.values()):raise ValueError('Non-finite learned judgment')
+        else:
+            dist, values, updated = self.model.act([prepare_entities(r['entities']) for r in rows], masks, memories, previous, with_value=run_search)
         if not torch.isfinite(updated).all() or not torch.isfinite(dist.probs).all():
             raise ValueError('Non-finite model output')
         actions = dist.probs.argmax(-1).tolist() if hasattr(self.model,'action_value_type') else dist.sample().tolist()
+        modes = ['greedy' if hasattr(self.model,'action_value_type') else 'sample'] * len(rows)
         reports = [None] * len(rows)
         if use_search:
             from .recruit_search import Evaluation
@@ -90,27 +100,47 @@ class Policy:
                 self.search_runs += 1
                 if action is not None:
                     actions[i] = action
+                    modes[i] = 'search'
                 else:
                     self.search_fallbacks += 1
                 if 'actions' in reports[i]:
                     reports[i]['actions'] = reports[i]['actions'][:8]
+        ledgers = [None]*len(rows)
+        if learned is not None:
+            from .ledger_model import VERSION
+            for i in range(len(rows)):
+                slots = learned['present'][i].nonzero().flatten().tolist()
+                ledgers[i] = dict(version=VERSION, boardStrength=float(learned['board'][i]),
+                    cards=[dict(slot=slot,body=float(torch.expm1(learned['body_log'][i,slot].clamp(max=12))),
+                        strength=float(learned['strength'][i,slot]),contribution=float(learned['contributions'][i,slot])) for slot in slots],
+                    economy=torch.expm1(learned['economy_log'][i].clamp(max=12)).tolist(),
+                    futureEconomy=torch.expm1(learned['future_log'][i].clamp(max=12)).tolist(),
+                    combat=learned['combat_logits'][i].softmax(-1).tolist(),placementReturn=float(values[i]))
+                if 'routing' in learned:
+                    from .moe_model import TASKS, VERSION as MOE_VERSION
+                    ledgers[i]['moe'] = dict(version=MOE_VERSION, experts=self.model.expert_count,
+                        routing={task: weights for task,weights in zip(TASKS,learned['routing'][i].tolist())})
         elapsed = (time.perf_counter() - start) * 1000
         self.decisions += len(rows)
         self.elapsed += elapsed
-        return dict(rows=[dict(action=a, memory=m, **({'search': report} if report is not None else {}))
-                          for a, m, report in zip(actions, updated.tolist(), reports)], elapsedMs=elapsed)
+        return dict(rows=[dict(action=a, memory=m, **({'ledger':ledgers[i]} if ledgers[i] is not None else {}), **({'search': report} if report is not None else {}),
+            **(dict(probabilities=[[k,float(dist.probs[i,k])] for k in sorted(set(rows[i]['legal']))],selectionMode=modes[i]) if probabilities else {}))
+            for i,(a,m,report) in enumerate(zip(actions,updated.tolist(),reports))],elapsedMs=elapsed)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('model')
     parser.add_argument('--port', type=int, default=8790)
-    parser.add_argument('--search-bundle', help='Own-turn search simulator for 64, 256 and 1024-layer models')
+    parser.add_argument('--search-bundle', help='Own-turn search simulator for deep residual or ledger models')
     parser.add_argument('--search-ms', type=int, default=1000)
     parser.add_argument('--search-simulations', type=int, default=32)
     args = parser.parse_args()
-    from .recruit_search import SearchConfig
-    policy = Policy(args.model, args.search_bundle, SearchConfig(time_ms=args.search_ms, simulations=args.search_simulations))
+    search_config = None
+    if args.search_bundle:
+        from .recruit_search import SearchConfig
+        search_config = SearchConfig(time_ms=args.search_ms, simulations=args.search_simulations)
+    policy = Policy(args.model, args.search_bundle, search_config)
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):

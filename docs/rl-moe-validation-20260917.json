@@ -1,0 +1,166 @@
+{
+  "architecture": "entity-gru-moe",
+  "parameters": 1745189,
+  "experts": 4,
+  "tasks": [
+    "card",
+    "combat",
+    "economy",
+    "future",
+    "policy",
+    "value"
+  ],
+  "device": "cpu",
+  "cuda_available": false,
+  "checkpoint": "/tmp/tavern-moe-v1-validation/latest.pt",
+  "checkpoint_sha256": "b3d355731a67b8e70e57aa15aeec1151c3b4e60d4b7bf85ceb1b15ff170f2ec4",
+  "artifact": "/tmp/tavern-moe-v1-model.pt",
+  "artifact_bytes": 7933371,
+  "episodes": 6,
+  "iterations": 3,
+  "environment_actions": 3902,
+  "learner_samples": 2536,
+  "optimizer_steps": 23,
+  "configuration": {
+    "version": "task-gated-moe-v1",
+    "tasks": [
+      "card",
+      "combat",
+      "economy",
+      "future",
+      "policy",
+      "value"
+    ],
+    "experts": 4,
+    "expert_width": 256,
+    "balance_coefficient": 0.01,
+    "implementation_hash": "3384f53b9473e39f741a1f8c0a005103ed1f344d8ff1d49891ecabdb8a70ed68"
+  },
+  "ledger_configuration": {
+    "version": "minion-ledger-v1",
+    "coefficients": {
+      "card": 0.1,
+      "economy": 0.05,
+      "combat": 0.1,
+      "future": 0.05
+    },
+    "implementation_hash": "79ed5fb17197fafefa2cafa8e990b4be54f7900005d8b0742909b2b2c77de95e",
+    "network_hash": "a6a0960d86c654007fb35b25ec06e2c387cbf11f43b56e9ea236621c3063a77c"
+  },
+  "routing_example": {
+    "card": [
+      0.22715839743614197,
+      0.23204652965068817,
+      0.2958415150642395,
+      0.24495354294776917
+    ],
+    "combat": [
+      0.27114832401275635,
+      0.23339594900608063,
+      0.20133833587169647,
+      0.29411736130714417
+    ],
+    "economy": [
+      0.23062150180339813,
+      0.23672333359718323,
+      0.2354905754327774,
+      0.2971646785736084
+    ],
+    "future": [
+      0.2182377278804779,
+      0.2490522712469101,
+      0.27377980947494507,
+      0.2589302659034729
+    ],
+    "policy": [
+      0.28527718782424927,
+      0.19822034239768982,
+      0.247172012925148,
+      0.2693304419517517
+    ],
+    "value": [
+      0.27121368050575256,
+      0.2695557773113251,
+      0.2561601400375366,
+      0.20307035744190216
+    ]
+  },
+  "search": {
+    "version": "own-recruit-freeze-close-v3",
+    "simulations": 4,
+    "recruit_ends": 4,
+    "cutoffs": 0,
+    "nodes": 4,
+    "max_depth": 4,
+    "evaluations": 8,
+    "sampled_root_outcomes": 3,
+    "cycle_cutoffs": 0,
+    "elapsed_ms": 46.97,
+    "actions": [
+      {
+        "action": 0,
+        "visits": 2,
+        "value": 0.44304159283638,
+        "prior": 0.24436451221595132
+      },
+      {
+        "action": 1,
+        "visits": 1,
+        "value": 0.31739306449890137,
+        "prior": 0.26349922720157476
+      },
+      {
+        "action": 22,
+        "visits": 1,
+        "value": 0.25257182121276855,
+        "prior": 0.23408503568822478
+      },
+      {
+        "action": 6,
+        "visits": 0,
+        "value": null,
+        "prior": 0.032201636222731665
+      },
+      {
+        "action": 7,
+        "visits": 0,
+        "value": null,
+        "prior": 0.08470661098465386
+      },
+      {
+        "action": 8,
+        "visits": 0,
+        "value": null,
+        "prior": 0.14114297768686365
+      }
+    ]
+  },
+  "benchmark": [
+    {
+      "architecture": "ledger",
+      "batch": 1,
+      "parameters": 1477133,
+      "median_ms": 1.9204700001864694
+    },
+    {
+      "architecture": "ledger",
+      "batch": 8,
+      "parameters": 1477133,
+      "median_ms": 13.39955549883598
+    },
+    {
+      "architecture": "moe",
+      "batch": 1,
+      "parameters": 1745189,
+      "median_ms": 2.1252204987831647
+    },
+    {
+      "architecture": "moe",
+      "batch": 8,
+      "parameters": 1745189,
+      "median_ms": 13.490783001543605
+    }
+  ],
+  "validation": "8 MoE, 6 ledger, 9 recurrent, 5 serving, 10 search unit tests; complete local training, resume, persistent samplers and CPU central inference; export and real search",
+  "limitations": "Six games are pipeline validation only. No strength evaluation or CUDA execution. Benchmark is CPU single-thread policy-only forward, one opening, five warmups and twenty samples, excluding simulator and network. Dense MoE computes all experts."
+}

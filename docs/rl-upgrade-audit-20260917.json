@@ -1,0 +1,627 @@
+{
+  "recordedAt": "2026-09-17T01:33:38.815432+00:00",
+  "mode": "ordinary_policy_sample",
+  "games_per_model": 2,
+  "seats_per_model": 16,
+  "turns": 8,
+  "seed": 9817201,
+  "models": [
+    {
+      "depth": 64,
+      "metadata": {
+        "episodes": 4424,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+        "trainedRulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 64,
+        "valueDepth": 64,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 190,
+        "unusedGoldPenalty": 0.0
+      },
+      "model_sha256": "01c15d6d6e1cfa7da6c25bb8fd4f98a97a07711ac5e6646a68cdacbcb8ba844d",
+      "completed": true,
+      "turns": {
+        "1": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 0,
+          "mean_upgrade_probability_at_affordable_start": 0.0,
+          "upgrades": 0
+        },
+        "2": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.007815441861748696,
+          "upgrades": 1
+        },
+        "3": {
+          "seats": 16,
+          "tiers": {
+            "1": 15,
+            "2": 1
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.0013923866458104125,
+          "upgrades": 0
+        },
+        "4": {
+          "seats": 16,
+          "tiers": {
+            "1": 15,
+            "2": 1
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.0016290606332144567,
+          "upgrades": 0
+        },
+        "5": {
+          "seats": 16,
+          "tiers": {
+            "1": 15,
+            "2": 1
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.0019392178593469517,
+          "upgrades": 5
+        },
+        "6": {
+          "seats": 16,
+          "tiers": {
+            "1": 10,
+            "2": 6
+          },
+          "affordable_at_start": 0,
+          "mean_upgrade_probability_at_affordable_start": 0.0,
+          "upgrades": 3
+        },
+        "7": {
+          "seats": 16,
+          "tiers": {
+            "2": 9,
+            "1": 7
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.0037118310496831934,
+          "upgrades": 8
+        },
+        "8": {
+          "seats": 16,
+          "tiers": {
+            "2": 11,
+            "3": 3,
+            "1": 2
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.004453443423179644,
+          "upgrades": 2
+        }
+      },
+      "score_audit": {
+        "free_opportunities": 222,
+        "free_upgrades": 9,
+        "mean_free_upgrade_probability": 0.0232716821829436,
+        "score_pairs": [
+          {
+            "turn": 2,
+            "tier": 1,
+            "cost": 4,
+            "upgrade_p": 0.007440425455570221,
+            "scores": [
+              15,
+              14
+            ],
+            "score_delta": -1,
+            "potential_delta": -0.0030781175270123695
+          },
+          {
+            "turn": 2,
+            "tier": 1,
+            "cost": 4,
+            "upgrade_p": 0.010308989323675632,
+            "scores": [
+              15,
+              14
+            ],
+            "score_delta": -1,
+            "potential_delta": -0.0030781175270123695
+          },
+          {
+            "turn": 3,
+            "tier": 1,
+            "cost": 3,
+            "upgrade_p": 0.0020184365566819906,
+            "scores": [
+              19.3,
+              19.3
+            ],
+            "score_delta": 0.0,
+            "potential_delta": 0.0
+          },
+          {
+            "turn": 4,
+            "tier": 1,
+            "cost": 2,
+            "upgrade_p": 0.0013718921691179276,
+            "scores": [
+              55.6,
+              56.6
+            ],
+            "score_delta": 1.0,
+            "potential_delta": 7.271780962160579e-05
+          },
+          {
+            "turn": 5,
+            "tier": 1,
+            "cost": 1,
+            "upgrade_p": 0.0017383623635396361,
+            "scores": [
+              69.4,
+              71.4
+            ],
+            "score_delta": 2.0,
+            "potential_delta": 3.504176393454017e-05
+          },
+          {
+            "turn": 5,
+            "tier": 1,
+            "cost": 1,
+            "upgrade_p": 0.0013055780436843634,
+            "scores": [
+              62.4,
+              64.4
+            ],
+            "score_delta": 2.000000000000007,
+            "potential_delta": 7.043975135651026e-05
+          },
+          {
+            "turn": 7,
+            "tier": 2,
+            "cost": 6,
+            "upgrade_p": 0.003696589730679989,
+            "scores": [
+              111.75,
+              108.75
+            ],
+            "score_delta": -3.0,
+            "potential_delta": -9.809969653273853e-07
+          },
+          {
+            "turn": 8,
+            "tier": 2,
+            "cost": 5,
+            "upgrade_p": 0.004135587718337774,
+            "scores": [
+              160.25,
+              158.25
+            ],
+            "score_delta": -2.0,
+            "potential_delta": -4.860084765190287e-09
+          }
+        ]
+      }
+    },
+    {
+      "depth": 256,
+      "metadata": {
+        "episodes": 4936,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+        "trainedRulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 212,
+        "unusedGoldPenalty": 0.0
+      },
+      "model_sha256": "c104666e377921a6658fa65a0cf70be946ad403acee1aee64b03793be136fee7",
+      "completed": true,
+      "turns": {
+        "1": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 0,
+          "mean_upgrade_probability_at_affordable_start": 0.0,
+          "upgrades": 0
+        },
+        "2": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.025413893380512795,
+          "upgrades": 0
+        },
+        "3": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.0037158309947699308,
+          "upgrades": 0
+        },
+        "4": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.003895654126868716,
+          "upgrades": 1
+        },
+        "5": {
+          "seats": 16,
+          "tiers": {
+            "1": 15,
+            "2": 1
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.005129814480564424,
+          "upgrades": 6
+        },
+        "6": {
+          "seats": 16,
+          "tiers": {
+            "2": 7,
+            "1": 9
+          },
+          "affordable_at_start": 0,
+          "mean_upgrade_probability_at_affordable_start": 0.0,
+          "upgrades": 4
+        },
+        "7": {
+          "seats": 16,
+          "tiers": {
+            "1": 5,
+            "2": 11
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.008302931285773715,
+          "upgrades": 5
+        },
+        "8": {
+          "seats": 16,
+          "tiers": {
+            "1": 1,
+            "2": 14,
+            "3": 1
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.0067982060302581105,
+          "upgrades": 6
+        }
+      },
+      "score_audit": {
+        "free_opportunities": 209,
+        "free_upgrades": 9,
+        "mean_free_upgrade_probability": 0.03512003126500718,
+        "score_pairs": [
+          {
+            "turn": 2,
+            "tier": 1,
+            "cost": 4,
+            "upgrade_p": 0.039298515766859055,
+            "scores": [
+              15,
+              14
+            ],
+            "score_delta": -1,
+            "potential_delta": -0.0030781175270123695
+          },
+          {
+            "turn": 2,
+            "tier": 1,
+            "cost": 4,
+            "upgrade_p": 0.032769959419965744,
+            "scores": [
+              15,
+              14
+            ],
+            "score_delta": -1,
+            "potential_delta": -0.0030781175270123695
+          },
+          {
+            "turn": 3,
+            "tier": 1,
+            "cost": 3,
+            "upgrade_p": 0.003392148530110717,
+            "scores": [
+              26.05,
+              26.05
+            ],
+            "score_delta": 0.0,
+            "potential_delta": 0.0
+          },
+          {
+            "turn": 4,
+            "tier": 1,
+            "cost": 2,
+            "upgrade_p": 0.0032345654908567667,
+            "scores": [
+              54.6,
+              55.6
+            ],
+            "score_delta": 1.0,
+            "potential_delta": 8.030390586921676e-05
+          },
+          {
+            "turn": 5,
+            "tier": 1,
+            "cost": 1,
+            "upgrade_p": 0.003972766920924187,
+            "scores": [
+              58.4,
+              60.4
+            ],
+            "score_delta": 2.0,
+            "potential_delta": 0.0001049010470678402
+          },
+          {
+            "turn": 5,
+            "tier": 2,
+            "cost": 6,
+            "upgrade_p": 0.005751630757004023,
+            "scores": [
+              48.9,
+              45.9
+            ],
+            "score_delta": -3.0,
+            "potential_delta": -0.0005171081761252
+          },
+          {
+            "turn": 7,
+            "tier": 2,
+            "cost": 4,
+            "upgrade_p": 0.009555013850331306,
+            "scores": [
+              97.5,
+              96.5
+            ],
+            "score_delta": -1.0,
+            "potential_delta": -1.2260301973793242e-06
+          },
+          {
+            "turn": 8,
+            "tier": 2,
+            "cost": 3,
+            "upgrade_p": 0.008237229660153389,
+            "scores": [
+              86.3,
+              86.3
+            ],
+            "score_delta": 0.0,
+            "potential_delta": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "depth": 1024,
+      "metadata": {
+        "episodes": 5136,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+        "trainedRulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 221,
+        "unusedGoldPenalty": 0.0
+      },
+      "model_sha256": "a83194830e35f75a7fcd70c05cbec9f35770f2d797b623ae8b47bbed3d5ece56",
+      "completed": true,
+      "turns": {
+        "1": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 0,
+          "mean_upgrade_probability_at_affordable_start": 0.0,
+          "upgrades": 0
+        },
+        "2": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.04876562183101972,
+          "upgrades": 0
+        },
+        "3": {
+          "seats": 16,
+          "tiers": {
+            "1": 16
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.012767296594878038,
+          "upgrades": 1
+        },
+        "4": {
+          "seats": 16,
+          "tiers": {
+            "1": 15,
+            "2": 1
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.011346535424568824,
+          "upgrades": 3
+        },
+        "5": {
+          "seats": 16,
+          "tiers": {
+            "1": 12,
+            "2": 4
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.009787970189271229,
+          "upgrades": 1
+        },
+        "6": {
+          "seats": 16,
+          "tiers": {
+            "1": 11,
+            "2": 5
+          },
+          "affordable_at_start": 0,
+          "mean_upgrade_probability_at_affordable_start": 0.0,
+          "upgrades": 7
+        },
+        "7": {
+          "seats": 16,
+          "tiers": {
+            "2": 12,
+            "1": 4
+          },
+          "affordable_at_start": 15,
+          "mean_upgrade_probability_at_affordable_start": 0.01702810407926639,
+          "upgrades": 8
+        },
+        "8": {
+          "seats": 16,
+          "tiers": {
+            "1": 2,
+            "2": 8,
+            "3": 6
+          },
+          "affordable_at_start": 14,
+          "mean_upgrade_probability_at_affordable_start": 0.014657354314944573,
+          "upgrades": 6
+        }
+      },
+      "score_audit": {
+        "free_opportunities": 176,
+        "free_upgrades": 10,
+        "mean_free_upgrade_probability": 0.06824095510951751,
+        "score_pairs": [
+          {
+            "turn": 2,
+            "tier": 1,
+            "cost": 4,
+            "upgrade_p": 0.05413111299276352,
+            "scores": [
+              15,
+              14
+            ],
+            "score_delta": -1,
+            "potential_delta": -0.0030781175270123695
+          },
+          {
+            "turn": 2,
+            "tier": 1,
+            "cost": 4,
+            "upgrade_p": 0.05559766665101051,
+            "scores": [
+              15,
+              14
+            ],
+            "score_delta": -1,
+            "potential_delta": -0.0030781175270123695
+          },
+          {
+            "turn": 3,
+            "tier": 1,
+            "cost": 3,
+            "upgrade_p": 0.008563646115362644,
+            "scores": [
+              23.8,
+              23.8
+            ],
+            "score_delta": 0.0,
+            "potential_delta": 0.0
+          },
+          {
+            "turn": 4,
+            "tier": 1,
+            "cost": 2,
+            "upgrade_p": 0.010359236039221287,
+            "scores": [
+              57.6,
+              58.6
+            ],
+            "score_delta": 1.0,
+            "potential_delta": 5.961521582929785e-05
+          },
+          {
+            "turn": 5,
+            "tier": 1,
+            "cost": 1,
+            "upgrade_p": 0.010596893727779388,
+            "scores": [
+              71.9,
+              73.9
+            ],
+            "score_delta": 2.0,
+            "potential_delta": 2.730117752865191e-05
+          },
+          {
+            "turn": 5,
+            "tier": 1,
+            "cost": 1,
+            "upgrade_p": 0.012665421701967716,
+            "scores": [
+              64.9,
+              66.9
+            ],
+            "score_delta": 2.0,
+            "potential_delta": 5.490151462014814e-05
+          },
+          {
+            "turn": 7,
+            "tier": 2,
+            "cost": 6,
+            "upgrade_p": 0.008591080084443092,
+            "scores": [
+              111.5,
+              108.5
+            ],
+            "score_delta": -3.0,
+            "potential_delta": -1.0058301828652638e-06
+          },
+          {
+            "turn": 8,
+            "tier": 3,
+            "cost": 7,
+            "upgrade_p": 0.012148519046604633,
+            "scores": [
+              137,
+              133
+            ],
+            "score_delta": -4,
+            "potential_delta": -1.1040906003345619e-07
+          }
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Small deterministic-seed diagnostic, not a rank or strength evaluation.",
+    "Potential differences telescope: immediate negative upgrade feedback alone does not prove a lower full-game objective.",
+    "Free-upgrade counts are decision opportunities, not independent games."
+  ]
+}

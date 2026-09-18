@@ -120,6 +120,14 @@ def make_model(specification):
     elif architecture == 'entity-gru':
         from .entity_model import EntityActorCritic
         model=EntityActorCritic(**spec)
+    elif architecture == 'entity-gru-ledger':
+        if any((auxiliary,card_value,action_values,scene,horizons)):raise ValueError('Ledger model cannot load legacy auxiliary heads')
+        from .ledger_model import LedgerActorCritic
+        model=LedgerActorCritic(**spec)
+    elif architecture == 'entity-gru-moe':
+        if any((auxiliary,card_value,action_values,scene,horizons)):raise ValueError('MoE model cannot load legacy auxiliary heads')
+        from .moe_model import MoEActorCritic
+        model=MoEActorCritic(**spec)
     elif architecture == 'entity-gru-resnet':
         from .deep_model import DeepEntityActorCritic
         model=DeepEntityActorCritic(**spec)

@@ -118,21 +118,24 @@ def reburn(model,games,device):
     """Recompute learner memory from its full public history under updated weights."""
     rows=[(g,s) for g in games for s in range(8) if g['controllers'][s]==-1 and g['history'][s]]
     if not rows:return
+    histories=[g['history'][seat] for g,seat in rows]
+    host=model.reburn(histories) if getattr(model,'remote',False) else reburn_histories(model,histories,device)
+    for i,(g,seat) in enumerate(rows):g['memory'][seat]=host[i].copy()
+
+
+def reburn_histories(model,histories,device):
     model.eval()
     with torch.inference_mode():
-        memory=torch.zeros(len(rows),model.hidden,device=device)
-        for start in range(0,max(len(g['history'][s]) for g,s in rows),16):
-            observations=[]
-            for g,s in rows:
-                observations.extend(g['history'][s][t][0] if t<len(g['history'][s]) else None for t in range(start,start+16))
-            encoded=model.encode(observations,device).reshape(len(rows),16,model.schema['count'],model.hidden)
+        memory=torch.zeros(len(histories),model.hidden,device=device)
+        for start in range(0,max(map(len,histories),default=0),16):
+            observations=[history[t][0] if t<len(history) else None for history in histories for t in range(start,start+16)]
+            encoded=model.encode(observations,device).reshape(len(histories),16,model.schema['count'],model.hidden)
             for i,t in enumerate(range(start,start+16)):
-                live=torch.tensor([t<len(g['history'][s]) for g,s in rows],device=device)
-                previous=torch.tensor([g['history'][s][t][6] if t<len(g['history'][s]) else model.action_size for g,s in rows],device=device)
+                live=torch.tensor([t<len(history) for history in histories],device=device)
+                previous=torch.tensor([history[t][6] if t<len(history) else model.action_size for history in histories],device=device)
                 updated=model.recurrent_step(encoded[:,i],memory,previous)
                 memory=torch.where(live[:,None],updated,memory)
-        host=memory.cpu().numpy()
-        for i,(g,s) in enumerate(rows):g['memory'][s]=host[i].copy()
+        return memory.cpu().numpy()
 
 
 def flush(game,simulator,snapshot,model,device,bonus):

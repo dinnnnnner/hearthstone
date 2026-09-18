@@ -159,9 +159,17 @@ def evaluate(pool, models, device, options, first_place_bonus, progress=None):
         return _evaluate(pool,models,device,options,first_place_bonus,progress,resources)
 
 
+def legal_action_mask(legal_actions, action_count, device):
+    """Build the whole batch on the host before one transfer to the device."""
+    mask = np.zeros((len(legal_actions), action_count), dtype=np.bool_)
+    for index, actions in enumerate(legal_actions):
+        mask[index, actions] = True
+    return torch.as_tensor(mask, device=device)
+
+
 def _evaluate(pool, models, device, options, first_place_bonus, progress, resources):
     """Reuse idle sampler workers after the real games; batch all branch inference."""
-    from .rollout import sample_masked_cdf, inference_to_host
+    from .rollout import policy_sample
     from .streaming import tier_tempo_reward
     started=time.monotonic();last=started;steps=0;completed=0;cutoffs=0
     labels=[];reports=[];bootstrap=0;terminal=0;scene_battles=0;scene_roots=0
@@ -221,16 +229,13 @@ def _evaluate(pool, models, device, options, first_place_bonus, progress, resour
                 for controller,workers in groups.items():
                     model=models[controller]
                     seats=[active[w]['state']['actor'] for w in workers]
-                    mask=torch.zeros(len(workers),pool.meta['actionCount'],dtype=torch.bool,device=device)
-                    for i,w in enumerate(workers):mask[i,active[w]['state']['legalActions']]=True
+                    mask=legal_action_mask([active[w]['state']['legalActions'] for w in workers],
+                                           pool.meta['actionCount'],device)
                     observations=[prepare_entities(active[w]['state']['entities']) for w in workers]
                     memories=torch.tensor(np.asarray([active[w]['memory'][s] for w,s in zip(workers,seats)]),dtype=torch.float32,device=device)
                     previous=torch.tensor([active[w]['previous'][s] for w,s in zip(workers,seats)],device=device)
-                    dist,values,updated=model.act(observations,mask,memories,previous,with_value=True)
-                    uniforms=torch.tensor([active[w]['rng'][s].random() for w,s in zip(workers,seats)],dtype=dist.probs.dtype,device=device)
-                    uniforms=uniforms.clamp_max(torch.nextafter(torch.ones((),device=device),torch.zeros((),device=device)))
-                    actions=sample_masked_cdf(dist.probs,mask,uniforms)
-                    actions,_,values,updated=inference_to_host(actions,values=values,memory=updated)
+                    draws=[active[w]['rng'][seat].random() for w,seat in zip(workers,seats)]
+                    actions,_,values,updated,_=policy_sample(model,observations,mask,memories,previous,draws,with_value=True,log_probs=False)
                     for i,(w,seat) in enumerate(zip(workers,seats)):
                         branch=active[w];state=branch['state']
                         if not complete and not branch['first'] and seat==root['seat'] and state['info']['turn']>=root['turn']+options.horizon:

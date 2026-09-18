@@ -1,0 +1,33 @@
+{
+  "verifiedUtc": "2026-09-16T11:44:15.509888+00:00",
+  "processAlive": true,
+  "launch": {
+    "pid": 227538,
+    "startedUtc": "2026-09-16T11:43:34.605863+00:00",
+    "command": [
+      "/root/miniconda3/bin/python",
+      "-u",
+      "/root/tavern-ops/20260916-basic-highload/continuous/email/mail-training.py",
+      "--config",
+      "/root/tavern-ops/20260916-basic-highload/continuous/email/config.json"
+    ],
+    "firstAccepted": {
+      "lastSent": "85cbe6f6cd58a7917592cb9e317072475ac6c20ecf683f2f9705a675ad58776b",
+      "snapshotUtc": "2026-09-16T11:43:32.659128+00:00",
+      "lastHealthy": true,
+      "lastIssues": [],
+      "acceptedUtc": "2026-09-16T11:43:34.580112+00:00"
+    }
+  },
+  "state": {
+    "lastSent": "85cbe6f6cd58a7917592cb9e317072475ac6c20ecf683f2f9705a675ad58776b",
+    "snapshotUtc": "2026-09-16T11:43:32.659128+00:00",
+    "lastHealthy": true,
+    "lastIssues": [],
+    "acceptedUtc": "2026-09-16T11:43:34.580112+00:00"
+  },
+  "intervalSeconds": 300,
+  "job": "/root/tavern-ops/20260916-basic-highload/continuous/job.json",
+  "recipient": "1901023630@qq.com",
+  "log": ""
+}

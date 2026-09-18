@@ -1,51 +1,51 @@
 [
   {
     "id": "deep64-1480",
-    "label": "64 层模型",
-    "episodes": 7554,
-    "checkpointSha256": "807c295e1f4eef922797716152c39228d572bf905a2dbf8f4b35520390dbd1f6",
+    "label": "新版 · 64 层模型",
+    "episodes": 4424,
+    "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18891"
   },
   {
     "id": "deep256-1164",
-    "label": "256 层模型",
-    "episodes": 7618,
-    "checkpointSha256": "558f44e4967f1cda2bb42895ce9ecf5de490dc1cb5440614c8084c17bd8b1c36",
+    "label": "新版 · 256 层模型",
+    "episodes": 4936,
+    "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18893"
   },
   {
     "id": "deep1024-612",
-    "label": "1024 层模型",
-    "episodes": 7298,
-    "checkpointSha256": "fc0cee9e233e6c8e1a11c4dc26d38f79902489ef7e3184b40d7dc0669970015b",
+    "label": "新版 · 1024 层模型",
+    "episodes": 5136,
+    "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18895"
   },
   {
     "id": "deep64-search-2568",
-    "label": "64 层模型＋回合搜索（实验）",
-    "episodes": 7554,
-    "checkpointSha256": "807c295e1f4eef922797716152c39228d572bf905a2dbf8f4b35520390dbd1f6",
+    "label": "新版 · 64 层模型＋回合搜索（实验）",
+    "episodes": 4424,
+    "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18897",
     "search": true
   },
   {
     "id": "deep256-search-2140",
-    "label": "256 层模型＋回合搜索（实验）",
-    "episodes": 7618,
-    "checkpointSha256": "558f44e4967f1cda2bb42895ce9ecf5de490dc1cb5440614c8084c17bd8b1c36",
+    "label": "新版 · 256 层模型＋回合搜索（实验）",
+    "episodes": 4936,
+    "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18901",
     "search": true
   },
   {
     "id": "deep1024-search-1284",
-    "label": "1024 层模型＋回合搜索（实验）",
-    "episodes": 7298,
-    "checkpointSha256": "fc0cee9e233e6c8e1a11c4dc26d38f79902489ef7e3184b40d7dc0669970015b",
+    "label": "新版 · 1024 层模型＋回合搜索（实验）",
+    "episodes": 5136,
+    "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
     "profile": "scouting-v4",
     "url": "http://127.0.0.1:18903",
     "search": true

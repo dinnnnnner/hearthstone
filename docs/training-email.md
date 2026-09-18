@@ -55,3 +55,10 @@ python3 scripts/mail-training.py --config /path/to/config.json
 13:23 改绑场面评估续训 `/root/tavern-ops/20260916-scene-value/`，首封邮件于13:23:28获SMTP接受。仍每五分钟巡检，截止时间为16:24:41。
 
 13:50 改绑多时间尺度续训 `/root/tavern-ops/20260916-multi-horizon/`，首封邮件于13:50:42获SMTP接受，沿用五分钟间隔和16:24:41截止时间。
+
+
+19:43 修复基础评分持续训练遗漏邮件绑定的问题。沿用原 QQ 邮箱和服务器授权文件，首封当前状态邮件于北京时间 19:43:34 获 SMTP 接受。后台通知进程 PID 为 227538，配置目录为 `/root/tavern-ops/20260916-basic-highload/continuous/email/`。每 5 分钟一封正常通知，新增异常及结束结果立即发送；已提交状态落盘去重。
+
+新增 `format: "supervised-basic"` 支持读取任务目录的 `status.json`，以 `supervisorPid`、`supervisorBirth` 和任务路径校验身份。`minimumSeconds: 300` 控制正常通知间隔。无截止时间的任务按持续训练显示；局数注明为新评分续训累计。状态超过 90 秒未更新或巡检进程身份失效时发送异常通知。旧任务格式继续兼容。
+
+本地及服务器均通过 5 项邮件测试，涵盖频率、去重、异常和结束通知、任务身份、过期状态及 SMTP 接受后 QUIT 失败不重复投递。配置只引用服务器原有授权文件，没有复制授权码到仓库。记录见 [本次邮件恢复验证](rl-basic-training-email-20260916.json)。SMTP 接受证明提交成功，不能单凭此确认已经进入收件箱。

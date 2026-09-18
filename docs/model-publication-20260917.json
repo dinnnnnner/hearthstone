@@ -1,0 +1,654 @@
+{
+  "publishedAtUtc": "2026-09-17T01:21:52.977371+00:00",
+  "release": "20260917-basic-feedback",
+  "url": "https://8.153.150.101/tavern/",
+  "models": [
+    {
+      "id": "deep64-1480",
+      "depth": 64,
+      "metadata": {
+        "episodes": 4424,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+        "trainedRulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 64,
+        "valueDepth": 64,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 190,
+        "unusedGoldPenalty": 0.0
+      },
+      "hashes": {
+        "model.pt": "01c15d6d6e1cfa7da6c25bb8fd4f98a97a07711ac5e6646a68cdacbcb8ba844d",
+        "metadata.json": "4562586ee5ebc9d1e94b45349bb2dba5b6875ea9fbbf473e17128493812312a2"
+      },
+      "basicFeedback": {
+        "version": "board-economy-potential-v1",
+        "coefficient": 0.1,
+        "scale": 20.0,
+        "weights": {
+          "attack": 1,
+          "health": 1,
+          "shieldAttack": 1,
+          "windfuryAttack": 0.5,
+          "rebornBody": 0.5,
+          "handPotential": 0.25,
+          "gold": 1,
+          "minionAsset": 1,
+          "nextIncome": 0.8,
+          "freeRefresh": 0.5,
+          "spellDiscount": 0.5,
+          "tier": 3
+        },
+        "implementation_hash": "4de91517065d27c93c955e7f20462c555e4793ec2b85189df2b58abb2ed697ed"
+      },
+      "source": "/root/autodl-tmp/tavern-basic-feedback-old-20260916/depth-64/latest.pt"
+    },
+    {
+      "id": "deep256-1164",
+      "depth": 256,
+      "metadata": {
+        "episodes": 4936,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+        "trainedRulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 256,
+        "valueDepth": 256,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 212,
+        "unusedGoldPenalty": 0.0
+      },
+      "hashes": {
+        "model.pt": "c104666e377921a6658fa65a0cf70be946ad403acee1aee64b03793be136fee7",
+        "metadata.json": "b424bb94018ccef64f2bf673995552807671af59771e0ab4d5d7beb68db5a99c"
+      },
+      "basicFeedback": {
+        "version": "board-economy-potential-v1",
+        "coefficient": 0.1,
+        "scale": 20.0,
+        "weights": {
+          "attack": 1,
+          "health": 1,
+          "shieldAttack": 1,
+          "windfuryAttack": 0.5,
+          "rebornBody": 0.5,
+          "handPotential": 0.25,
+          "gold": 1,
+          "minionAsset": 1,
+          "nextIncome": 0.8,
+          "freeRefresh": 0.5,
+          "spellDiscount": 0.5,
+          "tier": 3
+        },
+        "implementation_hash": "4de91517065d27c93c955e7f20462c555e4793ec2b85189df2b58abb2ed697ed"
+      },
+      "source": "/root/autodl-tmp/tavern-basic-feedback-old-20260916/depth-256/latest.pt"
+    },
+    {
+      "id": "deep1024-612",
+      "depth": 1024,
+      "metadata": {
+        "episodes": 5136,
+        "architecture": "entity-gru-resnet",
+        "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+        "trainedRulesHash": "bd04e443dcad24651378e33f4c3a30847b798f15173307504c88d34c6c064a4c",
+        "adaptedDefinitions": 0,
+        "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+        "hidden": 128,
+        "actionCount": 4316,
+        "policyDepth": 1024,
+        "valueDepth": 1024,
+        "observationVersion": 4,
+        "entityVersion": 3,
+        "iteration": 221,
+        "unusedGoldPenalty": 0.0
+      },
+      "hashes": {
+        "model.pt": "a83194830e35f75a7fcd70c05cbec9f35770f2d797b623ae8b47bbed3d5ece56",
+        "metadata.json": "529f1f4765bfbdda5f44cb5b64eec60e418434adfb637b1b369d7ca9a5b0f8b2"
+      },
+      "basicFeedback": {
+        "version": "board-economy-potential-v1",
+        "coefficient": 0.1,
+        "scale": 20.0,
+        "weights": {
+          "attack": 1,
+          "health": 1,
+          "shieldAttack": 1,
+          "windfuryAttack": 0.5,
+          "rebornBody": 0.5,
+          "handPotential": 0.25,
+          "gold": 1,
+          "minionAsset": 1,
+          "nextIncome": 0.8,
+          "freeRefresh": 0.5,
+          "spellDiscount": 0.5,
+          "tier": 3
+        },
+        "implementation_hash": "4de91517065d27c93c955e7f20462c555e4793ec2b85189df2b58abb2ed697ed"
+      },
+      "source": "/root/autodl-tmp/tavern-basic-feedback-old-20260916/depth-1024/latest.pt"
+    }
+  ],
+  "registry": [
+    {
+      "id": "deep64-1480",
+      "label": "新版 · 64 层模型",
+      "episodes": 4424,
+      "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18891"
+    },
+    {
+      "id": "deep256-1164",
+      "label": "新版 · 256 层模型",
+      "episodes": 4936,
+      "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18893"
+    },
+    {
+      "id": "deep1024-612",
+      "label": "新版 · 1024 层模型",
+      "episodes": 5136,
+      "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18895"
+    },
+    {
+      "id": "deep64-search-2568",
+      "label": "新版 · 64 层模型＋回合搜索（实验）",
+      "episodes": 4424,
+      "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18897",
+      "search": true
+    },
+    {
+      "id": "deep256-search-2140",
+      "label": "新版 · 256 层模型＋回合搜索（实验）",
+      "episodes": 4936,
+      "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18901",
+      "search": true
+    },
+    {
+      "id": "deep1024-search-1284",
+      "label": "新版 · 1024 层模型＋回合搜索（实验）",
+      "episodes": 5136,
+      "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+      "profile": "scouting-v4",
+      "url": "http://127.0.0.1:18903",
+      "search": true
+    }
+  ],
+  "activation": {
+    "compute": {
+      "stage": "active",
+      "models": [
+        {
+          "id": "deep64-1480",
+          "checkpoint": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83"
+        },
+        {
+          "id": "deep64-search",
+          "checkpoint": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83"
+        },
+        {
+          "id": "deep256-1164",
+          "checkpoint": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743"
+        },
+        {
+          "id": "deep256-search",
+          "checkpoint": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743"
+        },
+        {
+          "id": "deep1024-612",
+          "checkpoint": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6"
+        },
+        {
+          "id": "deep1024-search",
+          "checkpoint": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6"
+        }
+      ]
+    },
+    "public": {
+      "stage": "active",
+      "models": [
+        {
+          "id": "deep64-1480",
+          "label": "新版 · 64 层模型",
+          "episodes": 4424,
+          "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "label": "新版 · 256 层模型",
+          "episodes": 4936,
+          "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "label": "新版 · 1024 层模型",
+          "episodes": 5136,
+          "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+          "available": true
+        },
+        {
+          "id": "deep64-search-2568",
+          "label": "新版 · 64 层模型＋回合搜索（实验）",
+          "episodes": 4424,
+          "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+          "available": true
+        },
+        {
+          "id": "deep256-search-2140",
+          "label": "新版 · 256 层模型＋回合搜索（实验）",
+          "episodes": 4936,
+          "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+          "available": true
+        },
+        {
+          "id": "deep1024-search-1284",
+          "label": "新版 · 1024 层模型＋回合搜索（实验）",
+          "episodes": 5136,
+          "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+          "available": true
+        }
+      ]
+    }
+  },
+  "computePreflight": [
+    {
+      "id": "deep64-1480",
+      "old": "/home/zich/.local/share/tavern-models/deep64-1480/releases/20260916-ai-watch",
+      "new": "/home/zich/.local/share/tavern-models/deep64-1480/releases/20260917-basic-feedback",
+      "service": "tavern-model@deep64-1480.service",
+      "port": 18890,
+      "checkpoint": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+      "preflight": {
+        "checkpoint": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+        "episodes": 4424,
+        "search": false,
+        "rows": [
+          {
+            "choices": 6,
+            "selectionMode": "sample",
+            "probabilitySum": 1.00000006146729
+          },
+          {
+            "choices": 17,
+            "selectionMode": "sample",
+            "probabilitySum": 1.0000000642330633
+          },
+          {
+            "choices": 64,
+            "selectionMode": "sample",
+            "probabilitySum": 1.0000000388965553
+          }
+        ]
+      }
+    },
+    {
+      "id": "deep64-search",
+      "old": "/home/zich/.local/share/tavern-models/deep64-search/releases/20260916-ai-watch",
+      "new": "/home/zich/.local/share/tavern-models/deep64-search/releases/20260917-basic-feedback",
+      "service": "tavern-deep64-search.service",
+      "port": 18896,
+      "checkpoint": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+      "preflight": {
+        "checkpoint": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+        "episodes": 4424,
+        "search": true,
+        "rows": [
+          {
+            "choices": 6,
+            "selectionMode": "search",
+            "probabilitySum": 1.00000006146729
+          },
+          {
+            "choices": 17,
+            "selectionMode": "search",
+            "probabilitySum": 1.0000000626632755
+          },
+          {
+            "choices": 64,
+            "selectionMode": "search",
+            "probabilitySum": 1.0000000770226123
+          }
+        ]
+      }
+    },
+    {
+      "id": "deep256-1164",
+      "old": "/home/zich/.local/share/tavern-models/deep256-1164/releases/20260916-ai-watch",
+      "new": "/home/zich/.local/share/tavern-models/deep256-1164/releases/20260917-basic-feedback",
+      "service": "tavern-model@deep256-1164.service",
+      "port": 18892,
+      "checkpoint": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+      "preflight": {
+        "checkpoint": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+        "episodes": 4936,
+        "search": false,
+        "rows": [
+          {
+            "choices": 6,
+            "selectionMode": "sample",
+            "probabilitySum": 0.9999999701976776
+          },
+          {
+            "choices": 17,
+            "selectionMode": "sample",
+            "probabilitySum": 0.9999999373612809
+          },
+          {
+            "choices": 64,
+            "selectionMode": "sample",
+            "probabilitySum": 1.0000000257884984
+          }
+        ]
+      }
+    },
+    {
+      "id": "deep256-search",
+      "old": "/home/zich/.local/share/tavern-models/deep256-search/releases/20260916-ai-watch",
+      "new": "/home/zich/.local/share/tavern-models/deep256-search/releases/20260917-basic-feedback",
+      "service": "tavern-deep256-search.service",
+      "port": 18900,
+      "checkpoint": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+      "preflight": {
+        "checkpoint": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+        "episodes": 4936,
+        "search": true,
+        "rows": [
+          {
+            "choices": 6,
+            "selectionMode": "search",
+            "probabilitySum": 0.9999999701976776
+          },
+          {
+            "choices": 17,
+            "selectionMode": "search",
+            "probabilitySum": 0.9999999564679456
+          },
+          {
+            "choices": 64,
+            "selectionMode": "search",
+            "probabilitySum": 1.0000000180013267
+          }
+        ]
+      }
+    },
+    {
+      "id": "deep1024-612",
+      "old": "/home/zich/.local/share/tavern-models/deep1024-612/releases/20260916-ai-watch",
+      "new": "/home/zich/.local/share/tavern-models/deep1024-612/releases/20260917-basic-feedback",
+      "service": "tavern-model@deep1024-612.service",
+      "port": 18894,
+      "checkpoint": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+      "preflight": {
+        "checkpoint": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+        "episodes": 5136,
+        "search": false,
+        "rows": [
+          {
+            "choices": 6,
+            "selectionMode": "sample",
+            "probabilitySum": 0.9999999892897904
+          },
+          {
+            "choices": 17,
+            "selectionMode": "sample",
+            "probabilitySum": 1.0000000344152795
+          },
+          {
+            "choices": 64,
+            "selectionMode": "sample",
+            "probabilitySum": 1.0000000167583494
+          }
+        ]
+      }
+    },
+    {
+      "id": "deep1024-search",
+      "old": "/home/zich/.local/share/tavern-models/deep1024-search/releases/20260916-ai-watch",
+      "new": "/home/zich/.local/share/tavern-models/deep1024-search/releases/20260917-basic-feedback",
+      "service": "tavern-deep1024-search.service",
+      "port": 18902,
+      "checkpoint": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+      "preflight": {
+        "checkpoint": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+        "episodes": 5136,
+        "search": true,
+        "rows": [
+          {
+            "choices": 6,
+            "selectionMode": "search",
+            "probabilitySum": 0.9999999892897904
+          },
+          {
+            "choices": 17,
+            "selectionMode": "search",
+            "probabilitySum": 0.9999999874562491
+          },
+          {
+            "choices": 64,
+            "selectionMode": "search",
+            "probabilitySum": 0.9999999456595106
+          }
+        ]
+      }
+    }
+  ],
+  "public": {
+    "old": "/opt/bobs-tavern/releases/20260916-ai-watch",
+    "new": "/opt/bobs-tavern/releases/20260917-basic-feedback",
+    "backendSha256": "6f22e8d0e9eb89be736a8d107181e70441af7e1bef479ce82493177fd98f3018",
+    "models": [
+      {
+        "id": "deep64-1480",
+        "label": "新版 · 64 层模型",
+        "episodes": 4424,
+        "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18891"
+      },
+      {
+        "id": "deep256-1164",
+        "label": "新版 · 256 层模型",
+        "episodes": 4936,
+        "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18893"
+      },
+      {
+        "id": "deep1024-612",
+        "label": "新版 · 1024 层模型",
+        "episodes": 5136,
+        "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18895"
+      },
+      {
+        "id": "deep64-search-2568",
+        "label": "新版 · 64 层模型＋回合搜索（实验）",
+        "episodes": 4424,
+        "checkpointSha256": "2a1d93b911b10f8ac65e0b552270eb48e59a5423c157ea1a6dce59ff71a73d83",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18897",
+        "search": true
+      },
+      {
+        "id": "deep256-search-2140",
+        "label": "新版 · 256 层模型＋回合搜索（实验）",
+        "episodes": 4936,
+        "checkpointSha256": "8722f9ca291850df6cbe9358a415a1911beea113f15962457ea142f5d5961743",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18901",
+        "search": true
+      },
+      {
+        "id": "deep1024-search-1284",
+        "label": "新版 · 1024 层模型＋回合搜索（实验）",
+        "episodes": 5136,
+        "checkpointSha256": "7a736e2d76f7727e28413d096d7bc85fe70bc8b6f87e93b189cbaf673b8c3db6",
+        "profile": "scouting-v4",
+        "url": "http://127.0.0.1:18903",
+        "search": true
+      }
+    ]
+  },
+  "validation": {
+    "spectator": [
+      {
+        "id": "deep64-1480",
+        "choices": 9,
+        "selectionMode": "sample",
+        "sum": 0.9999999383871909,
+        "step": true,
+        "readOnly": true
+      },
+      {
+        "id": "deep256-1164",
+        "choices": 9,
+        "selectionMode": "sample",
+        "sum": 0.9999999600695446,
+        "step": true,
+        "readOnly": true
+      },
+      {
+        "id": "deep1024-612",
+        "choices": 9,
+        "selectionMode": "sample",
+        "sum": 1.0000000083819032,
+        "step": true,
+        "readOnly": true
+      },
+      {
+        "id": "deep64-search-2568",
+        "choices": 9,
+        "selectionMode": "search",
+        "sum": 1.0000000122818165,
+        "step": true,
+        "readOnly": true
+      },
+      {
+        "id": "deep256-search-2140",
+        "choices": 9,
+        "selectionMode": "search",
+        "sum": 0.9999999736755854,
+        "step": true,
+        "readOnly": true
+      },
+      {
+        "id": "deep1024-search-1284",
+        "choices": 9,
+        "selectionMode": "search",
+        "sum": 0.9999999729916453,
+        "step": true,
+        "readOnly": true
+      }
+    ],
+    "browser": {
+      "test": "tests/ai-models.spec.ts",
+      "passed": true,
+      "models": 6,
+      "reconnect": true,
+      "combat": true,
+      "friendRoom": true
+    }
+  },
+  "health": {
+    "ok": true,
+    "service": "tavern",
+    "rooms": 0,
+    "recording": {
+      "enabled": true,
+      "episodes": 0,
+      "decisions": 0,
+      "completed": 0,
+      "rejected": 0,
+      "errors": 0,
+      "bytes": 11274214
+    },
+    "ai": {
+      "mode": "neural",
+      "decisions": 152,
+      "errors": 0,
+      "fallbackRounds": 0,
+      "lastError": "",
+      "contract": "9d455a3d6d6ea1544e612c2abf81e1f4df500c3ca0c74d8022f52b0d2457eb5d",
+      "profile": "scouting-v4",
+      "traffic": {
+        "requests": 158,
+        "rawRequestBytes": 814482,
+        "requestBytes": 314323,
+        "responseBytes": 240676,
+        "maxKbps": 512
+      },
+      "models": [
+        {
+          "id": "deep64-1480",
+          "decisions": 29,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-1164",
+          "decisions": 21,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-612",
+          "decisions": 29,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep64-search-2568",
+          "decisions": 19,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep256-search-2140",
+          "decisions": 28,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        },
+        {
+          "id": "deep1024-search-1284",
+          "decisions": 26,
+          "errors": 0,
+          "fallbackRounds": 0,
+          "available": true
+        }
+      ]
+    }
+  },
+  "training": {
+    "actualProcessesRunning": false,
+    "lastStatusUpdated": "2026-09-16T23:09:56.665014+00:00",
+    "staleStatusReportedStage": "running",
+    "supervisorPidInStaleFile": 225560,
+    "note": "No training or supervisor processes found in /proc; last status file was stale before publication. Published last successfully saved checkpoints without starting training."
+  }
+}

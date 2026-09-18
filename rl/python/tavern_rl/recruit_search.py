@@ -194,18 +194,35 @@ class SearchPolicy:
         import torch
         from .bridge import Simulator
         specification = model.specification()
-        if specification.get('policy_depth') not in (64, 256, 1024) or specification.get('value_depth') != specification.get('policy_depth'):
+        if specification.get('architecture') not in ('entity-gru-ledger', 'entity-gru-moe') and (specification.get('policy_depth') not in (64, 256, 1024) or specification.get('value_depth') != specification.get('policy_depth')):
             raise ValueError('Recruit search requires matching 64, 256 or 1024-layer policy/value towers')
         self.simulator = Simulator(bundle=bundle, timeout=5)
         if self.simulator.meta != dict(contract=metadata['contract'], searchVersion=VERSION):
             self.simulator.close()
             raise ValueError('Search simulator contract differs from serving model')
+        self.value_feedback = None
+        try:
+            convention = metadata.get('valueConvention', 'legacy-unspecified')
+            if convention not in ('legacy-unspecified','native-return-v1','placement-minus-basic-potential-v1'):
+                raise ValueError('Unsupported search critic value convention')
+            if bool(metadata.get('basicFeedback')) != (convention == 'placement-minus-basic-potential-v1'):
+                raise ValueError('Search requires complete basic-feedback value metadata')
+            if metadata.get('basicFeedback'):
+                from .basic_feedback import BasicFeedback
+                self.value_feedback = BasicFeedback(metadata['basicFeedback'],dict(entitySchema=specification['entity_schema']))
+        except BaseException:
+            self.simulator.close(); raise
         self.model = model; self.config = config
         self.rng = random.SystemRandom()
         self.torch = torch
 
     def close(self):
         self.simulator.close()
+        if self.value_feedback: self.value_feedback.close()
+
+    def restore_value(self, value, entities):
+        if not math.isfinite(value): raise ValueError('Non-finite search critic value')
+        return value + (self.value_feedback.score([entities])[0] if self.value_feedback else 0.)
 
     def evaluate(self, view, memory, previous):
         from .features import prepare_entities
@@ -217,9 +234,10 @@ class SearchPolicy:
         with torch.inference_mode():
             dist, values, updated = self.model.act([prepare_entities(view['entities'])], masks,
                 torch.tensor([memory], dtype=torch.float32), torch.tensor([previous], dtype=torch.long))
-        return Evaluation({a: float(dist.probs[0, a]) for a in view['legal']}, float(values[0]), updated[0].tolist())
+        return Evaluation({a: float(dist.probs[0, a]) for a in view['legal']}, self.restore_value(float(values[0]), view['entities']), updated[0].tolist())
 
     def predict(self, row, root_evaluation, time_ms=None):
+        root_evaluation = replace(root_evaluation, value=self.restore_value(root_evaluation.value,row['entities']))
         g = row['entities'][0]['details']
         try:
             opened = self.simulator.call('open', entities=row['entities'], decisions=g['decisions'], budget=g['budget'])

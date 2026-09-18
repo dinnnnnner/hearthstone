@@ -13,3 +13,7 @@ rl/runs/
 *.egg-info/
 references/battlegrounds-original/
 references/battlegrounds-shop-actions/
+
+# Editor lock and autosave files
+**/.#*
+**/#*#

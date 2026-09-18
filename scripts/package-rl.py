@@ -9,6 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 files = [ROOT / path for path in ["rl-dist/bridge.cjs", "rl-dist/build.json", "rl/README.md",
     "rl/requirements.txt", "rl/run.sh", "rl/deep256.sh", "docs/rules-coverage.json", "docs/rl-roadmap.md", "docs/rl-server.md", "docs/rl-v3.md", "docs/rl-campaign.md", "docs/rl-public-scouting.md", "docs/rl-deep64.md", "docs/rl-deep256.md"]]
 files += [ROOT / "rl-dist/scene-evaluation.cjs", ROOT / "rl-dist/scene-evaluation.json", ROOT / "scripts/build-scene-evaluation.mjs"]
+files += [ROOT / "rl-dist/basic-evaluation.cjs", ROOT / "scripts/build-basic-evaluation.mjs",
+          ROOT / "rl/fixtures/basic-opening-cases.json", ROOT / "docs/rl-basic-feedback.md"]
 files += sorted((ROOT / "rl/python").rglob("*.py"))
 files += [ROOT / "rl/deep1024.sh", ROOT / "docs/rl-deep1024.md"]
 files += [ROOT / "docs/rl-opponent-diversity.md"]
@@ -49,6 +51,8 @@ files += [ROOT / "docs" / name for name in [
     "rl-blackwell-20260915.md", "tavern-operations.md", "rl-human-demonstrations.md", "rl-fresh-imitation-20260915.json",
     "neural-serving.md",
 ]]
+files += [ROOT / "rl-dist/ledger-evaluation.cjs", ROOT / "scripts/build-ledger-evaluation.mjs", ROOT / "docs/rl-ledger-model.md"]
+files += [ROOT / "docs/rl-moe-model.md", ROOT / "docs/rl-moe-validation-20260917.json"]
 files = sorted(set(files))
 manifest = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
 archive = ROOT / "rl-dist/tavern-selfplay-v3.tar.gz"

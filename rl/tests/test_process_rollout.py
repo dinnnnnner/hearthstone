@@ -3,10 +3,27 @@ from pathlib import Path
 import signal
 import tempfile
 from unittest.mock import Mock,patch
-from tavern_rl.process_rollout import shards,ProcessSimulationPool,prepare_descriptor_limit
+from tavern_rl.process_rollout import shards,ProcessSimulationPool,prepare_descriptor_limit,rollout_storage
 
 
 class ProcessRolloutTests(unittest.TestCase):
+    def test_ram_scratch_pins_old_checkpoint_and_cleans_up_after_failure(self):
+        with tempfile.TemporaryDirectory() as disk, tempfile.TemporaryDirectory() as ram:
+            source=Path(disk)/'latest.pt';source.write_bytes(b'old weights')
+            with patch.dict('os.environ',{'TAVERN_ROLLOUT_SCRATCH':ram}):
+                with self.assertRaisesRegex(RuntimeError,'interrupted'):
+                    with rollout_storage(source) as (directory,snapshot):
+                        self.assertEqual(directory.parent,Path(ram))
+                        self.assertEqual(snapshot.parent.parent,Path(disk))
+                        replacement=Path(disk)/'next.pt';replacement.write_bytes(b'new weights')
+                        replacement.replace(source)
+                        self.assertEqual(snapshot.read_bytes(),b'old weights')
+                        (directory/'0.pt').write_bytes(b'trajectories')
+                        raise RuntimeError('interrupted')
+            self.assertEqual(list(Path(ram).iterdir()),[])
+            self.assertEqual(list(Path(disk).iterdir()),[source])
+            self.assertEqual(source.read_bytes(),b'new weights')
+
     def test_completion_order_does_not_reorder_ppo_inputs(self):
         with tempfile.TemporaryDirectory() as directory:
             source=Path(directory)/'latest.pt';source.write_bytes(b'immutable')

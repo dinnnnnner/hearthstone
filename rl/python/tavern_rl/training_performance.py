@@ -13,6 +13,11 @@ def positive_size(value):
 def add_arguments(parser):
     parser.add_argument('--training-graphs', action=argparse.BooleanOptionalAction, default=None,
                         help='Capture residual tower forward/backward during PPO')
+    parser.add_argument('--persistent-samplers', action='store_true',
+                        help='Reuse sampler processes, models and streaming games between updates')
+    parser.add_argument('--central-inference',action='store_true',help='Share versioned GPU inference across resident samplers')
+    parser.add_argument('--inference-max-batch',type=positive_size,default=32)
+    parser.add_argument('--inference-delay-ms',type=float,default=1.)
     parser.add_argument('--sampling-processes', type=positive_size, default=1,
                         help='Separate on-policy sampler processes sharing one checkpoint')
     parser.add_argument('--resume-sequence-batch-size', type=positive_size,
@@ -51,11 +56,18 @@ def make_optimizer(model, config, saved=None):
 
 
 def make_pool(args, output):
+    central=getattr(args,'central_inference',False)
+    if central and (not getattr(args,'persistent_samplers',False) or args.sampling_processes<2):
+        raise ValueError('--central-inference requires --persistent-samplers and at least two sampling processes')
+    inference=dict(max_batch=args.inference_max_batch,delay_ms=args.inference_delay_ms) if central else None
+    if inference and (not 1<=inference['max_batch']<=256 or not 0<=inference['delay_ms']<=20):
+        raise ValueError('Inference batch must be 1..256 and delay must be 0..20 ms')
     if args.sampling_processes > args.workers:
         raise ValueError('Sampling processes cannot exceed simulator workers')
     if args.sampling_processes > 1:
         from .process_rollout import ProcessSimulationPool
-        return ProcessSimulationPool(args.workers,args.sampling_processes,output/'latest.pt')
+        return ProcessSimulationPool(args.workers,args.sampling_processes,output/'latest.pt',
+                                     persistent=getattr(args,'persistent_samplers',False),inference=inference)
     from .rollout import SimulationPool
     return SimulationPool(args.workers)
 
@@ -70,3 +82,15 @@ def optimized_update(update, model, optimizer, tracks, config, device):
                       training_graph_replays=sum(g.replays for g in graphs),
                       training_graph_capture_seconds=sum(g.capture_seconds for g in graphs))
     return result
+
+
+def reserve_game_seeds(config, episodes):
+    """Reserve a full batch independently of out-of-order game completion.
+
+    Old checkpoints record counts but no seed cursor. Skip their unfinished
+    batch conservatively; those game states were never persisted by the trainer.
+    """
+    offset = config.get('next_seed_offset', episodes + config.get('unfinished_games_at_checkpoint',0))
+    count = config['games_per_iteration']
+    config['next_seed_offset'] = offset + count
+    return [(config['seed'] + offset + i) & 0xffffffff for i in range(count)]

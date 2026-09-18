@@ -51,6 +51,23 @@ def inference_to_host(actions, logs=None, values=None, memory=None, packed=True)
     return tuple(result)
 
 
+def policy_sample(model,observations,masks,memory,previous,draws,with_value=True,priors=False,packed=True,log_probs=True):
+    """Run the same masked GPU sampling locally or through the inference owner."""
+    if getattr(model,'remote',False):
+        return model.sample(observations,masks,memory,previous,draws,with_value=with_value,priors=priors,log_probs=log_probs)
+    if memory is not None:
+        distribution,values,updated=model.act(observations,masks,memory,previous,with_value=with_value)
+    else:
+        distribution,values=model.distribution(torch.as_tensor(np.stack(observations),device=masks.device),masks)
+        updated=None
+    uniforms=torch.tensor(draws,device=masks.device,dtype=distribution.probs.dtype)
+    uniforms=uniforms.clamp_max(torch.nextafter(torch.ones((),device=masks.device),torch.zeros((),device=masks.device)))
+    actions=sample_masked_cdf(distribution.probs,masks,uniforms)
+    logs=distribution.log_prob(actions) if with_value and log_probs else None
+    result=inference_to_host(actions,logs,values if with_value else None,updated,packed)
+    return (*result,distribution.probs.cpu().numpy() if priors else None)
+
+
 class SimulationPool:
     def __init__(self, workers, bundle=None):
         self.simulators = []
@@ -65,6 +82,9 @@ class SimulationPool:
             self.close(); raise RuntimeError("Workers use different simulator versions")
 
     def close(self):
+        if getattr(self,'ledger_evaluator',None): self.ledger_evaluator.close()
+        if getattr(self,'basic_evaluator',None):
+            self.basic_evaluator.close();self.basic_evaluator=None
         if getattr(self,'direct_planner',None):
             self.direct_planner.close();self.direct_planner=None
         if getattr(self,'stage_evaluator',None):
@@ -74,13 +94,34 @@ class SimulationPool:
             simulator.close()
 
     @accelerate_sampling
-    def collect(self, current, opponents, seeds, options, device, learner_seats=4, collect=True, replay_dir=None, error_dir=None, opponent_weights=None, schedule=None, progress=None, seat_offset=0, hero_pool=None, packed_host_transfer=False, first_place_bonus=0., planning_states=0, direct_planning=None, stage_feedback=None, counterfactual=None, streaming=None, resume_state=None, card_value=None, scene_value=None, multi_horizon=None, reference_pool=None):
+    def collect(self, current, opponents, seeds, options, device, learner_seats=4, collect=True, replay_dir=None, error_dir=None, opponent_weights=None, schedule=None, progress=None, seat_offset=0, hero_pool=None, packed_host_transfer=False, first_place_bonus=0., planning_states=0, direct_planning=None, stage_feedback=None, counterfactual=None, streaming=None, resume_state=None, card_value=None, scene_value=None, multi_horizon=None, reference_pool=None, basic_feedback=None):
         """Batched model inference, parallel local simulators, per-seat on-policy records."""
         first_place_bonus = validate_bonus(first_place_bonus)
         seeds = list(seeds)
         if not seeds or not 1 <= learner_seats <= 8:
             raise ValueError("Need games and 1..8 learning seats")
         active, summaries, tracks = {}, [], []
+        ledger_mode = bool(collect and getattr(current,'ledger',False))
+        if ledger_mode and any((streaming,counterfactual,basic_feedback,direct_planning,planning_states,stage_feedback,card_value,scene_value,multi_horizon)):
+            raise ValueError('Ledger collection requires complete-game placement PPO')
+        if ledger_mode and not getattr(self,'ledger_evaluator',None):
+            from .ledger_training import LedgerTargets
+            self.ledger_evaluator = LedgerTargets(self.meta)
+
+        if basic_feedback and (not collect or any((streaming, counterfactual, planning_states, direct_planning,
+                                                  stage_feedback, card_value, scene_value, multi_horizon))):
+            raise ValueError('Basic feedback requires complete-game PPO without other teaching modes')
+        if basic_feedback and any(hasattr(current,name) for name in ('action_value_type','auxiliary','card_value_head','scene_current','horizon_embedding')):
+            raise ValueError('Basic feedback requires a plain PPO learner')
+        if getattr(self,'basic_evaluator',None) and self.basic_evaluator.settings != basic_feedback:
+            self.basic_evaluator.close();self.basic_evaluator=None
+        if basic_feedback and not getattr(self,'basic_evaluator',None):
+            from .basic_feedback import BasicFeedback
+            self.basic_evaluator=BasicFeedback(basic_feedback,self.meta)
+        basic=self.basic_evaluator if basic_feedback else None
+        basic_stats=dict(states=0,seconds=0.,trajectories=0,positive_steps=0,negative_steps=0,
+                         feedback_sum=0.,terminal_correction_sum=0.,coefficient=basic_feedback['coefficient']) if basic_feedback else None
+        if basic:basic.states=0;basic.seconds=0.
         tempo_audits=[]
         self.planning_examples = []
         self.card_evaluations=[]
@@ -147,6 +188,8 @@ class SimulationPool:
                 if len(controllers) != 8 or -1 not in controllers or any(c not in models for c in controllers):
                     raise ValueError("Invalid fixed seat schedule")
             active[worker] = {"state": state, "seed": seed, "worker":worker, "branch_seen":set(), "heroes": game_options.get("heroes"), "controllers": controllers, "tracks": [[] for _ in range(8)],
+                "basic_potentials": [[] for _ in range(8)],
+                "ledger_targets": [[] for _ in range(8)],
                 "action_values":hasattr(current,'action_value_type'),"scene_value":scene_value,"multi_horizon":multi_horizon,
                 "planning_seen": set(),
                 "stages_seen":set(),"stage_rewards":[{} for _ in range(8)],"stage_totals":[0.]*8,
@@ -189,25 +232,18 @@ class SimulationPool:
                     group = groups[controller]
                     model = models[controller]
                     need_value = collect and controller == -1
+                    ledger_reports = self.ledger_evaluator.score([active[w]['state']['entities'] for w,_,_,_ in group]) if ledger_mode and need_value else None
+                    potentials=basic.score([active[w]['state']['entities'] for w,_,_,_ in group]) if basic and need_value else None
                     inference_batches += 1; inference_decisions += len(group)
                     masks = torch.as_tensor(np.stack([g[3] for g in group]), device=device)
-                    updated = None
+                    memories=previous=None
                     if model.recurrent:
-                        memories = torch.as_tensor(np.stack([active[w]['memory'][s] for w,s,_,_ in group]), device=device)
-                        previous = torch.tensor([active[w]['previous'][s] for w,s,_,_ in group], device=device)
-                        distribution, values, updated = model.act([g[2] for g in group], masks, memories, previous, with_value=need_value)
-                    else:
-                        obs = torch.as_tensor(np.stack([g[2] for g in group]), device=device)
-                        distribution, values = model.distribution(obs, masks)
-                    # Separate action random stream per seat/game: changing the candidate
-                    # cannot consume opponents' draws, and worker count cannot change sampling.
-                    uniforms = torch.tensor([active[w]['action_rng'][s].random() for w,s,_,_ in group], device=device, dtype=distribution.probs.dtype)
-                    uniforms = uniforms.clamp_max(torch.nextafter(torch.ones((),device=device),torch.zeros((),device=device)))
-                    actions = sample_masked_cdf(distribution.probs, masks, uniforms)
-                    logs = distribution.log_prob(actions) if need_value else None
-                    values = values if need_value else None
-                    actions, logs, values, updated = inference_to_host(actions, logs, values, updated, packed_host_transfer and self.meta['actionCount'] <= 2**24)
-                    priors=distribution.probs.cpu().numpy() if need_value and (self.direct_planner or branch_options) else None
+                        memories=torch.as_tensor(np.stack([active[w]['memory'][seat] for w,seat,_,_ in group]),device=device)
+                        previous=torch.tensor([active[w]['previous'][seat] for w,seat,_,_ in group],device=device)
+                    draws=[active[w]['action_rng'][seat].random() for w,seat,_,_ in group]
+                    actions,logs,values,updated,priors=policy_sample(model,[g[2] for g in group],masks,memories,previous,draws,
+                        with_value=need_value,priors=bool(need_value and (self.direct_planner or branch_options)),
+                        packed=packed_host_transfer and self.meta['actionCount']<=2**24)
                     for i, (worker, seat, observation, mask) in enumerate(group):
                         action = int(actions[i]); game = active[worker]
                         if collect and controller == -1:
@@ -225,6 +261,9 @@ class SimulationPool:
                                 # search decision. The search-policy update never reads it.
                                 record=(*record[:3],float('nan'),*record[4:],teacher)
                             game["tracks"][seat].append(record)
+                            if potentials is not None:game['basic_potentials'][seat].append(potentials[i])
+                            if ledger_reports is not None:
+                                game['ledger_targets'][seat].append(dict(ledger_reports[i],end=action_types[action]=='end'))
                             if streaming:game['record_turns'][seat].append(game['state']['info']['turn'])
                         if model.recurrent: game['memory'][seat] = updated[i].copy()
                         game['previous'][seat] = action
@@ -253,10 +292,13 @@ class SimulationPool:
                 if self.stage_evaluator:
                     report=self.stage_evaluator.assess(game,self.simulators[worker],game['state'],state)
                     if report is not None:game['stage_evaluations'].append(report)
-                boundary=(streaming or references) and (state['terminated'] or state['info']['turn']!=game['state']['info']['turn'])
-                if boundary and (streaming or references):
+                boundary=(streaming or references or ledger_mode) and (state['terminated'] or state['info']['turn']!=game['state']['info']['turn'])
+                if boundary and (streaming or references or ledger_mode):
                     snapshot=self.simulators[worker].call('snapshot')
                     if references:references.offer(snapshot)
+                if ledger_mode and boundary:
+                    from .ledger_training import attach_outcomes
+                    attach_outcomes(game,snapshot,game['state']['info']['turn'])
                 if streaming and boundary:
                     previous_checks=len(game['tempo_audit'])
                     outcome(game,snapshot,game['state']['info']['turn'])
@@ -282,6 +324,23 @@ class SimulationPool:
                                 if self.stage_evaluator:
                                     from .stage_feedback import trajectory_rewards
                                     terminal=trajectory_rewards(records,terminal,game['stage_rewards'][seat])
+                                if basic:
+                                    from .basic_feedback import shape_rewards
+                                    potentials=game['basic_potentials'][seat]
+                                    if len(potentials)!=len(records):raise ValueError('Basic feedback trajectory length differs')
+                                    rewards=shape_rewards(potentials,terminal)
+                                    feedback=shape_rewards(potentials,0.)
+                                    basic_stats['trajectories']+=1
+                                    basic_stats['positive_steps']+=int((feedback>0).sum())
+                                    basic_stats['negative_steps']+=int((feedback<0).sum())
+                                    basic_stats['feedback_sum']+=float(feedback.sum(dtype=np.float64))
+                                    basic_stats['terminal_correction_sum']-=potentials[-1]
+                                    terminal=rewards
+                                if ledger_mode:
+                                    targets = game['ledger_targets'][seat]
+                                    if len(targets) != len(records):raise ValueError('Ledger trajectory target count differs')
+                                    rewards = np.zeros(len(records),dtype=np.float32);rewards[-1] = terminal
+                                    terminal = dict(rewards=rewards,ledger=targets,terminal=True)
                                 tracks.append((records, terminal))
                     self.stage_evaluations.extend(game['stage_evaluations'])
                 # Truncated games are excluded, rather than assigning fictitious final ranks.
@@ -313,12 +372,14 @@ class SimulationPool:
                 self.card_value_labels,self.card_value_reports,card_metrics=evaluate_cards(self,models,device,branch_options,first_place_bonus,card_value,progress)
             self.branch_roots=[]  # release private snapshots and opponent memory
         elapsed = time.monotonic() - start_time
+        if basic:basic_stats.update(states=basic.states,seconds=basic.seconds)
         self.streaming_state=dict(active=active,cursor=cursor,seeds=seeds,done=not active) if streaming else None
         if self.direct_planner:
             self.card_evaluations=[r for r in getattr(self.direct_planner,'card_evaluations',[]) if 'actual_return' in r]
         return tracks, summaries, {"seconds": elapsed, "environment_actions": action_count, "actions_per_second": action_count / max(elapsed, 1e-9),
             "action_counts": dict(action_counts), "learner_action_counts": dict(learner_action_counts),
             "first_place_bonus": first_place_bonus,
+            **({'basic_feedback':basic_stats} if basic else {}),
             **({'streaming_done':not active,'streaming_active_games':len(active),'streaming_tracks':len(tracks),'tier_tempo_checks':tempo_audits} if streaming else {}),
             **({'counterfactual':branch_metrics} if branch_metrics is not None else {}),
             **({'card_value':card_metrics} if card_value else {}),

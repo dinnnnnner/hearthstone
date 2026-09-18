@@ -1,0 +1,1167 @@
+{
+  "sourceModelSha256": "61a92f7ce526cba6ef4d28ad517e32d2a41767896fdec4b49bd435d11562196c",
+  "sourceIteration": 175,
+  "cases": 28,
+  "comparable": 27,
+  "saleScoresLower": 27,
+  "scope": "Heuristic replay audit, not a complete-game strength evaluation.",
+  "rows": [
+    {
+      "seed": 9821501,
+      "seat": 5,
+      "hero": "s14_kaelthas",
+      "comparable": true,
+      "saleDelta": -5.999999999999999,
+      "componentDelta": {
+        "board": -5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG25_013",
+          "name": "腐皮豺狼人",
+          "zone": "board",
+          "position": 0,
+          "attack": 1,
+          "health": 4,
+          "keywords": [],
+          "body": 5,
+          "keywordBonus": 0,
+          "boardScore": 5,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "friendlyDeath:buff"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821502,
+      "seat": 1,
+      "hero": "s14_kaelthas",
+      "comparable": true,
+      "saleDelta": -5.499999999999999,
+      "componentDelta": {
+        "board": -4.5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG25_001",
+          "name": "复活的骑兵",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 1,
+          "keywords": [
+            "复生",
+            "嘲讽"
+          ],
+          "body": 3,
+          "keywordBonus": 1.5,
+          "boardScore": 4.5,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": []
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821502,
+      "seat": 7,
+      "hero": "s14_jailer",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BGS_119",
+          "name": "爆裂飓风",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 1,
+          "keywords": [
+            "圣盾",
+            "风怒"
+          ],
+          "body": 3,
+          "keywordBonus": 3,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": []
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821503,
+      "seat": 2,
+      "hero": "s14_guff",
+      "comparable": true,
+      "saleDelta": -7.999999999999999,
+      "componentDelta": {
+        "board": -7,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG36_921",
+          "name": "逃窜的纳迦",
+          "zone": "board",
+          "position": 0,
+          "attack": 5,
+          "health": 2,
+          "keywords": [],
+          "body": 7,
+          "keywordBonus": 0,
+          "boardScore": 7,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "targetSpell:buff"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821504,
+      "seat": 4,
+      "hero": "s14_kaelthas",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821505,
+      "seat": 5,
+      "hero": "s14_yogg",
+      "comparable": true,
+      "saleDelta": -4,
+      "componentDelta": {
+        "board": -3,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG31_330",
+          "name": "厄运先知",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 1,
+          "keywords": [],
+          "body": 3,
+          "keywordBonus": 0,
+          "boardScore": 3,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "battlecry:discountSpell"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821506,
+      "seat": 2,
+      "hero": "s14_kaelthas",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821506,
+      "seat": 4,
+      "hero": "s14_voone",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_236",
+          "name": "夺金健将",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 2,
+          "keywords": [
+            "圣盾"
+          ],
+          "body": 4,
+          "keywordBonus": 2,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "aura:alwaysGolden"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821507,
+      "seat": 0,
+      "hero": "s14_ragnaros",
+      "comparable": true,
+      "saleDelta": -5.999999999999999,
+      "componentDelta": {
+        "board": -5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG33_886",
+          "name": "獠牙露营者",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 3,
+          "keywords": [],
+          "body": 5,
+          "keywordBonus": 0,
+          "boardScore": 5,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "rally:gem"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821507,
+      "seat": 6,
+      "hero": "s14_waggtoggle",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG35_814",
+          "name": "血色幸存飞龙",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "aura:shieldAtSix"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821508,
+      "seat": 6,
+      "hero": "s14_voone",
+      "comparable": true,
+      "saleDelta": -4.999999999999999,
+      "componentDelta": {
+        "board": -4,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BGS_004",
+          "name": "愤怒编织者",
+          "zone": "board",
+          "position": 0,
+          "attack": 1,
+          "health": 3,
+          "keywords": [],
+          "body": 4,
+          "keywordBonus": 0,
+          "boardScore": 4,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "playDemon:weaver"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821509,
+      "seat": 1,
+      "hero": "s14_kaelthas",
+      "comparable": true,
+      "saleDelta": -7.999999999999999,
+      "componentDelta": {
+        "board": -7,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG36_921",
+          "name": "逃窜的纳迦",
+          "zone": "board",
+          "position": 0,
+          "attack": 5,
+          "health": 2,
+          "keywords": [],
+          "body": 7,
+          "keywordBonus": 0,
+          "boardScore": 7,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "targetSpell:buff"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821509,
+      "seat": 7,
+      "hero": "s14_bazhial",
+      "comparable": true,
+      "saleDelta": -3,
+      "componentDelta": {
+        "board": -2,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG31_803",
+          "name": "嗡鸣害虫",
+          "zone": "board",
+          "position": 0,
+          "attack": 1,
+          "health": 1,
+          "keywords": [
+            "嘲讽"
+          ],
+          "body": 2,
+          "keywordBonus": 0,
+          "boardScore": 2,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "death:summon"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821510,
+      "seat": 0,
+      "hero": "s14_shudderwock",
+      "comparable": true,
+      "saleDelta": -7.999999999999999,
+      "componentDelta": {
+        "board": -7,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG36_921",
+          "name": "逃窜的纳迦",
+          "zone": "board",
+          "position": 0,
+          "attack": 5,
+          "health": 2,
+          "keywords": [],
+          "body": 7,
+          "keywordBonus": 0,
+          "boardScore": 7,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "targetSpell:buff"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821510,
+      "seat": 6,
+      "hero": "s14_enhance",
+      "comparable": true,
+      "saleDelta": -8.5,
+      "componentDelta": {
+        "board": -7.5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [
+            "风怒"
+          ],
+          "body": 6,
+          "keywordBonus": 1.5,
+          "boardScore": 7.5,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821511,
+      "seat": 1,
+      "hero": "s14_sylvanas",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821511,
+      "seat": 2,
+      "hero": "s14_scabbs",
+      "comparable": false,
+      "saleDelta": null,
+      "componentDelta": null,
+      "ranking": [],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": [
+        "Scabbs requires an unknown opposing warband",
+        "Scabbs requires an unknown opposing warband",
+        "Scabbs requires an unknown opposing warband",
+        "Scabbs requires an unknown opposing warband"
+      ]
+    },
+    {
+      "seed": 9821511,
+      "seat": 3,
+      "hero": "s14_patchwerk",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821512,
+      "seat": 0,
+      "hero": "s14_omu",
+      "comparable": true,
+      "saleDelta": -5.999999999999999,
+      "componentDelta": {
+        "board": -5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG26_146",
+          "name": "催眠机器人",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 2,
+          "keywords": [],
+          "body": 4,
+          "keywordBonus": 0,
+          "boardScore": 4,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "end:buff"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821512,
+      "seat": 4,
+      "hero": "s14_togwaggle",
+      "comparable": true,
+      "saleDelta": -4,
+      "componentDelta": {
+        "board": -3,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG29_611",
+          "name": "拔线机",
+          "zone": "board",
+          "position": 0,
+          "attack": 1,
+          "health": 1,
+          "keywords": [
+            "圣盾"
+          ],
+          "body": 2,
+          "keywordBonus": 1,
+          "boardScore": 3,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "death:summon"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821512,
+      "seat": 5,
+      "hero": "s14_ysera",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821513,
+      "seat": 1,
+      "hero": "s14_rakanishu",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG32_330",
+          "name": "好斗的斥候",
+          "zone": "board",
+          "position": 0,
+          "attack": 3,
+          "health": 3,
+          "keywords": [],
+          "body": 6,
+          "keywordBonus": 0,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "handCombat:summonSelfCopy"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821513,
+      "seat": 5,
+      "hero": "s14_mutanus",
+      "comparable": true,
+      "saleDelta": -5.999999999999999,
+      "componentDelta": {
+        "board": -5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG33_886",
+          "name": "獠牙露营者",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 3,
+          "keywords": [],
+          "body": 5,
+          "keywordBonus": 0,
+          "boardScore": 5,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "rally:gem"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821513,
+      "seat": 6,
+      "hero": "s14_greybough",
+      "comparable": true,
+      "saleDelta": -5.499999999999999,
+      "componentDelta": {
+        "board": -4.5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG25_001",
+          "name": "复活的骑兵",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 1,
+          "keywords": [
+            "复生",
+            "嘲讽"
+          ],
+          "body": 3,
+          "keywordBonus": 1.5,
+          "boardScore": 4.5,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": []
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821514,
+      "seat": 7,
+      "hero": "s14_voone",
+      "comparable": true,
+      "saleDelta": -5.999999999999999,
+      "componentDelta": {
+        "board": -5,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG33_886",
+          "name": "獠牙露营者",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 3,
+          "keywords": [],
+          "body": 5,
+          "keywordBonus": 0,
+          "boardScore": 5,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "rally:gem"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821515,
+      "seat": 3,
+      "hero": "s14_lo",
+      "comparable": true,
+      "saleDelta": -6.999999999999999,
+      "componentDelta": {
+        "board": -6,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BGS_119",
+          "name": "爆裂飓风",
+          "zone": "board",
+          "position": 0,
+          "attack": 2,
+          "health": 1,
+          "keywords": [
+            "圣盾",
+            "风怒"
+          ],
+          "body": 3,
+          "keywordBonus": 3,
+          "boardScore": 6,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": []
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821516,
+      "seat": 3,
+      "hero": "s14_ragnaros",
+      "comparable": true,
+      "saleDelta": -3,
+      "componentDelta": {
+        "board": -2,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG31_803",
+          "name": "嗡鸣害虫",
+          "zone": "board",
+          "position": 0,
+          "attack": 1,
+          "health": 1,
+          "keywords": [
+            "嘲讽"
+          ],
+          "body": 2,
+          "keywordBonus": 0,
+          "boardScore": 2,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "death:summon"
+          ]
+        }
+      ],
+      "errors": []
+    },
+    {
+      "seed": 9821516,
+      "seat": 4,
+      "hero": "s14_ini",
+      "comparable": true,
+      "saleDelta": -3,
+      "componentDelta": {
+        "board": -2,
+        "handPotential": 0,
+        "cash": 0,
+        "minionAssets": -1,
+        "futureIncome": 0,
+        "freeRefresh": 0,
+        "spellDiscount": 0,
+        "tavernTier": 0
+      },
+      "ranking": [
+        "keep",
+        "sell"
+      ],
+      "beforeBoard": [
+        {
+          "id": "s14_BG31_803",
+          "name": "嗡鸣害虫",
+          "zone": "board",
+          "position": 0,
+          "attack": 1,
+          "health": 1,
+          "keywords": [
+            "嘲讽"
+          ],
+          "body": 2,
+          "keywordBonus": 0,
+          "boardScore": 2,
+          "handPotential": 0,
+          "minionAssetUnits": 1,
+          "unpricedAbilities": [
+            "death:summon"
+          ]
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
